@@ -2,32 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PalmWeb — Websites & Automation for Local Businesses</title>
-  <meta name="description" content="PalmWeb builds simple, effective websites and automates admin workflows for local businesses." />
+  <meta name="description" content="PalmWeb builds websites and automation solutions for locally owned businesses." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      /* PalmWeb-inspired but calm + iOS-like */
-      --bg: #ffffff;
-      --panel: #ffffff;
-      --panel2: #f6f8fb;
-      --border: #e5e7eb;
-
-      --text: #111827;
-      --muted: #4b5563;
-
-      /* logo-friendly accents */
+      /* PalmWeb-inspired palette */
       --blue: #1d79c6;
-      --blue2:#2aa6d6;
+      --blueSoft:#eaf5ff;
       --green:#2cab4b;
-      --green2:#7bd63d;
+      --greenSoft:#eafaf0;
 
-      --shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+      --bg:#ffffff;
+      --panel:#ffffff;
+      --panel2:#f7fbff;
+      --border:#e5e7eb;
+
+      --text:#0f172a;
+      --muted:#475569;
+
+      --shadow: 0 14px 34px rgba(15,23,42,.10);
       --radius: 18px;
-
-      --max: 1100px;
+      --max: 1120px;
     }
 
     *{ box-sizing:border-box; }
@@ -35,13 +33,12 @@
       margin:0;
       padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color: var(--text);
       background: var(--bg);
+      color: var(--text);
       line-height: 1.55;
     }
-
     a{ color: inherit; }
-    img{ max-width: 100%; display:block; }
+    img{ max-width:100%; display:block; }
 
     .container{
       max-width: var(--max);
@@ -49,13 +46,13 @@
       padding: 0 18px;
     }
 
-    /* Top bar */
-    .topbar{
+    /* HEADER */
+    header{
       position: sticky;
       top: 0;
-      z-index: 30;
-      background: rgba(255,255,255,.88);
-      backdrop-filter: blur(10px);
+      z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -63,7 +60,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 16px;
+      gap: 18px;
       padding: 14px 0;
     }
 
@@ -75,52 +72,48 @@
       min-width: 0;
     }
 
-    .brand-logo{
-      width: 40px;
-      height: 40px;
+    .brand img{
+      width: 42px;
+      height: 42px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 12px;
+      flex: 0 0 auto;
     }
 
-    .brand-text{
+    .brand-title{
       display:flex;
       flex-direction:column;
-      gap:2px;
+      gap: 2px;
       min-width:0;
     }
-
-    .brand-name{
+    .brand-title strong{
+      font-size: 14px;
+      letter-spacing: .2px;
       font-weight: 950;
-      letter-spacing: 0.2px;
     }
-
-    .brand-sub{
+    .brand-title span{
       font-size: 12px;
       color: var(--muted);
-      font-weight: 650;
+      font-weight: 750;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 520px;
     }
 
-    .nav-links{
+    nav{
       display:flex;
       align-items:center;
-      gap: 14px;
-      flex: 0 0 auto;
+      gap: 18px;
     }
-
-    .nav-links a{
+    nav a{
       text-decoration:none;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 850;
       font-size: 14px;
     }
-    .nav-links a:hover{
+    nav a:hover{
       color: var(--text);
-      text-decoration: underline;
-      text-underline-offset: 4px;
     }
 
     .btn{
@@ -129,106 +122,85 @@
       justify-content:center;
       padding: 10px 14px;
       border-radius: 999px;
-      font-weight: 900;
       border: 1px solid transparent;
       text-decoration:none;
+      font-weight: 950;
       cursor:pointer;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+      transition: transform .06s ease, box-shadow .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
 
     .btn-primary{
-      color: #fff;
+      color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 10px 20px rgba(29, 121, 198, 0.18);
+      box-shadow: 0 12px 26px rgba(29,121,198,.22);
     }
     .btn-primary:hover{
-      box-shadow: 0 14px 30px rgba(29, 121, 198, 0.22);
+      box-shadow: 0 16px 34px rgba(29,121,198,.28);
     }
 
-    .btn-secondary{
+    .btn-outline{
       background: #fff;
       border: 1px solid var(--border);
       color: var(--text);
     }
-    .btn-secondary:hover{
-      background: #f9fafb;
+    .btn-outline:hover{
+      background: #f8fafc;
     }
 
-    /* Hero */
+    /* HERO */
     .hero{
-      padding: 44px 0 24px;
+      padding: 52px 0 28px;
+      background:
+        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.20), transparent 60%),
+        radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.16), transparent 60%),
+        linear-gradient(180deg, var(--panel2), #fff 60%);
+      border-bottom: 1px solid var(--border);
     }
 
     .hero-grid{
       display:grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 18px;
-      align-items: start;
+      gap: 16px;
+      align-items:start;
     }
 
-    .hero-card{
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
+    .hero h1{
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.8px;
     }
 
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      color: #0b3a5f;
-      background: linear-gradient(135deg, rgba(29,121,198,.12), rgba(44,171,75,.12));
-      border: 1px solid rgba(29,121,198,.18);
-      margin-bottom: 12px;
-    }
-
-    h1{
-      margin: 0 0 10px;
-      font-size: clamp(30px, 4vw, 42px);
-      line-height: 1.1;
-      letter-spacing: -0.6px;
-    }
-
-    .lead{
-      margin: 0 0 16px;
+    .hero p{
+      margin: 0 0 18px;
       color: var(--muted);
       font-size: 16px;
-      max-width: 60ch;
+      max-width: 62ch;
     }
 
     .hero-actions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
-    .hero-note{
-      margin-top: 14px;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    /* Right side quick box */
-    .quick{
-      background: linear-gradient(135deg, rgba(29,121,198,.08), rgba(44,171,75,.08));
-      border: 1px solid rgba(29,121,198,.18);
+    .hero-card{
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(229,231,235,.85);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
     }
 
     .quick h3{
       margin: 0 0 6px;
       font-size: 16px;
+      font-weight: 950;
     }
-
     .quick p{
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       color: var(--muted);
       font-size: 14px;
     }
@@ -239,88 +211,107 @@
       justify-content:space-between;
       gap: 10px;
       padding: 10px 12px;
-      background: rgba(255,255,255,.8);
-      border: 1px solid rgba(229,231,235,.9);
+      border: 1px solid var(--border);
       border-radius: 14px;
+      background: #fff;
       margin-top: 10px;
       font-size: 14px;
     }
-
-    .quick-label{
-      color: #6b7280;
-      font-weight: 800;
+    .quick-row span:first-child{
+      color: #64748b;
+      font-weight: 850;
     }
-
-    .quick-value a{
-      color: var(--text);
+    .quick-row a{
       font-weight: 950;
-      text-decoration: none;
+      text-decoration:none;
+      color: var(--text);
     }
-    .quick-value a:hover{
+    .quick-row a:hover{
       text-decoration: underline;
       text-underline-offset: 4px;
     }
 
-    /* Sections */
-    .section{
-      padding: 30px 0;
-      border-top: 1px solid var(--border);
-      background: #fff;
+    /* SECTION */
+    section{
+      padding: 38px 0;
     }
-
-    .section.alt{
-      background: var(--panel2);
-    }
-
     .section-head{
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
-
-    h2{
+    .section-head h2{
       margin:0;
-      font-size: 22px;
+      font-size: 24px;
       letter-spacing: -0.2px;
     }
-
     .section-head p{
       margin:0;
       color: var(--muted);
-      max-width: 60ch;
+      max-width: 64ch;
     }
 
-    /* Services */
-    .grid-4{
+    /* SERVICE CARDS — matches your screenshot layout */
+    .grid{
       display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 12px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 14px;
     }
 
-    .card{
+    .service{
       background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 16px;
-      min-height: 140px;
+      padding: 18px;
+      min-height: 170px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      position: relative;
+      overflow:hidden;
     }
 
-    .card h3{
-      margin: 0 0 8px;
+    .service::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(280px 140px at 15% 20%, rgba(29,121,198,.14), transparent 70%),
+        radial-gradient(260px 140px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
+      pointer-events:none;
+    }
+
+    .service > *{ position: relative; }
+
+    .icon{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(135deg, rgba(29,121,198,.14), rgba(44,171,75,.14));
+      border: 1px solid rgba(29,121,198,.18);
+      font-size: 20px;
+    }
+
+    .service h3{
+      margin: 0;
       font-size: 16px;
+      font-weight: 950;
     }
 
-    .card p{
+    .service p{
       margin: 0;
       color: var(--muted);
       font-size: 14px;
     }
 
-    /* Portfolio */
+    /* PORTFOLIO */
     .portfolio{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
@@ -328,99 +319,85 @@
       margin-top: 14px;
     }
 
-    .site{
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .site-top{
-      padding: 16px;
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-    }
-
-    .site-name{
-      font-weight: 950;
-      font-size: 16px;
-    }
-
-    .site-meta{
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .site-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(29,121,198,.18);
-      background: rgba(29,121,198,.08);
-      font-size: 12px;
-      font-weight: 900;
-      color: #0b3a5f;
-      width: fit-content;
-    }
-
-    /* Contact */
-    .contact{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .contact-card{
-      background: #fff;
+    .work{
+      background:#fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 18px;
     }
 
-    .contact-card h3{
-      margin: 0 0 10px;
-      font-size: 16px;
+    .tag{
+      display:inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      border: 1px solid rgba(29,121,198,.20);
+      background: rgba(29,121,198,.08);
+      width: fit-content;
+      color:#0b3a5f;
+      margin-bottom: 10px;
     }
 
-    .contact-line{
+    .work-title{
+      font-weight: 950;
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    .work-desc{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* CONTACT */
+    .contact-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .box{
+      background:#fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .box h3{
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+    .line{
       margin-top: 10px;
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 750;
     }
-
-    .contact-line a{
+    .line a{
       color: var(--text);
       font-weight: 950;
       text-decoration:none;
     }
-    .contact-line a:hover{
+    .line a:hover{
       text-decoration: underline;
       text-underline-offset: 4px;
     }
 
-    /* Footer */
+    /* FOOTER */
     footer{
       border-top: 1px solid var(--border);
+      background:#fff;
       padding: 18px 0;
-      background: #fff;
-      color: #6b7280;
+      color:#64748b;
       font-size: 12px;
       text-align:center;
     }
@@ -429,42 +406,43 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      flex-wrap:wrap;
       gap: 10px;
+      flex-wrap:wrap;
     }
 
     .footer-logo{
       width: 18px;
       height: 18px;
       object-fit: contain;
-      opacity: 0.9;
       border-radius: 6px;
+      opacity:.9;
     }
 
     /* Responsive */
     @media (max-width: 980px){
       .hero-grid{ grid-template-columns: 1fr; }
-      .grid-4{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
       .portfolio{ grid-template-columns: 1fr; }
-      .contact{ grid-template-columns: 1fr; }
-      .nav-links{ display:none; }
+      .contact-grid{ grid-template-columns: 1fr; }
+      nav{ display:none; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Top bar -->
-  <header class="topbar">
+  <!-- Header -->
+  <header>
     <div class="container nav">
-      <a class="brand" href="#top" aria-label="PalmWeb home">
-        <img class="brand-logo" src="logo.png" alt="PalmWeb logo" />
-        <div class="brand-text">
-          <div class="brand-name">PalmWeb</div>
-          <div class="brand-sub">Websites • Automation • Consulting</div>
+      <a class="brand" href="#top">
+        <!-- ✅ IMPORTANT: store logo at assets/logo.png -->
+        <img src="assets/logo.png" alt="PalmWeb logo" />
+        <div class="brand-title">
+          <strong>PalmWeb</strong>
+          <span>Websites • Automation • Consulting</span>
         </div>
       </a>
 
-      <nav class="nav-links" aria-label="Primary">
+      <nav aria-label="Main">
         <a href="#services">Services</a>
         <a href="#work">Work</a>
         <a href="#contact">Contact</a>
@@ -476,156 +454,153 @@
   <!-- Hero -->
   <main id="top" class="hero">
     <div class="container hero-grid">
-      <section class="hero-card">
-        <div class="kicker">Simple websites for local businesses</div>
-        <h1>Improve your online presence — without making things complicated.</h1>
-        <p class="lead">
-          PalmWeb builds clean, reliable websites and helps streamline administrative work through practical automation.
-          Ideal for locally owned businesses that want clarity and results.
+      <section>
+        <h1>Websites that feel professional — and are easy to manage.</h1>
+        <p>
+          PalmWeb helps locally owned businesses build a clean web presence and
+          simplify admin work through practical automation.
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">Get in touch</a>
-          <a class="btn btn-secondary" href="#work">See examples</a>
+          <a class="btn btn-primary" href="#contact">Get Started</a>
+          <a class="btn btn-outline" href="#work">View Work</a>
         </div>
 
-        <div class="hero-note">
-          Serving local businesses in Massachusetts & surrounding areas.
-        </div>
+        <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
+          Based in Massachusetts • Serving local businesses
+        </p>
       </section>
 
       <aside class="hero-card quick">
         <h3>Quick Contact</h3>
-        <p>Send a quick email — I’ll respond with next steps.</p>
+        <p>Email me and I’ll respond with simple next steps.</p>
 
         <div class="quick-row">
-          <span class="quick-label">Email</span>
-          <span class="quick-value"><a href="mailto:mason@palmweb.net">mason@palmweb.net</a></span>
+          <span>Email</span>
+          <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
         </div>
 
         <div class="quick-row">
-          <span class="quick-label">Services</span>
-          <span class="quick-value">Websites + Automation</span>
+          <span>Services</span>
+          <span style="font-weight:950;">Web + Automation</span>
         </div>
 
         <div class="quick-row">
-          <span class="quick-label">Based in</span>
-          <span class="quick-value">Massachusetts</span>
+          <span>Response</span>
+          <span style="font-weight:950;">Fast</span>
         </div>
       </aside>
     </div>
   </main>
 
   <!-- Services -->
-  <section id="services" class="section alt">
+  <section id="services">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Services</h2>
-          <p>Clear offerings that help local businesses look professional and run smoother.</p>
+          <p>Simple offerings that help you look better online and run smoother behind the scenes.</p>
         </div>
       </div>
 
-      <div class="grid-4">
-        <div class="card">
+      <div class="grid">
+        <div class="service">
+          <div class="icon">🖥️</div>
           <h3>Website Build</h3>
-          <p>Modern, clean websites that work on phone and desktop — designed for clarity and trust.</p>
+          <p>Clean websites that work on phone and desktop — designed for clarity and trust.</p>
         </div>
 
-        <div class="card">
+        <div class="service">
+          <div class="icon">🌐</div>
           <h3>Domain Maintenance</h3>
-          <p>Domain setup, renewals, DNS, email forwarding, and keeping your site online without headaches.</p>
+          <p>DNS, renewals, email setup, and keeping your site online without headaches.</p>
         </div>
 
-        <div class="card">
+        <div class="service">
+          <div class="icon">⚙️</div>
           <h3>Automation</h3>
-          <p>Simple automation for forms, documents, invoicing, and admin tasks to save time and reduce errors.</p>
+          <p>Streamline invoices, forms, documents, and admin work to save time and reduce errors.</p>
         </div>
 
-        <div class="card">
+        <div class="service">
+          <div class="icon">📈</div>
+          <h3>SEO & Visibility</h3>
+          <p>Improve how you show up online — the basics that make a real difference locally.</p>
+        </div>
+
+        <div class="service">
+          <div class="icon">🧾</div>
+          <h3>Business Tools</h3>
+          <p>Simple systems for organizing requests, scheduling, and customer follow-ups.</p>
+        </div>
+
+        <div class="service">
+          <div class="icon">💬</div>
           <h3>Consulting</h3>
-          <p>Practical guidance on what to do (and what not to do) to improve your web footprint and workflows.</p>
+          <p>Practical advice on what to do next — and what to avoid — for your business.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Work -->
-  <section id="work" class="section">
+  <section id="work" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Recent Work</h2>
-          <p>A few websites I’ve built for locally owned businesses and professionals.</p>
+          <p>Examples of simple, effective websites built for real local businesses.</p>
         </div>
       </div>
 
       <div class="portfolio">
-        <article class="site">
-          <div class="site-top">
-            <div class="pill">Fine Art</div>
-            <div class="site-name">Bill Noble Fine Art</div>
-            <div class="site-meta">A clean gallery website designed to showcase paintings and contact info.</div>
+        <div class="work">
+          <div class="tag">Fine Art</div>
+          <div class="work-title">Bill Noble Fine Art</div>
+          <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact info.</div>
+          <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">
+            Visit billnoblefineart.com
+          </a>
+        </div>
 
-            <div class="site-actions">
-              <a class="btn btn-secondary" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">
-                Visit billnoblefineart.com
-              </a>
-            </div>
-          </div>
-        </article>
-
-        <article class="site">
-          <div class="site-top">
-            <div class="pill">Real Estate</div>
-            <div class="site-name">Missy Wagner Real Estate</div>
-            <div class="site-meta">A clear, mobile-friendly site with contact tools and listing links.</div>
-
-            <div class="site-actions">
-              <a class="btn btn-secondary" href="https://missywagnerre.com" target="_blank" rel="noreferrer">
-                Visit missywagnerre.com
-              </a>
-            </div>
-          </div>
-        </article>
+        <div class="work">
+          <div class="tag">Real Estate</div>
+          <div class="work-title">Missy Wagner Real Estate</div>
+          <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
+          <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">
+            Visit missywagnerre.com
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section alt">
+  <section id="contact">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Contact</h2>
-          <p>Tell me what you’re trying to build — I’ll respond with a simple plan and next steps.</p>
+          <p>Email me what you need — I’ll reply with a simple plan and next steps.</p>
         </div>
       </div>
 
-      <div class="contact">
-        <div class="contact-card">
+      <div class="contact-grid">
+        <div class="box">
           <h3>Get in touch</h3>
-          <div class="contact-line">
-            Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
-          </div>
-          <div class="contact-line">
-            Website: <a href="https://palmweb.net" target="_blank" rel="noreferrer">palmweb.net</a>
-          </div>
-          <div class="contact-line">
-            Availability: <span style="color:var(--text); font-weight:950;">By appointment</span>
-          </div>
-        </div>
-
-        <div class="contact-card">
-          <h3>What to include</h3>
-          <p class="muted" style="margin:0;">
-            When you email, include your business name, what you want your website to do, and any current website/domain info.
-            If you’re looking for automation, describe the task you do repeatedly and what you want to simplify.
-          </p>
-
+          <div class="line">Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a></div>
+          <div class="line">Website: <a href="https://palmweb.net" target="_blank" rel="noreferrer">palmweb.net</a></div>
           <div style="margin-top:14px;">
             <a class="btn btn-primary" href="mailto:mason@palmweb.net">Email PalmWeb</a>
           </div>
+        </div>
+
+        <div class="box">
+          <h3>What to include</h3>
+          <p style="margin:0; color:var(--muted); font-size:14px;">
+            Include your business name, what you want your website to do, and any current domain or website details.
+            If you want automation, tell me what task you repeat each week and what you'd like simplified.
+          </p>
         </div>
       </div>
     </div>
@@ -634,7 +609,7 @@
   <!-- Footer -->
   <footer>
     <div class="container footer-inner">
-      <img class="footer-logo" src="logo.png" alt="PalmWeb" />
+      <img class="footer-logo" src="assets/logo.png" alt="PalmWeb" />
       <div>© <span id="year"></span> PalmWeb. All rights reserved.</div>
     </div>
   </footer>
