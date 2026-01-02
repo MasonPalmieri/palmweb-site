@@ -127,6 +127,7 @@
       font-weight: 950;
       cursor:pointer;
       transition: transform .06s ease, box-shadow .2s ease;
+      user-select: none;
     }
     .btn:active{ transform: translateY(1px); }
 
@@ -253,7 +254,7 @@
       max-width: 64ch;
     }
 
-    /* SERVICE CARDS — matches your screenshot layout */
+    /* SERVICE CARDS */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -284,7 +285,6 @@
         radial-gradient(260px 140px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
       pointer-events:none;
     }
-
     .service > *{ position: relative; }
 
     .icon{
@@ -418,6 +418,155 @@
       opacity:.9;
     }
 
+    /* ===== Inquiry Modal (mailto only) ===== */
+    .modal{
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 9999;
+    }
+    .modal.show{ display:block; }
+
+    .modal-overlay{
+      position:absolute;
+      inset:0;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-card{
+      position: relative;
+      width: min(860px, calc(100% - 32px));
+      margin: 6vh auto;
+      background: #ffffff;
+      border-radius: 22px;
+      border: 1px solid rgba(29,121,198,0.18);
+      box-shadow: 0 30px 90px rgba(0,0,0,.22);
+      padding: 18px;
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .modal-head h2{
+      margin:0;
+      font-size: 20px;
+      letter-spacing: -0.2px;
+    }
+
+    .modal-x{
+      border: none;
+      background: rgba(15, 23, 42, 0.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+    .modal-x:hover{ background: rgba(15, 23, 42, 0.10); }
+
+    .form-grid{
+      margin-top: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .form-row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-grid label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 13px;
+      color: #0f172a;
+    }
+
+    .form-grid input,
+    .form-grid select,
+    .form-grid textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      background: #fff;
+      color: #0f172a;
+      outline:none;
+      font-weight: 650;
+    }
+
+    .form-grid input:focus,
+    .form-grid select:focus,
+    .form-grid textarea:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,0.12);
+    }
+
+    textarea{ resize: vertical; }
+
+    .field-error{
+      min-height: 14px;
+      font-size: 12px;
+      color: #b91c1c;
+      font-weight: 800;
+    }
+
+    .textarea-meta{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      align-items:center;
+      margin-top: -2px;
+    }
+
+    .char-count{
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 800;
+    }
+
+    /* honeypot */
+    #company_site{
+      position:absolute;
+      left:-10000px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+
+    .form-actions{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-secondary{
+      background: rgba(15, 23, 42, 0.06);
+      color: #0f172a;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+    }
+    .btn-secondary:hover{
+      background: rgba(15, 23, 42, 0.10);
+    }
+
+    #inqStatus{
+      margin: 0;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
     /* Responsive */
     @media (max-width: 980px){
       .hero-grid{ grid-template-columns: 1fr; }
@@ -425,6 +574,10 @@
       .portfolio{ grid-template-columns: 1fr; }
       .contact-grid{ grid-template-columns: 1fr; }
       nav{ display:none; }
+    }
+    @media (max-width: 760px){
+      .form-row{ grid-template-columns: 1fr; }
+      .modal-card{ margin: 4vh auto; }
     }
   </style>
 </head>
@@ -434,7 +587,6 @@
   <header>
     <div class="container nav">
       <a class="brand" href="#top">
-        <!-- ✅ IMPORTANT: store logo at assets/logo.png -->
         <img src="assets/logo.png" alt="PalmWeb logo" />
         <div class="brand-title">
           <strong>PalmWeb</strong>
@@ -446,7 +598,7 @@
         <a href="#services">Services</a>
         <a href="#work">Work</a>
         <a href="#contact">Contact</a>
-        <a class="btn btn-primary" href="mailto:mason@palmweb.net">Email</a>
+        <a class="btn btn-primary" href="#" id="openInquiryNav">Start Inquiry</a>
       </nav>
     </div>
   </header>
@@ -462,7 +614,7 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#contact">Get Started</a>
+          <a class="btn btn-primary" href="#" id="openInquiryHero">Start an Inquiry</a>
           <a class="btn btn-outline" href="#work">View Work</a>
         </div>
 
@@ -473,7 +625,7 @@
 
       <aside class="hero-card quick">
         <h3>Quick Contact</h3>
-        <p>Email me and I’ll respond with simple next steps.</p>
+        <p>Send an inquiry and I’ll respond with simple next steps.</p>
 
         <div class="quick-row">
           <span>Email</span>
@@ -488,6 +640,10 @@
         <div class="quick-row">
           <span>Response</span>
           <span style="font-weight:950;">Fast</span>
+        </div>
+
+        <div style="margin-top:12px;">
+          <a class="btn btn-outline" href="#" id="openInquiryCard" style="width:100%;">Start Inquiry</a>
         </div>
       </aside>
     </div>
@@ -591,7 +747,7 @@
           <div class="line">Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a></div>
           <div class="line">Website: <a href="https://palmweb.net" target="_blank" rel="noreferrer">palmweb.net</a></div>
           <div style="margin-top:14px;">
-            <a class="btn btn-primary" href="mailto:mason@palmweb.net">Email PalmWeb</a>
+            <a class="btn btn-primary" href="#" id="openInquiryContact">Start an Inquiry</a>
           </div>
         </div>
 
@@ -614,8 +770,329 @@
     </div>
   </footer>
 
+  <!-- Inquiry Modal (mailto only - no backend) -->
+  <div class="modal" id="inquiryModal" aria-hidden="true">
+    <div class="modal-overlay" id="closeInquiry"></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="PalmWeb inquiry form">
+      <div class="modal-head">
+        <div>
+          <h2>Start an Inquiry</h2>
+          <p class="muted" style="margin:4px 0 0;">Quick form — opens your email app with everything filled in.</p>
+        </div>
+        <button class="modal-x" id="closeInquiryBtn" aria-label="Close">✕</button>
+      </div>
+
+      <form id="inquiryForm" class="form-grid" novalidate>
+        <!-- Honeypot (anti-spam) -->
+        <input type="text" name="company_site" id="company_site" autocomplete="off" tabindex="-1" />
+
+        <div class="form-row">
+          <label>
+            Your Name*
+            <input type="text" name="name" id="inq_name" required placeholder="John Smith" />
+            <span class="field-error" id="err_name"></span>
+          </label>
+
+          <label>
+            Business Name
+            <input type="text" name="business" id="inq_business" placeholder="Smith Plumbing" />
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            Email*
+            <input type="email" name="email" id="inq_email" required placeholder="you@business.com" />
+            <span class="field-error" id="err_email"></span>
+          </label>
+
+          <label>
+            Phone
+            <input type="tel" name="phone" id="inq_phone" placeholder="(401) 555-1234" />
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            What do you need?*
+            <select name="service" id="inq_service" required>
+              <option value="" selected disabled>Select one</option>
+              <option>Website Build / Refresh</option>
+              <option>Domain + Website Maintenance</option>
+              <option>Automation (Scheduling, Forms, CRM, etc.)</option>
+              <option>Consulting</option>
+            </select>
+            <span class="field-error" id="err_service"></span>
+          </label>
+
+          <label>
+            Timeline
+            <select name="timeline" id="inq_timeline">
+              <option value="" selected disabled>Select one</option>
+              <option>ASAP</option>
+              <option>2–4 weeks</option>
+              <option>1–2 months</option>
+              <option>Just exploring</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            Budget Range
+            <select name="budget" id="inq_budget">
+              <option value="" selected disabled>Select one</option>
+              <option>Under $1,000</option>
+              <option>$1,000 – $3,000</option>
+              <option>$3,000 – $7,000</option>
+              <option>$7,000+</option>
+            </select>
+          </label>
+
+          <label>
+            Website (if you have one)
+            <input type="url" name="current_site" id="inq_site" placeholder="https://..." />
+          </label>
+        </div>
+
+        <label>
+          Tell me what you’re trying to accomplish*
+          <textarea name="message" id="inq_message" rows="6" required placeholder="A quick summary of your goals…"></textarea>
+          <div class="textarea-meta">
+            <span class="field-error" id="err_message"></span>
+            <span class="char-count" id="charCount">0 / 800</span>
+          </div>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Open Email Draft</button>
+          <button type="button" class="btn btn-secondary" id="copyInquiry">Copy Message</button>
+          <p class="small" id="inqStatus" role="status" aria-live="polite"></p>
+        </div>
+
+        <p style="margin:0; font-size:12px; color:#64748b; font-weight:700;">
+          Your info stays private — this form does not submit to a server.
+        </p>
+      </form>
+    </div>
+  </div>
+
   <script>
+    // footer year
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ===== Inquiry Modal (mailto-based) =====
+    (function () {
+      const modal = document.getElementById("inquiryModal");
+      const closeOverlay = document.getElementById("closeInquiry");
+      const closeBtn = document.getElementById("closeInquiryBtn");
+
+      const openButtons = [
+        "openInquiryNav",
+        "openInquiryHero",
+        "openInquiryCard",
+        "openInquiryContact"
+      ]
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+
+      const form = document.getElementById("inquiryForm");
+      const status = document.getElementById("inqStatus");
+
+      const nameEl = document.getElementById("inq_name");
+      const emailEl = document.getElementById("inq_email");
+      const serviceEl = document.getElementById("inq_service");
+      const messageEl = document.getElementById("inq_message");
+
+      const errName = document.getElementById("err_name");
+      const errEmail = document.getElementById("err_email");
+      const errService = document.getElementById("err_service");
+      const errMessage = document.getElementById("err_message");
+
+      const charCount = document.getElementById("charCount");
+      const copyBtn = document.getElementById("copyInquiry");
+
+      const toEmail = "mason@palmweb.net";
+
+      function showModal() {
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => nameEl.focus(), 120);
+      }
+
+      function hideModal() {
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        status.textContent = "";
+        clearErrors();
+      }
+
+      function clearErrors() {
+        errName.textContent = "";
+        errEmail.textContent = "";
+        errService.textContent = "";
+        errMessage.textContent = "";
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function updateCharCount() {
+        const max = 800;
+        const len = (messageEl.value || "").length;
+        charCount.textContent = `${len} / ${max}`;
+        if (len > max) {
+          errMessage.textContent = `Please keep your message under ${max} characters.`;
+        } else if (errMessage.textContent.includes("under")) {
+          errMessage.textContent = "";
+        }
+      }
+
+      function buildEmailBody(data) {
+        const lines = [
+          "PalmWeb Inquiry",
+          "-------------------------",
+          `Name: ${data.name}`,
+          `Business: ${data.business || "—"}`,
+          `Email: ${data.email}`,
+          `Phone: ${data.phone || "—"}`,
+          `Service: ${data.service}`,
+          `Timeline: ${data.timeline || "—"}`,
+          `Budget: ${data.budget || "—"}`,
+          `Website: ${data.site || "—"}`,
+          "",
+          "Message:",
+          data.message,
+          "",
+          "-------------------------",
+          "Sent from PalmWeb.net inquiry form"
+        ];
+        return lines.join("\n");
+      }
+
+      function openMailDraft(data) {
+        const subject = encodeURIComponent(`PalmWeb Inquiry — ${data.service}`);
+        const body = encodeURIComponent(buildEmailBody(data));
+        window.location.href = `mailto:${toEmail}?subject=${subject}&body=${body}`;
+      }
+
+      function collectData() {
+        return {
+          name: (document.getElementById("inq_name").value || "").trim(),
+          business: (document.getElementById("inq_business").value || "").trim(),
+          email: (document.getElementById("inq_email").value || "").trim(),
+          phone: (document.getElementById("inq_phone").value || "").trim(),
+          service: (document.getElementById("inq_service").value || "").trim(),
+          timeline: (document.getElementById("inq_timeline").value || "").trim(),
+          budget: (document.getElementById("inq_budget").value || "").trim(),
+          site: (document.getElementById("inq_site").value || "").trim(),
+          message: (document.getElementById("inq_message").value || "").trim(),
+          honeypot: (document.getElementById("company_site").value || "").trim()
+        };
+      }
+
+      function validate(data) {
+        clearErrors();
+
+        let ok = true;
+
+        if (!data.name) {
+          errName.textContent = "Please enter your name.";
+          ok = false;
+        }
+
+        if (!data.email || !isValidEmail(data.email)) {
+          errEmail.textContent = "Please enter a valid email address.";
+          ok = false;
+        }
+
+        if (!data.service) {
+          errService.textContent = "Please choose a service.";
+          ok = false;
+        }
+
+        if (!data.message) {
+          errMessage.textContent = "Please enter a brief message.";
+          ok = false;
+        }
+
+        if (data.message.length > 800) {
+          errMessage.textContent = "Please keep your message under 800 characters.";
+          ok = false;
+        }
+
+        // honeypot triggered (bots)
+        if (data.honeypot) ok = false;
+
+        return ok;
+      }
+
+      async function copyToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          status.textContent = "Copied! If your email app doesn’t open, paste this into an email to mason@palmweb.net.";
+          status.style.color = "#0f172a";
+        } catch {
+          status.textContent = "Copy failed. Please manually copy your message.";
+          status.style.color = "#b91c1c";
+        }
+      }
+
+      // open button handlers
+      openButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showModal();
+        });
+      });
+
+      // close handlers
+      closeOverlay.addEventListener("click", hideModal);
+      closeBtn.addEventListener("click", hideModal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("show")) hideModal();
+      });
+
+      // live char count
+      messageEl.addEventListener("input", updateCharCount);
+      updateCharCount();
+
+      // copy button
+      copyBtn.addEventListener("click", () => {
+        const data = collectData();
+        if (!validate(data)) {
+          status.textContent = "Please fix the highlighted fields before copying.";
+          status.style.color = "#b91c1c";
+          return;
+        }
+        copyToClipboard(buildEmailBody(data));
+      });
+
+      // submit handler
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const data = collectData();
+        if (!validate(data)) {
+          status.textContent = "Please fix the highlighted fields.";
+          status.style.color = "#b91c1c";
+          return;
+        }
+
+        status.textContent = "Opening your email draft…";
+        status.style.color = "#0f172a";
+
+        openMailDraft(data);
+
+        // close after a moment
+        setTimeout(() => hideModal(), 700);
+      });
+    })();
   </script>
 </body>
 </html>
