@@ -9,11 +9,11 @@
 
   <style>
     :root{
-      /* PalmWeb-inspired palette (light, iOS-ish) */
+      /* PalmWeb (light, iOS-ish) */
       --blue:#1d79c6;
+      --blue2:#2aa0ff;
       --green:#2cab4b;
-      --blueSoft:#eaf5ff;
-      --greenSoft:#eafaf0;
+      --green2:#44d16b;
 
       --bg:#ffffff;
       --panel:#ffffff;
@@ -25,6 +25,7 @@
 
       --shadow: 0 14px 34px rgba(15,23,42,.10);
       --radius: 18px;
+      --radius2: 22px;
       --max: 1120px;
     }
 
@@ -79,6 +80,9 @@
       object-fit: contain;
       border-radius: 12px;
       flex: 0 0 auto;
+      background: #fff;
+      border: 1px solid rgba(229,231,235,.8);
+      padding: 6px;
     }
 
     .brand-title{
@@ -117,6 +121,7 @@
     }
     nav a:hover{ color: var(--text); }
 
+    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -153,7 +158,7 @@
     .hero{
       padding: 52px 0 28px;
       background:
-        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.20), transparent 60%),
+        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.18), transparent 60%),
         radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.16), transparent 60%),
         linear-gradient(180deg, var(--panel2), #fff 60%);
       border-bottom: 1px solid var(--border);
@@ -188,13 +193,14 @@
     }
 
     .hero-card{
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.95);
       border: 1px solid rgba(229,231,235,.85);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 18px;
     }
 
+    /* Quick Contact Card */
     .quick h3{
       margin: 0 0 6px;
       font-size: 16px;
@@ -257,7 +263,7 @@
       max-width: 70ch;
     }
 
-    /* CARDS */
+    /* ======= BLUE/GREEN SERVICE CARDS (instead of purple) ======= */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -266,27 +272,31 @@
     }
 
     .card{
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius: var(--radius2);
       padding: 18px;
-      min-height: 170px;
+      min-height: 178px;
       display:flex;
       flex-direction:column;
       gap: 10px;
       position: relative;
       overflow:hidden;
+      color: #072233;
+      box-shadow: 0 16px 36px rgba(15,23,42,.10);
+      border: 1px solid rgba(255,255,255,.35);
+      background:
+        linear-gradient(135deg, rgba(29,121,198,.18), rgba(44,171,75,.18)),
+        linear-gradient(180deg, #ffffff, #ffffff);
     }
 
-    .card::before{
+    .card::after{
       content:"";
       position:absolute;
       inset:-2px;
       background:
-        radial-gradient(280px 140px at 15% 20%, rgba(29,121,198,.14), transparent 70%),
-        radial-gradient(260px 140px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
+        radial-gradient(340px 220px at 10% 10%, rgba(42,160,255,.40), transparent 60%),
+        radial-gradient(360px 240px at 85% 15%, rgba(68,209,107,.30), transparent 60%);
       pointer-events:none;
+      opacity: .65;
     }
 
     .card > *{ position: relative; }
@@ -298,20 +308,22 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      background: linear-gradient(135deg, rgba(29,121,198,.14), rgba(44,171,75,.14));
-      border: 1px solid rgba(29,121,198,.18);
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(255,255,255,.55);
       font-size: 20px;
+      box-shadow: 0 12px 24px rgba(15,23,42,.10);
     }
 
     .card h3{
       margin: 0;
       font-size: 16px;
       font-weight: 950;
+      color: #062233;
     }
 
     .card p{
       margin: 0;
-      color: var(--muted);
+      color: rgba(15,23,42,.75);
       font-size: 14px;
     }
 
@@ -429,10 +441,7 @@
       box-shadow: var(--shadow);
       padding: 14px 16px;
     }
-
-    details + details{
-      margin-top: 12px;
-    }
+    details + details{ margin-top: 12px; }
 
     summary{
       cursor:pointer;
@@ -440,7 +449,6 @@
       color: var(--text);
       list-style: none;
     }
-
     summary::-webkit-details-marker{ display:none; }
 
     summary:after{
@@ -449,7 +457,6 @@
       font-weight: 950;
       color:#64748b;
     }
-
     details[open] summary:after{ content:"–"; }
 
     details p{
@@ -527,6 +534,165 @@
       opacity:.9;
     }
 
+    /* ======= QUOTE MODAL ======= */
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.45);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 200;
+    }
+    .modal.open{ display:flex; }
+
+    .modal-card{
+      width: min(820px, 100%);
+      background:#fff;
+      border-radius: 22px;
+      border: 1px solid rgba(229,231,235,.9);
+      box-shadow: 0 24px 70px rgba(15,23,42,.28);
+      overflow:hidden;
+    }
+
+    .modal-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(700px 220px at 0% 0%, rgba(29,121,198,.16), transparent 60%),
+        radial-gradient(700px 220px at 100% 0%, rgba(44,171,75,.14), transparent 60%),
+        #fff;
+    }
+
+    .modal-title{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .modal-title img{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      object-fit: contain;
+      border: 1px solid rgba(229,231,235,.9);
+      padding: 5px;
+      background: #fff;
+    }
+
+    .modal-title h3{
+      margin:0;
+      font-weight: 950;
+      font-size: 16px;
+    }
+    .modal-title p{
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .modal-close{
+      border: 1px solid var(--border);
+      background:#fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-weight: 950;
+      color:#64748b;
+      transition: background .15s ease;
+    }
+    .modal-close:hover{ background:#f8fafc; }
+
+    .modal-body{
+      padding: 16px 18px 18px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    input, select, textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      outline:none;
+      font-size: 14px;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.12);
+    }
+
+    textarea{ resize: vertical; min-height: 112px; }
+
+    .full{ grid-column: 1 / -1; }
+
+    .checks{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .check{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      border: 1px solid rgba(29,121,198,.18);
+      background: rgba(29,121,198,.07);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 850;
+      font-size: 13px;
+      color: #0b3a5f;
+      user-select:none;
+    }
+
+    .check input{ width: 16px; height: 16px; }
+
+    .modal-actions{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .muted-note{
+      margin-top: 10px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
     /* Responsive */
     @media (max-width: 980px){
       .hero-grid{ grid-template-columns: 1fr; }
@@ -534,6 +700,7 @@
       .portfolio{ grid-template-columns: 1fr; }
       .two-col{ grid-template-columns: 1fr; }
       nav{ display:none; }
+      .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -555,7 +722,7 @@
         <a href="#work">Work</a>
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
-        <a class="btn btn-primary" href="#" id="navQuoteBtn">Request a Quote</a>
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </nav>
     </div>
   </header>
@@ -571,7 +738,7 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#" id="heroQuoteBtn">Request a Quote</a>
+          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
           <a class="btn btn-outline" href="#process">See the Process</a>
           <a class="btn btn-outline" href="#work">View Work</a>
         </div>
@@ -602,7 +769,7 @@
 
         <div class="quick-row">
           <span>Quote request</span>
-          <a href="#" id="quickQuoteBtn">Tap to pre-fill</a>
+          <a href="#" data-open-quote>Open form</a>
         </div>
       </aside>
     </div>
@@ -654,6 +821,11 @@
           <h3>Consulting</h3>
           <p>Practical guidance—what matters, what doesn’t, and the best next step for your business.</p>
         </div>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+        <a class="btn btn-outline" href="#work">See examples</a>
       </div>
     </div>
   </section>
@@ -737,7 +909,7 @@
       </div>
 
       <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="#" id="processQuoteBtn">Request a Quote</a>
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
         <a class="btn btn-outline" href="#faq">Read FAQ</a>
       </div>
     </div>
@@ -771,6 +943,10 @@
             Visit missywagnerre.com
           </a>
         </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </div>
     </div>
   </section>
@@ -830,6 +1006,10 @@
           We’ll choose what’s best for your business.
         </p>
       </details>
+
+      <div style="margin-top:18px;">
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+      </div>
     </div>
   </section>
 
@@ -852,7 +1032,7 @@
           </p>
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href="#" id="aboutQuoteBtn">Request a Quote</a>
+            <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="#process">View Process</a>
           </div>
         </div>
@@ -864,7 +1044,7 @@
           <div class="line">Location: <span style="font-weight:950; color:var(--text);">New England</span></div>
 
           <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href="#" id="contactQuoteBtn">Request a Quote</a>
+            <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
           </div>
 
@@ -884,76 +1064,221 @@
     </div>
   </footer>
 
+  <!-- ===== Quote Modal ===== -->
+  <div class="modal" id="quoteModal" aria-hidden="true" aria-label="Request a Quote">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div class="modal-title">
+          <img src="assets/logo.png" alt="PalmWeb" />
+          <div>
+            <h3>Request a Quote</h3>
+            <p>No backend needed — submits as a pre-filled email.</p>
+          </div>
+        </div>
+
+        <button class="modal-close" id="closeQuote" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="quoteForm">
+          <div class="form-grid">
+            <label>
+              Your Name*
+              <input name="name" type="text" autocomplete="name" required />
+            </label>
+
+            <label>
+              Business Name*
+              <input name="business" type="text" required />
+            </label>
+
+            <label>
+              Email*
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+
+            <label>
+              Phone (optional)
+              <input name="phone" type="tel" autocomplete="tel" />
+            </label>
+
+            <label class="full">
+              Business Location (City/State)*
+              <input name="location" type="text" placeholder="Example: Providence, RI" required />
+            </label>
+
+            <label class="full">
+              Current Website (optional)
+              <input name="currentWebsite" type="url" placeholder="https://..." />
+            </label>
+
+            <label class="full">
+              What do you need help with?*
+              <div class="checks">
+                <label class="check"><input type="checkbox" name="needs" value="New website build" /> New website build</label>
+                <label class="check"><input type="checkbox" name="needs" value="Website redesign" /> Website redesign</label>
+                <label class="check"><input type="checkbox" name="needs" value="Maintenance / updates" /> Maintenance / updates</label>
+                <label class="check"><input type="checkbox" name="needs" value="Domain / email migration" /> Domain / email migration</label>
+                <label class="check"><input type="checkbox" name="needs" value="Automation / integration" /> Automation / integration</label>
+                <label class="check"><input type="checkbox" name="needs" value="Not sure yet" /> Not sure yet</label>
+              </div>
+            </label>
+
+            <label>
+              Timeline*
+              <select name="timeline" required>
+                <option value="" selected disabled>Select...</option>
+                <option>ASAP</option>
+                <option>This month</option>
+                <option>1–3 months</option>
+                <option>Flexible</option>
+              </select>
+            </label>
+
+            <label>
+              Budget range*
+              <select name="budget" required>
+                <option value="" selected disabled>Select...</option>
+                <option>Under $1,000</option>
+                <option>$1,000 – $2,000</option>
+                <option>$2,000 – $4,000</option>
+                <option>$4,000+</option>
+                <option>Not sure yet</option>
+              </select>
+            </label>
+
+            <label class="full">
+              What’s your main goal?
+              <textarea name="goal" placeholder="More calls, more bookings, show services clearly, build trust, etc."></textarea>
+            </label>
+
+            <label class="full">
+              Any example websites you like?
+              <textarea name="examples" placeholder="Paste links here (optional)."></textarea>
+            </label>
+
+            <label class="full">
+              Anything else I should know?
+              <textarea name="notes" placeholder="Optional — special requests, pages needed, contact form, photo gallery, etc."></textarea>
+            </label>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" id="cancelQuote">Cancel</button>
+            <button type="submit" class="btn btn-primary">Send Quote Request</button>
+          </div>
+
+          <div class="muted-note">
+            This will open your default email app with a pre-filled message to <strong>mason@palmweb.net</strong>.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Year in footer
+    // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // === Request a Quote (Prefilled Email) ===
     const TO_EMAIL = "mason@palmweb.net";
 
-    // This creates a strong intake email that looks professional.
-    function buildQuoteMailto(){
+    // Modal controls
+    const modal = document.getElementById("quoteModal");
+    const openBtns = document.querySelectorAll("[data-open-quote]");
+    const closeBtn = document.getElementById("closeQuote");
+    const cancelBtn = document.getElementById("cancelQuote");
+
+    function openModal(){
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    openBtns.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+
+    // Close when clicking outside the card
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) closeModal();
+    });
+
+    // Close on ESC key
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
+
+    // Build mailto from form
+    function getCheckedValues(form, name){
+      return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`))
+        .map(x => x.value);
+    }
+
+    document.getElementById("quoteForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const form = e.target;
+
+      const name = (form.name.value || "").trim();
+      const business = (form.business.value || "").trim();
+      const email = (form.email.value || "").trim();
+      const phone = (form.phone.value || "").trim();
+      const location = (form.location.value || "").trim();
+      const currentWebsite = (form.currentWebsite.value || "").trim();
+
+      const needs = getCheckedValues(form, "needs");
+      const timeline = (form.timeline.value || "").trim();
+      const budget = (form.budget.value || "").trim();
+      const goal = (form.goal.value || "").trim();
+      const examples = (form.examples.value || "").trim();
+      const notes = (form.notes.value || "").trim();
+
       const subject = encodeURIComponent("PalmWeb Quote Request");
       const body = encodeURIComponent(
 `Hi Mason,
 
-My business name is:
-My industry is:
-My location (city/state) is:
+Here are my details:
 
-My current website (if any) is:
-My domain (if different) is:
+Name: ${name}
+Business: ${business}
+Email: ${email}
+Phone: ${phone || "N/A"}
+Location: ${location}
+
+Current website: ${currentWebsite || "N/A"}
 
 What I need help with:
-(Website build / maintenance / domain migration / automation / other)
+${needs.length ? "- " + needs.join("\n- ") : "N/A"}
 
-My main goal for the website is:
-(e.g., more calls, more bookings, show services, credibility, etc.)
+Timeline: ${timeline}
+Budget: ${budget}
 
-Pages or sections needed:
-(e.g., Home, Services, About, Gallery, Contact, FAQ)
+Main goal:
+${goal || "N/A"}
 
-Do you need a contact form?
-Yes / No
+Example websites I like:
+${examples || "N/A"}
 
-Any example websites you like:
-1)
-2)
-3)
+Additional notes:
+${notes || "N/A"}
 
-Timeline:
-(asap / this month / flexible)
-
-Budget range:
-(under $1k / $1-2k / $2-4k / not sure yet)
-
-Best way to reach me:
-(phone/email)
-
-Thank you!
+Thanks!
 `
       );
 
-      return `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
-    }
-
-    // Wire up all quote buttons
-    const quoteBtnIds = [
-      "navQuoteBtn",
-      "heroQuoteBtn",
-      "quickQuoteBtn",
-      "processQuoteBtn",
-      "aboutQuoteBtn",
-      "contactQuoteBtn"
-    ];
-
-    quoteBtnIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if(!el) return;
-      el.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.location.href = buildQuoteMailto();
-      });
+      window.location.href = `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
+      closeModal();
     });
   </script>
 </body>
