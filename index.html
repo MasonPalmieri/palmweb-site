@@ -129,6 +129,7 @@
       cursor:pointer;
       transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
       user-select:none;
+      white-space: nowrap;
     }
     .btn:active{ transform: translateY(1px); }
 
@@ -538,7 +539,6 @@
 </head>
 
 <body>
-  <!-- Header -->
   <header>
     <div class="container nav">
       <a class="brand" href="#top">
@@ -555,7 +555,7 @@
         <a href="#work">Work</a>
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
-        <a class="btn btn-primary" href="mailto:mason@palmweb.net">Email</a>
+        <a class="btn btn-primary" href="#" id="navQuoteBtn">Request a Quote</a>
       </nav>
     </div>
   </header>
@@ -571,9 +571,9 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#process">See the Process</a>
+          <a class="btn btn-primary" href="#" id="heroQuoteBtn">Request a Quote</a>
+          <a class="btn btn-outline" href="#process">See the Process</a>
           <a class="btn btn-outline" href="#work">View Work</a>
-          <a class="btn btn-outline" href="#services">Services</a>
         </div>
 
         <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
@@ -598,6 +598,11 @@
         <div class="quick-row">
           <span>Approach</span>
           <span style="font-weight:950;">Clear + practical</span>
+        </div>
+
+        <div class="quick-row">
+          <span>Quote request</span>
+          <a href="#" id="quickQuoteBtn">Tap to pre-fill</a>
         </div>
       </aside>
     </div>
@@ -671,9 +676,7 @@
           <div class="step-num">1</div>
           <div>
             <h3>Free Consultation</h3>
-            <p>
-              We start with a quick call to understand your business, your customers, and what your website needs to do.
-            </p>
+            <p>We start with a quick call to understand your business, your customers, and what your website needs to do.</p>
             <small>Goal: clarity, direction, and no pressure.</small>
           </div>
         </div>
@@ -682,6 +685,276 @@
           <div class="step-num">2</div>
           <div>
             <h3>Info Collection (Simple + Fast)</h3>
-            <p>
-              You send a few basics: services, location, contact info, and examples of websites you like.
-              I’ll also review any current website and
+            <p>You send a few basics: services, location, contact info, and examples of websites you like. I’ll review your current setup if needed.</p>
+            <small>Goal: capture requirements without overwhelming you.</small>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h3>Pre-Consultation Sample</h3>
+            <p>Before our meeting, I build a small sample layout from your info so we have something real to review together.</p>
+            <small>Goal: save time, reduce confusion, and make decisions easier.</small>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>
+            <h3>Consultation & Refinement</h3>
+            <p>We review the sample, refine the look and content, and confirm your must-haves. I’ll advise what’s worth doing now vs. later.</p>
+            <small>Goal: match expectations and prevent surprises.</small>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">5</div>
+          <div>
+            <h3>Quote & Scope</h3>
+            <p>You receive a clear quote with what’s included, timeline, and optional maintenance. Simple pricing, no hidden charges.</p>
+            <small>Goal: value at a reasonable cost while protecting quality.</small>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">6</div>
+          <div>
+            <h3>Build, Review, and Launch</h3>
+            <p>I build the site, send a review link, make final changes, then launch and confirm everything works smoothly on phone and desktop.</p>
+            <small>Goal: professional launch with clean handoff and support.</small>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">7</div>
+          <div>
+            <h3>Maintenance & Improvements</h3>
+            <p>After launch, I can handle updates and improvements so your site stays current, secure, and reliable.</p>
+            <small>Goal: long-term integrity and peace of mind.</small>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#" id="processQuoteBtn">Request a Quote</a>
+        <a class="btn btn-outline" href="#faq">Read FAQ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Recent Work</h2>
+          <p>Examples of simple, effective websites built for real local businesses.</p>
+        </div>
+      </div>
+
+      <div class="portfolio">
+        <div class="work">
+          <div class="tag">Fine Art</div>
+          <div class="work-title">Bill Noble Fine Art</div>
+          <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact info.</div>
+          <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">
+            Visit billnoblefineart.com
+          </a>
+        </div>
+
+        <div class="work">
+          <div class="tag">Real Estate</div>
+          <div class="work-title">Missy Wagner Real Estate</div>
+          <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
+          <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">
+            Visit missywagnerre.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>FAQ</h2>
+          <p>Common questions from business owners. We can customize anything based on your needs.</p>
+        </div>
+      </div>
+
+      <details>
+        <summary>How much does a website cost?</summary>
+        <p>
+          It depends on what you need (pages, features, content, forms, etc.). After a short consultation, I provide a clear quote and scope.
+          I focus on fair pricing and long-term quality.
+        </p>
+      </details>
+
+      <details>
+        <summary>How long does it take to build a website?</summary>
+        <p>
+          Most small-business sites take 1–3 weeks depending on content readiness and review rounds.
+          If you need it faster, we can prioritize essentials and expand later.
+        </p>
+      </details>
+
+      <details>
+        <summary>Do you offer monthly maintenance?</summary>
+        <p>
+          Yes. Some businesses prefer a monthly plan for updates and support. Others request changes as needed.
+          Either way, you’ll have a reliable option.
+        </p>
+      </details>
+
+      <details>
+        <summary>Can you move my domain and email?</summary>
+        <p>
+          Yes — I can migrate domains, update DNS records, connect your website properly, and configure domain-based email (including Microsoft 365 / Outlook).
+        </p>
+      </details>
+
+      <details>
+        <summary>Will my website work on phones and tablets?</summary>
+        <p>
+          Yes — everything I build is responsive and tested across common screen sizes.
+        </p>
+      </details>
+
+      <details>
+        <summary>Can you add a contact form?</summary>
+        <p>
+          Yes. There are a few options depending on your needs (simple email-based forms vs. secure form delivery).
+          We’ll choose what’s best for your business.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- About + Contact -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>About</h2>
+          <p>A quick intro — simple, professional, and local.</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="box">
+          <h3>Mason Palmieri</h3>
+          <p style="margin:0; color:var(--muted); font-size:14px;">
+            I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
+            I earned my MBA from Bryant University and played Division I baseball there for five years.
+          </p>
+
+          <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#" id="aboutQuoteBtn">Request a Quote</a>
+            <a class="btn btn-outline" href="#process">View Process</a>
+          </div>
+        </div>
+
+        <div class="box" id="contact">
+          <h3>Contact</h3>
+          <div class="line">Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a></div>
+          <div class="line">Website: <a href="https://palmweb.net" target="_blank" rel="noreferrer">palmweb.net</a></div>
+          <div class="line">Location: <span style="font-weight:950; color:var(--text);">New England</span></div>
+
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#" id="contactQuoteBtn">Request a Quote</a>
+            <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
+          </div>
+
+          <p style="margin-top:14px; color:#64748b; font-size:12px; font-weight:650;">
+            Tip: Include your website/domain (if any) and what you’d like improved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <img class="footer-logo" src="assets/logo.png" alt="PalmWeb" />
+      <div>© <span id="year"></span> PalmWeb. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // === Request a Quote (Prefilled Email) ===
+    const TO_EMAIL = "mason@palmweb.net";
+
+    // This creates a strong intake email that looks professional.
+    function buildQuoteMailto(){
+      const subject = encodeURIComponent("PalmWeb Quote Request");
+      const body = encodeURIComponent(
+`Hi Mason,
+
+My business name is:
+My industry is:
+My location (city/state) is:
+
+My current website (if any) is:
+My domain (if different) is:
+
+What I need help with:
+(Website build / maintenance / domain migration / automation / other)
+
+My main goal for the website is:
+(e.g., more calls, more bookings, show services, credibility, etc.)
+
+Pages or sections needed:
+(e.g., Home, Services, About, Gallery, Contact, FAQ)
+
+Do you need a contact form?
+Yes / No
+
+Any example websites you like:
+1)
+2)
+3)
+
+Timeline:
+(asap / this month / flexible)
+
+Budget range:
+(under $1k / $1-2k / $2-4k / not sure yet)
+
+Best way to reach me:
+(phone/email)
+
+Thank you!
+`
+      );
+
+      return `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
+    }
+
+    // Wire up all quote buttons
+    const quoteBtnIds = [
+      "navQuoteBtn",
+      "heroQuoteBtn",
+      "quickQuoteBtn",
+      "processQuoteBtn",
+      "aboutQuoteBtn",
+      "contactQuoteBtn"
+    ];
+
+    quoteBtnIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = buildQuoteMailto();
+      });
+    });
+  </script>
+</body>
+</html>
