@@ -12,8 +12,6 @@
       /* PalmWeb-inspired palette (light, iOS-ish) */
       --blue:#1d79c6;
       --green:#2cab4b;
-      --blueSoft:#eaf5ff;
-      --greenSoft:#eafaf0;
 
       --bg:#ffffff;
       --panel:#ffffff;
@@ -541,8 +539,8 @@
     .modal.show{ display:flex; }
 
     .modal-card{
-      width: min(680px, 100%);
-      max-height: 86vh;
+      width: min(640px, 100%);
+      max-height: 78vh;              /* ✅ smaller overall */
       background:#fff;
       border: 1px solid rgba(229,231,235,.95);
       border-radius: 22px;
@@ -553,7 +551,7 @@
     }
 
     .modal-head{
-      padding: 16px 16px 12px;
+      padding: 14px 16px 12px;
       border-bottom: 1px solid var(--border);
       display:flex;
       align-items:flex-start;
@@ -588,7 +586,7 @@
     .close-btn:hover{ background:#f8fafc; }
 
     .modal-body{
-      padding: 14px 16px 16px;
+      padding: 12px 16px 16px;
       overflow:auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -597,7 +595,7 @@
       display:flex;
       gap: 8px;
       align-items:center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .dot{
       width: 10px;
@@ -635,7 +633,7 @@
     }
 
     input, select, textarea{
-      padding: 12px 12px;
+      padding: 10px 12px;           /* ✅ slightly smaller fields */
       border-radius: 14px;
       border: 1px solid var(--border);
       background:#fff;
@@ -649,7 +647,7 @@
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
 
-    textarea{ resize: vertical; min-height: 110px; }
+    textarea{ resize: vertical; min-height: 100px; }
 
     .checks{
       margin-top: 10px;
@@ -677,7 +675,7 @@
     .check input{ accent-color: var(--blue); }
 
     .modal-actions{
-      margin-top: 14px;
+      margin-top: 12px;
       display:flex;
       gap: 10px;
       justify-content:space-between;
@@ -685,7 +683,7 @@
     }
 
     .hint{
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 12px;
       color:#64748b;
       font-weight: 700;
@@ -700,7 +698,7 @@
       nav{ display:none; }
     }
 
-    /* Mobile quote modal = sheet style */
+    /* Mobile quote modal = iOS sheet style */
     @media (max-width: 520px){
       .modal{
         align-items:flex-end;
@@ -708,7 +706,7 @@
       }
       .modal-card{
         width: 100%;
-        max-height: 90vh;
+        max-height: 86vh;            /* ✅ smaller mobile height */
         border-radius: 20px 20px 16px 16px;
       }
       .modal-head{
@@ -721,7 +719,7 @@
         grid-template-columns: 1fr;
       }
       input, select, textarea{
-        padding: 11px 11px;
+        padding: 10px 11px;
         border-radius: 12px;
       }
       .checks{ padding: 10px; gap: 8px; }
@@ -1086,13 +1084,13 @@
     </div>
   </footer>
 
-  <!-- ======= REQUEST A QUOTE MODAL (3-Step) ======= -->
+  <!-- ======= REQUEST A QUOTE MODAL (3-Step, FormSubmit) ======= -->
   <div class="modal" id="quoteModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
       <div class="modal-head">
         <div>
           <h3 class="modal-title" id="quoteTitle">Request a Quote</h3>
-          <p class="modal-sub">Complete the form below and I will receive an email with your response.</p>
+          <p class="modal-sub">Fill this out and it will be emailed directly to me (no email app opens).</p>
         </div>
         <button class="close-btn" id="closeModalBtn" aria-label="Close">✕</button>
       </div>
@@ -1105,136 +1103,148 @@
           <span id="stepLabel">Step 1 of 3</span>
         </div>
 
-        <!-- STEP 1 -->
-        <div id="step1">
-          <div style="font-weight:950; margin-bottom:6px;">Contact info</div>
+        <form id="quoteForm" action="https://formsubmit.co/mason@palmweb.net" method="POST">
+          <!-- FormSubmit settings -->
+          <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
+          <input type="hidden" name="_captcha" value="true" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+          <input type="text" name="_honey" style="display:none" />
 
-          <div class="form-grid">
-            <label class="full">
-              Business name*
-              <input id="bizName" type="text" placeholder="Example: Smith & Sons Plumbing" required />
-            </label>
+          <!-- Hidden field populated by JS -->
+          <input type="hidden" name="Needs" id="needsField" />
 
-            <label>
-              Your name*
-              <input id="yourName" type="text" placeholder="Your full name" required />
-            </label>
+          <!-- STEP 1 -->
+          <div id="step1">
+            <div style="font-weight:950; margin-bottom:6px;">Contact info</div>
 
-            <label>
-              Phone*
-              <input id="phone" type="tel" placeholder="(401) 555-1234" required />
-            </label>
+            <div class="form-grid">
+              <label class="full">
+                Business name*
+                <input id="bizName" name="Business Name" type="text" required />
+              </label>
 
-            <label class="full">
-              Email*
-              <input id="email" type="email" placeholder="you@yourdomain.com" required />
-            </label>
+              <label>
+                Your name*
+                <input id="yourName" name="Your Name" type="text" required />
+              </label>
 
-            <label class="full">
-              Location (city/state)
-              <input id="location" type="text" placeholder="Example: Warwick, RI" />
-            </label>
-          </div>
-        </div>
+              <label>
+                Phone*
+                <input id="phone" name="Phone" type="tel" required />
+              </label>
 
-        <!-- STEP 2 -->
-        <div id="step2" style="display:none;">
-          <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
+              <label class="full">
+                Email*
+                <input id="email" name="Email" type="email" required />
+              </label>
 
-          <div class="checks" aria-label="What do you need?">
-            <label class="check"><input type="checkbox" value="New website" class="need"> New website</label>
-            <label class="check"><input type="checkbox" value="Website redesign" class="need"> Website redesign</label>
-            <label class="check"><input type="checkbox" value="Maintenance/updates" class="need"> Maintenance/updates</label>
-            <label class="check"><input type="checkbox" value="Domain + email setup/migration" class="need"> Domain + email setup</label>
-            <label class="check"><input type="checkbox" value="Automation (Power Apps/Automate)" class="need"> Automation</label>
-            <label class="check"><input type="checkbox" value="Consulting" class="need"> Consulting</label>
+              <label class="full">
+                Location (city/state)
+                <input id="location" name="Location" type="text" />
+              </label>
+            </div>
           </div>
 
-          <div class="form-grid">
-            <label class="full">
-              Current website (if any)
-              <input id="currentSite" type="url" placeholder="https://yourwebsite.com" />
-            </label>
+          <!-- STEP 2 -->
+          <div id="step2" style="display:none;">
+            <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
 
-            <label class="full">
-              Primary goal
-              <select id="goal">
-                <option value="">Select…</option>
-                <option>More calls / leads</option>
-                <option>Bookings / appointments</option>
-                <option>Professional credibility</option>
-                <option>Show services + pricing</option>
-                <option>Sell products online</option>
-                <option>Other</option>
-              </select>
-            </label>
+            <div class="checks" aria-label="What do you need?">
+              <label class="check"><input type="checkbox" value="New website" class="need"> New website</label>
+              <label class="check"><input type="checkbox" value="Website redesign" class="need"> Website redesign</label>
+              <label class="check"><input type="checkbox" value="Maintenance/updates" class="need"> Maintenance/updates</label>
+              <label class="check"><input type="checkbox" value="Domain + email setup/migration" class="need"> Domain + email setup</label>
+              <label class="check"><input type="checkbox" value="Automation (Power Apps/Automate)" class="need"> Automation</label>
+              <label class="check"><input type="checkbox" value="Consulting" class="need"> Consulting</label>
+            </div>
 
-            <label>
-              Timeline
-              <select id="timeline">
-                <option value="">Select…</option>
-                <option>As soon as possible</option>
-                <option>This month</option>
-                <option>Next 1–2 months</option>
-                <option>Flexible</option>
-              </select>
-            </label>
+            <div class="form-grid">
+              <label class="full">
+                Current website (if any)
+                <input id="currentSite" name="Current Website" type="url" placeholder="https://yourwebsite.com" />
+              </label>
 
-            <label>
-              Budget range
-              <select id="budget">
-                <option value="">Select…</option>
-                <option>Under $1,000</option>
-                <option>$1,000 – $2,000</option>
-                <option>$2,000 – $4,000</option>
-                <option>$4,000+</option>
-                <option>Not sure yet</option>
-              </select>
-            </label>
+              <label class="full">
+                Primary goal
+                <select id="goal" name="Primary Goal">
+                  <option value="">Select…</option>
+                  <option>More calls / leads</option>
+                  <option>Bookings / appointments</option>
+                  <option>Professional credibility</option>
+                  <option>Show services + pricing</option>
+                  <option>Sell products online</option>
+                  <option>Other</option>
+                </select>
+              </label>
 
-            <label class="full">
-              Contact form needed?
-              <select id="formNeeded">
-                <option value="">Select…</option>
-                <option>Yes</option>
-                <option>No</option>
-                <option>Not sure</option>
-              </select>
-            </label>
-          </div>
-        </div>
+              <label>
+                Timeline
+                <select id="timeline" name="Timeline">
+                  <option value="">Select…</option>
+                  <option>As soon as possible</option>
+                  <option>This month</option>
+                  <option>Next 1–2 months</option>
+                  <option>Flexible</option>
+                </select>
+              </label>
 
-        <!-- STEP 3 -->
-        <div id="step3" style="display:none;">
-          <div style="font-weight:950; margin-bottom:6px;">Details</div>
+              <label>
+                Budget range
+                <select id="budget" name="Budget">
+                  <option value="">Select…</option>
+                  <option>Under $1,000</option>
+                  <option>$1,000 – $2,000</option>
+                  <option>$2,000 – $4,000</option>
+                  <option>$4,000+</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
 
-          <div class="form-grid">
-            <label class="full">
-              Details (pages needed, examples you like, notes, anything helpful)
-              <textarea id="details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like..."></textarea>
-            </label>
-
-            <label class="full">
-              Best way to reach you
-              <select id="bestReach">
-                <option value="">Select…</option>
-                <option>Email</option>
-                <option>Phone</option>
-                <option>Text</option>
-              </select>
-            </label>
+              <label class="full">
+                Contact form needed?
+                <select id="formNeeded" name="Contact Form Needed">
+                  <option value="">Select…</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Not sure</option>
+                </select>
+              </label>
+            </div>
           </div>
 
-          <p class="hint">
-            When you hit “Send Email”, your email app will open with everything filled out.
-          </p>
-        </div>
+          <!-- STEP 3 -->
+          <div id="step3" style="display:none;">
+            <div style="font-weight:950; margin-bottom:6px;">Details</div>
 
-        <div class="modal-actions">
-          <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
-          <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
-          <button class="btn btn-primary" id="sendBtn" type="button" style="display:none;">Send Email</button>
-        </div>
+            <div class="form-grid">
+              <label class="full">
+                Details (pages needed, examples you like, notes, anything helpful)
+                <textarea id="details" name="Details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like…"></textarea>
+              </label>
+
+              <label class="full">
+                Best way to reach you
+                <select id="bestReach" name="Best Contact Method">
+                  <option value="">Select…</option>
+                  <option>Email</option>
+                  <option>Phone</option>
+                  <option>Text</option>
+                </select>
+              </label>
+            </div>
+
+            <p class="hint">
+              When you hit “Send”, your request will be sent directly to me and you’ll be redirected to a Thank You page.
+            </p>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
+            <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+            <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -1262,7 +1272,6 @@
     const sendBtn = document.getElementById("sendBtn");
 
     let currentStep = 1;
-    const TO_EMAIL = "mason@palmweb.net";
 
     function openModal(){
       modal.classList.add("show");
@@ -1279,6 +1288,7 @@
 
     function resetToStep1(){
       currentStep = 1;
+
       step1.style.display = "";
       step2.style.display = "none";
       step3.style.display = "none";
@@ -1286,12 +1296,15 @@
       dot1.classList.add("active");
       dot2.classList.remove("active");
       dot3.classList.remove("active");
+
       stepLabel.textContent = "Step 1 of 3";
 
       backBtn.style.display = "none";
       nextBtn.style.display = "";
       sendBtn.style.display = "none";
-      nextBtn.textContent = "Next";
+
+      // Scroll to top
+      modal.querySelector(".modal-body").scrollTop = 0;
     }
 
     function goToStep(step){
@@ -1327,61 +1340,10 @@
       return true;
     }
 
-    function getSelectedNeeds(){
+    function populateNeedsField(){
       const needs = [];
       document.querySelectorAll(".need:checked").forEach(cb => needs.push(cb.value));
-      return needs.length ? needs.join(", ") : "Not specified";
-    }
-
-    function buildMailto(){
-      const bizName = document.getElementById("bizName").value.trim();
-      const yourName = document.getElementById("yourName").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const location = document.getElementById("location").value.trim();
-
-      const needs = getSelectedNeeds();
-      const currentSite = document.getElementById("currentSite").value.trim();
-      const goal = document.getElementById("goal").value;
-      const timeline = document.getElementById("timeline").value;
-      const budget = document.getElementById("budget").value;
-      const formNeeded = document.getElementById("formNeeded").value;
-
-      const details = document.getElementById("details").value.trim();
-      const bestReach = document.getElementById("bestReach").value;
-
-      const subject = encodeURIComponent(`PalmWeb Quote Request — ${bizName}`);
-      const body = encodeURIComponent(
-`Hi Mason,
-
-I'd like to request a quote from PalmWeb.
-
---- Contact Info ---
-Business name: ${bizName}
-Your name: ${yourName}
-Phone: ${phone}
-Email: ${email}
-Location: ${location || "N/A"}
-
---- Needs ---
-What I need help with: ${needs}
-Current website: ${currentSite || "N/A"}
-Primary goal: ${goal || "N/A"}
-Timeline: ${timeline || "N/A"}
-Budget: ${budget || "N/A"}
-Contact form needed: ${formNeeded || "N/A"}
-
---- Details ---
-${details || "N/A"}
-
-Best way to reach me: ${bestReach || "N/A"}
-
-Thank you!
-${yourName}
-`
-      );
-
-      return `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
+      document.getElementById("needsField").value = needs.length ? needs.join(", ") : "Not specified";
     }
 
     // Open modal buttons
@@ -1410,6 +1372,7 @@ ${yourName}
         return;
       }
       if(currentStep === 2){
+        populateNeedsField();
         goToStep(3);
         return;
       }
@@ -1420,12 +1383,9 @@ ${yourName}
       if(currentStep === 3) goToStep(2);
     });
 
-    sendBtn.addEventListener("click", () => {
-      if(!validateStep1()){
-        goToStep(1);
-        return;
-      }
-      window.location.href = buildMailto();
+    // On final submit: ensure Needs field is ready
+    document.getElementById("quoteForm").addEventListener("submit", () => {
+      populateNeedsField();
     });
   </script>
 </body>
