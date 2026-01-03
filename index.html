@@ -231,6 +231,27 @@
       text-underline-offset: 4px;
     }
 
+    /* NEW: Quick Contact + Big Logo layout */
+    .quick-wrap{
+      display:flex;
+      align-items:flex-start;
+      justify-content:flex-end;
+      gap: 18px;
+    }
+
+    .hero-logo{
+      width: 170px;
+      height: 170px;
+      object-fit: contain;
+      border-radius: 28px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(229,231,235,.9);
+      box-shadow: 0 18px 50px rgba(15,23,42,.10);
+      padding: 14px;
+      margin-top: 6px;
+      flex: 0 0 auto;
+    }
+
     /* SECTION */
     section{
       padding: 44px 0;
@@ -632,9 +653,24 @@
       .portfolio{ grid-template-columns: 1fr; }
       .two-col{ grid-template-columns: 1fr; }
       nav{ display:none; }
+
+      .quick-wrap{
+        justify-content:flex-start;
+      }
     }
 
+    /* On mobile, show logo above card and centered */
     @media (max-width: 520px){
+      .quick-wrap{
+        flex-direction:column;
+        align-items:center;
+      }
+      .hero-logo{
+        width: 140px;
+        height: 140px;
+        margin-top: 0;
+      }
+
       .modal{
         align-items:flex-end;
         padding: 10px;
@@ -715,39 +751,32 @@
         </p>
       </section>
 
-      <aside class="hero-card quick">
-        <img src="assets/logo.png" alt="PalmWeb logo" style="width:80px; height:80px; object-fit:contain; border-radius:18px; margin-bottom:10px;" />
-  <h3>Quick Contact</h3>
-  <p>Send a quick email and I’ll reply with simple next steps.</p>
+      <!-- RIGHT SIDE: Quick Contact + Big Logo -->
+      <div class="quick-wrap">
+        <aside class="hero-card quick">
+          <h3>Quick Contact</h3>
+          <p>Send a quick email and I’ll reply with simple next steps.</p>
 
-  <div class="quick-row">
-    <span>Email</span>
-    <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
-  </div>
+          <div class="quick-row">
+            <span>Email</span>
+            <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
+          </div>
 
-  <div class="quick-row">
-    <span>Approach</span>
-    <span style="font-weight:950;">Clear + practical</span>
-  </div>
+          <div class="quick-row">
+            <span>Approach</span>
+            <span style="font-weight:950;">Clear + practical</span>
+          </div>
 
-  <div class="quick-row">
-    <span>Quote request</span>
-    <a href="#" data-open-quote>Open form</a>
-  </div>
-</aside>
+          <div class="quick-row">
+            <span>Quote request</span>
+            <a href="#" data-open-quote>Open form</a>
+          </div>
+        </aside>
 
+        <img class="hero-logo" src="assets/logo.png" alt="PalmWeb logo" />
+      </div>
     </div>
   </main>
-  
-<section style="padding: 26px 0;">
-  <div class="container" style="display:flex; align-items:center; gap:14px; justify-content:center; flex-wrap:wrap;">
-    <img src="assets/logo.png" alt="PalmWeb logo" style="width:72px; height:72px; object-fit:contain; border-radius:18px;" />
-    <div style="text-align:left;">
-      <div style="font-weight:950; font-size:18px;">PalmWeb</div>
-      <div style="color:var(--muted); font-weight:750; font-size:14px;">Websites • Automation • Consulting</div>
-    </div>
-  </div>
-</section>
 
   <!-- Services -->
   <section id="services">
@@ -924,17 +953,14 @@
           <span id="stepLabel">Step 1 of 3</span>
         </div>
 
-        <!-- ✅ FORMSTART -->
         <form
           id="quoteForm"
           action="https://formsubmit.co/mason@palmweb.net"
           method="POST"
           novalidate
         >
-          <!-- FormSubmit options -->
           <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
           <input type="hidden" name="_captcha" value="false" />
-          <!-- ✅ Change this to your thank-you page if you create one -->
           <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
 
           <!-- STEP 1 -->
@@ -1023,7 +1049,6 @@
                   <option>Not sure yet</option>
                 </select>
               </label>
-
             </div>
           </div>
 
@@ -1056,12 +1081,9 @@
           <div class="modal-actions">
             <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
             <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
-
-            <!-- ✅ FIXED: now submits the form -->
             <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
           </div>
         </form>
-        <!-- ✅ FORMEND -->
       </div>
     </div>
   </div>
@@ -1069,7 +1091,6 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ======= Modal logic =======
     const modal = document.getElementById("quoteModal");
     const closeBtn = document.getElementById("closeModalBtn");
     const openBtns = document.querySelectorAll("[data-open-quote]");
@@ -1183,7 +1204,6 @@
       if(currentStep === 3) goToStep(2);
     });
 
-    // ✅ Optional console confirm submit works
     document.getElementById("quoteForm").addEventListener("submit", () => {
       console.log("Submitting form to FormSubmit...");
     });
