@@ -9,9 +9,10 @@
 
   <style>
     :root{
-      /* PalmWeb-inspired palette (light, iOS-ish) */
       --blue:#1d79c6;
       --green:#2cab4b;
+      --blueSoft:#eaf5ff;
+      --greenSoft:#eafaf0;
 
       --bg:#ffffff;
       --panel:#ffffff;
@@ -313,71 +314,6 @@
       font-size: 14px;
     }
 
-    /* PROCESS FLOW */
-    .process-wrap{
-      margin-top: 18px;
-      display:grid;
-      gap: 12px;
-    }
-
-    .step{
-      background:#fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      display:flex;
-      align-items:flex-start;
-      gap: 14px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .step::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:0;
-      width: 6px;
-      height: 100%;
-      background: linear-gradient(180deg, var(--blue), var(--green));
-      opacity: .95;
-    }
-
-    .step-num{
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(29,121,198,.14), rgba(44,171,75,.14));
-      border: 1px solid rgba(29,121,198,.18);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 950;
-      color: #0b3a5f;
-      flex: 0 0 auto;
-    }
-
-    .step h3{
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 950;
-    }
-
-    .step p{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .step small{
-      display:block;
-      margin-top: 10px;
-      color:#64748b;
-      font-weight: 750;
-      font-size: 12px;
-    }
-
     /* PORTFOLIO */
     .portfolio{
       display:grid;
@@ -539,8 +475,8 @@
     .modal.show{ display:flex; }
 
     .modal-card{
-      width: min(640px, 100%);
-      max-height: 78vh;              /* ✅ smaller overall */
+      width: min(680px, 100%);
+      max-height: 86vh;
       background:#fff;
       border: 1px solid rgba(229,231,235,.95);
       border-radius: 22px;
@@ -551,7 +487,7 @@
     }
 
     .modal-head{
-      padding: 14px 16px 12px;
+      padding: 16px 16px 12px;
       border-bottom: 1px solid var(--border);
       display:flex;
       align-items:flex-start;
@@ -586,7 +522,7 @@
     .close-btn:hover{ background:#f8fafc; }
 
     .modal-body{
-      padding: 12px 16px 16px;
+      padding: 14px 16px 16px;
       overflow:auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -595,7 +531,7 @@
       display:flex;
       gap: 8px;
       align-items:center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .dot{
       width: 10px;
@@ -633,7 +569,7 @@
     }
 
     input, select, textarea{
-      padding: 10px 12px;           /* ✅ slightly smaller fields */
+      padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid var(--border);
       background:#fff;
@@ -647,7 +583,7 @@
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
 
-    textarea{ resize: vertical; min-height: 100px; }
+    textarea{ resize: vertical; min-height: 110px; }
 
     .checks{
       margin-top: 10px;
@@ -675,7 +611,7 @@
     .check input{ accent-color: var(--blue); }
 
     .modal-actions{
-      margin-top: 12px;
+      margin-top: 14px;
       display:flex;
       gap: 10px;
       justify-content:space-between;
@@ -683,7 +619,7 @@
     }
 
     .hint{
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 12px;
       color:#64748b;
       font-weight: 700;
@@ -698,7 +634,6 @@
       nav{ display:none; }
     }
 
-    /* Mobile quote modal = iOS sheet style */
     @media (max-width: 520px){
       .modal{
         align-items:flex-end;
@@ -706,7 +641,7 @@
       }
       .modal-card{
         width: 100%;
-        max-height: 86vh;            /* ✅ smaller mobile height */
+        max-height: 90vh;
         border-radius: 20px 20px 16px 16px;
       }
       .modal-head{
@@ -719,7 +654,7 @@
         grid-template-columns: 1fr;
       }
       input, select, textarea{
-        padding: 10px 11px;
+        padding: 11px 11px;
         border-radius: 12px;
       }
       .checks{ padding: 10px; gap: 8px; }
@@ -751,7 +686,6 @@
 
       <nav aria-label="Main">
         <a href="#services">Services</a>
-        <a href="#process">Process</a>
         <a href="#work">Work</a>
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
@@ -772,7 +706,7 @@
 
         <div class="hero-actions">
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-          <a class="btn btn-outline" href="#process">See the Process</a>
+          <a class="btn btn-outline" href="#services">See Services</a>
           <a class="btn btn-outline" href="#work">View Work</a>
         </div>
 
@@ -858,93 +792,8 @@
     </div>
   </section>
 
-  <!-- Process -->
-  <section id="process" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Process</h2>
-          <p>
-            Clear steps, realistic timelines, and a website that matches your expectations.
-            You’ll always know what’s happening and what comes next.
-          </p>
-        </div>
-      </div>
-
-      <div class="process-wrap">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div>
-            <h3>Free Consultation</h3>
-            <p>We start with a quick call to understand your business, your customers, and what your website needs to do.</p>
-            <small>Goal: clarity, direction, and no pressure.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">2</div>
-          <div>
-            <h3>Info Collection (Simple + Fast)</h3>
-            <p>You send a few basics: services, location, contact info, and examples of websites you like. I’ll review your current setup if needed.</p>
-            <small>Goal: capture requirements without overwhelming you.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">3</div>
-          <div>
-            <h3>Pre-Consultation Sample</h3>
-            <p>Before our meeting, I build a small sample layout from your info so we have something real to review together.</p>
-            <small>Goal: save time, reduce confusion, and make decisions easier.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">4</div>
-          <div>
-            <h3>Consultation & Refinement</h3>
-            <p>We review the sample, refine the look and content, and confirm your must-haves. I’ll advise what’s worth doing now vs. later.</p>
-            <small>Goal: match expectations and prevent surprises.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">5</div>
-          <div>
-            <h3>Quote & Scope</h3>
-            <p>You receive a clear quote with what’s included, timeline, and optional maintenance. Simple pricing, no hidden charges.</p>
-            <small>Goal: value at a reasonable cost while protecting quality.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">6</div>
-          <div>
-            <h3>Build, Review, and Launch</h3>
-            <p>I build the site, send a review link, make final changes, then launch and confirm everything works smoothly on phone and desktop.</p>
-            <small>Goal: professional launch with clean handoff and support.</small>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-num">7</div>
-          <div>
-            <h3>Maintenance & Improvements</h3>
-            <p>After launch, I can handle updates and improvements so your site stays current, secure, and reliable.</p>
-            <small>Goal: long-term integrity and peace of mind.</small>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-        <a class="btn btn-outline" href="#faq">Read FAQ</a>
-      </div>
-    </div>
-  </section>
-
   <!-- Work -->
-  <section id="work">
+  <section id="work" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
     <div class="container">
       <div class="section-head">
         <div>
@@ -976,7 +825,7 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <section id="faq">
     <div class="container">
       <div class="section-head">
         <div>
@@ -987,54 +836,23 @@
 
       <details>
         <summary>How much does a website cost?</summary>
-        <p>
-          It depends on what you need (pages, features, content, forms, etc.). After a short consultation, I provide a clear quote and scope.
-          I focus on fair pricing and long-term quality.
-        </p>
+        <p>After a short consultation, I provide a clear quote and scope based on your needs.</p>
       </details>
 
       <details>
-        <summary>How long does it take to build a website?</summary>
-        <p>
-          Most small-business sites take 1–3 weeks depending on content readiness and review rounds.
-          If you need it faster, we can prioritize essentials and expand later.
-        </p>
+        <summary>How long does it take?</summary>
+        <p>Most small-business sites take 1–3 weeks depending on content readiness and review rounds.</p>
       </details>
 
       <details>
-        <summary>Do you offer monthly maintenance?</summary>
-        <p>
-          Yes. Some businesses prefer a monthly plan for updates and support. Others request changes as needed.
-          Either way, you’ll have a reliable option.
-        </p>
-      </details>
-
-      <details>
-        <summary>Can you move my domain and email?</summary>
-        <p>
-          Yes — I can migrate domains, update DNS records, connect your website properly, and configure domain-based email (including Microsoft 365 / Outlook).
-        </p>
-      </details>
-
-      <details>
-        <summary>Will my website work on phones and tablets?</summary>
-        <p>
-          Yes — everything I build is responsive and tested across common screen sizes.
-        </p>
-      </details>
-
-      <details>
-        <summary>Can you add a contact form?</summary>
-        <p>
-          Yes. There are a few options depending on your needs (simple email-based forms vs. secure form delivery).
-          We’ll choose what’s best for your business.
-        </p>
+        <summary>Do you offer maintenance?</summary>
+        <p>Yes — monthly plans or as-needed changes depending on what you prefer.</p>
       </details>
     </div>
   </section>
 
   <!-- About + Contact -->
-  <section id="about">
+  <section id="about" style="background: var(--panel2); border-top:1px solid var(--border);">
     <div class="container">
       <div class="section-head">
         <div>
@@ -1053,7 +871,7 @@
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="#process">View Process</a>
+            <a class="btn btn-outline" href="#work">View Work</a>
           </div>
         </div>
 
@@ -1067,10 +885,6 @@
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
           </div>
-
-          <p style="margin-top:14px; color:#64748b; font-size:12px; font-weight:650;">
-            Tip: Include your website/domain (if any) and what you’d like improved.
-          </p>
         </div>
       </div>
     </div>
@@ -1084,13 +898,13 @@
     </div>
   </footer>
 
-  <!-- ======= REQUEST A QUOTE MODAL (3-Step, FormSubmit) ======= -->
+  <!-- ======= REQUEST A QUOTE MODAL (3-Step + FormSubmit) ======= -->
   <div class="modal" id="quoteModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
       <div class="modal-head">
         <div>
           <h3 class="modal-title" id="quoteTitle">Request a Quote</h3>
-          <p class="modal-sub">Fill this out and it will be emailed directly to me (no email app opens).</p>
+          <p class="modal-sub">Submit this form and I’ll receive the info instantly by email.</p>
         </div>
         <button class="close-btn" id="closeModalBtn" aria-label="Close">✕</button>
       </div>
@@ -1103,16 +917,18 @@
           <span id="stepLabel">Step 1 of 3</span>
         </div>
 
-        <form id="quoteForm" action="https://formsubmit.co/mason@palmweb.net" method="POST">
-          <!-- FormSubmit settings -->
+        <!-- ✅ FORMSTART -->
+        <form
+          id="quoteForm"
+          action="https://formsubmit.co/mason@palmweb.net"
+          method="POST"
+          novalidate
+        >
+          <!-- FormSubmit options -->
           <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
-          <input type="hidden" name="_captcha" value="true" />
-          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
+          <!-- ✅ Change this to your thank-you page if you create one -->
           <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-          <input type="text" name="_honey" style="display:none" />
-
-          <!-- Hidden field populated by JS -->
-          <input type="hidden" name="Needs" id="needsField" />
 
           <!-- STEP 1 -->
           <div id="step1">
@@ -1121,27 +937,27 @@
             <div class="form-grid">
               <label class="full">
                 Business name*
-                <input id="bizName" name="Business Name" type="text" required />
+                <input name="Business Name" id="bizName" type="text" placeholder="Example: Smith & Sons Plumbing" required />
               </label>
 
               <label>
                 Your name*
-                <input id="yourName" name="Your Name" type="text" required />
+                <input name="Your Name" id="yourName" type="text" placeholder="Your full name" required />
               </label>
 
               <label>
                 Phone*
-                <input id="phone" name="Phone" type="tel" required />
+                <input name="Phone" id="phone" type="tel" placeholder="(401) 555-1234" required />
               </label>
 
               <label class="full">
                 Email*
-                <input id="email" name="Email" type="email" required />
+                <input name="Email" id="email" type="email" placeholder="you@yourdomain.com" required />
               </label>
 
               <label class="full">
                 Location (city/state)
-                <input id="location" name="Location" type="text" />
+                <input name="Location" id="location" type="text" placeholder="Example: Warwick, RI" />
               </label>
             </div>
           </div>
@@ -1150,24 +966,24 @@
           <div id="step2" style="display:none;">
             <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
 
-            <div class="checks" aria-label="What do you need?">
-              <label class="check"><input type="checkbox" value="New website" class="need"> New website</label>
-              <label class="check"><input type="checkbox" value="Website redesign" class="need"> Website redesign</label>
-              <label class="check"><input type="checkbox" value="Maintenance/updates" class="need"> Maintenance/updates</label>
-              <label class="check"><input type="checkbox" value="Domain + email setup/migration" class="need"> Domain + email setup</label>
-              <label class="check"><input type="checkbox" value="Automation (Power Apps/Automate)" class="need"> Automation</label>
-              <label class="check"><input type="checkbox" value="Consulting" class="need"> Consulting</label>
+            <div class="checks">
+              <label class="check"><input type="checkbox" name="Needs" value="New website"> New website</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Website redesign"> Website redesign</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Maintenance/updates"> Maintenance/updates</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Domain + email setup/migration"> Domain + email setup</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Automation (Power Apps/Automate)"> Automation</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Consulting"> Consulting</label>
             </div>
 
             <div class="form-grid">
               <label class="full">
                 Current website (if any)
-                <input id="currentSite" name="Current Website" type="url" placeholder="https://yourwebsite.com" />
+                <input name="Current Website" id="currentSite" type="url" placeholder="https://yourwebsite.com" />
               </label>
 
               <label class="full">
                 Primary goal
-                <select id="goal" name="Primary Goal">
+                <select name="Primary Goal" id="goal">
                   <option value="">Select…</option>
                   <option>More calls / leads</option>
                   <option>Bookings / appointments</option>
@@ -1180,7 +996,7 @@
 
               <label>
                 Timeline
-                <select id="timeline" name="Timeline">
+                <select name="Timeline" id="timeline">
                   <option value="">Select…</option>
                   <option>As soon as possible</option>
                   <option>This month</option>
@@ -1191,7 +1007,7 @@
 
               <label>
                 Budget range
-                <select id="budget" name="Budget">
+                <select name="Budget Range" id="budget">
                   <option value="">Select…</option>
                   <option>Under $1,000</option>
                   <option>$1,000 – $2,000</option>
@@ -1203,7 +1019,7 @@
 
               <label class="full">
                 Contact form needed?
-                <select id="formNeeded" name="Contact Form Needed">
+                <select name="Contact Form Needed" id="formNeeded">
                   <option value="">Select…</option>
                   <option>Yes</option>
                   <option>No</option>
@@ -1220,12 +1036,12 @@
             <div class="form-grid">
               <label class="full">
                 Details (pages needed, examples you like, notes, anything helpful)
-                <textarea id="details" name="Details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like…"></textarea>
+                <textarea name="Details" id="details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like..."></textarea>
               </label>
 
               <label class="full">
                 Best way to reach you
-                <select id="bestReach" name="Best Contact Method">
+                <select name="Best Contact Method" id="bestReach">
                   <option value="">Select…</option>
                   <option>Email</option>
                   <option>Phone</option>
@@ -1235,22 +1051,24 @@
             </div>
 
             <p class="hint">
-              When you hit “Send”, your request will be sent directly to me and you’ll be redirected to a Thank You page.
+              When you hit “Send”, the form submits directly to PalmWeb (no email app needed).
             </p>
           </div>
 
           <div class="modal-actions">
             <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
             <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+
+            <!-- ✅ FIXED: now submits the form -->
             <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
           </div>
         </form>
+        <!-- ✅ FORMEND -->
       </div>
     </div>
   </div>
 
   <script>
-    // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // ======= Modal logic =======
@@ -1288,7 +1106,6 @@
 
     function resetToStep1(){
       currentStep = 1;
-
       step1.style.display = "";
       step2.style.display = "none";
       step3.style.display = "none";
@@ -1296,15 +1113,11 @@
       dot1.classList.add("active");
       dot2.classList.remove("active");
       dot3.classList.remove("active");
-
       stepLabel.textContent = "Step 1 of 3";
 
       backBtn.style.display = "none";
       nextBtn.style.display = "";
       sendBtn.style.display = "none";
-
-      // Scroll to top
-      modal.querySelector(".modal-body").scrollTop = 0;
     }
 
     function goToStep(step){
@@ -1324,7 +1137,6 @@
       nextBtn.style.display = step === 3 ? "none" : "";
       sendBtn.style.display = step === 3 ? "" : "none";
 
-      // Always scroll modal to top when changing steps
       modal.querySelector(".modal-body").scrollTop = 0;
     }
 
@@ -1340,13 +1152,6 @@
       return true;
     }
 
-    function populateNeedsField(){
-      const needs = [];
-      document.querySelectorAll(".need:checked").forEach(cb => needs.push(cb.value));
-      document.getElementById("needsField").value = needs.length ? needs.join(", ") : "Not specified";
-    }
-
-    // Open modal buttons
     openBtns.forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -1354,7 +1159,6 @@
       });
     });
 
-    // Close actions
     closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => {
       if(e.target === modal) closeModal();
@@ -1364,7 +1168,6 @@
       if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
     });
 
-    // Navigation buttons
     nextBtn.addEventListener("click", () => {
       if(currentStep === 1){
         if(!validateStep1()) return;
@@ -1372,7 +1175,6 @@
         return;
       }
       if(currentStep === 2){
-        populateNeedsField();
         goToStep(3);
         return;
       }
@@ -1383,9 +1185,9 @@
       if(currentStep === 3) goToStep(2);
     });
 
-    // On final submit: ensure Needs field is ready
+    // ✅ Optional console confirm submit works
     document.getElementById("quoteForm").addEventListener("submit", () => {
-      populateNeedsField();
+      console.log("Submitting form to FormSubmit...");
     });
   </script>
 </body>
