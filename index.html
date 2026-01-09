@@ -231,7 +231,7 @@
       text-underline-offset: 4px;
     }
 
-    /* NEW: Quick Contact + Big Logo layout */
+    /* Quick Contact + Big Logo layout */
     .quick-wrap{
       display:flex;
       align-items:flex-start;
@@ -374,6 +374,53 @@
       margin: 0 0 14px;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    /* DEMOS SECTION */
+    .demo-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      margin-top: 14px;
+      align-items: stretch;
+    }
+
+    .demo-box{
+      background:#fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 12px;
+      position: relative;
+      overflow:hidden;
+    }
+
+    .demo-box::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(340px 160px at 15% 20%, rgba(29,121,198,.14), transparent 70%),
+        radial-gradient(320px 160px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
+      pointer-events:none;
+    }
+    .demo-box > *{ position: relative; }
+
+    .demo-badge{
+      display:inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      border: 1px solid rgba(44,171,75,.25);
+      background: rgba(44,171,75,.10);
+      width: fit-content;
+      color:#0f3c22;
+      margin-bottom: 10px;
     }
 
     /* FAQ */
@@ -652,6 +699,7 @@
       .grid{ grid-template-columns: 1fr; }
       .portfolio{ grid-template-columns: 1fr; }
       .two-col{ grid-template-columns: 1fr; }
+      .demo-grid{ grid-template-columns: 1fr; }
       nav{ display:none; }
 
       .quick-wrap{
@@ -723,8 +771,10 @@
       <nav aria-label="Main">
         <a href="#services">Services</a>
         <a href="#work">Work</a>
+        <a href="demos.html">Demos</a>
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
+        <a class="btn btn-outline" href="demos.html">View Demos</a>
         <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </nav>
     </div>
@@ -742,6 +792,7 @@
 
         <div class="hero-actions">
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+          <a class="btn btn-outline" href="demos.html">View Demos</a>
           <a class="btn btn-outline" href="#services">See Services</a>
           <a class="btn btn-outline" href="#work">View Work</a>
         </div>
@@ -770,8 +821,8 @@
           </div>
 
           <div class="quick-row">
-            <span>Approach</span>
-            <span style="font-weight:950;">Clear + practical</span>
+            <span>Demo gallery</span>
+            <a href="demos.html">Open demos</a>
           </div>
 
           <div class="quick-row">
@@ -835,8 +886,67 @@
     </div>
   </section>
 
+  <!-- DEMOS -->
+  <section id="demos" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Interactive Product Demos</h2>
+          <p>
+            Want to show prospects a working concept before building the full product?
+            These demos are lightweight, password-protected, and designed to look like the real app.
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-box">
+          <div>
+            <div class="demo-badge">Demo Build</div>
+            <div style="font-weight:950; font-size:18px;">FSS — Fill • Sign • Send</div>
+            <p style="margin:10px 0 0; color:var(--muted); max-width:70ch;">
+              DocuSign-style workflow demo: create NDAs & agreements, send to clients, and complete signatures with an audit-style flow.
+            </p>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+            <a class="btn btn-primary" href="demos.html">Open Demo Gallery</a>
+            <a class="btn btn-outline" href="#" data-open-quote>Request a demo for your business</a>
+          </div>
+
+          <p style="margin:14px 0 0; font-size:13px; color:#64748b; font-weight:650;">
+            Ideal for SaaS ideas, internal tools, and proof-of-concept client walkthroughs.
+          </p>
+        </div>
+
+        <div class="demo-box">
+          <div>
+            <div class="demo-badge" style="border-color: rgba(29,121,198,.25); background: rgba(29,121,198,.10); color:#0b3a5f;">
+              How it works
+            </div>
+            <ol style="margin:10px 0 0; padding-left:18px; color:var(--muted); font-weight:650;">
+              <li>Create a realistic UI that matches the concept</li>
+              <li>Simulate flows: login, dashboard, forms, eSignature</li>
+              <li>Host on GitHub Pages and share a protected link</li>
+              <li>Use it in sales calls before writing full backend code</li>
+            </ol>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+            <a class="btn btn-outline" href="demos.html">View demos</a>
+            <a class="btn btn-outline" href="#about">Talk to me</a>
+          </div>
+
+          <p style="margin:14px 0 0; font-size:13px; color:#64748b; font-weight:650;">
+            Clients understand value faster when they can click through a working flow.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Work -->
-  <section id="work" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <section id="work">
     <div class="container">
       <div class="section-head">
         <div>
@@ -914,7 +1024,7 @@
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="#work">View Work</a>
+            <a class="btn btn-outline" href="demos.html">View Demos</a>
           </div>
         </div>
 
@@ -932,6 +1042,7 @@
 
           <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+            <a class="btn btn-outline" href="demos.html">View demos</a>
             <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
           </div>
         </div>
