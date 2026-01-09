@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS Demo — Completed</title>
+  <title>Client Portal — Completed</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body class="app dark">
@@ -13,58 +13,98 @@
       <div class="logo">FSS</div>
       <div>
         <div class="title">Completed</div>
-        <div class="sub">Your signed document is ready.</div>
+        <div class="sub">Signed document ready.</div>
       </div>
     </div>
 
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
       <a href="create.html">Create</a>
+      <a href="audit.html">Audit</a>
       <a href="../../demos.html" id="logoutBtn">Logout</a>
     </nav>
   </header>
 
   <main class="page">
     <div class="shell" style="max-width:980px;">
-      <section class="panel" style="text-align:center; padding:28px;">
-        <div style="display:flex; justify-content:center; margin-bottom:16px;">
-          <div style="
-            width:160px; height:160px;
-            border-radius: 24px;
-            background: rgba(34,197,94,.16);
-            border: 1px solid rgba(34,197,94,.35);
-            display:flex; align-items:center; justify-content:center;
-            box-shadow: var(--shadow);
-          ">
-            <div style="font-size:64px;">✅</div>
+      <section class="panel" style="padding:24px;">
+        <div class="successGrid">
+          <div>
+            <div class="successBadge">✅</div>
+            <h2 style="margin:14px 0 6px;">Document completed</h2>
+            <p class="muted">
+              The signed PDF has been generated locally in your browser.
+              Original templates were not modified.
+            </p>
+
+            <div class="divider"></div>
+
+            <div class="actions">
+              <button class="btn primary" id="downloadBtn" type="button">Download Signed PDF</button>
+              <button class="btn secondary" id="viewBtn" type="button">View</button>
+              <a class="btn outline" href="audit.html">View Audit Trail</a>
+            </div>
+
+            <p class="tiny muted" id="metaLine" style="margin-top:12px;"></p>
+
+            <div class="divider"></div>
+
+            <p class="tiny muted">
+              Upgrade path: true DocuSign features require a backend (envelope storage, email sending, identity, tamper proof audit logs).
+              PalmWeb can implement this with Supabase/Firebase + email sending + file storage.
+            </p>
+          </div>
+
+          <div class="panel mini" style="margin:0; box-shadow:none; background: rgba(0,0,0,.18);">
+            <b>Signed PDF Preview</b>
+            <p class="muted tiny" style="margin-top:6px;">Preview appears after clicking “View”.</p>
+
+            <div class="divider"></div>
+
+            <div id="previewBox" class="previewBox" style="height:420px;">
+              <div class="muted tiny">No preview loaded.</div>
+            </div>
           </div>
         </div>
-
-        <h2 style="font-size:28px;">Parties have been notified and the agreement is completed.</h2>
-        <p class="muted" style="max-width:70ch; margin: 10px auto 0;">
-          Your signed PDF was generated and downloaded locally in the browser.
-          This demo does not alter your original templates.
-        </p>
-
-        <div class="divider"></div>
-
-        <div class="actions" style="justify-content:center;">
-          <a class="btn primary" href="dashboard.html">Back to Dashboard</a>
-          <a class="btn secondary" href="create.html">Create Another</a>
-        </div>
-
-        <p class="tiny muted" style="margin-top:14px;">
-          If you want real sending + storage + audit logs, we can add a backend and email delivery.
-        </p>
       </section>
     </div>
   </main>
 
+  <script src="assets/app.js"></script>
   <script>
+    FSS.guard();
+
+    const downloadBtn = document.getElementById("downloadBtn");
+    const viewBtn = document.getElementById("viewBtn");
+    const previewBox = document.getElementById("previewBox");
+    const metaLine = document.getElementById("metaLine");
+
+    const signed = FSS.getSignedBlob();
+    const state = FSS.loadDocState();
+
+    if(!signed){
+      metaLine.textContent = "No signed document found yet. Complete a signing flow first.";
+      metaLine.style.color = "#fda4af";
+      downloadBtn.disabled = true;
+      viewBtn.disabled = true;
+    } else {
+      metaLine.textContent = `Ready • Template: ${state?.template || "PDF"} • Generated: ${new Date(signed.generatedAt).toLocaleString()}`;
+      metaLine.style.color = "#86efac";
+    }
+
+    downloadBtn.addEventListener("click", () => {
+      if(!signed) return;
+      FSS.downloadSigned();
+    });
+
+    viewBtn.addEventListener("click", () => {
+      if(!signed) return;
+      const url = FSS.getSignedObjectUrl();
+      previewBox.innerHTML = `<iframe class="previewFrame" src="${url}" title="Signed PDF"></iframe>`;
+    });
+
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("fss_auth");
-      localStorage.removeItem("fss_doc");
-      localStorage.removeItem("fss_parties");
+      FSS.logout();
     });
   </script>
 </body>
