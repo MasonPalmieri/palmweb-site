@@ -6,14 +6,14 @@
   <title>Client Portal — Sign</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
-<body class="app dark">
+<body class="app light">
 
   <header class="topbar">
     <div class="brand">
       <div class="logo">FSS</div>
       <div>
-        <div class="title">Signing Room</div>
-        <div class="sub" id="subLine">Place fields, then complete.</div>
+        <div class="title" id="roomTitle">Signing Room</div>
+        <div class="sub" id="roomSub">Loading…</div>
       </div>
     </div>
 
@@ -29,66 +29,68 @@
     <div class="shell">
 
       <section class="panel">
-        <div class="signTop">
+        <div class="panelHead">
           <div>
-            <h2 style="margin:0 0 6px;">Sign Document</h2>
-            <p class="muted" id="docLine">Loading document...</p>
+            <h2 style="margin:0;" id="docTitle">Sign Document</h2>
+            <p class="muted" style="margin:6px 0 0;" id="docLine">Loading…</p>
           </div>
 
-          <div class="signActions">
-            <button class="btn secondary" id="prevPageBtn" type="button">◀ Prev</button>
+          <div class="topActions">
+            <button class="btn secondary" id="prevPageBtn" type="button">◀</button>
             <div class="pill" id="pagePill">Page 1 / 1</div>
-            <button class="btn secondary" id="nextPageBtn" type="button">Next ▶</button>
+            <button class="btn secondary" id="nextPageBtn" type="button">▶</button>
 
-            <button class="btn outline" id="nextFieldBtn" type="button">Next Field</button>
-            <button class="btn primary" id="completeBtn" type="button">Complete</button>
+            <button class="btn ghost" id="nextFieldBtn" type="button">Next Field</button>
+            <button class="btn primary" id="primaryActionBtn" type="button">Complete</button>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="grid2">
-          <aside class="panel mini" style="height:fit-content;">
-            <b>Fields</b>
-            <p class="muted tiny" style="margin-top:6px;">
-              Click a field type, then click on the document to place it.
-            </p>
-
-            <div class="toolGrid">
-              <button class="tool" data-tool="signature" type="button">✍️ Signature</button>
-              <button class="tool" data-tool="initials" type="button">🆔 Initials</button>
-              <button class="tool" data-tool="text" type="button">🔤 Text</button>
-              <button class="tool" data-tool="date" type="button">📅 Date</button>
-              <button class="tool" data-tool="checkbox" type="button">☑ Checkbox</button>
+        <div class="signLayout">
+          <!-- LEFT PANEL -->
+          <aside class="sidePanel">
+            <div class="sideBlock">
+              <b>Fields</b>
+              <div class="toolRow">
+                <button class="tool active" data-tool="signature" type="button">Signature</button>
+                <button class="tool" data-tool="date" type="button">Date</button>
+                <button class="tool" data-tool="initials" type="button">Initials</button>
+                <button class="tool" data-tool="text" type="button">Text</button>
+                <button class="tool" data-tool="checkbox" type="button">Checkbox</button>
+              </div>
+              <p class="tiny muted" style="margin-top:10px;">
+                Click a field type, then click on the document to place it.
+              </p>
             </div>
 
             <div class="divider"></div>
 
-            <b>Recipient info</b>
-            <div class="hintBox" id="partyBox" style="margin-top:10px;">
-              Loading…
+            <div class="sideBlock">
+              <b id="signerLabel">Signer</b>
+              <div class="cardInfo" id="partyBox">Loading…</div>
+
+              <div class="divider"></div>
+
+              <b>Required</b>
+              <p class="tiny muted" style="margin-top:6px;" id="requiredLine">
+                Required: Signature + Date
+              </p>
             </div>
-
-            <div class="divider"></div>
-
-            <b>Required fields</b>
-            <p class="muted tiny" style="margin-top:6px;">
-              The demo requires at least: <b>Signature</b> + <b>Date</b>.
-              Any placed field marked “Required” must be completed to finish.
-            </p>
 
             <div class="divider"></div>
 
             <button class="btn outlineFull" id="clearFieldsBtn" type="button">Clear Fields</button>
           </aside>
 
+          <!-- DOCUMENT -->
           <div class="docWrap">
-            <div class="docToolbar">
+            <div class="docBar">
               <span class="pill">PDF</span>
               <span class="muted tiny" id="fileName"></span>
               <span class="muted tiny" style="margin-left:auto;" id="zoomLabel">Zoom: 100%</span>
-              <button class="btn tinyBtn" id="zoomOut" type="button">–</button>
-              <button class="btn tinyBtn" id="zoomIn" type="button">+</button>
+              <button class="btn miniBtn" id="zoomOut" type="button">–</button>
+              <button class="btn miniBtn" id="zoomIn" type="button">+</button>
             </div>
 
             <div class="docStage">
@@ -96,7 +98,7 @@
               <div id="overlay" class="overlay"></div>
             </div>
 
-            <p class="tiny muted" id="statusLine" style="margin-top:10px;"></p>
+            <p class="tiny" id="statusLine" style="margin-top:10px;"></p>
           </div>
         </div>
       </section>
@@ -104,6 +106,7 @@
     </div>
   </main>
 
+  <!-- PDF.js (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module"></script>
   <script src="assets/app.js"></script>
 
@@ -114,6 +117,7 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs";
 
+    // UI refs
     const canvas = document.getElementById("pdfCanvas");
     const overlay = document.getElementById("overlay");
     const statusLine = document.getElementById("statusLine");
@@ -125,43 +129,92 @@
     const prevPageBtn = document.getElementById("prevPageBtn");
     const nextPageBtn = document.getElementById("nextPageBtn");
     const nextFieldBtn = document.getElementById("nextFieldBtn");
-    const completeBtn = document.getElementById("completeBtn");
+    const primaryActionBtn = document.getElementById("primaryActionBtn");
     const clearFieldsBtn = document.getElementById("clearFieldsBtn");
 
     const zoomLabel = document.getElementById("zoomLabel");
     const zoomOut = document.getElementById("zoomOut");
     const zoomIn = document.getElementById("zoomIn");
 
+    const roomTitle = document.getElementById("roomTitle");
+    const roomSub = document.getElementById("roomSub");
+    const signerLabel = document.getElementById("signerLabel");
+    const requiredLine = document.getElementById("requiredLine");
+
     const toolBtns = document.querySelectorAll(".tool");
+
+    // Role
+    const params = new URLSearchParams(location.search);
+    const role = (params.get("role") || "recipient").toLowerCase(); // sender | recipient
 
     const state = FSS.loadDocState();
     if(!state?.template){
       window.location.href = "create.html";
     }
 
+    // If sender is done and recipient tries sender page, push them to recipient
+    if(role === "sender" && state.stage === "recipient"){
+      window.location.href = "sign.html?role=recipient";
+    }
+
+    if(role === "sender"){
+      roomTitle.textContent = "Sender Signing";
+      roomSub.textContent = "Party A signs first. Then send to recipient.";
+      signerLabel.textContent = "Sender (Party A)";
+      primaryActionBtn.textContent = "Send to Recipient";
+    } else {
+      roomTitle.textContent = "Recipient Signing";
+      roomSub.textContent = "Party B signs after receiving the envelope.";
+      signerLabel.textContent = "Recipient (Party B)";
+      primaryActionBtn.textContent = "Complete";
+    }
+
     fileName.textContent = state.template;
     docLine.textContent = `Template: ${state.template}`;
 
+    // Display signer
     const partyBox = document.getElementById("partyBox");
     const p = state.parties || {};
-    partyBox.innerHTML = `
-      <b>${FSS.escape(p.bName || "Recipient")}</b><br/>
-      <span class="muted">${FSS.escape(p.bEmail || "")}</span><br/>
-      <div class="divider" style="margin:10px 0;"></div>
-      <span class="muted tiny">Sender:</span> <b>${FSS.escape(p.aName || "")}</b><br/>
-      <span class="muted tiny">${FSS.escape(p.aEmail || "")}</span>
-    `;
+    if(role === "sender"){
+      partyBox.innerHTML = `
+        <b>${FSS.escape(p.aName || "Sender")}</b><br/>
+        <span class="muted">${FSS.escape(p.aEmail || "")}</span>
+        <div class="divider" style="margin:12px 0;"></div>
+        <span class="tiny muted">Recipient:</span><br/>
+        <b>${FSS.escape(p.bName || "")}</b><br/>
+        <span class="muted">${FSS.escape(p.bEmail || "")}</span>
+      `;
+    } else {
+      partyBox.innerHTML = `
+        <b>${FSS.escape(p.bName || "Recipient")}</b><br/>
+        <span class="muted">${FSS.escape(p.bEmail || "")}</span>
+        <div class="divider" style="margin:12px 0;"></div>
+        <span class="tiny muted">Sender:</span><br/>
+        <b>${FSS.escape(p.aName || "")}</b><br/>
+        <span class="muted">${FSS.escape(p.aEmail || "")}</span>
+      `;
+    }
 
-    FSS.auditAddOnce("Viewed", "Recipient opened the signing link.");
+    // Audit: viewed
+    if(role === "recipient"){
+      FSS.auditAddOnce("Viewed", "Recipient opened the envelope.");
+    }
 
+    // Fields
     let fields = FSS.loadFields();
     let selectedTool = "signature";
 
+    // PDF rendering
     let pdfDoc = null;
     let pageCount = 1;
     let currentPage = 1;
-    let scale = 1.0;
+    let scale = 1.15; // default slightly zoomed in for readability
 
+    // Required model: signature + date are required for BOTH roles,
+    // but we enforce they are done twice: sender must sign+date at least once, recipient must sign+date at least once.
+    requiredLine.textContent = "Required: Signature + Date";
+
+    // Render page
     async function renderPage(pageNum){
       const page = await pdfDoc.getPage(pageNum);
       const viewport = page.getViewport({ scale });
@@ -170,7 +223,7 @@
       canvas.width = viewport.width;
       canvas.height = viewport.height;
 
-      // store last canvas size for pdf-lib mapping
+      // store canvas size for PDF stamping mapping
       localStorage.setItem("fss_last_canvas_size", JSON.stringify({ w: canvas.width, h: canvas.height }));
 
       overlay.style.width = viewport.width + "px";
@@ -186,41 +239,55 @@
 
     function renderOverlay(){
       overlay.innerHTML = "";
+
+      // show all fields on current page, but visually label who owns it
       const pageFields = fields.filter(f => f.page === currentPage);
 
       for(const f of pageFields){
         const el = document.createElement("div");
-        el.className = `field field-${f.type} ${f.required ? "required" : ""} ${f.value ? "filled" : ""}`;
+        el.className = `field ${f.value ? "filled" : ""} ${f.required ? "required" : ""}`;
         el.style.left = f.x + "px";
         el.style.top = f.y + "px";
         el.style.width = f.w + "px";
         el.style.height = f.h + "px";
         el.setAttribute("data-id", f.id);
 
-        const label = document.createElement("div");
-        label.className = "fieldLabel";
-        label.textContent = f.type.toUpperCase() + (f.required ? " *" : "");
-        el.appendChild(label);
+        const top = document.createElement("div");
+        top.className = "fieldTop";
+        top.textContent = `${f.type.toUpperCase()} • ${f.owner.toUpperCase()}${f.required ? " *" : ""}`;
+        el.appendChild(top);
 
         const body = document.createElement("div");
         body.className = "fieldBody";
         body.textContent = f.value ? f.value : "Click to fill";
         el.appendChild(body);
 
-        const del = document.createElement("button");
-        del.type = "button";
-        del.className = "fieldDel";
-        del.textContent = "✕";
-        del.title = "Remove field";
-        del.addEventListener("click", (e) => {
-          e.stopPropagation();
-          fields = fields.filter(x => x.id !== f.id);
-          FSS.saveFields(fields);
-          renderOverlay();
-        });
-        el.appendChild(del);
+        // delete button only if you are the owner of the field
+        if(f.owner === role){
+          const del = document.createElement("button");
+          del.type = "button";
+          del.className = "fieldDel";
+          del.textContent = "✕";
+          del.title = "Remove field";
+          del.addEventListener("click", (e) => {
+            e.stopPropagation();
+            fields = fields.filter(x => x.id !== f.id);
+            FSS.saveFields(fields);
+            renderOverlay();
+          });
+          el.appendChild(del);
+        }
 
-        el.addEventListener("click", () => openFillModal(f.id));
+        // only allow filling your own fields
+        el.addEventListener("click", () => {
+          if(f.owner !== role){
+            statusLine.textContent = "This field belongs to the other signer.";
+            statusLine.className = "tiny textWarn";
+            return;
+          }
+          openFillModal(f.id);
+        });
+
         overlay.appendChild(el);
       }
     }
@@ -245,24 +312,24 @@
         return;
       }
 
-      let promptLabel = "Enter value";
+      let label = "Enter value";
       let placeholder = "";
       let defaultVal = f.value || "";
 
       if(f.type === "signature"){
-        promptLabel = "Type your full name (Signature)";
-        placeholder = "Example: John Smith";
+        label = "Type your full name (Signature)";
+        placeholder = role === "sender" ? (p.aName || "Your name") : (p.bName || "Your name");
       }
       if(f.type === "initials"){
-        promptLabel = "Type your initials";
+        label = "Type your initials";
         placeholder = "Example: JS";
       }
       if(f.type === "text"){
-        promptLabel = "Enter text";
+        label = "Enter text";
         placeholder = "Type here…";
       }
 
-      const val = window.prompt(promptLabel, defaultVal || placeholder);
+      const val = window.prompt(label, defaultVal || placeholder);
       if(val === null) return;
 
       f.value = val.trim();
@@ -270,9 +337,22 @@
       renderOverlay();
     }
 
+    function getRequiredFieldsForRole(){
+      // Required fields placed by this signer
+      const mine = fields.filter(f => f.owner === role && f.required);
+      return mine;
+    }
+
+    function ensureRoleHasSignatureAndDate(){
+      const mine = fields.filter(f => f.owner === role);
+      const hasSig = mine.some(f => f.type === "signature");
+      const hasDate = mine.some(f => f.type === "date");
+      return { hasSig, hasDate };
+    }
+
     function getNextUnfilledRequired(){
-      const required = fields.filter(f => f.required);
-      for(const f of required){
+      const mineReq = getRequiredFieldsForRole();
+      for(const f of mineReq){
         if(!f.value) return f;
       }
       return null;
@@ -280,6 +360,7 @@
 
     function focusField(f){
       if(!f) return;
+
       if(currentPage !== f.page){
         currentPage = f.page;
         renderPage(currentPage).then(() => flashField(f.id));
@@ -296,6 +377,7 @@
       setTimeout(()=> el.classList.remove("flash"), 900);
     }
 
+    // Place fields
     overlay.addEventListener("click", (e) => {
       if(e.target.closest(".field")) return;
 
@@ -309,20 +391,21 @@
         id: crypto.randomUUID(),
         type: selectedTool,
         page: currentPage,
-        x: Math.max(6, x - size.w / 2),
-        y: Math.max(6, y - size.h / 2),
+        x: Math.max(10, x - size.w / 2),
+        y: Math.max(10, y - size.h / 2),
         w: size.w,
         h: size.h,
         required: size.required,
-        value: ""
+        value: "",
+        owner: role
       };
 
       fields.push(field);
       FSS.saveFields(fields);
       renderOverlay();
 
-      statusLine.textContent = `${selectedTool.toUpperCase()} field placed on page ${currentPage}. Click it to fill.`;
-      statusLine.style.color = "#86efac";
+      statusLine.textContent = `Placed ${selectedTool.toUpperCase()} on page ${currentPage}. Click it to fill.`;
+      statusLine.className = "tiny textGood";
     });
 
     toolBtns.forEach(btn => {
@@ -330,12 +413,12 @@
         toolBtns.forEach(x => x.classList.remove("active"));
         btn.classList.add("active");
         selectedTool = btn.getAttribute("data-tool");
-        statusLine.textContent = `Selected: ${selectedTool.toUpperCase()} — click on the document to place it.`;
-        statusLine.style.color = "#fde68a";
+        statusLine.textContent = `Selected: ${selectedTool.toUpperCase()} — click on the PDF to place it.`;
+        statusLine.className = "tiny textWarn";
       });
     });
-    document.querySelector(`.tool[data-tool="${selectedTool}"]`).classList.add("active");
 
+    // Page controls
     prevPageBtn.addEventListener("click", () => {
       if(currentPage > 1){
         currentPage -= 1;
@@ -350,58 +433,96 @@
       }
     });
 
+    // Zoom
     zoomIn.addEventListener("click", () => {
-      scale = Math.min(2.0, scale + 0.1);
+      scale = Math.min(1.7, scale + 0.08);
       renderPage(currentPage);
     });
     zoomOut.addEventListener("click", () => {
-      scale = Math.max(0.6, scale - 0.1);
+      scale = Math.max(0.9, scale - 0.08);
       renderPage(currentPage);
     });
 
+    // Next required field
     nextFieldBtn.addEventListener("click", () => {
-      if(!fields.some(f => f.required)){
-        alert("No required fields placed yet.\n\nPlace a Signature and Date field to proceed.");
-        return;
-      }
       const next = getNextUnfilledRequired();
       if(!next){
-        alert("All required fields are completed ✅");
+        statusLine.textContent = "All required fields for you are completed ✅";
+        statusLine.className = "tiny textGood";
         return;
       }
       focusField(next);
-      statusLine.textContent = "Jumped to next required field.";
-      statusLine.style.color = "#86efac";
+      statusLine.textContent = "Jumped to your next required field.";
+      statusLine.className = "tiny textGood";
     });
 
+    // Clear fields for role only (safer)
     clearFieldsBtn.addEventListener("click", () => {
-      if(!confirm("Clear all placed fields?")) return;
-      fields = [];
+      if(!confirm("Clear ONLY your placed fields?")) return;
+      fields = fields.filter(f => f.owner !== role);
       FSS.saveFields(fields);
       renderOverlay();
-      statusLine.textContent = "Fields cleared.";
-      statusLine.style.color = "#fde68a";
+      statusLine.textContent = "Your fields cleared.";
+      statusLine.className = "tiny textWarn";
     });
 
-    completeBtn.addEventListener("click", async () => {
-      const hasSig = fields.some(f => f.type === "signature");
-      const hasDate = fields.some(f => f.type === "date");
-
+    // Primary action (Send / Complete)
+    primaryActionBtn.addEventListener("click", async () => {
+      // Enforce this signer placed signature + date
+      const { hasSig, hasDate } = ensureRoleHasSignatureAndDate();
       if(!hasSig || !hasDate){
-        alert("This demo requires at least:\n\n• Signature field\n• Date field\n\nPlace both, then complete.");
+        alert("You must place at least:\n\n• Signature field\n• Date field\n\nThen fill them.");
         return;
       }
 
-      const requiredFields = fields.filter(f => f.required);
-      const unfilled = requiredFields.find(f => !f.value);
+      // Enforce required filled for this signer
+      const unfilled = getNextUnfilledRequired();
       if(unfilled){
         alert("A required field is missing.\n\nWe will take you to it now.");
         focusField(unfilled);
         return;
       }
 
+      // If sender => send to recipient
+      if(role === "sender"){
+        FSS.auditAdd("Sender Signed", "Sender completed required fields.");
+
+        // Move state forward
+        FSS.saveDocState({
+          ...state,
+          status: "sent",
+          stage: "recipient",
+          sentAt: Date.now()
+        });
+
+        // Create signing link (demo)
+        const base = `${window.location.origin}${window.location.pathname.replace("sign.html","")}`;
+        const link = `${base}sign.html?role=recipient`;
+
+        // Log
+        FSS.auditAdd("Sent", "Envelope sent to recipient.");
+
+        // Show prompt and auto go to recipient signing
+        const ok = confirm(
+          "Sender signing complete ✅\n\nEnvelope is now ready to send.\n\nClick OK to copy the recipient signing link and continue as recipient."
+        );
+
+        if(ok){
+          try{
+            await navigator.clipboard.writeText(link);
+          }catch{}
+          window.location.href = "sign.html?role=recipient";
+          return;
+        }
+
+        // If they cancel, return to dashboard
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      // Recipient => complete and generate signed pdf
       statusLine.textContent = "Generating signed PDF…";
-      statusLine.style.color = "#fde68a";
+      statusLine.className = "tiny textWarn";
 
       try{
         const pdfUrl = `pdfs/${state.template}`;
@@ -413,13 +534,13 @@
           parties: state.parties || {}
         });
 
-        FSS.auditAdd("Signed", "Recipient completed all required fields and signed.");
+        FSS.auditAdd("Recipient Signed", "Recipient completed required fields.");
         FSS.auditAdd("Completed", "Signed PDF generated.");
 
         FSS.saveSignedBlob(signedBytes, state.template);
 
-        statusLine.textContent = "Complete ✅ Redirecting…";
-        statusLine.style.color = "#86efac";
+        statusLine.textContent = "Completed ✅ Redirecting…";
+        statusLine.className = "tiny textGood";
 
         setTimeout(() => {
           window.location.href = "success.html";
@@ -428,7 +549,7 @@
       }catch(err){
         console.error(err);
         statusLine.textContent = "Error generating signed PDF.";
-        statusLine.style.color = "#fda4af";
+        statusLine.className = "tiny textBad";
       }
     });
 
@@ -436,6 +557,7 @@
       FSS.logout();
     });
 
+    // Load PDF
     (async function init(){
       try{
         const pdfUrl = `pdfs/${state.template}`;
@@ -443,16 +565,20 @@
         pdfDoc = await loadingTask.promise;
         pageCount = pdfDoc.numPages;
 
+        // Remove any fields out of bounds
         fields = (fields || []).filter(f => f.page >= 1 && f.page <= pageCount);
         FSS.saveFields(fields);
 
         await renderPage(currentPage);
-        statusLine.textContent = "Tip: Place Signature + Date (required) then use Next Field to finish quickly.";
-        statusLine.style.color = "#86efac";
+
+        statusLine.textContent = role === "sender"
+          ? "Sender: place Signature + Date, fill them, then click “Send to Recipient”."
+          : "Recipient: place Signature + Date, fill them, then click “Complete”.";
+        statusLine.className = "tiny textGood";
       }catch(err){
         console.error(err);
-        statusLine.textContent = "Could not load PDF. Confirm the file exists in /pdfs/.";
-        statusLine.style.color = "#fda4af";
+        statusLine.textContent = "Could not load PDF. Confirm file exists in /pdfs/.";
+        statusLine.className = "tiny textBad";
       }
     })();
   </script>
