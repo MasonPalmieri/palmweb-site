@@ -1,1 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Client Portal — Audit</title>
+  <link rel="stylesheet" href="assets/app.css" />
+</head>
+<body class="app dark">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FSS</div>
+      <div>
+        <div class="title">Audit Trail</div>
+        <div class="sub">Envelope history and completion log (demo).</div>
+      </div>
+    </div>
+
+    <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="create.html">Create</a>
+      <a href="audit.html" class="active">Audit</a>
+      <a href="../../demos.html" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="shell" style="max-width:980px;">
+      <section class="panel">
+        <h2 style="margin:0 0 6px;">Audit Trail</h2>
+        <p class="muted">
+          This is a static demo version of an audit trail. In a real system, events are cryptographically tamper-resistant.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="grid2">
+          <div class="panel mini" style="margin:0; box-shadow:none; background: rgba(0,0,0,.18);">
+            <b>Envelope</b>
+            <div class="divider"></div>
+            <div class="muted tiny" id="envBox">Loading…</div>
+
+            <div class="divider"></div>
+
+            <b>Actions</b>
+            <div class="actions" style="margin-top:12px;">
+              <button class="btn secondary" id="clearAuditBtn" type="button">Clear Audit</button>
+              <a class="btn outline" href="create.html">Back to Create</a>
+              <a class="btn outline" href="sign.html">Go to Sign</a>
+            </div>
+          </div>
+
+          <div class="panel mini" style="margin:0; box-shadow:none; background: rgba(0,0,0,.18);">
+            <b>Events</b>
+            <p class="muted tiny" style="margin-top:6px;">Newest first</p>
+
+            <div class="divider"></div>
+
+            <div id="events" class="auditList"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/app.js"></script>
+  <script>
+    FSS.guard();
+
+    const state = FSS.loadDocState() || {};
+    const events = FSS.auditGet();
+
+    const envBox = document.getElementById("envBox");
+    envBox.innerHTML = `
+      <b>Template:</b> ${FSS.escape(state.template || "None")}<br/>
+      <b>Status:</b> ${FSS.escape(state.status || "draft")}<br/>
+      <b>Sender:</b> ${FSS.escape(state.parties?.aName || "")} (${FSS.escape(state.parties?.aEmail || "")})<br/>
+      <b>Recipient:</b> ${FSS.escape(state.parties?.bName || "")} (${FSS.escape(state.parties?.bEmail || "")})<br/>
+    `;
+
+    const list = document.getElementById("events");
+    if(!events.length){
+      list.innerHTML = `<div class="muted tiny">No audit events yet. Create and send a document first.</div>`;
+    } else {
+      list.innerHTML = events.map(e => `
+        <div class="auditItem">
+          <div class="auditTitle">${FSS.escape(e.title)}</div>
+          <div class="auditMeta">${new Date(e.at).toLocaleString()}</div>
+          <div class="auditDesc">${FSS.escape(e.desc)}</div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("clearAuditBtn").addEventListener("click", () => {
+      if(!confirm("Clear all audit events?")) return;
+      localStorage.removeItem("fss_audit");
+      location.reload();
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+    });
+  </script>
+</body>
+</html>
 
