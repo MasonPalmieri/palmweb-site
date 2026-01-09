@@ -231,6 +231,7 @@
       text-underline-offset: 4px;
     }
 
+    /* NEW: Quick Contact + Big Logo layout */
     .quick-wrap{
       display:flex;
       align-items:flex-start;
@@ -645,76 +646,30 @@
       font-weight: 700;
     }
 
-    /* ======= PRIVATE PORTAL MODAL ======= */
-    .portal-modal{
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.62);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-      z-index: 250;
+    /* ======= CLIENT ACCESS MODAL ======= */
+    .access-modal .modal-card{
+      width: min(520px, 100%);
     }
-    .portal-modal.show{ display:flex; }
 
-    .portal-card{
-      width: min(540px, 100%);
-      background:#fff;
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: 0 22px 70px rgba(15,23,42,.35);
-      overflow:hidden;
-    }
-    .portal-head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid var(--border);
+    .access-form{
       display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-    }
-    .portal-title{
-      margin:0;
-      font-size: 16px;
-      font-weight: 950;
-    }
-    .portal-sub{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 750;
-    }
-    .portal-body{
-      padding: 14px 16px 16px;
-    }
-    .portal-input{
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline:none;
-      font-size: 14px;
-      font-weight: 750;
-    }
-    .portal-input:focus{
-      border-color: rgba(29,121,198,.55);
-      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
-    }
-    .portal-error{
+      flex-direction:column;
+      gap: 10px;
       margin-top: 10px;
-      display:none;
-      color: #b91c1c;
+    }
+
+    .access-error{
+      color:#dc2626;
       font-weight: 850;
       font-size: 13px;
-    }
-
-    /* PRIVATE PORTAL SECTION (hidden until unlocked) */
-    .portal-section{
       display:none;
     }
-    .portal-section.show{
-      display:block;
+
+    .access-hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color:#64748b;
+      font-weight: 750;
     }
 
     /* Responsive */
@@ -724,9 +679,13 @@
       .portfolio{ grid-template-columns: 1fr; }
       .two-col{ grid-template-columns: 1fr; }
       nav{ display:none; }
-      .quick-wrap{ justify-content:flex-start; }
+
+      .quick-wrap{
+        justify-content:flex-start;
+      }
     }
 
+    /* On mobile, show logo above card and centered */
     @media (max-width: 520px){
       .quick-wrap{
         flex-direction:column;
@@ -793,11 +752,8 @@
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
 
-        <!-- PRIVATE / HIDDEN DEMO PORTAL LINK -->
-        <a href="#" id="portalBtn" style="color: var(--muted); font-weight: 850;">Client Portal</a>
-
-        <!-- This will appear ONLY after password is entered -->
-        <a href="demos.html" id="demosNavLink" style="display:none;">Demo Portal</a>
+        <!-- Hidden Demos Access (password protected) -->
+        <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
 
         <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </nav>
@@ -818,7 +774,9 @@
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
           <a class="btn btn-outline" href="#services">See Services</a>
           <a class="btn btn-outline" href="#work">View Work</a>
-          <a class="btn btn-outline" href="#" id="portalBtn2">Client Portal</a>
+
+          <!-- Hidden Demos Access (password protected) -->
+          <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
         </div>
 
         <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
@@ -845,8 +803,13 @@
           </div>
 
           <div class="quick-row">
-            <span>Portal</span>
-            <a href="#" id="portalBtn3">Enter Portal</a>
+            <span>Approach</span>
+            <span style="font-weight:950;">Clear + practical</span>
+          </div>
+
+          <div class="quick-row">
+            <span>Client Access</span>
+            <a href="#" data-open-access>Enter password</a>
           </div>
         </aside>
 
@@ -905,41 +868,8 @@
     </div>
   </section>
 
-  <!-- ✅ PRIVATE PORTAL SECTION (hidden by default) -->
-  <section id="privatePortal" class="portal-section" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Demo Portal</h2>
-          <p>
-            Private preview environment for approved clients. Password required.
-          </p>
-        </div>
-      </div>
-
-      <div class="work">
-        <div class="tag" style="border-color: rgba(44,171,75,.25); background: rgba(44,171,75,.10); color:#0f3c22;">
-          Private
-        </div>
-        <div class="work-title">Client Preview Environment</div>
-        <div class="work-desc">
-          Access interactive product demos and prototypes built for sales calls, proof-of-concepts, and client walkthroughs.
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-primary" href="demos.html">Open Demo Portal</a>
-          <button class="btn btn-outline" id="lockPortalBtn" type="button">Lock Portal</button>
-        </div>
-
-        <p style="margin:14px 0 0; font-size:13px; color:#64748b; font-weight:650;">
-          Tip: If you share this link with a prospect, send them the portal password separately.
-        </p>
-      </div>
-    </div>
-  </section>
-
   <!-- Work -->
-  <section id="work">
+  <section id="work" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
     <div class="container">
       <div class="section-head">
         <div>
@@ -1017,7 +947,8 @@
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="#" id="portalBtn4">Client Portal</a>
+            <a class="btn btn-outline" href="#work">View Work</a>
+            <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
           </div>
         </div>
 
@@ -1036,6 +967,7 @@
           <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
+            <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
           </div>
         </div>
       </div>
@@ -1204,35 +1136,35 @@
     </div>
   </div>
 
-  <!-- ✅ PRIVATE PORTAL PASSWORD MODAL -->
-  <div class="portal-modal" id="portalModal" aria-hidden="true">
-    <div class="portal-card" role="dialog" aria-modal="true">
-      <div class="portal-head">
+  <!-- ======= CLIENT ACCESS MODAL (PASSWORD TO SEE DEMOS) ======= -->
+  <div class="modal access-modal" id="accessModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+      <div class="modal-head">
         <div>
-          <h3 class="portal-title">Client Portal Access</h3>
-          <p class="portal-sub">
-            Enter the access password to view private demos.
-          </p>
+          <h3 class="modal-title" id="accessTitle">Client Access</h3>
+          <p class="modal-sub">Enter password to view confidential demos.</p>
         </div>
-        <button class="close-btn" id="portalCloseBtn" aria-label="Close">✕</button>
+        <button class="close-btn" id="closeAccessBtn" aria-label="Close">✕</button>
       </div>
 
-      <div class="portal-body">
-        <label style="font-weight:950; font-size:13px; display:block; margin-bottom:8px;">
-          Portal password
-        </label>
-        <input class="portal-input" id="portalPass" type="password" placeholder="Enter password…" />
+      <div class="modal-body">
+        <div class="access-form">
+          <label>
+            Password
+            <input id="accessPw" type="password" placeholder="Enter password" autocomplete="off" />
+          </label>
 
-        <div class="portal-error" id="portalError">Incorrect password.</div>
+          <div class="access-error" id="accessErr">Incorrect password.</div>
 
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
-          <button class="btn btn-outline" id="portalCancelBtn" type="button">Cancel</button>
-          <button class="btn btn-primary" id="portalUnlockBtn" type="button">Unlock</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+            <button class="btn btn-primary" id="accessEnterBtn" type="button">Enter</button>
+            <button class="btn btn-outline" id="accessCancelBtn" type="button">Cancel</button>
+          </div>
+
+          <div class="access-hint">
+            Tip: you can share this password with clients to access the demo portal.
+          </div>
         </div>
-
-        <p class="hint" style="margin-top:12px;">
-          Note: This is a lightweight client gate for a static site. For true security, use server authentication or Cloudflare Access.
-        </p>
       </div>
     </div>
   </div>
@@ -1240,7 +1172,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    /* ===== Quote Modal (unchanged) ===== */
+    // ============ Quote modal ============
     const modal = document.getElementById("quoteModal");
     const closeBtn = document.getElementById("closeModalBtn");
     const openBtns = document.querySelectorAll("[data-open-quote]");
@@ -1260,14 +1192,14 @@
 
     let currentStep = 1;
 
-    function openQuoteModal(){
+    function openModal(){
       modal.classList.add("show");
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
       resetToStep1();
     }
 
-    function closeQuoteModal(){
+    function closeModal(){
       modal.classList.remove("show");
       modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
@@ -1324,17 +1256,17 @@
     openBtns.forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        openQuoteModal();
+        openModal();
       });
     });
 
-    closeBtn.addEventListener("click", closeQuoteModal);
+    closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => {
-      if(e.target === modal) closeQuoteModal();
+      if(e.target === modal) closeModal();
     });
 
     document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && modal.classList.contains("show")) closeQuoteModal();
+      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
     });
 
     nextBtn.addEventListener("click", () => {
@@ -1354,110 +1286,63 @@
       if(currentStep === 3) goToStep(2);
     });
 
-    /* ===== Private Portal Gate ===== */
-    const PORTAL_KEY = "palmweb_portal_unlocked";
-    const PORTAL_PASSWORD = "hallam";
+    // ============ Client Access modal ============
+    const accessModal = document.getElementById("accessModal");
+    const openAccessBtns = document.querySelectorAll("[data-open-access]");
+    const closeAccessBtn = document.getElementById("closeAccessBtn");
+    const accessCancelBtn = document.getElementById("accessCancelBtn");
+    const accessEnterBtn = document.getElementById("accessEnterBtn");
+    const accessPw = document.getElementById("accessPw");
+    const accessErr = document.getElementById("accessErr");
 
-    const portalModal = document.getElementById("portalModal");
-    const portalCloseBtn = document.getElementById("portalCloseBtn");
-    const portalCancelBtn = document.getElementById("portalCancelBtn");
-    const portalUnlockBtn = document.getElementById("portalUnlockBtn");
-    const portalPass = document.getElementById("portalPass");
-    const portalError = document.getElementById("portalError");
+    const ACCESS_PASSWORD = "hallam";
 
-    const privatePortalSection = document.getElementById("privatePortal");
-    const demosNavLink = document.getElementById("demosNavLink");
-    const lockPortalBtn = document.getElementById("lockPortalBtn");
-
-    const portalBtns = [
-      document.getElementById("portalBtn"),
-      document.getElementById("portalBtn2"),
-      document.getElementById("portalBtn3"),
-      document.getElementById("portalBtn4")
-    ].filter(Boolean);
-
-    function openPortal(){
-      portalModal.classList.add("show");
-      portalModal.setAttribute("aria-hidden", "false");
+    function openAccess(){
+      accessModal.classList.add("show");
+      accessModal.setAttribute("aria-hidden","false");
+      accessErr.style.display = "none";
+      accessPw.value = "";
       document.body.style.overflow = "hidden";
-      portalError.style.display = "none";
-      portalPass.value = "";
-      setTimeout(() => portalPass.focus(), 50);
+      setTimeout(()=>accessPw.focus(), 80);
     }
 
-    function closePortal(){
-      portalModal.classList.remove("show");
-      portalModal.setAttribute("aria-hidden", "true");
+    function closeAccess(){
+      accessModal.classList.remove("show");
+      accessModal.setAttribute("aria-hidden","true");
       document.body.style.overflow = "";
     }
 
-    function setUnlocked(unlocked){
-      if(unlocked){
-        localStorage.setItem(PORTAL_KEY, "true");
-        privatePortalSection.classList.add("show");
-        demosNavLink.style.display = "";
-      }else{
-        localStorage.removeItem(PORTAL_KEY);
-        privatePortalSection.classList.remove("show");
-        demosNavLink.style.display = "none";
+    function enterAccess(){
+      const val = accessPw.value.trim();
+      if(val === ACCESS_PASSWORD){
+        // store a short-lived session flag
+        sessionStorage.setItem("pw_demo_access", "true");
+        window.location.href = "demos.html";
+        return;
       }
+      accessErr.style.display = "block";
+      accessPw.focus();
     }
 
-    function checkUnlocked(){
-      const unlocked = localStorage.getItem(PORTAL_KEY) === "true";
-      setUnlocked(unlocked);
-    }
-
-    portalBtns.forEach(btn => {
-      btn.addEventListener("click", (e) => {
+    openAccessBtns.forEach(b=>{
+      b.addEventListener("click",(e)=>{
         e.preventDefault();
-        const already = localStorage.getItem(PORTAL_KEY) === "true";
-        if(already){
-          // if already unlocked, jump down to the portal section for convenience
-          document.getElementById("privatePortal").scrollIntoView({ behavior: "smooth", block: "start" });
-          return;
-        }
-        openPortal();
+        openAccess();
       });
     });
 
-    portalCloseBtn.addEventListener("click", closePortal);
-    portalCancelBtn.addEventListener("click", closePortal);
-    portalModal.addEventListener("click", (e) => {
-      if(e.target === portalModal) closePortal();
+    closeAccessBtn.addEventListener("click", closeAccess);
+    accessCancelBtn.addEventListener("click", closeAccess);
+    accessEnterBtn.addEventListener("click", enterAccess);
+
+    accessModal.addEventListener("click",(e)=>{
+      if(e.target === accessModal) closeAccess();
     });
 
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && portalModal.classList.contains("show")) closePortal();
+    document.addEventListener("keydown",(e)=>{
+      if(e.key === "Escape" && accessModal.classList.contains("show")) closeAccess();
+      if(e.key === "Enter" && accessModal.classList.contains("show")) enterAccess();
     });
-
-    portalUnlockBtn.addEventListener("click", () => {
-      const input = (portalPass.value || "").trim();
-      if(input === PORTAL_PASSWORD){
-        setUnlocked(true);
-        closePortal();
-        document.getElementById("privatePortal").scrollIntoView({ behavior: "smooth", block: "start" });
-      }else{
-        portalError.style.display = "block";
-        portalPass.focus();
-      }
-    });
-
-    portalPass.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        e.preventDefault();
-        portalUnlockBtn.click();
-      }
-    });
-
-    if(lockPortalBtn){
-      lockPortalBtn.addEventListener("click", () => {
-        setUnlocked(false);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    }
-
-    checkUnlocked();
   </script>
 </body>
 </html>
