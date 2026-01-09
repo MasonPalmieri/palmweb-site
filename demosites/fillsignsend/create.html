@@ -3,131 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Client Portal — Create</title>
-  <link rel="stylesheet" href="assets/app.css" />
-</head>
-<body class="app light">
+  <title>Create • Client Demo</title>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">FSS</div>
+  <link rel="stylesheet" href="assets/app.css" />
+
+  <style>
+    .wrap{ max-width:1120px; margin:0 auto; padding:18px 18px 40px; }
+    .page-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .page-head h1{ margin:0; font-size:18px; font-weight:950; letter-spacing:-.2px; }
+    .page-head p{ margin:6px 0 0; font-size:13px; color:var(--muted); font-weight:750; max-width:78ch; line-height:1.5; }
+
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start; margin-top:10px; }
+    .card{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:20px; padding:14px; }
+    .card h2{ margin:0; font-size:14px; font-weight:950; letter-spacing:-.1px; }
+    .card p{ margin:8px 0 0; color:rgba(255,255,255,.72); font-weight:750; font-size:13px; line-height:1.5; }
+
+    .divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
+
+    label{
+      display:grid;
+      gap:6px;
+      font-weight:900;
+      font-size:13px;
+      color:rgba(255,255,255,.86);
+      margin-top: 10px;
+    }
+
+    input, select{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      outline:none;
+      font-weight:850;
+      font-size:14px;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(67,203,255,.55);
+      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
+    }
+
+    .two{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .btn-lg{ padding:12px 16px; border-radius:14px; font-size:14px; font-weight:950; }
+
+    .hint{ margin-top:12px; color:rgba(255,255,255,.62); font-size:12px; font-weight:750; line-height:1.45; }
+
+    .status{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(255,255,255,.84);
+    }
+    .status.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
+    .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; }
+      .two{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="dashboard.html">
+        <span class="logo-badge">FSS</span>
+        <div class="brand-text">
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
+        </div>
+      </a>
+
+      <div class="app-nav">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link active" href="create.html">Create</a>
+        <a class="nav-link" href="sign.html">Sign</a>
+        <a class="nav-link" href="success.html">Completed</a>
+      </div>
+
+      <div class="app-user">
+        <span id="userEmail" class="user-pill">—</span>
+        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
       <div>
-        <div class="title">Create Agreement</div>
-        <div class="sub">Fill details, then sign as the sender.</div>
+        <h1>Create Envelope</h1>
+        <p>
+          Choose a template (PDF), then enter sender + recipient details.
+          This simulates a paid SaaS workflow for preparing agreements before signature.
+        </p>
       </div>
     </div>
 
-    <nav class="navlinks">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="create.html" class="active">Create</a>
-      <a href="audit.html">Audit</a>
-      <a href="../../demos.html" id="logoutLink">Logout</a>
-    </nav>
-  </header>
-
-  <main class="page">
-    <div class="shell">
-
-      <section class="panel">
-        <div class="panelHead">
-          <div>
-            <h2 style="margin:0;">Step 1 — Choose a PDF</h2>
-            <p class="muted" style="margin:6px 0 0;">
-              Templates load from <code>/demosites/fillsignsend/pdfs/</code>
-            </p>
-          </div>
-          <div class="pill">Fill → Sign → Send</div>
-        </div>
+    <div class="grid">
+      <!-- Template -->
+      <section class="card">
+        <h2>Template</h2>
+        <p>Select which agreement you want to generate. These are real PDFs stored in your repo.</p>
 
         <div class="divider"></div>
 
-        <div class="layout">
-          <!-- LEFT -->
-          <div class="left">
-            <label class="lbl">Template</label>
-            <select class="input" id="docSelect">
-              <option value="">Select a PDF…</option>
-              <option value="nda.pdf">NDA</option>
-              <option value="consulting_agreement.pdf">Consulting Agreement</option>
-              <option value="lease-waiver.pdf">Lease Waiver</option>
-              <option value="event-accident-waiver.pdf">Event Accident Waiver</option>
-              <option value="non-compete-agreement.pdf">Non-Compete Agreement</option>
-              <option value="Photo-Release.pdf">Photo Release</option>
-              <option value="real-estate-agreement.pdf">Real Estate Agreement</option>
-            </select>
+        <label>
+          Choose a template PDF
+          <select id="templateSelect">
+            <option value="nda.pdf">nda.pdf</option>
+            <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
+            <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
+            <option value="lease-waiver.pdf">lease-waiver.pdf</option>
+            <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
+            <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
+            <option value="Photo-Release.pdf">Photo-Release.pdf</option>
+          </select>
+        </label>
 
-            <div class="divider"></div>
-
-            <h3 class="h3">Step 2 — Parties</h3>
-            <p class="muted tiny" style="margin-top:6px;">
-              Party A will be prompted to sign immediately after creating.
-            </p>
-
-            <div class="twoMini">
-              <div class="miniCard">
-                <div class="miniHead">
-                  <b>Party A (Sender)</b>
-                  <span class="tag">Signs First</span>
-                </div>
-
-                <label class="lbl">Full name*</label>
-                <input class="input" id="aName" type="text" placeholder="Example: Mason Palmieri" />
-
-                <label class="lbl" style="margin-top:10px;">Email*</label>
-                <input class="input" id="aEmail" type="email" placeholder="Example: mason@palmweb.net" />
-              </div>
-
-              <div class="miniCard">
-                <div class="miniHead">
-                  <b>Party B (Recipient)</b>
-                  <span class="tag gray">Receives After</span>
-                </div>
-
-                <label class="lbl">Full name*</label>
-                <input class="input" id="bName" type="text" placeholder="Example: Client Name" />
-
-                <label class="lbl" style="margin-top:10px;">Email*</label>
-                <input class="input" id="bEmail" type="email" placeholder="Example: client@email.com" />
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <h3 class="h3">Optional Message</h3>
-            <label class="lbl">Subject</label>
-            <input class="input" id="subject" type="text" placeholder="Signature requested" />
-
-            <label class="lbl" style="margin-top:10px;">Message</label>
-            <textarea class="input" id="message" style="min-height:110px;" placeholder="Hi — please review and sign."></textarea>
-
-            <div class="divider"></div>
-
-            <div class="actions">
-              <button class="btn secondary" id="saveBtn" type="button">Save Draft</button>
-              <button class="btn primary" id="continueBtn" type="button">Continue to Sender Signing</button>
-            </div>
-
-            <p class="tiny" id="statusLine" style="margin-top:10px;"></p>
-          </div>
-
-          <!-- RIGHT -->
-          <div class="right">
-            <div class="previewHeader">
-              <b>Preview</b>
-              <span class="muted tiny" id="previewName">No template selected</span>
-            </div>
-
-            <div class="previewBox" id="previewBox">
-              <div class="muted tiny" style="padding:14px;">Select a template to preview.</div>
-            </div>
-
-            <p class="tiny muted" style="margin-top:10px;">
-              After you continue, the sender will be prompted to sign required fields.
-            </p>
-          </div>
+        <div class="hint">
+          These files must exist here: <strong>demosites/fillsignsend/pdfs/</strong><br />
+          (Your screenshot confirms this is set up correctly.)
         </div>
       </section>
 
+      <!-- Parties -->
+      <aside class="card">
+        <h2>Parties</h2>
+        <p>Enter the sender (your client) and the recipient (their customer).</p>
+
+        <div class="divider"></div>
+
+        <div class="two">
+          <label>
+            Sender name
+            <input id="aName" type="text" placeholder="Example: John Smith" />
+          </label>
+
+          <label>
+            Sender email
+            <input id="aEmail" type="email" placeholder="john@company.com" />
+          </label>
+        </div>
+
+        <div class="two">
+          <label>
+            Recipient name
+            <input id="bName" type="text" placeholder="Example: Sarah Johnson" />
+          </label>
+
+          <label>
+            Recipient email
+            <input id="bEmail" type="email" placeholder="sarah@email.com" />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary btn-lg" id="saveBtn" type="button">Save & Continue</button>
+          <button class="btn btn-outline btn-lg" id="resetBtn" type="button">Reset Envelope</button>
+        </div>
+
+        <div class="status warn" id="statusBox" style="display:none;"></div>
+      </aside>
     </div>
   </main>
 
@@ -135,120 +179,87 @@
   <script>
     FSS.guard();
 
-    const docSelect = document.getElementById("docSelect");
-    const previewBox = document.getElementById("previewBox");
-    const previewName = document.getElementById("previewName");
-    const statusLine = document.getElementById("statusLine");
+    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
 
+    let doc = FSS.loadDocState();
+    if(!doc){
+      doc = FSS.resetDoc();
+      FSS.logAudit("Envelope created.");
+    }
+
+    const templateSelect = document.getElementById("templateSelect");
     const aName = document.getElementById("aName");
     const aEmail = document.getElementById("aEmail");
     const bName = document.getElementById("bName");
     const bEmail = document.getElementById("bEmail");
-    const subject = document.getElementById("subject");
-    const message = document.getElementById("message");
 
-    const saveBtn = document.getElementById("saveBtn");
-    const continueBtn = document.getElementById("continueBtn");
+    const statusBox = document.getElementById("statusBox");
 
-    // Load saved state
-    const state = FSS.loadDocState();
-    if(state?.template){
-      docSelect.value = state.template;
-      renderPreview(state.template);
-    }
-    if(state?.parties){
-      aName.value = state.parties.aName || "";
-      aEmail.value = state.parties.aEmail || "";
-      bName.value = state.parties.bName || "";
-      bEmail.value = state.parties.bEmail || "";
-      subject.value = state.parties.subject || "";
-      message.value = state.parties.message || "";
+    function showStatus(type, msg){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
     }
 
-    docSelect.addEventListener("change", () => {
-      const val = docSelect.value.trim();
-      if(!val){
-        previewName.textContent = "No template selected";
-        previewBox.innerHTML = `<div class="muted tiny" style="padding:14px;">Select a template to preview.</div>`;
+    function load(){
+      doc = FSS.loadDocState() || doc;
+
+      templateSelect.value = doc.template || "nda.pdf";
+      aName.value = doc.parties?.aName || "";
+      aEmail.value = doc.parties?.aEmail || "";
+      bName.value = doc.parties?.bName || "";
+      bEmail.value = doc.parties?.bEmail || "";
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      doc = FSS.loadDocState() || doc;
+
+      const t = templateSelect.value.trim();
+      const an = aName.value.trim();
+      const bn = bName.value.trim();
+
+      if(!t){
+        showStatus("warn", "Please choose a template PDF.");
         return;
       }
-      renderPreview(val);
-    });
 
-    function renderPreview(filename){
-      previewName.textContent = filename;
-      const url = `pdfs/${filename}`;
-      previewBox.innerHTML = `<iframe class="previewFrame" src="${url}" title="PDF preview"></iframe>`;
-    }
+      if(!an || !bn){
+        showStatus("warn", "Sender name and Recipient name are required for the demo flow.");
+        return;
+      }
 
-    function validate(){
-      if(!docSelect.value.trim()) return "Select a PDF template.";
-      if(!aName.value.trim()) return "Sender name is required.";
-      if(!aEmail.value.trim()) return "Sender email is required.";
-      if(!bName.value.trim()) return "Recipient name is required.";
-      if(!bEmail.value.trim()) return "Recipient email is required.";
-      return null;
-    }
-
-    function saveState(extra = {}){
-      const template = docSelect.value.trim();
-      const parties = {
-        aName: aName.value.trim(),
+      doc.template = t;
+      doc.parties = {
+        aName: an,
         aEmail: aEmail.value.trim(),
-        bName: bName.value.trim(),
-        bEmail: bEmail.value.trim(),
-        subject: subject.value.trim(),
-        message: message.value.trim(),
+        bName: bn,
+        bEmail: bEmail.value.trim()
       };
 
-      FSS.saveDocState({
-        template,
-        parties,
-        status: "draft",
-        ...extra
-      });
-    }
+      // reset signature if changing template
+      FSS.saveDocState(doc);
+      localStorage.removeItem("fss_signed_pdf_b64");
+      FSS.logAudit("Envelope details saved (template + parties).");
+      FSS.setDocStage("draft");
 
-    saveBtn.addEventListener("click", () => {
-      const err = validate();
-      if(err){
-        statusLine.textContent = err;
-        statusLine.className = "tiny textBad";
-        return;
-      }
-      saveState();
-      statusLine.textContent = "Saved draft.";
-      statusLine.className = "tiny textGood";
+      showStatus("good", "Saved. Redirecting to Sign & Send…");
+
+      setTimeout(() => location.href = "sign.html", 650);
     });
 
-    continueBtn.addEventListener("click", () => {
-      const err = validate();
-      if(err){
-        statusLine.textContent = err;
-        statusLine.className = "tiny textBad";
-        return;
-      }
-
-      // Clear any old fields from previous envelopes
-      FSS.saveFields([]);
-
-      // Set flow state
-      saveState({
-        status: "sender_signing",
-        createdAt: Date.now(),
-        stage: "sender"
-      });
-
-      // Audit
-      FSS.auditAdd("Created", "Envelope created. Sender prompted to sign.");
-
-      // Go to signing room as sender
-      window.location.href = "sign.html?role=sender";
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset the envelope? This clears signatures + audit history.")) return;
+      FSS.resetDoc();
+      location.reload();
     });
 
-    document.getElementById("logoutLink").addEventListener("click", () => {
+    document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
+      location.href = "index.html";
     });
+
+    load();
   </script>
 </body>
 </html>
