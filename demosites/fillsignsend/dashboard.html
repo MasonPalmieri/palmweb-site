@@ -1,462 +1,392 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Client Portal — Dashboard</title>
-  <link rel="stylesheet" href="assets/app.css" />
-</head>
+/* ============================================================
+   FSS Demo App — app.js
+   Static, works on GitHub Pages. No backend.
+   Uses localStorage + pdf-lib (loaded only on sign.html).
+   ============================================================ */
 
-<body class="app light">
+window.FSS = (() => {
+  // ===== CONFIG =====
+  const DEMO_PASSWORD = "hallam";              // demos.html / main demo gate
+  const FSS_LOGIN_EMAIL = "demo@client.com";   // login credential for FSS
+  const FSS_LOGIN_PASS  = "hallam";            // login credential for FSS
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">FSS</div>
-      <div>
-        <div class="title">Dashboard</div>
-        <div class="sub">Manage agreements from creation through completion.</div>
-      </div>
-    </div>
+  // ===== STORAGE KEYS =====
+  const K = {
+    demoGate: "palmweb_demo_gate",
+    auth: "fss_auth",
+    doc: "fss_doc",
+    fields: "fss_fields",
+    audit: "fss_audit",
+    signed: "fss_signed",
+  };
 
-    <nav class="navlinks">
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="create.html">Create</a>
-      <a href="audit.html">Audit</a>
-      <a href="../../demos.html" id="logoutBtn">Logout</a>
-    </nav>
-  </header>
+  // ===== HELPERS =====
+  function escape(str){
+    return String(str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-  <main class="page">
-    <div class="shell">
+  function now(){
+    const d = new Date();
+    return d.toLocaleString();
+  }
 
-      <!-- OVERVIEW -->
-      <section class="panel">
-        <div class="panelHead">
-          <div>
-            <h2 style="margin:0;">Welcome back</h2>
-            <p class="muted" style="margin:6px 0 0;">
-              This demo shows a modern agreement workflow: <b>Fill → Sign → Send</b>.
-            </p>
-          </div>
+  function set(key, val){
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+  function get(key, fallback=null){
+    const raw = localStorage.getItem(key);
+    if(!raw) return fallback;
+    try { return JSON.parse(raw); } catch { return fallback; }
+  }
 
-          <div class="actions">
-            <a class="btn primary" href="create.html">+ Create New Agreement</a>
-            <a class="btn secondary" href="audit.html">View Audit Trail</a>
-          </div>
-        </div>
+  function setStr(key, val){
+    localStorage.setItem(key, val);
+  }
+  function getStr(key){
+    return localStorage.getItem(key);
+  }
 
-        <div class="divider"></div>
+  // ===== DEMO PASSWORD GATE =====
+  function isDemoUnlocked(){
+    return get(K.demoGate, false) === true;
+  }
 
-        <div class="dashGrid">
-
-          <!-- STATUS CARD -->
-          <div class="dashCard">
-            <div class="dashCardTop">
-              <b>Current Envelope</b>
-              <span class="pill" id="statusPill">No Active</span>
-            </div>
-
-            <div class="dashMeta" id="docMeta">
-              <div class="muted tiny">No envelope created yet.</div>
-            </div>
-
-            <div class="divider" style="margin:14px 0;"></div>
-
-            <div class="dashActions" id="docActions">
-              <a class="btn primary" href="create.html">Start a new agreement</a>
-            </div>
-
-            <p class="tiny muted" style="margin-top:12px;">
-              Templates are stored at: <code>/demosites/fillsignsend/pdfs/</code>
-            </p>
-          </div>
-
-          <!-- FLOW CARD -->
-          <div class="dashCard">
-            <div class="dashCardTop">
-              <b>How it Works</b>
-              <span class="pill">FSS Flow</span>
-            </div>
-
-            <div class="flow">
-              <div class="flowStep">
-                <div class="flowDot">1</div>
-                <div>
-                  <div class="flowTitle">Fill</div>
-                  <div class="muted tiny">
-                    Choose a PDF template and enter Party A + Party B details.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flowStep">
-                <div class="flowDot">2</div>
-                <div>
-                  <div class="flowTitle">Sign (Sender)</div>
-                  <div class="muted tiny">
-                    Party A signs first inside the signing room.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flowStep">
-                <div class="flowDot">3</div>
-                <div>
-                  <div class="flowTitle">Send</div>
-                  <div class="muted tiny">
-                    A signing link is generated for Party B (demo mimics email sending).
-                  </div>
-                </div>
-              </div>
-
-              <div class="flowStep">
-                <div class="flowDot">4</div>
-                <div>
-                  <div class="flowTitle">Sign (Recipient)</div>
-                  <div class="muted tiny">
-                    Party B signs and completes the envelope.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flowStep">
-                <div class="flowDot">5</div>
-                <div>
-                  <div class="flowTitle">Complete + Download</div>
-                  <div class="muted tiny">
-                    Signed PDF is generated locally and becomes downloadable.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- QUICK LINKS -->
-          <div class="dashCard">
-            <div class="dashCardTop">
-              <b>Quick Links</b>
-              <span class="pill">Tools</span>
-            </div>
-
-            <div class="quickLinks">
-              <a class="quickLink" href="create.html">
-                <div>
-                  <b>Create Agreement</b>
-                  <div class="muted tiny">Pick a template and build an envelope.</div>
-                </div>
-                <span class="arrow">→</span>
-              </a>
-
-              <a class="quickLink" href="sign.html?role=sender" id="senderLink">
-                <div>
-                  <b>Sender Signing Room</b>
-                  <div class="muted tiny">Party A signs first.</div>
-                </div>
-                <span class="arrow">→</span>
-              </a>
-
-              <a class="quickLink" href="sign.html?role=recipient" id="recipientLink">
-                <div>
-                  <b>Recipient Signing Room</b>
-                  <div class="muted tiny">Party B signs after it’s sent.</div>
-                </div>
-                <span class="arrow">→</span>
-              </a>
-
-              <a class="quickLink" href="success.html">
-                <div>
-                  <b>Completion Page</b>
-                  <div class="muted tiny">Download the signed document.</div>
-                </div>
-                <span class="arrow">→</span>
-              </a>
-
-              <a class="quickLink" href="audit.html">
-                <div>
-                  <b>Audit Trail</b>
-                  <div class="muted tiny">Review activity and timestamps.</div>
-                </div>
-                <span class="arrow">→</span>
-              </a>
-            </div>
-
-            <div class="divider" style="margin:14px 0;"></div>
-
-            <button class="btn secondary" id="resetBtn" type="button" style="width:100%;">
-              Reset Demo (Clear Envelope)
-            </button>
-
-            <p class="tiny muted" style="margin-top:10px;">
-              Reset clears the envelope, placed fields, signed output, and audit log.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-    </div>
-  </main>
-
-  <script src="assets/app.js"></script>
-  <script>
-    FSS.guard();
-
-    const statusPill = document.getElementById("statusPill");
-    const docMeta = document.getElementById("docMeta");
-    const docActions = document.getElementById("docActions");
-
-    const senderLink = document.getElementById("senderLink");
-    const recipientLink = document.getElementById("recipientLink");
-
-    const resetBtn = document.getElementById("resetBtn");
-
-    const state = FSS.loadDocState();
-    const signed = FSS.getSignedBlob();
-
-    // Helper
-    function fmt(ts){
-      if(!ts) return "—";
-      return new Date(ts).toLocaleString();
+  function unlockDemo(password){
+    if((password || "").trim().toLowerCase() === DEMO_PASSWORD){
+      set(K.demoGate, true);
+      return true;
     }
+    return false;
+  }
 
-    function setStatus(label, type="neutral"){
-      statusPill.textContent = label;
+  // ===== AUTH =====
+  function isAuthed(){
+    return get(K.auth, null) && get(K.auth).ok === true;
+  }
 
-      // Simple class swap by type
-      statusPill.style.borderColor = "#cbd5e1";
-      statusPill.style.background = "#f8fafc";
-      statusPill.style.color = "#0f172a";
+  function login(email, pass){
+    const e = (email || "").trim().toLowerCase();
+    const p = (pass || "").trim();
 
-      if(type === "good"){
-        statusPill.style.borderColor = "#86efac";
-        statusPill.style.background = "#dcfce7";
-        statusPill.style.color = "#14532d";
-      }
-      if(type === "warn"){
-        statusPill.style.borderColor = "#fdba74";
-        statusPill.style.background = "#ffedd5";
-        statusPill.style.color = "#7c2d12";
-      }
-      if(type === "blue"){
-        statusPill.style.borderColor = "#c7d2fe";
-        statusPill.style.background = "#eef2ff";
-        statusPill.style.color = "#1e3a8a";
-      }
-      if(type === "bad"){
-        statusPill.style.borderColor = "#fecaca";
-        statusPill.style.background = "#fee2e2";
-        statusPill.style.color = "#7f1d1d";
+    if(e === FSS_LOGIN_EMAIL && p === FSS_LOGIN_PASS){
+      set(K.auth, { ok:true, email:e, at: Date.now() });
+      return true;
+    }
+    return false;
+  }
+
+  function logout(){
+    localStorage.removeItem(K.auth);
+    // do NOT wipe demo gate password
+    // optional: keep doc + signed pdf for demo continuity
+  }
+
+  function guard(){
+    // for pages inside demosites/fillsignsend/
+    if(!isAuthed()){
+      // If user is not authenticated, bounce to index
+      const here = location.pathname.toLowerCase();
+      if(!here.endsWith("/index.html") && !here.endsWith("/index")){
+        location.href = "index.html";
       }
     }
+  }
 
-    // Default state
-    if(!state || !state.template){
-      setStatus("No Active", "neutral");
-      docMeta.innerHTML = `<div class="muted tiny">No envelope created yet.</div>`;
-      docActions.innerHTML = `<a class="btn primary" href="create.html">+ Create New Agreement</a>`;
-
-      // Disable signer room links if empty
-      senderLink.style.opacity = ".6";
-      senderLink.style.pointerEvents = "none";
-      recipientLink.style.opacity = ".6";
-      recipientLink.style.pointerEvents = "none";
-    } else {
-      const parties = state.parties || {};
-
-      // Status logic
-      if(signed){
-        setStatus("Completed", "good");
-      } else if(state.stage === "sender"){
-        setStatus("Sender Signing", "warn");
-      } else if(state.stage === "recipient" && state.status === "sent"){
-        setStatus("Awaiting Recipient", "blue");
-      } else {
-        setStatus(state.status || "Active", "neutral");
+  // ===== DOC STATE =====
+  function defaultDoc(){
+    return {
+      id: "ENV-" + Math.random().toString(16).slice(2, 10).toUpperCase(),
+      createdAt: Date.now(),
+      template: "nda.pdf",
+      status: "draft",      // draft | sent | completed
+      stage: "sender",      // sender | recipient
+      parties: {
+        aName: "",
+        aEmail: "",
+        bName: "",
+        bEmail: ""
+      },
+      meta: {
+        subject: "Agreement Signature Request",
+        message: "Please review and sign."
       }
+    };
+  }
 
-      docMeta.innerHTML = `
-        <div class="metaRow"><span class="metaKey">Template</span><span class="metaVal">${FSS.escape(state.template)}</span></div>
-        <div class="metaRow"><span class="metaKey">Created</span><span class="metaVal">${fmt(state.createdAt)}</span></div>
-        <div class="metaRow"><span class="metaKey">Sent</span><span class="metaVal">${fmt(state.sentAt)}</span></div>
-        <div class="divider" style="margin:12px 0;"></div>
-        <div class="metaRow"><span class="metaKey">Sender</span><span class="metaVal">${FSS.escape(parties.aName || "—")} (${FSS.escape(parties.aEmail || "—")})</span></div>
-        <div class="metaRow"><span class="metaKey">Recipient</span><span class="metaVal">${FSS.escape(parties.bName || "—")} (${FSS.escape(parties.bEmail || "—")})</span></div>
-      `;
+  function loadDocState(){
+    return get(K.doc, null);
+  }
 
-      // Actions
-      if(signed){
-        docActions.innerHTML = `
-          <a class="btn primary" href="success.html">View + Download Signed PDF</a>
-          <a class="btn secondary" href="audit.html">View Audit Trail</a>
-        `;
-      } else if(state.stage === "sender"){
-        docActions.innerHTML = `
-          <a class="btn primary" href="sign.html?role=sender">Continue Sender Signing</a>
-          <a class="btn secondary" href="create.html">Edit Details</a>
-        `;
-      } else if(state.stage === "recipient" && state.status === "sent"){
-        docActions.innerHTML = `
-          <a class="btn primary" href="sign.html?role=recipient">Open Recipient Signing</a>
-          <a class="btn secondary" href="audit.html">View Audit Trail</a>
-        `;
-      } else {
-        docActions.innerHTML = `
-          <a class="btn primary" href="create.html">Open Envelope</a>
-          <a class="btn secondary" href="audit.html">View Audit Trail</a>
-        `;
-      }
+  function saveDocState(doc){
+    set(K.doc, doc);
+  }
 
-      // Enable links
-      senderLink.style.opacity = "1";
-      senderLink.style.pointerEvents = "auto";
-      recipientLink.style.opacity = "1";
-      recipientLink.style.pointerEvents = "auto";
-    }
+  function resetDoc(){
+    saveDocState(defaultDoc());
+    saveFields([]);
+    set(K.audit, []);
+    localStorage.removeItem(K.signed);
+  }
 
-    // Reset
-    resetBtn.addEventListener("click", () => {
-      const ok = confirm(
-        "Reset the demo?\n\nThis will clear:\n• Envelope state\n• Placed fields\n• Signed PDF\n• Audit trail"
-      );
-      if(!ok) return;
+  function setDocStage(stage){
+    const d = loadDocState() || defaultDoc();
+    d.stage = stage;
+    saveDocState(d);
+  }
 
-      // Clear only demo keys (auth stays)
-      localStorage.removeItem("fss_doc");
-      localStorage.removeItem("fss_fields");
-      localStorage.removeItem("fss_signed");
-      localStorage.removeItem("fss_audit");
+  function setDocStatus(status){
+    const d = loadDocState() || defaultDoc();
+    d.status = status;
+    saveDocState(d);
+  }
 
-      location.reload();
+  // ===== FIELDS =====
+  function loadFields(){
+    return get(K.fields, []);
+  }
+
+  function saveFields(fields){
+    set(K.fields, fields || []);
+  }
+
+  // ===== AUDIT =====
+  function loadAudit(){
+    return get(K.audit, []);
+  }
+
+  function logAudit(message){
+    const audit = loadAudit();
+    const doc = loadDocState();
+    audit.unshift({
+      at: now(),
+      env: doc?.id || "—",
+      msg: message
     });
+    set(K.audit, audit);
+  }
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      FSS.logout();
-    });
-  </script>
+  // ===== FILE UTILS =====
+  async function fetchAsArrayBuffer(url){
+    const res = await fetch(url);
+    if(!res.ok) throw new Error("Failed to fetch PDF: " + url);
+    return await res.arrayBuffer();
+  }
 
-  <!-- Small dashboard-only styling (keeps app.css clean) -->
-  <style>
-    .dashGrid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr .95fr;
-      gap: 14px;
-      margin-top: 14px;
+  function arrayBufferToBase64(buffer){
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    for(let i=0; i<bytes.length; i+=chunkSize){
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i+chunkSize));
     }
-    .dashCard{
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 12px 28px rgba(15,23,42,.06);
-    }
-    .dashCardTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .dashMeta{
-      margin-top: 12px;
-    }
-    .metaRow{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 6px 0;
-      border-bottom: 1px dashed rgba(203,213,225,.7);
-    }
-    .metaRow:last-child{ border-bottom: 0; }
-    .metaKey{
-      font-size: 12px;
-      font-weight: 950;
-      color: #334155;
-      flex: 0 0 auto;
-      min-width: 90px;
-    }
-    .metaVal{
-      font-size: 12px;
-      font-weight: 850;
-      color: #0f172a;
-      text-align:right;
-      max-width: 280px;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .dashActions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
+    return btoa(binary);
+  }
 
-    .flow{
-      margin-top: 12px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .flowStep{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      padding: 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(226,232,240,.9);
-      background: #f8fafc;
-    }
-    .flowDot{
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 1000;
-      border: 1px solid rgba(29,121,198,.22);
-      background: rgba(29,121,198,.08);
-      flex: 0 0 auto;
-    }
-    .flowTitle{
-      font-weight: 1000;
-      font-size: 13px;
-      margin-bottom: 2px;
-    }
+  // ============================================================
+  // ✅ PDF SIGNING / PDF FIELD WRITING (pdf-lib)
+  // Requires pdf-lib loaded on sign.html:
+  // <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  // ============================================================
 
-    .quickLinks{
-      margin-top: 12px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .quickLink{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(226,232,240,.9);
-      background: #f8fafc;
-      transition: transform .06s ease, background .2s ease;
-    }
-    .quickLink:hover{
-      background:#fff;
-      transform: translateY(-1px);
-    }
-    .arrow{
-      font-weight: 1000;
-      color: #64748b;
-      flex: 0 0 auto;
-    }
+  function mapOverlayToPdfCoords(overlayEl, field){
+    // overlay top-left = (0,0)
+    // pdf-lib uses bottom-left = (0,0)
+    const rect = overlayEl.getBoundingClientRect();
 
-    @media(max-width: 1040px){
-      .dashGrid{ grid-template-columns: 1fr; }
-      .metaVal{ text-align:left; white-space: normal; }
-    }
-  </style>
+    // Convert from overlay pixel coords to normalized
+    const xNorm = field.x / rect.width;
+    const yNorm = field.y / rect.height;
+    const wNorm = field.w / rect.width;
+    const hNorm = field.h / rect.height;
 
-</body>
-</html>
+    return { xNorm, yNorm, wNorm, hNorm };
+  }
+
+  async function generateSignedPDF(){
+    try{
+      // Ensure pdf-lib exists
+      if(!window.PDFLib){
+        console.error("pdf-lib not loaded.");
+        return false;
+      }
+
+      const docState = loadDocState();
+      if(!docState || !docState.template){
+        console.error("No doc state / template.");
+        return false;
+      }
+
+      const fields = loadFields();
+
+      // Fetch the actual PDF template
+      const templateUrl = `pdfs/${docState.template}`;
+      const templateBytes = await fetchAsArrayBuffer(templateUrl);
+
+      // Load it into pdf-lib
+      const pdfDoc = await PDFLib.PDFDocument.load(templateBytes);
+
+      // We'll write on page 1 for demo. (You can extend to multi-page later)
+      const pageIndex = 0;
+      const page = pdfDoc.getPage(pageIndex);
+
+      // Measure page size
+      const { width: pdfW, height: pdfH } = page.getSize();
+
+      // Overlay DOM size (needed to map pixels → PDF points)
+      const overlayEl = document.getElementById("overlay");
+      if(!overlayEl){
+        console.error("overlay element missing.");
+        return false;
+      }
+
+      // Font
+      const helv = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const helvBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+
+      // Draw each field value onto PDF
+      for(const f of fields){
+        const val = (f.value || "").trim();
+        if(!val) continue;
+
+        // Map overlay pixels into PDF coordinates
+        const { xNorm, yNorm, wNorm, hNorm } = mapOverlayToPdfCoords(overlayEl, f);
+
+        const x = xNorm * pdfW;
+        const yTop = yNorm * pdfH;
+
+        // Convert overlay top-left to PDF bottom-left
+        const y = pdfH - yTop - (hNorm * pdfH);
+
+        const boxW = wNorm * pdfW;
+        const boxH = hNorm * pdfH;
+
+        // Draw a subtle border box (looks DocuSign-ish)
+        page.drawRectangle({
+          x,
+          y,
+          width: boxW,
+          height: boxH,
+          borderColor: PDFLib.rgb(0.2, 0.45, 1),
+          borderWidth: 1,
+          color: PDFLib.rgb(1,1,1),
+          opacity: 0.02
+        });
+
+        // Field label
+        page.drawText(f.type.toUpperCase(), {
+          x: x + 4,
+          y: y + boxH - 10,
+          size: 7,
+          font: helvBold,
+          color: PDFLib.rgb(0.1, 0.2, 0.4),
+          opacity: 0.7
+        });
+
+        // Field content
+        let drawValue = val;
+        let fontSize = 12;
+        let font = helv;
+
+        if(f.type === "signature"){
+          // mimic signature feel
+          fontSize = 16;
+          font = helvBold;
+        }
+        if(f.type === "date"){
+          fontSize = 12;
+          font = helv;
+        }
+        if(f.type === "checkbox"){
+          drawValue = (val.toLowerCase() === "true" || val.toLowerCase() === "yes" || val === "1") ? "☑" : "☐";
+          fontSize = 18;
+          font = helvBold;
+        }
+
+        page.drawText(drawValue, {
+          x: x + 8,
+          y: y + (boxH / 2) - (fontSize / 2) + 2,
+          size: fontSize,
+          font,
+          color: PDFLib.rgb(0.05, 0.1, 0.2)
+        });
+      }
+
+      // Add a footer stamp to show it was completed
+      const stampText = `Completed via FSS Demo — ${now()}`;
+      page.drawText(stampText, {
+        x: 40,
+        y: 25,
+        size: 9,
+        font: helv,
+        color: PDFLib.rgb(0.3, 0.3, 0.35),
+        opacity: 0.9
+      });
+
+      // Save PDF bytes
+      const signedBytes = await pdfDoc.save();
+
+      // Store base64 so success.html can display it
+      const b64 = arrayBufferToBase64(signedBytes);
+      setStr(K.signed, b64);
+
+      return true;
+    }catch(err){
+      console.error(err);
+      return false;
+    }
+  }
+
+  // ===== DASHBOARD / STATUS HELPERS =====
+  function getSignedBase64(){
+    return getStr(K.signed);
+  }
+
+  function hasSignedPDF(){
+    return !!getStr(K.signed);
+  }
+
+  // ===== PUBLIC API =====
+  return {
+    // config access (optional)
+    DEMO_PASSWORD,
+    FSS_LOGIN_EMAIL,
+    FSS_LOGIN_PASS,
+
+    // demo gate
+    isDemoUnlocked,
+    unlockDemo,
+
+    // auth
+    isAuthed,
+    login,
+    logout,
+    guard,
+
+    // state
+    defaultDoc,
+    loadDocState,
+    saveDocState,
+    resetDoc,
+    setDocStage,
+    setDocStatus,
+
+    // fields + audit
+    loadFields,
+    saveFields,
+    loadAudit,
+    logAudit,
+
+    // pdf signing
+    generateSignedPDF,
+    getSignedBase64,
+    hasSignedPDF,
+
+    // utils
+    escape
+  };
+})();
