@@ -3,291 +3,141 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS — Create Document</title>
+  <title>FSS Demo — Create</title>
   <link rel="stylesheet" href="assets/app.css" />
-
-  <style>
-    .doc-grid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .doc-card{
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,.30);
-      cursor:pointer;
-      transition: transform .08s ease, border-color .18s ease, background .18s ease;
-      min-height: 120px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap: 8px;
-      position: relative;
-      overflow:hidden;
-    }
-
-    .doc-card:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.22);
-      background: rgba(255,255,255,.08);
-    }
-
-    .doc-card.selected{
-      border-color: rgba(220,38,38,.65);
-      background: rgba(220,38,38,.10);
-      box-shadow: 0 22px 70px rgba(220,38,38,.15);
-    }
-
-    .doc-pill{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      width: fit-content;
-      color: rgba(255,255,255,.86);
-    }
-
-    .doc-title{
-      font-weight: 950;
-      font-size: 15px;
-      color: #fff;
-      margin: 0;
-      letter-spacing: .2px;
-    }
-
-    .doc-sub{
-      color: rgba(255,255,255,.70);
-      font-size: 12.5px;
-      font-weight: 750;
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    .doc-check{
-      position:absolute;
-      top: 12px;
-      right: 12px;
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.85);
-      font-weight: 950;
-      font-size: 14px;
-      opacity: .55;
-    }
-
-    .doc-card.selected .doc-check{
-      opacity: 1;
-      background: rgba(220,38,38,.95);
-      border-color: transparent;
-      color: #fff;
-    }
-
-    @media(max-width: 980px){
-      .doc-grid{ grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
+<body class="app dark">
 
-<body>
-  <div class="app-shell">
-    <header class="app-top">
-      <div class="app-brand">
-        <div class="app-logo">FSS</div>
-        <div>
-          <div class="app-title">Fill • Send • Sign</div>
-          <div class="app-sub">Create & Send Document</div>
-        </div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FSS</div>
+      <div>
+        <div class="title">Agreement Builder</div>
+        <div class="sub">Select a document, assign parties, and send to sign.</div>
       </div>
+    </div>
 
-      <div class="app-actions">
-        <a class="btn btn-outline" href="dashboard.html">← Dashboard</a>
-        <button class="btn btn-primary" id="sendBtn" type="button">Send for Signature</button>
-      </div>
-    </header>
+    <nav class="navlinks">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="create.html" class="active">Create</a>
+      <a href="index.html" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
 
-    <main class="app-main">
-      <div class="layout-two">
-        <!-- Left -->
-        <aside class="panel">
-          <h2 class="panel-title">Document Setup</h2>
-          <p class="panel-sub">
-            Choose a template, add recipient details, then send.
-          </p>
+  <main class="page">
+    <div class="shell">
 
-          <div class="info-block">
-            <label style="display:flex; flex-direction:column; gap:6px; font-weight:900; font-size:13px; color:#fff;">
-              Recipient Email*
-              <input
-                id="recipientEmail"
-                type="email"
-                placeholder="client@example.com"
-                style="padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:#fff; outline:none; font-size:14px;"
-              />
-            </label>
+      <section class="panel">
+        <h2>Create Agreement</h2>
+        <p class="muted">Choose one of the real PDFs in your repository. Then add Party A and Party B details.</p>
 
-            <label style="display:flex; flex-direction:column; gap:6px; font-weight:900; font-size:13px; color:#fff; margin-top:10px;">
-              Message (optional)
-              <textarea
-                id="message"
-                placeholder="Hi — please sign this document when you can."
-                style="padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:#fff; outline:none; font-size:14px; resize:vertical; min-height:110px;"
-              ></textarea>
-            </label>
-
-            <div class="note" style="margin-top:12px;">
-              <strong>Demo note:</strong>
-              This simulates sending a signing request. No emails are sent.
-            </div>
-          </div>
-
-          <div class="info-block">
-            <div style="font-weight:950; color:#fff; margin-bottom:8px;">Selected Template</div>
-            <div class="info-row">
-              <span class="muted">Name</span>
-              <span id="selectedName" style="font-weight:950;">None</span>
-            </div>
-            <div class="info-row">
-              <span class="muted">File</span>
-              <span id="selectedFile" style="font-weight:950;">—</span>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Right -->
-        <section class="panel panel-wide">
-          <h2 class="panel-title">Choose a Template</h2>
-          <p class="panel-sub">
-            These PDFs are stored inside <code style="opacity:.85;">/pdfs</code> and rendered using PDF.js on the signing screen.
-          </p>
-
-          <div class="doc-grid" id="docGrid"></div>
-        </section>
-      </div>
-    </main>
-
-    <footer class="app-foot">
-      <span>FSS Demo — Template selection</span>
-    </footer>
-  </div>
-
-  <script src="assets/app.js"></script>
-
-  <script>
-    // ================================
-    // Templates (your real PDFs)
-    // ================================
-    const templates = [
-      { name: "NDA", file: "nda.pdf", tag: "Confidentiality", desc: "Standard NDA for client/vendor discussions." },
-      { name: "Consulting Agreement", file: "consulting_agreement.pdf", tag: "Services", desc: "Basic consulting / service agreement template." },
-      { name: "Real Estate Agreement", file: "real-estate-agreement.pdf", tag: "Real Estate", desc: "Purchase/engagement agreement for property-related work." },
-      { name: "Non-Compete Agreement", file: "non-compete-agreement.pdf", tag: "Employment", desc: "Protect business interests and restrict competition." },
-      { name: "Lease Waiver", file: "lease-waiver.pdf", tag: "Liability", desc: "Waiver for lease-related situations." },
-      { name: "Event Accident Waiver", file: "event-accident-waiver.pdf", tag: "Events", desc: "Assumption of risk waiver for events." },
-      { name: "Photo Release", file: "Photo-Release.pdf", tag: "Media", desc: "Simple photo release consent form." }
-    ];
-
-    const docGrid = document.getElementById("docGrid");
-    const selectedName = document.getElementById("selectedName");
-    const selectedFile = document.getElementById("selectedFile");
-
-    const recipientEmail = document.getElementById("recipientEmail");
-    const message = document.getElementById("message");
-    const sendBtn = document.getElementById("sendBtn");
-
-    // Default select NDA unless something already chosen
-    let selectedTemplate = localStorage.getItem("fss_selected_pdf") || "nda.pdf";
-
-    function niceName(file){
-      return file
-        .replace(/[-_]/g, " ")
-        .replace(".pdf", "")
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
-
-    function renderTemplates(){
-      docGrid.innerHTML = "";
-
-      templates.forEach(t => {
-        const card = document.createElement("div");
-        card.className = "doc-card";
-        if(t.file === selectedTemplate) card.classList.add("selected");
-
-        card.innerHTML = `
-          <div class="doc-check">✓</div>
-          <div class="doc-pill">${t.tag}</div>
+        <div class="grid2">
           <div>
-            <h3 class="doc-title">${t.name}</h3>
-            <p class="doc-sub">${t.desc}</p>
+            <label class="lbl">Document template</label>
+            <select class="input" id="pdfSelect">
+              <option value="">Select a PDF…</option>
+              <option value="nda.pdf">NDA</option>
+              <option value="consulting_agreement.pdf">Consulting Agreement</option>
+              <option value="lease-waiver.pdf">Lease Release</option>
+              <option value="event-accident-waiver.pdf">Event Accident Waiver</option>
+              <option value="non-compete-agreement.pdf">Non-Compete Release</option>
+              <option value="Photo-Release.pdf">Photo Release</option>
+              <option value="real-estate-agreement.pdf">Real Estate Mutual Release</option>
+            </select>
+
+            <div class="divider"></div>
+
+            <h3 class="h3">Party A (Sender)</h3>
+            <div class="grid2">
+              <div>
+                <label class="lbl">Company Name</label>
+                <input class="input" id="aCompany" placeholder="Example: Hallam Group" />
+              </div>
+              <div>
+                <label class="lbl">Title</label>
+                <input class="input" id="aTitle" placeholder="Owner / Manager" />
+              </div>
+              <div>
+                <label class="lbl">First Name</label>
+                <input class="input" id="aFirst" placeholder="Mason" />
+              </div>
+              <div>
+                <label class="lbl">Last Name</label>
+                <input class="input" id="aLast" placeholder="Palmieri" />
+              </div>
+              <div class="full">
+                <label class="lbl">Email</label>
+                <input class="input" id="aEmail" placeholder="sender@company.com" />
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3 class="h3">Party B (Recipient)</h3>
+            <div class="grid2">
+              <div>
+                <label class="lbl">Company Name</label>
+                <input class="input" id="bCompany" placeholder="Client company" />
+              </div>
+              <div>
+                <label class="lbl">Title</label>
+                <input class="input" id="bTitle" placeholder="CEO / Director" />
+              </div>
+              <div>
+                <label class="lbl">First Name</label>
+                <input class="input" id="bFirst" placeholder="John" />
+              </div>
+              <div>
+                <label class="lbl">Last Name</label>
+                <input class="input" id="bLast" placeholder="Smith" />
+              </div>
+              <div class="full">
+                <label class="lbl">Email</label>
+                <input class="input" id="bEmail" placeholder="client@email.com" />
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="actions">
+              <button class="btn secondary" id="previewBtn" type="button">Preview PDF</button>
+              <button class="btn primary" id="goSignBtn" type="button">Next → Add Signature</button>
+            </div>
+
+            <p class="tiny muted">This is a static demo. “Send” is simulated. PDF completion generates a new copy in the browser.</p>
           </div>
-        `;
 
-        card.addEventListener("click", () => {
-          selectedTemplate = t.file;
-          localStorage.setItem("fss_selected_pdf", selectedTemplate);
-          renderTemplates();
-          updateSelected();
-        });
+          <div>
+            <div class="viewerWrap">
+              <div class="viewerHead">
+                <div class="viewerTitle">PDF Preview</div>
+                <div class="viewerHint">This loads directly from <code>/pdfs/</code></div>
+              </div>
 
-        docGrid.appendChild(card);
-      });
-    }
+              <div class="pdfViewer" id="pdfPreview">
+                <div class="pdfEmpty">
+                  Select a document and click <b>Preview PDF</b>.
+                </div>
+              </div>
+            </div>
 
-    function updateSelected(){
-      selectedName.textContent = niceName(selectedTemplate);
-      selectedFile.textContent = selectedTemplate;
-    }
+            <div class="hintBox">
+              <b>How it works</b>
+              <div class="muted" style="margin-top:6px;">
+                We display the real PDF and allow a DocuSign-like signature overlay.
+                Your original PDFs are never modified.
+              </div>
+            </div>
+          </div>
+        </div>
 
-    // Pre-fill recipient if exists
-    const storedRecipient = localStorage.getItem("fss_recipient");
-    if(storedRecipient) recipientEmail.value = storedRecipient;
+      </section>
 
-    sendBtn.addEventListener("click", () => {
-      const email = recipientEmail.value.trim();
+    </div>
+  </main>
 
-      if(!email){
-        alert("Please enter a recipient email.");
-        recipientEmail.focus();
-        return;
-      }
-
-      // Store values
-      localStorage.setItem("fss_selected_pdf", selectedTemplate);
-      localStorage.setItem("fss_recipient", email);
-      localStorage.setItem("fss_message", message.value.trim());
-
-      // Save fake outgoing request for dashboard log
-      const outbox = JSON.parse(localStorage.getItem("fss_outbox") || "[]");
-      outbox.unshift({
-        id: crypto.randomUUID(),
-        file: selectedTemplate,
-        name: niceName(selectedTemplate),
-        recipient: email,
-        status: "Sent",
-        sentAt: new Date().toISOString()
-      });
-      localStorage.setItem("fss_outbox", JSON.stringify(outbox));
-
-      // Go sign
-      window.location.href = "sign.html";
-    });
-
-    renderTemplates();
-    updateSelected();
-  </script>
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.min.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
