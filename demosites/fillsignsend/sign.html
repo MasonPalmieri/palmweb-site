@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS Demo — Sign</title>
+  <title>Client Portal — Sign</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body class="app dark">
@@ -12,15 +12,16 @@
     <div class="brand">
       <div class="logo">FSS</div>
       <div>
-        <div class="title">Sign & Complete</div>
-        <div class="sub">Place a signature + date on the PDF. Then “Complete”.</div>
+        <div class="title">Signing Room</div>
+        <div class="sub" id="subLine">Place fields, then complete.</div>
       </div>
     </div>
 
     <nav class="navlinks">
       <a href="dashboard.html">Dashboard</a>
       <a href="create.html">Create</a>
-      <a href="index.html" id="logoutBtn">Logout</a>
+      <a href="audit.html">Audit</a>
+      <a href="../../demos.html" id="logoutBtn">Logout</a>
     </nav>
   </header>
 
@@ -28,59 +29,464 @@
     <div class="shell">
 
       <section class="panel">
-        <div class="signLayout">
-          <div class="tools">
-            <h2>Signing Tools</h2>
-            <p class="muted">Drag-and-drop signature elements onto the PDF, just like DocuSign.</p>
-
-            <div class="toolRow">
-              <button class="btn secondary" id="addSig">+ Add Signature</button>
-              <button class="btn secondary" id="addDate">+ Add Date</button>
-            </div>
-
-            <div class="divider"></div>
-
-            <label class="lbl">Signer name</label>
-            <input class="input" id="signerName" placeholder="Type name for signature..." />
-
-            <label class="lbl" style="margin-top:10px;">Signer email</label>
-            <input class="input" id="signerEmail" placeholder="client@email.com" />
-
-            <div class="divider"></div>
-
-            <button class="btn primary" id="completeBtn">Complete & Download PDF</button>
-            <button class="btn secondary" id="cancelBtn">← Back</button>
-
-            <p class="tiny muted" style="margin-top:10px;">
-              Completion creates a new signed PDF in the browser. Your original PDF stays untouched.
-            </p>
+        <div class="signTop">
+          <div>
+            <h2 style="margin:0 0 6px;">Sign Document</h2>
+            <p class="muted" id="docLine">Loading document...</p>
           </div>
 
-          <div class="viewerWrap">
-            <div class="viewerHead">
-              <div class="viewerTitle" id="docTitle">Document</div>
-              <div class="viewerHint">Drag boxes into position</div>
-            </div>
+          <div class="signActions">
+            <button class="btn secondary" id="prevPageBtn" type="button">◀ Prev</button>
+            <div class="pill" id="pagePill">Page 1 / 1</div>
+            <button class="btn secondary" id="nextPageBtn" type="button">Next ▶</button>
 
-            <div class="pdfStage" id="pdfStage">
-              <div class="pdfViewer" id="pdfCanvasWrap"></div>
-              <div class="overlay" id="overlay"></div>
-            </div>
-
-            <div class="tiny muted" style="margin-top:10px;">
-              Tip: Click a placed field to move it. Double-click to remove.
-            </div>
+            <button class="btn outline" id="nextFieldBtn" type="button">Next Field</button>
+            <button class="btn primary" id="completeBtn" type="button">Complete</button>
           </div>
         </div>
 
+        <div class="divider"></div>
+
+        <div class="grid2">
+          <!-- Left: Tools -->
+          <aside class="panel mini" style="height:fit-content;">
+            <b>Fields</b>
+            <p class="muted tiny" style="margin-top:6px;">
+              Click a field type, then click on the document to place it.
+            </p>
+
+            <div class="toolGrid">
+              <button class="tool" data-tool="signature" type="button">✍️ Signature</button>
+              <button class="tool" data-tool="initials" type="button">🆔 Initials</button>
+              <button class="tool" data-tool="text" type="button">🔤 Text</button>
+              <button class="tool" data-tool="date" type="button">📅 Date</button>
+              <button class="tool" data-tool="checkbox" type="button">☑ Checkbox</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <b>Recipient info</b>
+            <div class="hintBox" id="partyBox" style="margin-top:10px;">
+              Loading…
+            </div>
+
+            <div class="divider"></div>
+
+            <b>Required fields</b>
+            <p class="muted tiny" style="margin-top:6px;">
+              The demo requires at least: <b>Signature</b> + <b>Date</b>.
+              Any placed field marked “Required” must be completed to finish.
+            </p>
+
+            <div class="divider"></div>
+
+            <button class="btn outlineFull" id="clearFieldsBtn" type="button">Clear Fields</button>
+          </aside>
+
+          <!-- Right: Document + overlay -->
+          <div class="docWrap">
+            <div class="docToolbar">
+              <span class="pill">PDF</span>
+              <span class="muted tiny" id="fileName"></span>
+              <span class="muted tiny" style="margin-left:auto;" id="zoomLabel">Zoom: 100%</span>
+              <button class="btn tinyBtn" id="zoomOut" type="button">–</button>
+              <button class="btn tinyBtn" id="zoomIn" type="button">+</button>
+            </div>
+
+            <div class="docStage">
+              <canvas id="pdfCanvas"></canvas>
+              <div id="overlay" class="overlay"></div>
+            </div>
+
+            <p class="tiny muted" id="statusLine" style="margin-top:10px;"></p>
+          </div>
+        </div>
       </section>
 
     </div>
   </main>
 
-  <!-- PDF.js + PDF-lib -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <!-- PDF.js (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module"></script>
   <script src="assets/app.js"></script>
+
+  <script type="module">
+    FSS.guard();
+
+    // PDF.js setup
+    const { pdfjsLib } = globalThis;
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs";
+
+    const canvas = document.getElementById("pdfCanvas");
+    const overlay = document.getElementById("overlay");
+    const statusLine = document.getElementById("statusLine");
+
+    const fileName = document.getElementById("fileName");
+    const docLine = document.getElementById("docLine");
+    const pagePill = document.getElementById("pagePill");
+
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const nextFieldBtn = document.getElementById("nextFieldBtn");
+    const completeBtn = document.getElementById("completeBtn");
+    const clearFieldsBtn = document.getElementById("clearFieldsBtn");
+
+    const zoomLabel = document.getElementById("zoomLabel");
+    const zoomOut = document.getElementById("zoomOut");
+    const zoomIn = document.getElementById("zoomIn");
+
+    const toolBtns = document.querySelectorAll(".tool");
+
+    // Load state (template + parties)
+    const state = FSS.loadDocState();
+    if(!state?.template){
+      window.location.href = "create.html";
+    }
+
+    fileName.textContent = state.template;
+    docLine.textContent = `Template: ${state.template}`;
+
+    // Show recipient (Party B)
+    const partyBox = document.getElementById("partyBox");
+    const p = state.parties || {};
+    partyBox.innerHTML = `
+      <b>${FSS.escape(p.bName || "Recipient")}</b><br/>
+      <span class="muted">${FSS.escape(p.bEmail || "")}</span><br/>
+      <div class="divider" style="margin:10px 0;"></div>
+      <span class="muted tiny">Sender:</span> <b>${FSS.escape(p.aName || "")}</b><br/>
+      <span class="muted tiny">${FSS.escape(p.aEmail || "")}</span>
+    `;
+
+    // Audit entry: recipient opened
+    FSS.auditAddOnce("Viewed", "Recipient opened the signing link.");
+
+    // Signing model:
+    // Fields are stored in localStorage as array: {id,type,page,x,y,w,h,required,value}
+    let fields = FSS.loadFields();
+    let selectedTool = "signature";
+
+    let pdfDoc = null;
+    let pageCount = 1;
+    let currentPage = 1;
+    let scale = 1.0;
+
+    // Render current page
+    async function renderPage(pageNum){
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+
+      const ctx = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      overlay.style.width = viewport.width + "px";
+      overlay.style.height = viewport.height + "px";
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      pagePill.textContent = `Page ${pageNum} / ${pageCount}`;
+      zoomLabel.textContent = `Zoom: ${Math.round(scale * 100)}%`;
+
+      // Render overlay fields
+      renderOverlay();
+    }
+
+    function renderOverlay(){
+      overlay.innerHTML = "";
+
+      const pageFields = fields.filter(f => f.page === currentPage);
+
+      for(const f of pageFields){
+        const el = document.createElement("div");
+        el.className = `field field-${f.type} ${f.required ? "required" : ""} ${f.value ? "filled" : ""}`;
+        el.style.left = f.x + "px";
+        el.style.top = f.y + "px";
+        el.style.width = f.w + "px";
+        el.style.height = f.h + "px";
+        el.setAttribute("data-id", f.id);
+
+        const label = document.createElement("div");
+        label.className = "fieldLabel";
+        label.textContent = f.type.toUpperCase() + (f.required ? " *" : "");
+        el.appendChild(label);
+
+        const body = document.createElement("div");
+        body.className = "fieldBody";
+        body.textContent = f.value ? f.value : "Click to fill";
+        el.appendChild(body);
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "fieldDel";
+        del.textContent = "✕";
+        del.title = "Remove field";
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          fields = fields.filter(x => x.id !== f.id);
+          FSS.saveFields(fields);
+          renderOverlay();
+        });
+        el.appendChild(del);
+
+        el.addEventListener("click", () => openFillModal(f.id));
+
+        overlay.appendChild(el);
+      }
+    }
+
+    function openFillModal(fieldId){
+      const f = fields.find(x => x.id === fieldId);
+      if(!f) return;
+
+      // Checkbox toggle
+      if(f.type === "checkbox"){
+        f.value = f.value ? "" : "☑";
+        FSS.saveFields(fields);
+        renderOverlay();
+        return;
+      }
+
+      // Date auto
+      if(f.type === "date"){
+        const d = new Date();
+        const val = `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}/${d.getFullYear()}`;
+        f.value = val;
+        FSS.saveFields(fields);
+        renderOverlay();
+        return;
+      }
+
+      let promptLabel = "Enter value";
+      let placeholder = "";
+      let defaultVal = f.value || "";
+
+      if(f.type === "signature"){
+        promptLabel = "Type your full name (Signature)";
+        placeholder = "Example: John Smith";
+      }
+      if(f.type === "initials"){
+        promptLabel = "Type your initials";
+        placeholder = "Example: JS";
+      }
+      if(f.type === "text"){
+        promptLabel = "Enter text";
+        placeholder = "Type here…";
+      }
+
+      const val = window.prompt(promptLabel, defaultVal || placeholder);
+      if(val === null) return;
+
+      f.value = val.trim();
+      FSS.saveFields(fields);
+      renderOverlay();
+    }
+
+    function getNextUnfilledRequired(){
+      const required = fields.filter(f => f.required);
+      for(const f of required){
+        if(!f.value) return f;
+      }
+      return null;
+    }
+
+    function focusField(f){
+      // go to field page and scroll/flash
+      if(!f) return;
+
+      if(currentPage !== f.page){
+        currentPage = f.page;
+        renderPage(currentPage).then(() => flashField(f.id));
+      } else {
+        flashField(f.id);
+      }
+    }
+
+    function flashField(id){
+      const el = overlay.querySelector(`[data-id="${id}"]`);
+      if(!el) return;
+      el.classList.add("flash");
+      el.scrollIntoView({ behavior:"smooth", block:"center", inline:"center" });
+      setTimeout(()=> el.classList.remove("flash"), 900);
+    }
+
+    // Field placement
+    overlay.addEventListener("click", (e) => {
+      // ignore click if user clicked on an existing field
+      if(e.target.closest(".field")) return;
+
+      const rect = overlay.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const size = FSS.fieldDefaults(selectedTool);
+
+      // place field
+      const field = {
+        id: crypto.randomUUID(),
+        type: selectedTool,
+        page: currentPage,
+        x: Math.max(6, x - size.w / 2),
+        y: Math.max(6, y - size.h / 2),
+        w: size.w,
+        h: size.h,
+        required: size.required,
+        value: ""
+      };
+
+      fields.push(field);
+      FSS.saveFields(fields);
+      renderOverlay();
+
+      statusLine.textContent = `${selectedTool.toUpperCase()} field placed on page ${currentPage}. Click it to fill.`;
+      statusLine.style.color = "#86efac";
+    });
+
+    toolBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        toolBtns.forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        selectedTool = btn.getAttribute("data-tool");
+        statusLine.textContent = `Selected: ${selectedTool.toUpperCase()} — click on the document to place it.`;
+        statusLine.style.color = "#fde68a";
+      });
+    });
+    // default active
+    document.querySelector(`.tool[data-tool="${selectedTool}"]`).classList.add("active");
+
+    // Page controls
+    prevPageBtn.addEventListener("click", () => {
+      if(currentPage > 1){
+        currentPage -= 1;
+        renderPage(currentPage);
+      }
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+      if(currentPage < pageCount){
+        currentPage += 1;
+        renderPage(currentPage);
+      }
+    });
+
+    // Zoom
+    zoomIn.addEventListener("click", () => {
+      scale = Math.min(2.0, scale + 0.1);
+      renderPage(currentPage);
+    });
+    zoomOut.addEventListener("click", () => {
+      scale = Math.max(0.6, scale - 0.1);
+      renderPage(currentPage);
+    });
+
+    // Next required field
+    nextFieldBtn.addEventListener("click", () => {
+      // If no required fields exist, guide user
+      if(!fields.some(f => f.required)){
+        alert("No required fields have been placed yet.\n\nPlace a Signature and Date field to proceed.");
+        return;
+      }
+      const next = getNextUnfilledRequired();
+      if(!next){
+        alert("All required fields are completed ✅");
+        return;
+      }
+      focusField(next);
+      statusLine.textContent = "Jumped to next required field.";
+      statusLine.style.color = "#86efac";
+    });
+
+    // Clear all fields
+    clearFieldsBtn.addEventListener("click", () => {
+      if(!confirm("Clear all placed fields?")) return;
+      fields = [];
+      FSS.saveFields(fields);
+      renderOverlay();
+      statusLine.textContent = "Fields cleared.";
+      statusLine.style.color = "#fde68a";
+    });
+
+    // Completion
+    completeBtn.addEventListener("click", async () => {
+      // Enforce at least signature+date required
+      const hasSig = fields.some(f => f.type === "signature");
+      const hasDate = fields.some(f => f.type === "date");
+
+      if(!hasSig || !hasDate){
+        alert("This demo requires at least:\n\n• Signature field\n• Date field\n\nPlace both, then complete.");
+        return;
+      }
+
+      // Required completion
+      const requiredFields = fields.filter(f => f.required);
+      const unfilled = requiredFields.find(f => !f.value);
+      if(unfilled){
+        alert("A required field is missing.\n\nWe will take you to it now.");
+        focusField(unfilled);
+        return;
+      }
+
+      statusLine.textContent = "Generating signed PDF…";
+      statusLine.style.color = "#fde68a";
+
+      try{
+        // Generate signed PDF in browser
+        const pdfUrl = `pdfs/${state.template}`;
+        const bytes = await FSS.fetchArrayBuffer(pdfUrl);
+
+        const signedBytes = await FSS.generateSignedPdf({
+          originalPdfBytes: bytes,
+          fields,
+          parties: state.parties || {}
+        });
+
+        // Audit
+        FSS.auditAdd("Signed", "Recipient completed all required fields and signed.");
+        FSS.auditAdd("Completed", "Signed PDF generated.");
+
+        // Save final blob for success page
+        FSS.saveSignedBlob(signedBytes, state.template);
+
+        statusLine.textContent = "Complete ✅ Redirecting…";
+        statusLine.style.color = "#86efac";
+
+        setTimeout(() => {
+          window.location.href = "success.html";
+        }, 650);
+
+      }catch(err){
+        console.error(err);
+        statusLine.textContent = "Error generating signed PDF.";
+        statusLine.style.color = "#fda4af";
+      }
+    });
+
+    // Logout clears auth + doc state
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+    });
+
+    // Load PDF
+    (async function init(){
+      try{
+        const pdfUrl = `pdfs/${state.template}`;
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        pdfDoc = await loadingTask.promise;
+        pageCount = pdfDoc.numPages;
+
+        // Validate fields remain in range
+        fields = (fields || []).filter(f => f.page >= 1 && f.page <= pageCount);
+        FSS.saveFields(fields);
+
+        await renderPage(currentPage);
+        statusLine.textContent = "Tip: Place Signature + Date (required) then use Next Field to finish quickly.";
+        statusLine.style.color = "#86efac";
+      }catch(err){
+        console.error(err);
+        statusLine.textContent = "Could not load PDF. Confirm the file exists in /pdfs/.";
+        statusLine.style.color = "#fda4af";
+      }
+    })();
+  </script>
 </body>
 </html>
