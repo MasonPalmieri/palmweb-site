@@ -1,551 +1,421 @@
-/* =============================================================================
-   FSS Demo App — app.js (Static / GitHub Pages)
-   No backend. Uses localStorage to simulate sessions + doc state.
-   Supports:
-     - Template PDFs from /pdfs/
-     - Uploaded PDFs (stored base64 in localStorage)
-     - Scratch-built PDFs (generated dynamically and stored base64)
-   Signed PDF generation uses pdf-lib (loaded only on sign.html).
-============================================================================= */
+/* ============================================================================
+   FSS Demo App — app.js (Static / GitHub Pages, no backend)
+   - Uses localStorage to simulate auth + document state.
+   - Supports:
+       • Template PDFs from /pdfs/<template>.pdf
+       • Uploaded / Scratch PDFs stored as base64 in doc.customPdfBase64
+       • Drag & Drop field placement (pixel coords on rendered preview)
+       • Signed PDF generation using pdf-lib (embeds signature + date text)
+   - Pages call:
+       FSS.guard(), FSS.login(), FSS.logout()
+       FSS.loadDocState(), FSS.saveDocState(), FSS.resetDoc()
+       FSS.loadFields(), FSS.saveFields()
+       FSS.setFieldValue(), FSS.getFieldValue()
+       FSS.generateSignedPDF(), FSS.hasSignedPDF(), FSS.getSignedBase64()
+============================================================================ */
 
-window.FSS = (() => {
-
-  /* =========================
-     CONFIG
-  ========================= */
-  const DEMO_PASSWORD = "hallam";
-
-  // Optional: hide your internal demo name
-  const APP_LABEL = "Client Demo";
+(function () {
+  const CONFIG = {
+    DEMO_EMAIL: "demo@client.com",
+    DEMO_PASSWORD: "hallam", // can change
+    BASE_PATH: "", // keep "" for same folder. If you host in subfolder, set e.g. "/demosites/fillsignsend"
+  };
 
   const STORE_KEYS = {
-    demoGate: "palmweb_demo_gate",
     auth: "fss_auth",
     doc: "fss_doc",
     fields: "fss_fields",
     values: "fss_values",
     audit: "fss_audit",
-    signed: "fss_signed_pdf_b64"
+    signed: "fss_signed_pdf_b64",
   };
 
-  /* =========================
-     HELPERS
-  ========================= */
-  function escape(str){
-    return String(str || "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  // -------------------------
+  // Safe JSON Helpers
+  // -------------------------
+  function safeJSONParse(str, fallback) {
+    try {
+      return JSON.parse(str);
+    } catch {
+      return fallback;
+    }
   }
 
-  function safeJSONParse(str, fallback){
-    try { return JSON.parse(str); }
-    catch { return fallback; }
-  }
-
-  function nowStamp(){
-    return new Date().toLocaleString();
-  }
-
-  function uid(){
-    return String(Date.now()) + String(Math.floor(Math.random() * 100000));
-  }
-
-  function setKey(key, val){
-    localStorage.setItem(key, JSON.stringify(val));
-  }
-
-  function getKey(key, fallback){
+  function getKey(key, fallback) {
     const raw = localStorage.getItem(key);
-    if(!raw) return fallback;
+    if (!raw) return fallback;
     return safeJSONParse(raw, fallback);
   }
 
-  function removeKey(key){
+  function setKey(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function removeKey(key) {
     localStorage.removeItem(key);
   }
 
-  /* =========================
-     DEMO GATE (Main site password)
-  ========================= */
-  function isDemoUnlocked(){
-    return !!localStorage.getItem(STORE_KEYS.demoGate);
+  // -------------------------
+  // Auth
+  // -------------------------
+  function isAuthed() {
+    const auth = getKey(STORE_KEYS.auth, null);
+    return !!(auth && auth.ok && auth.email);
   }
 
-  function unlockDemo(password){
-    if((password || "").trim().toLowerCase() === DEMO_PASSWORD){
-      localStorage.setItem(STORE_KEYS.demoGate, "true");
+  function login(email, password) {
+    const em = String(email || "").trim().toLowerCase();
+    const pw = String(password || "").trim();
+
+    // Demo-only authentication
+    if (em === CONFIG.DEMO_EMAIL && pw === CONFIG.DEMO_PASSWORD) {
+      const auth = { ok: true, email: em, at: Date.now() };
+      setKey(STORE_KEYS.auth, auth);
+      logAudit("Login successful (" + em + ")");
       return true;
     }
+
     return false;
   }
 
-  /* =========================
-     AUTH
-  ========================= */
-  function isAuthed(){
-    return !!localStorage.getItem(STORE_KEYS.auth);
-  }
-
-  function login(email, password){
-    const e = (email || "").trim().toLowerCase();
-    const p = (password || "").trim();
-
-    // This is a demo auth gate only
-    if(!e || !p) return false;
-    if(p !== DEMO_PASSWORD) return false;
-
-    const auth = { email: e, at: nowStamp() };
-    setKey(STORE_KEYS.auth, auth);
-    logAudit(`Login successful (${e}).`);
-    return true;
-  }
-
-  function logout(){
+  function logout() {
     removeKey(STORE_KEYS.auth);
-    logAudit("Logged out.");
+    logAudit("Logged out");
   }
 
-  function guard(options = {}){
-    const {
-      allowDemoGate = false,
-      demoGatePath = "../../demos.html"
-    } = options;
-
-    // Demo gate optional
-    if(allowDemoGate && !isDemoUnlocked()){
-      location.href = demoGatePath;
-      return;
-    }
-
-    // Auth required for everything except index.html
-    const path = location.pathname.toLowerCase();
-    const isIndex = path.endsWith("/index.html") || path.endsWith("/index");
-
-    if(!isIndex && !isAuthed()){
-      location.href = "index.html";
-      return;
+  function guard() {
+    // Any page except index.html should require auth
+    if (!isAuthed()) {
+      const path = location.pathname.toLowerCase();
+      const isIndex = path.endsWith("/index.html") || path.endsWith("index.html") || path.endsWith("/");
+      if (!isIndex) {
+        location.href = "index.html";
+      }
     }
   }
 
-  /* =========================
-     DOC STATE
-  ========================= */
-  function defaultDoc(){
+  // -------------------------
+  // Doc State
+  // -------------------------
+  function defaultDoc() {
     return {
-      id: "ENV-" + uid(),
+      id: String(Date.now()),
       createdAt: new Date().toISOString(),
-      template: null,
-
-      // sourceType determines how the PDF is loaded
-      // "template" | "upload" | "scratch"
-      sourceType: "template",
-
-      // For upload/scratch, store PDF base64 here
-      customPdfBase64: null,
-      customPdfName: null,
-
-      status: "draft", // draft | sent | completed
-
+      template: "nda.pdf",              // used if no customPdfBase64
+      customPdfBase64: "",              // overrides template if present
+      customPdfName: "",                // optional name for custom pdf
+      status: "draft",                  // draft | sent | completed
       parties: {
         aName: "",
         aEmail: "",
         bName: "",
-        bEmail: ""
+        bEmail: "",
       },
-
-      title: "Confidential Agreement"
     };
   }
 
-  function loadDocState(){
+  function loadDocState() {
     return getKey(STORE_KEYS.doc, null);
   }
 
-  function saveDocState(doc){
+  function saveDocState(doc) {
     setKey(STORE_KEYS.doc, doc);
   }
 
-  function resetDoc(){
+  function resetDoc() {
     const d = defaultDoc();
     saveDocState(d);
-    removeKey(STORE_KEYS.fields);
-    removeKey(STORE_KEYS.values);
-    removeKey(STORE_KEYS.signed);
-    logAudit("Envelope reset.");
+    saveFields([]);
+    removeSigned();
+    setKey(STORE_KEYS.values, {});
+    setKey(STORE_KEYS.audit, []);
+    logAudit("Envelope reset");
     return d;
   }
 
-  function setDocStage(stage){
-    const doc = loadDocState() || defaultDoc();
-    doc.status = stage;
-    saveDocState(doc);
-    logAudit(`Status updated: ${stage}`);
-    return doc;
-  }
-
-  /* =========================
-     FIELDS + VALUES
-  ========================= */
-  function loadFields(){
+  // -------------------------
+  // Fields
+  // Fields are stored in "canvas pixel space" based on the rendered PDF
+  // sign.html stores: {id,type,page,x,y,w,h,required,role}
+  // -------------------------
+  function loadFields() {
     return getKey(STORE_KEYS.fields, []);
   }
 
-  function saveFields(fields){
+  function saveFields(fields) {
     setKey(STORE_KEYS.fields, fields || []);
   }
 
-  function loadValues(){
+  // -------------------------
+  // Values
+  // Used for signature/date values
+  // -------------------------
+  function loadValues() {
     return getKey(STORE_KEYS.values, {});
   }
 
-  function saveValues(values){
+  function saveValues(values) {
     setKey(STORE_KEYS.values, values || {});
   }
 
-  function setFieldValue(type, value){
+  function setFieldValue(type, value) {
     const values = loadValues();
     values[type] = value;
     saveValues(values);
   }
 
-  function getFieldValue(type){
+  function getFieldValue(type) {
     const values = loadValues();
     return values[type];
   }
 
-  /* =========================
-     AUDIT TRAIL
-  ========================= */
-  function loadAudit(){
+  // -------------------------
+  // Audit Trail
+  // -------------------------
+  function loadAudit() {
     return getKey(STORE_KEYS.audit, []);
   }
 
-  function saveAudit(audit){
-    setKey(STORE_KEYS.audit, audit || []);
+  function saveAudit(events) {
+    setKey(STORE_KEYS.audit, events || []);
   }
 
-  function logAudit(message){
+  function logAudit(message) {
     const audit = loadAudit();
     audit.unshift({
-      at: nowStamp(),
-      msg: message
+      at: new Date().toISOString(),
+      msg: message,
     });
     saveAudit(audit);
   }
 
-  /* =========================
-     PDF UTILITIES
-  ========================= */
-  async function fetchAsArrayBuffer(url){
-    const res = await fetch(url);
-    if(!res.ok) throw new Error("Failed to fetch PDF: " + url);
-    return await res.arrayBuffer();
+  // -------------------------
+  // Signed PDF storage
+  // -------------------------
+  function setSignedBase64(b64) {
+    if (!b64) return;
+    localStorage.setItem(STORE_KEYS.signed, b64);
   }
 
-  function arrayBufferToBase64(buffer){
+  function getSignedBase64() {
+    return localStorage.getItem(STORE_KEYS.signed) || "";
+  }
+
+  function hasSignedPDF() {
+    return !!getSignedBase64();
+  }
+
+  function removeSigned() {
+    localStorage.removeItem(STORE_KEYS.signed);
+  }
+
+  // -------------------------
+  // Base64 / Bytes
+  // -------------------------
+  function base64ToUint8(b64) {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function uint8ToBase64(uint8) {
     let binary = "";
-    const bytes = new Uint8Array(buffer);
-    const chunkSize = 0x8000;
-    for(let i=0; i<bytes.length; i += chunkSize){
-      const chunk = bytes.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, chunk);
+    const chunk = 0x8000;
+    for (let i = 0; i < uint8.length; i += chunk) {
+      const sub = uint8.subarray(i, i + chunk);
+      binary += String.fromCharCode(...sub);
     }
     return btoa(binary);
   }
 
-  function base64ToBlobURL(base64, mime="application/pdf"){
-    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-    const blob = new Blob([bytes], { type: mime });
-    return URL.createObjectURL(blob);
-  }
-
-  function setSignedBase64(b64){
-    localStorage.setItem(STORE_KEYS.signed, b64 || "");
-  }
-
-  function getSignedBase64(){
-    return localStorage.getItem(STORE_KEYS.signed) || "";
-  }
-
-  function hasSignedPDF(){
-    const b = getSignedBase64();
-    return !!(b && b.length > 50);
-  }
-
-  /* =========================
-     PDF SOURCE GETTER (template/upload/scratch)
-  ========================= */
-  async function getActivePdfBytes(){
+  // -------------------------
+  // Load PDF bytes (template OR custom)
+  // -------------------------
+  async function fetchPdfBytes() {
     const doc = loadDocState();
-    if(!doc) throw new Error("No doc state.");
+    if (!doc) throw new Error("No doc state found.");
 
-    // Template
-    if(doc.sourceType === "template"){
-      const template = doc.template || "nda.pdf";
-      const url = `pdfs/${encodeURIComponent(template)}`;
-      return await fetchAsArrayBuffer(url);
+    // Custom PDF (upload/scratch)
+    if (doc.customPdfBase64) {
+      return {
+        bytes: base64ToUint8(doc.customPdfBase64),
+        name: doc.customPdfName || "custom.pdf",
+        source: "custom",
+      };
     }
 
-    // Upload or Scratch
-    if((doc.sourceType === "upload" || doc.sourceType === "scratch") && doc.customPdfBase64){
-      const bytes = Uint8Array.from(atob(doc.customPdfBase64), c => c.charCodeAt(0));
-      return bytes.buffer;
-    }
-
-    throw new Error("No active PDF source found.");
+    // Template PDF
+    const template = doc.template || "nda.pdf";
+    const url = `pdfs/${encodeURIComponent(template)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Template not found: " + url);
+    const ab = await res.arrayBuffer();
+    return {
+      bytes: new Uint8Array(ab),
+      name: template,
+      source: "template",
+    };
   }
 
-  function getActivePdfViewerURL(zoom=125){
-    const doc = loadDocState();
-    if(!doc) return "";
+  // -------------------------
+  // Coordinates mapping (preview px -> PDF points)
+  // sign.html stores fields in preview pixel coords.
+  // We must map them onto the actual PDF page size.
+  //
+  // Approach:
+  // - Preview canvas size = (PDF page size in points) * previewScale
+  // - But sign.html field x/y is relative to stage scroll container.
+  // - In sign.html we set field x/y based on stage content coords.
+  // - So we treat those as "canvas pixel coords".
+  //
+  // To map:
+  //   pdfX = x / previewScale
+  //   pdfY = pageHeight - ((y + fieldHeight) / previewScale)
+  // (because PDF origin is bottom-left)
+  // -------------------------
+  function mapToPdfCoords(field, previewScale, pageHeight) {
+    const x = (field.x || 0) / previewScale;
+    const yTop = (field.y || 0) / previewScale;
+    const w = (field.w || 160) / previewScale;
+    const h = (field.h || 44) / previewScale;
 
-    if(doc.sourceType === "template"){
-      const template = doc.template || "nda.pdf";
-      return `pdfs/${encodeURIComponent(template)}#zoom=${zoom}`;
-    }
+    // Convert from top-left origin to PDF bottom-left origin
+    const y = pageHeight - (yTop + h);
 
-    if((doc.sourceType === "upload" || doc.sourceType === "scratch") && doc.customPdfBase64){
-      const blobUrl = base64ToBlobURL(doc.customPdfBase64);
-      return `${blobUrl}#zoom=${zoom}`;
-    }
-
-    return "";
+    return { x, y, w, h };
   }
 
-  /* =========================
-     SCRATCH PDF GENERATION
-     Creates a simple agreement PDF (real PDF bytes), stores it into doc.customPdfBase64
-  ========================= */
-  async function createScratchPDF({ title, partyA, partyB, bodyText }){
-    if(!window.PDFLib){
-      throw new Error("pdf-lib not loaded. Scratch PDF generation requires pdf-lib.");
-    }
-
-    const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([612, 792]);
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-    const margin = 54;
-    let y = 740;
-
-    page.drawText(title || "Confidential Agreement", {
-      x: margin,
-      y,
-      size: 22,
-      font: fontBold,
-      color: rgb(0.1, 0.1, 0.1)
-    });
-
-    y -= 36;
-
-    const meta = [
-      `Party A: ${partyA || "—"}`,
-      `Party B: ${partyB || "—"}`,
-      `Date: ${new Date().toLocaleDateString()}`
-    ];
-
-    meta.forEach(line => {
-      page.drawText(line, {
-        x: margin,
-        y,
-        size: 12,
-        font,
-        color: rgb(0.25, 0.25, 0.25)
-      });
-      y -= 18;
-    });
-
-    y -= 18;
-
-    const body = (bodyText || "").trim() || "This Agreement is made between Party A and Party B. The parties agree to keep information confidential and not disclose it to third parties without written consent.";
-
-    // simple wrap
-    const maxWidth = 612 - margin*2;
-    const words = body.split(/\s+/);
-    let line = "";
-    const lines = [];
-
-    for(const w of words){
-      const test = line ? (line + " " + w) : w;
-      const width = font.widthOfTextAtSize(test, 12);
-      if(width > maxWidth){
-        lines.push(line);
-        line = w;
-      }else{
-        line = test;
-      }
-    }
-    if(line) lines.push(line);
-
-    lines.forEach(ln => {
-      if(y < 120){
-        const p2 = pdfDoc.addPage([612, 792]);
-        y = 740;
-        p2.drawText(ln, { x: margin, y, size: 12, font, color: rgb(0.12,0.12,0.12) });
-      }else{
-        page.drawText(ln, { x: margin, y, size: 12, font, color: rgb(0.12,0.12,0.12) });
-      }
-      y -= 16;
-    });
-
-    // signature placeholders
-    const sigY = 92;
-    page.drawText("Party A Signature: ____________________________", { x: margin, y: sigY, size: 12, font, color: rgb(0.2,0.2,0.2) });
-    page.drawText("Party B Signature: ____________________________", { x: margin, y: sigY - 22, size: 12, font, color: rgb(0.2,0.2,0.2) });
-
-    const bytes = await pdfDoc.save();
-    const b64 = arrayBufferToBase64(bytes);
-
-    const doc = loadDocState() || defaultDoc();
-    doc.sourceType = "scratch";
-    doc.customPdfBase64 = b64;
-    doc.customPdfName = (title || "Scratch Agreement") + ".pdf";
-    doc.template = null;
-    saveDocState(doc);
-
-    logAudit("Scratch PDF created.");
-    return doc;
-  }
-
-  /* =========================
-     SIGNED PDF GENERATION
-     Embeds sender signature + date stamp on last page.
-  ========================= */
-  async function generateSignedPDF(){
-    try{
-      if(!window.PDFLib){
-        console.error("pdf-lib not loaded");
+  // -------------------------
+  // Generate Signed PDF
+  // This is the core fix for:
+  //  - "builder pdf failed"
+  //  - signed PDF not appearing
+  //  - custom/scratch PDFs not showing
+  // -------------------------
+  async function generateSignedPDF() {
+    try {
+      if (!window.PDFLib) {
+        console.error("pdf-lib missing. Ensure sign.html includes pdf-lib or loads it.");
         return false;
       }
 
-      const docState = loadDocState();
-      if(!docState) return false;
-
       const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
 
-      // Load PDF bytes based on source
-      const pdfBytes = await getActivePdfBytes();
-      const pdfDoc = await PDFDocument.load(pdfBytes);
+      const docState = loadDocState();
+      if (!docState) throw new Error("Missing docState");
 
-      const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const helvBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const fields = loadFields();
+      if (!fields || fields.length === 0) {
+        throw new Error("No fields placed. Place signature/date fields first.");
+      }
 
-      const pages = pdfDoc.getPages();
-      const lastPage = pages[pages.length - 1];
+      // Load original PDF bytes
+      const { bytes, name } = await fetchPdfBytes();
+      const pdfDoc = await PDFDocument.load(bytes);
 
-      // Pull sender + date values
-      const senderName = docState.parties.aName || "Sender";
-      const dateText = new Date().toLocaleDateString();
+      // Use first page for now (demo). You can extend to multi-page.
+      const page = pdfDoc.getPages()[0];
+      const { width: pageW, height: pageH } = page.getSize();
 
-      // Footer signature stamp (clean, readable)
-      const stampX = 54;
-      const stampY = 54;
+      // Embed font
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-      lastPage.drawRectangle({
-        x: stampX - 10,
-        y: stampY - 12,
-        width: 504,
-        height: 52,
-        color: rgb(0.98, 0.98, 0.99),
-        borderColor: rgb(0.85, 0.85, 0.88),
-        borderWidth: 1
+      // Values to embed
+      const sigText = String(getFieldValue("signature") || docState.parties?.aName || "Sender").trim();
+      const dateText = String(getFieldValue("date") || new Date().toLocaleDateString()).trim();
+
+      // IMPORTANT: previewScale needs to match sign.html default zoom scale.
+      // sign.html uses zoom = 1.3 by default.
+      // If the user changes zoom, sign.html re-renders but keeps fields in stage pixel coords.
+      // For best results we store current zoom in localStorage whenever user zooms.
+      //
+      // We'll attempt to read it here, fallback to 1.3.
+      const previewScale = parseFloat(localStorage.getItem("fss_preview_scale") || "1.3") || 1.3;
+
+      // Find signature & date fields
+      const sigField = fields.find(f => f.type === "signature");
+      const dateField = fields.find(f => f.type === "date");
+
+      if (!sigField || !dateField) {
+        throw new Error("Missing required fields: signature and/or date");
+      }
+
+      // Map to PDF coords
+      const sig = mapToPdfCoords(sigField, previewScale, pageH);
+      const dat = mapToPdfCoords(dateField, previewScale, pageH);
+
+      // Draw signature (as styled text) + line
+      page.drawRectangle({
+        x: sig.x,
+        y: sig.y,
+        width: sig.w,
+        height: sig.h,
+        color: rgb(1, 1, 1),
+        borderColor: rgb(0.9, 0.2, 0.5),
+        borderWidth: 1,
+        opacity: 0.95,
       });
 
-      lastPage.drawText("Signed via FSS Demo", {
-        x: stampX,
-        y: stampY + 22,
-        size: 10,
-        font: helvBold,
-        color: rgb(0.15, 0.15, 0.16)
-      });
-
-      lastPage.drawText(`Signer: ${senderName}`, {
-        x: stampX,
-        y: stampY + 8,
-        size: 10,
-        font: helv,
-        color: rgb(0.18, 0.18, 0.20)
-      });
-
-      lastPage.drawText(`Date: ${dateText}`, {
-        x: stampX + 280,
-        y: stampY + 8,
-        size: 10,
-        font: helv,
-        color: rgb(0.18, 0.18, 0.20)
-      });
-
-      // Optional: also embed a large signature mark for "wow factor"
-      lastPage.drawText(senderName, {
-        x: stampX + 300,
-        y: stampY + 24,
+      page.drawText(sigText, {
+        x: sig.x + 10,
+        y: sig.y + sig.h / 2 - 7,
         size: 14,
-        font: helvBold,
-        color: rgb(0.75, 0.10, 0.22)
+        font,
+        color: rgb(0.12, 0.12, 0.12),
       });
 
+      // Draw date
+      page.drawRectangle({
+        x: dat.x,
+        y: dat.y,
+        width: dat.w,
+        height: dat.h,
+        color: rgb(1, 1, 1),
+        borderColor: rgb(0.2, 0.9, 0.5),
+        borderWidth: 1,
+        opacity: 0.95,
+      });
+
+      page.drawText(dateText, {
+        x: dat.x + 10,
+        y: dat.y + dat.h / 2 - 7,
+        size: 12,
+        font,
+        color: rgb(0.12, 0.12, 0.12),
+      });
+
+      // Add footer stamp
+      page.drawText("Signed via FSS Demo", {
+        x: 36,
+        y: 22,
+        size: 9,
+        font,
+        color: rgb(0.4, 0.4, 0.4),
+        opacity: 0.75,
+      });
+
+      // Save PDF
       const signedBytes = await pdfDoc.save();
-      const signedB64 = arrayBufferToBase64(signedBytes);
+      const b64 = uint8ToBase64(signedBytes);
 
-      setSignedBase64(signedB64);
-      logAudit("Signed PDF generated.");
+      setSignedBase64(b64);
+
+      logAudit("Signed PDF generated (" + name + ")");
       return true;
-
-    }catch(err){
-      console.error("generateSignedPDF error:", err);
+    } catch (err) {
+      console.error("generateSignedPDF ERROR:", err);
+      logAudit("ERROR generating signed PDF: " + (err?.message || "unknown error"));
       return false;
     }
   }
 
-  /* =========================
-     UPLOAD HANDLER
-     Reads PDF file from <input type="file">, stores base64 in doc state.
-  ========================= */
-  function handlePdfUpload(file){
-    return new Promise((resolve, reject) => {
-      if(!file) return reject(new Error("No file provided."));
-      if(!file.name.toLowerCase().endsWith(".pdf")) return reject(new Error("Only PDF files allowed."));
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        try{
-          const arrayBuffer = reader.result;
-          const b64 = arrayBufferToBase64(arrayBuffer);
-
-          const doc = loadDocState() || defaultDoc();
-          doc.sourceType = "upload";
-          doc.customPdfBase64 = b64;
-          doc.customPdfName = file.name;
-          doc.template = null;
-          saveDocState(doc);
-
-          logAudit(`PDF uploaded: ${file.name}`);
-          resolve(doc);
-        }catch(e){
-          reject(e);
-        }
-      };
-      reader.onerror = () => reject(new Error("Failed to read file."));
-      reader.readAsArrayBuffer(file);
-    });
-  }
-
-  /* =========================
-     PUBLIC API
-  ========================= */
-  return {
+  // -------------------------
+  // PUBLIC API
+  // -------------------------
+  window.FSS = {
     // config
-    DEMO_PASSWORD,
-    APP_LABEL,
-
-    // demo gate
-    isDemoUnlocked,
-    unlockDemo,
+    CONFIG,
 
     // auth
     isAuthed,
@@ -558,14 +428,10 @@ window.FSS = (() => {
     loadDocState,
     saveDocState,
     resetDoc,
-    setDocStage,
 
-    // fields/values
-    uid,
+    // fields + values
     loadFields,
     saveFields,
-    loadValues,
-    saveValues,
     setFieldValue,
     getFieldValue,
 
@@ -573,20 +439,13 @@ window.FSS = (() => {
     loadAudit,
     logAudit,
 
-    // signed pdf
-    hasSignedPDF,
-    getSignedBase64,
+    // pdf
+    fetchPdfBytes,
     generateSignedPDF,
 
-    // active PDF source/viewer helpers
-    getActivePdfViewerURL,
-
-    // scratch + upload
-    createScratchPDF,
-    handlePdfUpload,
-
-    // helper
-    escape
+    // signed
+    hasSignedPDF,
+    getSignedBase64,
+    removeSigned,
   };
-
 })();
