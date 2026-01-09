@@ -1,365 +1,380 @@
-/* =========================================================
-   FSS Demo App — app.js (Static / GitHub Pages)
-   No backend. Uses localStorage to simulate sessions + doc state.
-   pdf-lib is loaded only on sign.html (window.PDFLib).
-   ========================================================= */
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard • FSS Demo</title>
+  <link rel="stylesheet" href="assets/app.css" />
 
-window.FSS = (() => {
-
-  /* =========================
-     CONFIG
-  ========================== */
-  const DEMO_PASSWORD = "hallam";
-  const DEMO_EMAIL = "demo@client.com";
-
-  const STORE_KEYS = {
-    auth: "fss_auth",
-    doc: "fss_doc",
-    fields: "fss_fields",
-    values: "fss_values",
-    audit: "fss_audit",
-    signed: "fss_signed_pdf_b64"
-  };
-
-  /* =========================
-     UTILS
-  ========================== */
-  function safeJSONParse(str, fallback){
-    try{ return JSON.parse(str); }catch{ return fallback; }
-  }
-
-  function setKey(key, val){
-    localStorage.setItem(key, JSON.stringify(val));
-  }
-
-  function getKey(key, fallback){
-    const raw = localStorage.getItem(key);
-    if(!raw) return fallback;
-    return safeJSONParse(raw, fallback);
-  }
-
-  function removeKey(key){
-    localStorage.removeItem(key);
-  }
-
-  function nowStamp(){
-    return new Date().toLocaleString();
-  }
-
-  function uid(){
-    return "fss_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-  }
-
-  function escape(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#39;");
-  }
-
-  function getPath(){
-    return location.pathname.toLowerCase();
-  }
-
-  function isLoginPage(){
-    const p = getPath();
-    return (
-      p.endsWith("/fillsignsend/") ||
-      p.endsWith("/fillsignsend/index.html") ||
-      (p.endsWith("/index.html") && p.includes("/fillsignsend/"))
-    );
-  }
-
-  /* =========================
-     AUTH
-  ========================== */
-  function isAuthed(){
-    const auth = getKey(STORE_KEYS.auth, null);
-    return !!(auth && auth.ok && auth.email);
-  }
-
-  function login(email, password){
-    const ok =
-      (email.toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) ||
-      (password === DEMO_PASSWORD);
-
-    if(!ok) return false;
-
-    setKey(STORE_KEYS.auth, { ok:true, email, at: nowStamp() });
-    logAudit(`Login successful (${email})`);
-    return true;
-  }
-
-  function logout(){
-    removeKey(STORE_KEYS.auth);
-    logAudit("Logged out");
-  }
-
-  function guard(){
-    if(isLoginPage()) return;
-    if(!isAuthed()){
-      location.replace("index.html");
+  <style>
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 14px;
+      margin-top: 14px;
+      align-items:start;
     }
-  }
 
-  /* =========================
-     DOC STATE
-  ========================== */
-  function defaultDoc(){
-    return {
-      id: uid(),
-      createdAt: nowStamp(),
-      template: "nda.pdf",
-      status: "draft",
-      parties: {
-        aName: "",
-        aEmail: "",
-        bName: "",
-        bEmail: ""
+    .card{
+      padding: 16px;
+    }
+
+    .card h1{
+      margin:0;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+
+    .sub{
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 750;
+      max-width: 75ch;
+      line-height: 1.55;
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      margin-top: 12px;
+    }
+
+    .left{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap: 3px;
+    }
+
+    .label{
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(255,255,255,.60);
+    }
+
+    .value{
+      font-size: 13px;
+      font-weight: 950;
+      color: rgba(255,255,255,.93);
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 600px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 850;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.88);
+      white-space: nowrap;
+    }
+
+    .pill .dot{
+      width: 9px; height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.25);
+    }
+    .pill[data-state="draft"] .dot{ background: rgba(67,203,255,.95); }
+    .pill[data-state="ready"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+
+    .btn-lg{
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .audit{
+      margin-top: 12px;
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+    }
+
+    .audit-head{
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .audit-head strong{
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .audit-body{
+      padding: 10px 12px 12px;
+      max-height: 340px;
+      overflow:auto;
+    }
+
+    .event{
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      margin-top: 10px;
+    }
+    .event:first-child{ margin-top: 0; }
+
+    .event .time{
+      font-size: 11px;
+      font-weight: 900;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 6px;
+    }
+
+    .event .msg{
+      font-size: 13px;
+      font-weight: 900;
+      color: rgba(255,255,255,.88);
+      line-height: 1.35;
+    }
+
+    .hint{
+      margin-top: 12px;
+      color: rgba(255,255,255,.62);
+      font-weight: 750;
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1020px){
+      .grid{ grid-template-columns: 1fr; }
+      .value{ max-width: 72vw; }
+    }
+  </style>
+</head>
+
+<body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="dashboard.html">
+        <span class="logo-badge">FSS</span>
+        <div class="brand-text">
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
+        </div>
+      </a>
+
+      <div class="app-nav">
+        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="create.html">Create</a>
+        <a class="nav-link" href="sign.html">Sign</a>
+        <a class="nav-link" href="success.html">Completed</a>
+      </div>
+
+      <div class="app-user">
+        <span id="userEmail" class="user-pill">—</span>
+        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+      <h1>Dashboard</h1>
+      <p class="sub">
+        Manage agreements, review audit history, and continue the workflow.
+        This is a realistic “DocuSign-style” experience — fully static, with signed PDFs generated in your browser.
+      </p>
+
+      <div class="grid">
+        <!-- LEFT: ACTIVE AGREEMENT -->
+        <section class="card" style="box-shadow:none; padding:0; background:transparent; border:none;">
+          <div class="row">
+            <div class="left">
+              <div class="label">Active template</div>
+              <div class="value" id="templateVal">—</div>
+            </div>
+            <span class="pill" id="statusPill" data-state="draft">
+              <span class="dot"></span>
+              <span id="statusVal">Draft</span>
+            </span>
+          </div>
+
+          <div class="row">
+            <div class="left">
+              <div class="label">Sender (signs first)</div>
+              <div class="value" id="senderVal">—</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="left">
+              <div class="label">Recipient</div>
+              <div class="value" id="recipientVal">—</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a class="btn btn-primary btn-lg" id="continueBtn" href="create.html">Continue workflow</a>
+            <button class="btn btn-outline btn-lg" id="resetBtn" type="button">Reset demo</button>
+          </div>
+
+          <div class="hint" id="hintText">
+            Tip: Start with <strong>nda.pdf</strong>. It’s the fastest path to show Fill → Sign → Send.
+          </div>
+        </section>
+
+        <!-- RIGHT: AUDIT TRAIL -->
+        <aside class="card">
+          <div class="audit-head">
+            <strong>Audit Trail</strong>
+            <button class="btn btn-outline" id="clearAuditBtn" type="button">Clear</button>
+          </div>
+
+          <div class="audit-body" id="auditBody">
+            <div class="event">
+              <div class="time">—</div>
+              <div class="msg">No activity yet.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/app.js"></script>
+  <script>
+    // Guard
+    FSS.guard();
+
+    // User pill
+    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
+
+    // Load doc state
+    let doc = FSS.loadDocState();
+    if(!doc){
+      FSS.resetDoc();
+      doc = FSS.loadDocState();
+      FSS.logAudit("Envelope created.");
+    }
+
+    function fmtParty(name, email){
+      if(!name && !email) return "Not provided";
+      if(name && email) return `${name} (${email})`;
+      return name || email;
+    }
+
+    // Populate rows
+    document.getElementById("templateVal").textContent = doc.template || "Not selected";
+    document.getElementById("senderVal").textContent = fmtParty(doc.parties?.aName, doc.parties?.aEmail);
+    document.getElementById("recipientVal").textContent = fmtParty(doc.parties?.bName, doc.parties?.bEmail);
+
+    // Status
+    const hasSigned = FSS.hasSignedPDF();
+    const statusPill = document.getElementById("statusPill");
+    const statusVal = document.getElementById("statusVal");
+    const hintText = document.getElementById("hintText");
+    const continueBtn = document.getElementById("continueBtn");
+
+    function setStatus(state, label){
+      statusPill.setAttribute("data-state", state);
+      statusVal.textContent = label;
+    }
+
+    if(doc.status === "completed"){
+      setStatus("completed", "Completed");
+      continueBtn.href = "success.html";
+      continueBtn.textContent = "View completed";
+      hintText.innerHTML = `✅ Completed. Download or review the signed document.`;
+    } else if(doc.status === "sent"){
+      setStatus("sent", "Sent");
+      continueBtn.href = "sign.html";
+      continueBtn.textContent = "Open recipient signing";
+      hintText.innerHTML = `Recipient signing is pending. Open the Sign screen to complete.`;
+    } else if(hasSigned){
+      setStatus("ready", "Ready to send");
+      continueBtn.href = "sign.html";
+      continueBtn.textContent = "Send to recipient";
+      hintText.innerHTML = `Sender signed. Next: send it to the recipient.`;
+    } else if(doc.template && doc.parties?.aName && doc.parties?.bName){
+      setStatus("draft", "Draft");
+      continueBtn.href = "sign.html";
+      continueBtn.textContent = "Sign as sender";
+      hintText.innerHTML = `Next: sender signs first. Then send to the recipient.`;
+    } else {
+      setStatus("draft", "Draft");
+      continueBtn.href = "create.html";
+      continueBtn.textContent = "Create agreement";
+      hintText.innerHTML = `Start by selecting a template and entering both parties.`;
+    }
+
+    // Audit trail render
+    function renderAudit(){
+      const audit = FSS.loadAudit() || [];
+      const body = document.getElementById("auditBody");
+
+      if(!audit.length){
+        body.innerHTML = `
+          <div class="event">
+            <div class="time">—</div>
+            <div class="msg">No activity yet.</div>
+          </div>`;
+        return;
       }
-    };
-  }
 
-  function loadDocState(){
-    return getKey(STORE_KEYS.doc, null);
-  }
-
-  function saveDocState(doc){
-    setKey(STORE_KEYS.doc, doc);
-  }
-
-  function resetDoc(){
-    const d = defaultDoc();
-    saveDocState(d);
-    setKey(STORE_KEYS.fields, []);
-    setKey(STORE_KEYS.values, {});
-    setKey(STORE_KEYS.audit, []);
-    removeKey(STORE_KEYS.signed);
-    logAudit("Envelope reset");
-    return d;
-  }
-
-  function setDocStage(stage){
-    const d = loadDocState() || defaultDoc();
-    d.status = stage;
-    saveDocState(d);
-    logAudit(`Status updated → ${stage}`);
-    return d;
-  }
-
-  /* =========================
-     AUDIT
-  ========================== */
-  function loadAudit(){
-    return getKey(STORE_KEYS.audit, []);
-  }
-
-  function saveAudit(a){
-    setKey(STORE_KEYS.audit, a);
-  }
-
-  function logAudit(msg){
-    const audit = loadAudit();
-    audit.unshift({ at: nowStamp(), msg });
-    saveAudit(audit);
-  }
-
-  /* =========================
-     FIELDS + VALUES
-  ========================== */
-  function loadFields(){
-    return getKey(STORE_KEYS.fields, []);
-  }
-
-  function saveFields(fields){
-    setKey(STORE_KEYS.fields, fields);
-  }
-
-  function loadValues(){
-    return getKey(STORE_KEYS.values, {});
-  }
-
-  function saveValues(values){
-    setKey(STORE_KEYS.values, values);
-  }
-
-  function setFieldValue(key, value){
-    const v = loadValues();
-    v[key] = value;
-    saveValues(v);
-  }
-
-  function getFieldValue(key){
-    const v = loadValues();
-    return v[key];
-  }
-
-  /* =========================
-     SIGNED PDF
-  ========================== */
-  function setSignedBase64(b64){
-    setKey(STORE_KEYS.signed, { b64, at: nowStamp() });
-    logAudit("Signed PDF generated");
-  }
-
-  function hasSignedPDF(){
-    const s = getKey(STORE_KEYS.signed, null);
-    return !!(s && s.b64);
-  }
-
-  function getSignedBase64(){
-    const s = getKey(STORE_KEYS.signed, null);
-    return s?.b64 || null;
-  }
-
-  /* =========================
-     FILE HELPERS
-  ========================== */
-  async function fetchAsArrayBuffer(url){
-    const res = await fetch(url);
-    if(!res.ok) throw new Error("Failed to fetch PDF: " + url);
-    return await res.arrayBuffer();
-  }
-
-  function arrayBufferToBase64(buffer){
-    let binary = "";
-    const bytes = new Uint8Array(buffer);
-    const chunkSize = 0x8000;
-    for(let i=0; i<bytes.length; i+=chunkSize){
-      binary += String.fromCharCode.apply(null, bytes.subarray(i, i+chunkSize));
+      body.innerHTML = audit.slice().reverse().map(ev => {
+        const d = new Date(ev.ts);
+        return `
+          <div class="event">
+            <div class="time">${d.toLocaleString()}</div>
+            <div class="msg">${FSS.escape(ev.msg)}</div>
+          </div>`;
+      }).join("");
     }
-    return btoa(binary);
-  }
+    renderAudit();
 
-  function base64ToBlobURL(b64, mime){
-    const byteChars = atob(b64);
-    const bytes = new Uint8Array(byteChars.length);
-    for(let i=0; i<byteChars.length; i++){
-      bytes[i] = byteChars.charCodeAt(i);
-    }
-    const blob = new Blob([bytes], { type: mime || "application/octet-stream" });
-    return URL.createObjectURL(blob);
-  }
+    // Reset demo
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset this demo? This clears the agreement, fields, and signed PDF.")) return;
+      FSS.resetDoc();
+      FSS.logAudit("Envelope reset.");
+      location.reload();
+    });
 
-  function downloadBase64PDF(b64, filename){
-    const url = base64ToBlobURL(b64, "application/pdf");
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename || "signed.pdf";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  }
+    // Clear audit
+    document.getElementById("clearAuditBtn").addEventListener("click", () => {
+      if(!confirm("Clear audit trail?")) return;
+      localStorage.removeItem("fss_audit");
+      renderAudit();
+    });
 
-  /* =========================
-     REAL SIGNED PDF GENERATOR
-     - Embeds sender signature + date on last page bottom-right
-     - Adds audit footer "Signed via FSS Demo"
-     - Requires pdf-lib loaded on sign.html
-  ========================== */
-  async function generateSignedPDF({ templateFile, senderName, senderEmail, recipientName, recipientEmail }){
-    try{
-      if(!window.PDFLib){
-        console.error("pdf-lib not loaded");
-        return false;
-      }
-
-      const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
-
-      const template = templateFile || "nda.pdf";
-      const url = `pdfs/${encodeURIComponent(template)}`;
-      const pdfBytes = await fetchAsArrayBuffer(url);
-
-      const pdfDoc = await PDFDocument.load(pdfBytes);
-      const pages = pdfDoc.getPages();
-      const lastPage = pages[pages.length - 1];
-
-      const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const helvBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-      const senderSig = senderName || "Sender";
-      const dateVal = getFieldValue("sender_date") || new Date().toLocaleDateString();
-
-      const { width, height } = lastPage.getSize();
-
-      // Signature block position (bottom-right)
-      const sigX = width - 270;
-      const sigY = 90;
-
-      // A signature-like font isn't available in standard PDF fonts,
-      // so we mimic it by making it larger + italic-ish styling.
-      lastPage.drawText(senderSig, {
-        x: sigX,
-        y: sigY + 28,
-        size: 22,
-        font: helvBold,
-        color: rgb(0.05, 0.05, 0.05),
-        opacity: 0.95
-      });
-
-      lastPage.drawText(`Date: ${dateVal}`, {
-        x: sigX,
-        y: sigY + 10,
-        size: 11,
-        font: helv,
-        color: rgb(0.20, 0.20, 0.20),
-        opacity: 0.95
-      });
-
-      // Audit footer
-      const auditText = `Signed via FSS Demo • ${nowStamp()} • Sender: ${senderEmail || senderSig} • Recipient: ${recipientEmail || recipientName || "—"}`;
-      lastPage.drawText(auditText, {
-        x: 36,
-        y: 28,
-        size: 8,
-        font: helv,
-        color: rgb(0.35, 0.35, 0.35),
-        opacity: 0.85
-      });
-
-      // Output bytes
-      const signedBytes = await pdfDoc.save();
-      const b64 = arrayBufferToBase64(signedBytes);
-
-      setSignedBase64(b64);
-      return true;
-    }catch(err){
-      console.error("generateSignedPDF error:", err);
-      return false;
-    }
-  }
-
-  /* =========================
-     PUBLIC API
-  ========================== */
-  return {
-    // auth
-    login, logout, isAuthed, guard,
-
-    // doc
-    defaultDoc, loadDocState, saveDocState, resetDoc, setDocStage,
-
-    // audit
-    loadAudit, logAudit,
-
-    // fields
-    loadFields, saveFields,
-
-    // values
-    setFieldValue, getFieldValue,
-
-    // signed pdf
-    setSignedBase64, hasSignedPDF, getSignedBase64,
-
-    // helpers
-    uid, escape, fetchAsArrayBuffer, arrayBufferToBase64,
-    base64ToBlobURL, downloadBase64PDF,
-
-    // signer
-    generateSignedPDF
-  };
-
-})();
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+      location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
