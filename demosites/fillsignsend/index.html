@@ -3,249 +3,260 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Client Portal • Demo</title>
+  <title>Client Demo • Fill → Sign → Send</title>
 
-  <!-- Cache-bust for GitHub Pages -->
-  <link rel="stylesheet" href="assets/app.css?v=20260109" />
+  <!-- ✅ RELATIVE PATHS (fixes subfolder hosting) -->
+  <link rel="stylesheet" href="./assets/app.css" />
 
   <style>
     .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 18px 48px;
-    }
-
-    .hero{
-      margin-top: 14px;
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-
-    .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 22px 70px rgba(0,0,0,.35);
-    }
-
-    h1{
-      margin: 0 0 10px;
-      font-size: clamp(22px, 3vw, 34px);
-      letter-spacing: -0.6px;
-      line-height: 1.08;
-      font-weight: 950;
-    }
-
-    p{
-      margin: 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .bullets{
-      margin-top: 12px;
-      display:grid;
-      gap: 10px;
-    }
-
-    .bullet{
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-weight: 800;
-      font-size: 13px;
-      color: rgba(255,255,255,.86);
-    }
-
-    .login h2{
-      margin: 0 0 6px;
-      font-size: 15px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-
-    .login p{
-      margin-bottom: 12px;
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 18px;
     }
 
     .grid{
+      width: min(980px, 100%);
       display:grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 8px;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+      align-items:stretch;
     }
 
-    label{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.85);
-    }
-
-    input{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
+    .hero{
+      padding: 24px;
+      border-radius: 22px;
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      outline:none;
-      font-weight: 850;
-      font-size: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
     }
 
-    input:focus{
-      border-color: rgba(67,203,255,.55);
-      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
+    .hero h1{
+      margin: 0;
+      font-size: 26px;
+      font-weight: 1000;
+      letter-spacing: -0.4px;
+    }
+
+    .hero p{
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.72);
+      font-weight: 850;
+      line-height: 1.55;
+      max-width: 62ch;
+    }
+
+    .checks{
+      margin-top: 18px;
+      display:grid;
+      gap: 10px;
+      padding-left: 0;
+      list-style:none;
+    }
+
+    .checks li{
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+      color: rgba(255,255,255,.78);
+      font-weight: 850;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .check{
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: rgba(96,255,157,.18);
+      border: 1px solid rgba(96,255,157,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .signin{
+      padding: 24px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+    }
+
+    .signin h2{
+      margin:0;
+      font-size: 16px;
+      font-weight: 1000;
+      letter-spacing: -0.2px;
+    }
+
+    .signin p{
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: rgba(255,255,255,.66);
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    form{
+      margin-top: 14px;
+      display:grid;
+      gap: 10px;
     }
 
     .row{
+      display:grid;
+      gap: 8px;
+    }
+
+    .actions{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
       gap: 10px;
       flex-wrap:wrap;
-      margin-top: 12px;
+      align-items:center;
+      margin-top: 6px;
     }
 
     .note{
       margin-top: 12px;
       font-size: 12px;
-      font-weight: 750;
-      color: rgba(255,255,255,.60);
+      color: rgba(255,255,255,.55);
+      font-weight: 800;
       line-height: 1.45;
     }
 
-    .err{
-      display:none;
-      margin-top: 10px;
+    .status{
+      margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,79,99,.30);
-      background: rgba(255,79,99,.10);
-      color: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
       font-weight: 850;
       font-size: 13px;
+      color: rgba(255,255,255,.86);
+      display:none;
     }
-    .err.show{ display:block; }
+    .status.good{ display:block; border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
+    .status.warn{ display:block; border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
+    .status.bad{ display:block; border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.08); }
 
-    @media (max-width: 920px){
-      .hero{ grid-template-columns: 1fr; }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body class="app">
-  <header class="app-top">
-    <div class="app-top-inner">
-      <a class="app-brand" href="./index.html">
-        <span class="logo-badge">CP</span>
-        <div class="brand-text">
-          <strong>Client Portal</strong>
-          <span>Agreements • Signatures • Delivery</span>
-        </div>
-      </a>
-
-      <div class="app-user">
-        <a class="btn btn-outline" href="../../index.html">Back to PalmWeb</a>
-      </div>
-    </div>
-  </header>
-
   <main class="wrap">
-    <section class="hero">
-      <div class="card">
+    <div class="grid">
+      <section class="hero">
         <h1>Document workflow demo</h1>
         <p>
-          This is a product-style demonstration showing how a paying customer would:
-          <strong>create</strong> an agreement, <strong>sign</strong> it, and <strong>send</strong> it to a client —
-          resulting in a completed, downloadable PDF.
+          Product-style demonstration of how a user creates an agreement, signs it,
+          and sends it to a client — resulting in a completed, downloadable PDF.
         </p>
 
-        <div class="bullets">
-          <div class="bullet">✅ Create an agreement from a PDF template</div>
-          <div class="bullet">✅ Sender signs first (Fill → Sign → Send)</div>
-          <div class="bullet">✅ “Send” generates a recipient signing step</div>
-          <div class="bullet">✅ Completed document becomes available for download</div>
-        </div>
+        <ul class="checks">
+          <li><span class="check">✓</span> Create an agreement from a PDF template</li>
+          <li><span class="check">✓</span> Upload your own PDF (no server upload)</li>
+          <li><span class="check">✓</span> Build an agreement from scratch (clause-based)</li>
+          <li><span class="check">✓</span> Sender signs first (Fill → Sign → Send)</li>
+          <li><span class="check">✓</span> Completed document becomes available for download</li>
+        </ul>
 
         <p class="note">
-          This demo uses browser storage only (no backend). Closing the browser may reset the session.
+          This demo is static and runs entirely in the browser using localStorage.
+          Nothing is sent to a server.
         </p>
-      </div>
+      </section>
 
-      <div class="card login">
+      <section class="signin">
         <h2>Sign in</h2>
         <p>Use the demo login to access the portal.</p>
 
-        <div class="grid">
-          <label>
-            Email
-            <input id="email" type="email" value="demo@client.com" autocomplete="off" />
-          </label>
+        <form id="loginForm">
+          <div class="row">
+            <label>Email</label>
+            <input id="email" type="email" autocomplete="username" placeholder="demo@client.com" />
+          </div>
 
-          <label>
-            Password
-            <input id="password" type="password" value="hallam" autocomplete="off" />
-          </label>
-        </div>
+          <div class="row">
+            <label>Password</label>
+            <input id="password" type="password" autocomplete="current-password" placeholder="hallam" />
+          </div>
 
-        <div class="err" id="errBox">Incorrect credentials.</div>
+          <div class="actions">
+            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-outline" id="skipBtn" type="button">Skip (if already logged in)</button>
+          </div>
 
-        <div class="row">
-          <button class="btn btn-primary" id="loginBtn" type="button">Login</button>
-          <a class="btn btn-muted" href="./dashboard.html">Skip (if already logged in)</a>
-        </div>
+          <div class="status" id="statusBox"></div>
 
-        <p class="note">
-          Demo credentials are local-only. Nothing is sent to a server.
-        </p>
-      </div>
-    </section>
+          <div class="note">
+            Demo credentials are local only. Nothing is sent to a server.
+          </div>
+        </form>
+      </section>
+    </div>
   </main>
 
-  <!-- Cache-bust for GitHub Pages -->
-  <script src="assets/app.js?v=20260109"></script>
+  <!-- ✅ RELATIVE PATH (fixes subfolder hosting) -->
+  <script src="./assets/app.js"></script>
 
   <script>
-    // If the JS didn't load, show a clear message instead of "spazzing"
-    if(!window.FSS){
-      alert("FSS app.js failed to load. Check /assets/app.js and /assets/app.css paths.");
+    // If app.js fails to load, show a clear message
+    if(typeof window.FSS === "undefined"){
+      alert("FSS app.js failed to load. Check ./assets/app.js and ./assets/app.css paths.");
     }
 
-    // If already authed, go to dashboard
+    const statusBox = document.getElementById("statusBox");
+    function showStatus(type, msg){
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+
+    // Auto-fill default demo creds
+    document.getElementById("email").value = "demo@client.com";
+    document.getElementById("password").value = "hallam";
+
+    // If already authed, allow quick jump
     if(window.FSS && FSS.isAuthed()){
-      location.href = "dashboard.html";
+      showStatus("good","Already logged in. You can click Skip.");
     }
 
-    const loginBtn = document.getElementById("loginBtn");
-    const errBox = document.getElementById("errBox");
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    loginBtn.addEventListener("click", () => {
-      errBox.classList.remove("show");
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value.trim();
 
-      const email = (document.getElementById("email").value || "").trim();
-      const pw = (document.getElementById("password").value || "").trim();
+      // demo gate unlock (optional)
+      if(!FSS.isDemoUnlocked()){
+        FSS.unlockDemo(pass);
+      }
 
-      // Demo login check (matches app.js config)
-      const ok = FSS.login(email, pw);
+      const ok = FSS.login(email, pass);
       if(!ok){
-        errBox.classList.add("show");
+        showStatus("bad","Invalid demo login. Try demo@client.com / hallam");
         return;
       }
 
-      location.href = "dashboard.html";
+      showStatus("good","✅ Logged in. Redirecting…");
+      setTimeout(() => location.href = "dashboard.html", 450);
     });
 
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Enter") loginBtn.click();
+    // Skip
+    document.getElementById("skipBtn").addEventListener("click", () => {
+      if(!FSS.isAuthed()){
+        showStatus("warn","You are not logged in yet — click Login first.");
+        return;
+      }
+      location.href = "dashboard.html";
     });
   </script>
 </body>
