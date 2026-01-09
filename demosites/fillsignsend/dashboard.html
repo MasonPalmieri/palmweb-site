@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FSS — Dashboard</title>
+  <link rel="stylesheet" href="assets/app.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-badge">FSS</div>
+        <div>
+          <strong>FSS</strong>
+          <span>Dashboard</span>
+        </div>
+      </a>
+
+      <div class="navlinks">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create.html">Create</a>
+        <a href="sign.html">eSign</a>
+        <a href="#" id="logout">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h2 style="margin:0;">Dashboard</h2>
+          <div class="small">Signed in as <span id="who"></span></div>
+        </div>
+        <a class="btn btn-primary" href="create.html">New Document</a>
+      </div>
+
+      <div class="grid">
+        <a class="tile" href="create.html?type=NDA">
+          <h2>New NDA</h2>
+          <p>Create a negotiable or fixed NDA and send it to a client for signature.</p>
+          <div class="arrow">→</div>
+        </a>
+
+        <a class="tile" href="create.html?type=Agreement">
+          <h2>New Agreement</h2>
+          <p>Create a service agreement and collect signatures from all parties.</p>
+          <div class="arrow">→</div>
+        </a>
+
+        <a class="tile" href="sign.html">
+          <h2>eSign Inbox</h2>
+          <p>Review a sent document and complete signing in a DocuSign-like flow.</p>
+          <div class="arrow">→</div>
+        </a>
+
+        <a class="tile" href="create.html?type=Event NDA">
+          <h2>New Event</h2>
+          <p>Create a multi-signer event NDA workflow (demo placeholder).</p>
+          <div class="arrow">→</div>
+        </a>
+      </div>
+
+      <hr />
+
+      <div class="card">
+        <div class="topbar">
+          <div>
+            <div style="font-weight:950;">Recent Activity</div>
+            <div class="small">Saved locally (demo only)</div>
+          </div>
+          <a class="btn btn-outline" href="create.html">Create Another</a>
+        </div>
+
+        <div id="activity" style="margin-top:12px;" class="small"></div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <a class="btn btn-outline" href="../../demos.html">← Back to PalmWeb Demos</a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { requireAuth, getUser, demoLogout, getAgreements, fmtDate } from "./assets/app.js";
+
+    requireAuth();
+    document.getElementById("who").textContent = getUser();
+
+    document.getElementById("logout").addEventListener("click", (e) => {
+      e.preventDefault();
+      demoLogout();
+      window.location.href = "index.html";
+    });
+
+    const list = getAgreements();
+    const el = document.getElementById("activity");
+
+    if(list.length === 0){
+      el.innerHTML = "No documents yet. Click <b>New Document</b> to create one.";
+    }else{
+      el.innerHTML = list.slice(0,6).map(a => {
+        return `
+          <div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06);">
+            <b>${a.title}</b> • ${a.status} • ${fmtDate(a.createdAt)}
+            <div style="opacity:.85; margin-top:4px;">
+              To: ${a.partyB.email} • Type: ${a.type}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  </script>
+</body>
+</html>
