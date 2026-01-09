@@ -48,7 +48,6 @@
         <div class="divider"></div>
 
         <div class="grid2">
-          <!-- Left: Tools -->
           <aside class="panel mini" style="height:fit-content;">
             <b>Fields</b>
             <p class="muted tiny" style="margin-top:6px;">
@@ -83,7 +82,6 @@
             <button class="btn outlineFull" id="clearFieldsBtn" type="button">Clear Fields</button>
           </aside>
 
-          <!-- Right: Document + overlay -->
           <div class="docWrap">
             <div class="docToolbar">
               <span class="pill">PDF</span>
@@ -106,14 +104,12 @@
     </div>
   </main>
 
-  <!-- PDF.js (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.mjs" type="module"></script>
   <script src="assets/app.js"></script>
 
   <script type="module">
     FSS.guard();
 
-    // PDF.js setup
     const { pdfjsLib } = globalThis;
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.mjs";
@@ -138,7 +134,6 @@
 
     const toolBtns = document.querySelectorAll(".tool");
 
-    // Load state (template + parties)
     const state = FSS.loadDocState();
     if(!state?.template){
       window.location.href = "create.html";
@@ -147,7 +142,6 @@
     fileName.textContent = state.template;
     docLine.textContent = `Template: ${state.template}`;
 
-    // Show recipient (Party B)
     const partyBox = document.getElementById("partyBox");
     const p = state.parties || {};
     partyBox.innerHTML = `
@@ -158,11 +152,8 @@
       <span class="muted tiny">${FSS.escape(p.aEmail || "")}</span>
     `;
 
-    // Audit entry: recipient opened
     FSS.auditAddOnce("Viewed", "Recipient opened the signing link.");
 
-    // Signing model:
-    // Fields are stored in localStorage as array: {id,type,page,x,y,w,h,required,value}
     let fields = FSS.loadFields();
     let selectedTool = "signature";
 
@@ -171,7 +162,6 @@
     let currentPage = 1;
     let scale = 1.0;
 
-    // Render current page
     async function renderPage(pageNum){
       const page = await pdfDoc.getPage(pageNum);
       const viewport = page.getViewport({ scale });
@@ -179,6 +169,9 @@
       const ctx = canvas.getContext("2d");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
+
+      // store last canvas size for pdf-lib mapping
+      localStorage.setItem("fss_last_canvas_size", JSON.stringify({ w: canvas.width, h: canvas.height }));
 
       overlay.style.width = viewport.width + "px";
       overlay.style.height = viewport.height + "px";
@@ -188,13 +181,11 @@
       pagePill.textContent = `Page ${pageNum} / ${pageCount}`;
       zoomLabel.textContent = `Zoom: ${Math.round(scale * 100)}%`;
 
-      // Render overlay fields
       renderOverlay();
     }
 
     function renderOverlay(){
       overlay.innerHTML = "";
-
       const pageFields = fields.filter(f => f.page === currentPage);
 
       for(const f of pageFields){
@@ -230,7 +221,6 @@
         el.appendChild(del);
 
         el.addEventListener("click", () => openFillModal(f.id));
-
         overlay.appendChild(el);
       }
     }
@@ -239,7 +229,6 @@
       const f = fields.find(x => x.id === fieldId);
       if(!f) return;
 
-      // Checkbox toggle
       if(f.type === "checkbox"){
         f.value = f.value ? "" : "☑";
         FSS.saveFields(fields);
@@ -247,7 +236,6 @@
         return;
       }
 
-      // Date auto
       if(f.type === "date"){
         const d = new Date();
         const val = `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}/${d.getFullYear()}`;
@@ -291,9 +279,7 @@
     }
 
     function focusField(f){
-      // go to field page and scroll/flash
       if(!f) return;
-
       if(currentPage !== f.page){
         currentPage = f.page;
         renderPage(currentPage).then(() => flashField(f.id));
@@ -310,9 +296,7 @@
       setTimeout(()=> el.classList.remove("flash"), 900);
     }
 
-    // Field placement
     overlay.addEventListener("click", (e) => {
-      // ignore click if user clicked on an existing field
       if(e.target.closest(".field")) return;
 
       const rect = overlay.getBoundingClientRect();
@@ -321,7 +305,6 @@
 
       const size = FSS.fieldDefaults(selectedTool);
 
-      // place field
       const field = {
         id: crypto.randomUUID(),
         type: selectedTool,
@@ -351,10 +334,8 @@
         statusLine.style.color = "#fde68a";
       });
     });
-    // default active
     document.querySelector(`.tool[data-tool="${selectedTool}"]`).classList.add("active");
 
-    // Page controls
     prevPageBtn.addEventListener("click", () => {
       if(currentPage > 1){
         currentPage -= 1;
@@ -369,7 +350,6 @@
       }
     });
 
-    // Zoom
     zoomIn.addEventListener("click", () => {
       scale = Math.min(2.0, scale + 0.1);
       renderPage(currentPage);
@@ -379,11 +359,9 @@
       renderPage(currentPage);
     });
 
-    // Next required field
     nextFieldBtn.addEventListener("click", () => {
-      // If no required fields exist, guide user
       if(!fields.some(f => f.required)){
-        alert("No required fields have been placed yet.\n\nPlace a Signature and Date field to proceed.");
+        alert("No required fields placed yet.\n\nPlace a Signature and Date field to proceed.");
         return;
       }
       const next = getNextUnfilledRequired();
@@ -396,7 +374,6 @@
       statusLine.style.color = "#86efac";
     });
 
-    // Clear all fields
     clearFieldsBtn.addEventListener("click", () => {
       if(!confirm("Clear all placed fields?")) return;
       fields = [];
@@ -406,9 +383,7 @@
       statusLine.style.color = "#fde68a";
     });
 
-    // Completion
     completeBtn.addEventListener("click", async () => {
-      // Enforce at least signature+date required
       const hasSig = fields.some(f => f.type === "signature");
       const hasDate = fields.some(f => f.type === "date");
 
@@ -417,7 +392,6 @@
         return;
       }
 
-      // Required completion
       const requiredFields = fields.filter(f => f.required);
       const unfilled = requiredFields.find(f => !f.value);
       if(unfilled){
@@ -430,7 +404,6 @@
       statusLine.style.color = "#fde68a";
 
       try{
-        // Generate signed PDF in browser
         const pdfUrl = `pdfs/${state.template}`;
         const bytes = await FSS.fetchArrayBuffer(pdfUrl);
 
@@ -440,11 +413,9 @@
           parties: state.parties || {}
         });
 
-        // Audit
         FSS.auditAdd("Signed", "Recipient completed all required fields and signed.");
         FSS.auditAdd("Completed", "Signed PDF generated.");
 
-        // Save final blob for success page
         FSS.saveSignedBlob(signedBytes, state.template);
 
         statusLine.textContent = "Complete ✅ Redirecting…";
@@ -461,12 +432,10 @@
       }
     });
 
-    // Logout clears auth + doc state
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
     });
 
-    // Load PDF
     (async function init(){
       try{
         const pdfUrl = `pdfs/${state.template}`;
@@ -474,7 +443,6 @@
         pdfDoc = await loadingTask.promise;
         pageCount = pdfDoc.numPages;
 
-        // Validate fields remain in range
         fields = (fields || []).filter(f => f.page >= 1 && f.page <= pageCount);
         FSS.saveFields(fields);
 
