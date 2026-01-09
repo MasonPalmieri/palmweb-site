@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FSS — Email Preview</title>
+  <link rel="stylesheet" href="assets/app.css" />
+
+  <style>
+    .email-shell{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(15,20,28,.85);
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+
+    .email-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(15,20,28,.95);
+    }
+
+    .email-top strong{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
+    }
+
+    .email-top span{
+      color: rgba(148,163,184,.95);
+      font-weight: 750;
+      font-size: 12px;
+    }
+
+    .email-body{
+      padding: 18px 16px;
+    }
+
+    .email-card{
+      padding: 14px 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(2,6,23,.35);
+      border-radius: 18px;
+    }
+
+    .email-line{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+      font-size: 13px;
+      color: rgba(148,163,184,.95);
+      font-weight: 750;
+    }
+    .email-line b{
+      color: rgba(255,255,255,.92);
+      font-weight: 950;
+    }
+
+    .divider{
+      height: 1px;
+      width:100%;
+      background: rgba(255,255,255,.08);
+      margin: 14px 0;
+    }
+
+    .subject{
+      font-size: 18px;
+      font-weight: 950;
+      color: rgba(255,255,255,.95);
+      margin: 0 0 10px;
+      letter-spacing: -.3px;
+    }
+
+    .content{
+      font-size: 14px;
+      color: rgba(226,232,240,.92);
+      font-weight: 700;
+      line-height: 1.6;
+      margin: 0;
+      max-width: 80ch;
+    }
+
+    .signature-box{
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    .signature-box .small{
+      margin-top: 8px;
+      color: rgba(148,163,184,.95);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .stamp{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 950;
+      font-size: 12px;
+      border: 1px solid rgba(225,29,72,.40);
+      background: rgba(225,29,72,.14);
+      color: rgba(255,255,255,.92);
+      width: fit-content;
+      margin-top: 10px;
+    }
+
+    .stamp .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(225,29,72,.95);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-badge">FSS</div>
+        <div>
+          <strong>FSS</strong>
+          <span>DocuSign-style Email</span>
+        </div>
+      </a>
+
+      <div class="navlinks">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create.html">Create</a>
+        <a href="sign.html">eSign</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h2 style="margin:0;">Email Preview</h2>
+          <div class="small">This simulates what your client receives when you “Send for Signature”.</div>
+        </div>
+        <a class="btn btn-outline" href="dashboard.html">Back</a>
+      </div>
+
+      <div class="email-shell" style="margin-top:14px;">
+        <div class="email-top">
+          <div>
+            <strong>FSS Documents</strong><br />
+            <span id="sentMeta"></span>
+          </div>
+          <div class="stamp"><span class="dot"></span> Signature Requested</div>
+        </div>
+
+        <div class="email-body">
+          <div class="email-card">
+            <h3 class="subject" id="subjectLine">Please review and sign: Document</h3>
+
+            <div class="email-line">
+              <span>To:</span> <b id="toLine">client@company.com</b>
+            </div>
+            <div class="email-line">
+              <span>From:</span> <b id="fromLine">FSS Platform</b>
+            </div>
+            <div class="email-line">
+              <span>Document:</span> <b id="docLine">Mutual NDA — FSS Demo</b>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="content">
+              You’ve been requested to review and electronically sign the document below.
+              Click <b>Review Document</b> to open the secure signing session.
+            </p>
+
+            <div class="signature-box">
+              <div style="font-weight:950;">Document ready for signature</div>
+              <div class="small">
+                Secure signing session • Audit trail • Tamper protection (real product)
+              </div>
+
+              <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
+                <a class="btn btn-outline" href="dashboard.html">Ignore (Demo)</a>
+                <a class="btn btn-primary" href="sign.html">Review Document →</a>
+              </div>
+            </div>
+
+            <p class="small" style="margin-top:12px;">
+              This is a demo preview page — real workflows send email + reminders automatically.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <a class="btn btn-outline" href="../../demos.html">← Back to PalmWeb Demos</a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { requireAuth, getAgreements, fmtDate } from "./assets/app.js";
+
+    requireAuth();
+
+    const list = getAgreements();
+    const latest = list[list.length - 1];
+
+    const toLine = document.getElementById("toLine");
+    const fromLine = document.getElementById("fromLine");
+    const docLine = document.getElementById("docLine");
+    const subjectLine = document.getElementById("subjectLine");
+    const sentMeta = document.getElementById("sentMeta");
+
+    if(latest){
+      const to = latest.partyB?.email || "client@company.com";
+      const doc = latest.title || "Document";
+      toLine.textContent = to;
+      fromLine.textContent = latest.partyA?.company || "FSS Platform";
+      docLine.textContent = doc;
+      subjectLine.textContent = `Please review and sign: ${doc}`;
+      sentMeta.textContent = `Sent ${fmtDate(latest.createdAt)} • Tracking enabled`;
+    }else{
+      sentMeta.textContent = "No document found — create one first.";
+    }
+  </script>
+</body>
+</html>
