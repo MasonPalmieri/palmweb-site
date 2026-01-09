@@ -3,99 +3,127 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS — Fill • Sign • Send (Demo)</title>
+  <title>Client Portal</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
+<body class="app dark">
 
-<body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="index.html">
-        <div class="brand-badge">FSS</div>
-        <div>
-          <strong>FSS</strong>
-          <span>Fill • Sign • Send</span>
-        </div>
-      </a>
-
-      <div class="navlinks">
-        <a href="index.html">Login</a>
-        <a href="dashboard.html">Dashboard</a>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FSS</div>
+      <div>
+        <div class="title">Client Portal</div>
+        <div class="sub">Sign in to access agreements and documents.</div>
       </div>
     </div>
+
+    <nav class="navlinks">
+      <a href="../../demos.html">Back</a>
+    </nav>
   </header>
 
-  <main class="hero">
-    <div class="container hero-grid">
-      <section>
-        <h1>Agreements and NDAs with built-in eSignature.</h1>
-        <p>
-          This demo simulates a SaaS platform where paid users can generate NDAs and agreements,
-          send them to clients, and complete signing with a DocuSign-like workflow.
-        </p>
+  <main class="page">
+    <div class="shell" style="max-width:980px;">
+      <section class="panel" style="padding:0; overflow:hidden;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; min-height:520px;">
 
-        <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-outline" href="dashboard.html">Skip to Dashboard</a>
-          <a class="btn btn-outline" href="../../demos.html">Back to PalmWeb Demos</a>
-        </div>
+          <!-- Left -->
+          <div style="padding:22px; border-right:1px solid var(--border); background: rgba(0,0,0,.18);">
+            <h2 style="margin:0 0 10px;">Sign in to your account</h2>
+            <p class="muted" style="margin:0 0 16px;">
+              Demo access is password-protected. Use the credentials provided by PalmWeb.
+            </p>
 
-        <p class="small">Demo only • no real emails are sent</p>
-      </section>
+            <div class="divider"></div>
 
-      <aside class="card">
-        <div class="topbar">
-          <div>
-            <div style="font-weight:950; font-size:16px;">Sign in</div>
-            <div class="small">Use any email + any password (4+ chars)</div>
+            <label class="lbl">Email</label>
+            <input class="input" id="email" type="email" placeholder="demo@fss.com" />
+
+            <label class="lbl" style="margin-top:10px;">Password</label>
+            <input class="input" id="password" type="password" placeholder="••••••••" />
+
+            <div class="actions" style="margin-top:14px;">
+              <button class="btn primary" id="loginBtn" type="button">Login</button>
+              <button class="btn secondary" id="hintBtn" type="button">Need help?</button>
+            </div>
+
+            <p class="tiny muted" id="status" style="margin-top:12px;"></p>
+
+            <div class="divider"></div>
+            <p class="tiny muted">
+              This portal is a static demo. Documents are loaded directly from the repository and signed copies are generated in the browser.
+            </p>
           </div>
-          <span class="badge">Demo Access</span>
+
+          <!-- Right -->
+          <div style="padding:22px; display:flex; align-items:center; justify-content:center;">
+            <div style="max-width:420px;">
+              <div style="font-size:42px; font-weight:1000; line-height:1.05;">
+                Create, send, and complete agreements online.
+              </div>
+              <p class="muted" style="margin-top:12px;">
+                A DocuSign-style experience built for modern teams. Select a document, assign parties, add a signature, and complete.
+              </p>
+
+              <div class="divider"></div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <div class="hintBox" style="flex:1;">
+                  <b>Fast</b>
+                  <div class="muted" style="margin-top:6px;">Simple workflows that save time.</div>
+                </div>
+                <div class="hintBox" style="flex:1;">
+                  <b>Secure</b>
+                  <div class="muted" style="margin-top:6px;">Access controlled for clients.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-
-        <div class="form-grid" style="margin-top:14px;">
-          <label class="full">
-            Email
-            <input id="email" type="email" placeholder="you@company.com" />
-          </label>
-
-          <label class="full">
-            Password
-            <input id="pw" type="password" placeholder="••••••••" />
-          </label>
-        </div>
-
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-primary" id="loginBtn" type="button">Login</button>
-          <a class="btn btn-outline" href="dashboard.html">Preview</a>
-        </div>
-
-        <p id="msg" class="small" style="margin-top:12px; display:none; color:#fca5a5;">
-          Invalid login.
-        </p>
-      </aside>
+      </section>
     </div>
   </main>
 
-  <script type="module">
-    import { demoLogin } from "./assets/app.js";
+  <script>
+    // Demo login (static)
+    const loginBtn = document.getElementById("loginBtn");
+    const hintBtn = document.getElementById("hintBtn");
+    const statusEl = document.getElementById("status");
 
-    const email = document.getElementById("email");
-    const pw = document.getElementById("pw");
-    const msg = document.getElementById("msg");
-    const btn = document.getElementById("loginBtn");
+    const DEMO_EMAIL = "demo@fss.com";
+    const DEMO_PASSWORD = "hallam";
 
-    btn.addEventListener("click", () => {
-      msg.style.display = "none";
-      const ok = demoLogin(email.value.trim(), pw.value);
-      if(ok) window.location.href = "dashboard.html";
-      else msg.style.display = "";
-    });
+    function setAuth(val){
+      localStorage.setItem("fss_auth", JSON.stringify(val));
+    }
+    function getAuth(){
+      const raw = localStorage.getItem("fss_auth");
+      try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+    }
 
-    pw.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        e.preventDefault();
-        btn.click();
+    // Auto-redirect if already logged in
+    if(getAuth()){
+      window.location.href = "dashboard.html";
+    }
+
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const pw = document.getElementById("password").value.trim();
+
+      if(email === DEMO_EMAIL && pw === DEMO_PASSWORD){
+        setAuth({ email, at: Date.now() });
+        window.location.href = "dashboard.html";
+      } else {
+        statusEl.textContent = "Invalid email or password.";
+        statusEl.style.color = "#fda4af";
       }
     });
+
+    hintBtn.addEventListener("click", () => {
+      alert("Demo login:\n\nEmail: demo@fss.com\nPassword: hallam");
+    });
   </script>
+
 </body>
 </html>
