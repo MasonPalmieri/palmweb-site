@@ -3,281 +3,128 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS — Dashboard</title>
+  <title>FSS Demo — Dashboard</title>
   <link rel="stylesheet" href="assets/app.css" />
-
-  <style>
-    .table-wrap{
-      overflow:auto;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      margin-top: 14px;
-    }
-    table{
-      width:100%;
-      border-collapse: collapse;
-      min-width: 720px;
-      background: rgba(15,20,28,.75);
-    }
-    th, td{
-      text-align:left;
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      font-size: 13px;
-      vertical-align: top;
-    }
-    th{
-      color: rgba(255,255,255,.86);
-      font-weight: 950;
-      position: sticky;
-      top: 0;
-      background: rgba(15,20,28,.95);
-      z-index: 2;
-    }
-    td{
-      color: rgba(255,255,255,.92);
-      font-weight: 750;
-    }
-    .muted{ color: rgba(148,163,184,.95); font-weight: 750; }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 950;
-      font-size: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      white-space: nowrap;
-    }
-    .pill.sent{
-      border-color: rgba(225,29,72,.35);
-      background: rgba(225,29,72,.14);
-    }
-    .pill.done{
-      border-color: rgba(34,197,94,.30);
-      background: rgba(34,197,94,.14);
-    }
-    .pill .dot{
-      width:8px;
-      height:8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.5);
-    }
-    .pill.sent .dot{ background: rgba(225,29,72,.95); }
-    .pill.done .dot{ background: rgba(34,197,94,.95); }
-
-    .row-actions{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .mini{
-      padding: 8px 10px;
-      font-size: 12px;
-    }
-  </style>
 </head>
+<body class="app dark">
 
-<body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="dashboard.html">
-        <div class="brand-badge">FSS</div>
-        <div>
-          <strong>FSS</strong>
-          <span>Dashboard</span>
-        </div>
-      </a>
-
-      <div class="navlinks">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="create.html">Create</a>
-        <a href="sign.html">eSign</a>
-        <a href="#" id="logout">Logout</a>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FSS</div>
+      <div>
+        <div class="title">Dashboard</div>
+        <div class="sub">Start a new agreement or review recent activity.</div>
       </div>
     </div>
+
+    <nav class="navlinks">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="create.html">Create</a>
+      <a href="../../demos.html" id="logoutLink">Logout</a>
+    </nav>
   </header>
 
-  <main class="section">
-    <div class="container">
-      <div class="topbar">
-        <div>
-          <h2 style="margin:0;">Dashboard</h2>
-          <div class="small">Signed in as <span id="who"></span></div>
-        </div>
-        <a class="btn btn-primary" href="create.html">New Document</a>
-      </div>
+  <main class="page">
+    <div class="shell">
 
-      <!-- Quick Actions -->
-      <div class="grid">
-        <a class="tile" href="create.html?type=NDA">
-          <h2>New NDA</h2>
-          <p>Create an NDA and send to a client for signature.</p>
-          <div class="arrow">→</div>
-        </a>
+      <section class="panel">
+        <h2>Welcome</h2>
+        <p class="muted" id="welcomeLine">Loading...</p>
 
-        <a class="tile" href="create.html?type=Agreement">
-          <h2>New Agreement</h2>
-          <p>Create a service agreement and collect signatures.</p>
-          <div class="arrow">→</div>
-        </a>
+        <div class="divider"></div>
 
-        <a class="tile" href="sign.html">
-          <h2>eSign Inbox</h2>
-          <p>Review sent documents and complete signing.</p>
-          <div class="arrow">→</div>
-        </a>
+        <div class="grid2">
 
-        <a class="tile" href="create.html?type=Event NDA">
-          <h2>New Event</h2>
-          <p>Create a multi-signer event NDA workflow (demo placeholder).</p>
-          <div class="arrow">→</div>
-        </a>
-      </div>
+          <!-- Left -->
+          <div class="panel" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
+            <h3 class="h3">Create a new agreement</h3>
+            <p class="muted" style="margin-top:6px;">
+              Choose a document template, assign parties, and send to sign.
+            </p>
 
-      <hr />
+            <div class="actions" style="margin-top:12px;">
+              <a class="btn primary" href="create.html">New Agreement</a>
+              <a class="btn secondary" href="create.html">New NDA</a>
+            </div>
 
-      <!-- Documents Table -->
-      <div class="card">
-        <div class="topbar">
-          <div>
-            <div style="font-weight:950;">Documents</div>
-            <div class="small">Statuses update after signing (stored locally)</div>
+            <div class="divider"></div>
+
+            <h3 class="h3">Available templates</h3>
+            <p class="tiny muted" style="margin-top:6px;">
+              These PDFs are loaded directly from <code>/pdfs/</code>
+            </p>
+
+            <ul class="muted" style="margin:10px 0 0; padding-left:18px; font-weight:800;">
+              <li>NDA</li>
+              <li>Consulting Agreement</li>
+              <li>Lease Release</li>
+              <li>Event Accident Waiver</li>
+              <li>Non-Compete Release</li>
+              <li>Photo Release</li>
+              <li>Real Estate Mutual Release</li>
+            </ul>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn btn-outline" id="clearAll" type="button">Clear Demo Data</button>
-            <a class="btn btn-outline" href="create.html">Create Another</a>
+
+          <!-- Right -->
+          <div class="panel" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
+            <h3 class="h3">Recent activity</h3>
+            <p class="muted" style="margin-top:6px;">
+              This demo simulates an audit trail and completion workflow.
+            </p>
+
+            <div class="divider"></div>
+
+            <div style="display:grid; gap:10px;">
+              <div class="hintBox">
+                <b>Agreement created</b>
+                <div class="muted" style="margin-top:6px;">Party A assigned, Party B invited.</div>
+              </div>
+
+              <div class="hintBox">
+                <b>Signature requested</b>
+                <div class="muted" style="margin-top:6px;">Recipient opened and placed fields.</div>
+              </div>
+
+              <div class="hintBox">
+                <b>Completed</b>
+                <div class="muted" style="margin-top:6px;">Signed PDF generated and downloaded.</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="tiny muted">
+              Want this to be real (email sending + storage + audit logs)? We can connect Firebase/Supabase + email delivery.
+            </p>
           </div>
+
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Status</th>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Client</th>
-                <th>Created</th>
-                <th style="width:220px;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
+      </section>
 
-        <div id="empty" class="small" style="margin-top:12px; display:none;">
-          No documents yet. Click <b>New Document</b> to create one.
-        </div>
-      </div>
-
-      <hr />
-
-      <!-- Completed Documents -->
-      <div class="card">
-        <div class="topbar">
-          <div>
-            <div style="font-weight:950;">Completed Documents</div>
-            <div class="small">Example: archive, download PDF, audit trail (real product)</div>
-          </div>
-          <a class="btn btn-outline" href="success.html">Preview Completion Screen</a>
-        </div>
-
-        <div id="completedList" class="small" style="margin-top:12px;"></div>
-      </div>
-
-      <div style="margin-top:14px;">
-        <a class="btn btn-outline" href="../../demos.html">← Back to PalmWeb Demos</a>
-      </div>
     </div>
   </main>
 
-  <script type="module">
-    import { requireAuth, getUser, demoLogout, getAgreements, fmtDate, saveAgreements } from "./assets/app.js";
+  <script>
+    // Auth guard
+    function getAuth(){
+      const raw = localStorage.getItem("fss_auth");
+      try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+    }
 
-    requireAuth();
-    document.getElementById("who").textContent = getUser();
-
-    document.getElementById("logout").addEventListener("click", (e) => {
-      e.preventDefault();
-      demoLogout();
+    const auth = getAuth();
+    if(!auth){
       window.location.href = "index.html";
-    });
-
-    const rows = document.getElementById("rows");
-    const empty = document.getElementById("empty");
-    const completedList = document.getElementById("completedList");
-
-    function statusPill(a){
-      const done = (a.status || "").toLowerCase().includes("completed");
-      const cls = done ? "done" : "sent";
-      const txt = done ? "Completed" : "Sent";
-      return `<span class="pill ${cls}"><span class="dot"></span>${txt}</span>`;
+    } else {
+      document.getElementById("welcomeLine").textContent =
+        `Signed in as ${auth.email} • Demo portal active`;
     }
 
-    function render(){
-      const list = getAgreements();
-
-      if(list.length === 0){
-        rows.innerHTML = "";
-        empty.style.display = "";
-        completedList.innerHTML = "No completed documents yet.";
-        return;
-      }
-
-      empty.style.display = "none";
-
-      rows.innerHTML = list.map(a => {
-        const client = a.partyB?.email || "—";
-        const created = fmtDate(a.createdAt);
-        const isDone = (a.status || "").toLowerCase().includes("completed");
-
-        return `
-          <tr>
-            <td>${statusPill(a)}</td>
-            <td>
-              <div style="font-weight:950;">${a.title || "Untitled"}</div>
-              <div class="muted">Mode: ${a.mode || "—"}</div>
-            </td>
-            <td class="muted">${a.type || "—"}</td>
-            <td class="muted">${client}</td>
-            <td class="muted">${created}</td>
-            <td>
-              <div class="row-actions">
-                <a class="btn btn-outline mini" href="sign.html">View</a>
-                ${isDone ? "" : `<a class="btn btn-primary mini" href="sign.html">Sign</a>`}
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join("");
-
-      const completed = list.filter(a => (a.status || "").toLowerCase().includes("completed"));
-
-      if(completed.length === 0){
-        completedList.innerHTML = "No completed documents yet.";
-      }else{
-        completedList.innerHTML = completed.slice(0,8).map(a => {
-          return `
-            <div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.06);">
-              <b>${a.title}</b> • ${a.type} • <span style="color:rgba(34,197,94,.9); font-weight:950;">Completed</span>
-              <div class="muted" style="margin-top:4px;">
-                Client: ${a.partyB?.email || "—"} • ${fmtDate(a.createdAt)}
-              </div>
-            </div>
-          `;
-        }).join("");
-      }
-    }
-
-    render();
-
-    document.getElementById("clearAll").addEventListener("click", () => {
-      saveAgreements([]);
-      render();
+    // Logout clears auth
+    document.getElementById("logoutLink").addEventListener("click", () => {
+      localStorage.removeItem("fss_auth");
+      localStorage.removeItem("fss_doc");
+      localStorage.removeItem("fss_parties");
     });
   </script>
 </body>
