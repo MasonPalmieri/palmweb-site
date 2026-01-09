@@ -3,120 +3,118 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Create • FSS Demo</title>
-  <link rel="stylesheet" href="assets/app.css" />
+  <title>Create • Client Demo</title>
 
+  <link rel="stylesheet" href="assets/app.css" />
   <style>
     .wrap{
-      max-width: 980px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 22px 18px 60px;
+      padding: 18px 18px 40px;
     }
 
-    .hero{
-      margin-top: 12px;
-      padding: 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 18px 70px rgba(0,0,0,.40);
+    .page-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
     }
 
-    .hero h1{
+    .page-head h1{
       margin: 0;
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: -0.4px;
+      font-size: 18px;
+      font-weight: 1000;
+      letter-spacing: -0.2px;
     }
-    .hero p{
+
+    .page-head p{
       margin: 6px 0 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 800;
       font-size: 13px;
-      max-width: 78ch;
+      color: var(--muted);
+      font-weight: 800;
+      max-width: 72ch;
+      line-height: 1.5;
     }
 
     .grid{
-      margin-top: 14px;
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
+      margin-top: 14px;
+      align-items:start;
     }
 
-    .card{
-      padding: 16px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
+    .tabs{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .tab{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
-    }
-
-    .card h2{
-      margin: 0;
-      font-size: 14px;
-      font-weight: 950;
-    }
-
-    .sub{
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.70);
-      font-weight: 800;
+      font-weight: 1000;
       font-size: 13px;
+      cursor:pointer;
+    }
+    .tab.active{
+      background: rgba(255,46,99,.18);
+      border-color: rgba(255,46,99,.22);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .full{ grid-column: 1 / -1; }
+
+    .clauses{
+      display:grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .clause{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      border-radius: 16px;
+      padding: 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .clause input{ margin-top: 4px; }
+    .clause strong{
+      display:block;
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .clause p{
+      margin: 0;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.72);
+      font-weight: 800;
       line-height: 1.45;
     }
 
-    .hr{
-      height:1px;
-      background: rgba(255,255,255,.08);
-      margin: 12px 0;
-    }
-
     .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
       margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
       justify-content:space-between;
-      align-items:center;
     }
 
-    .inline{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.86);
-      font-weight: 850;
-      font-size: 12.5px;
-      max-width: 100%;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .toggle{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      margin-top: 10px;
-    }
-    .toggle input{ transform: scale(1.15); }
-
-    @media (max-width: 860px){
+    @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -147,224 +145,360 @@
   </header>
 
   <main class="wrap">
-    <section class="hero">
-      <h1>Create a new agreement</h1>
-      <p>
-        Choose a PDF template (or upload your own), then enter Party A (sender) and Party B (recipient).
-        Next step is sender signing.
-      </p>
-    </section>
+    <div class="page-head">
+      <div>
+        <h1>Create a new agreement</h1>
+        <p>
+          Choose a template, upload your own PDF, or build an agreement from scratch.
+          Your selection becomes the active agreement for the workflow.
+        </p>
 
-    <div class="grid">
-      <!-- TEMPLATE / UPLOAD -->
-      <section class="card">
-        <h2>Agreement PDF</h2>
-        <p class="sub">Pick from the template library or upload a custom agreement (PDF).</p>
-
-        <div class="hr"></div>
-
-        <label>
-          Template library
-          <select id="templateSelect">
-            <option value="nda.pdf">nda.pdf</option>
-            <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
-            <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
-            <option value="lease-waiver.pdf">lease-waiver.pdf</option>
-            <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
-            <option value="Photo-Release.pdf">Photo-Release.pdf</option>
-            <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
-          </select>
-        </label>
-
-        <div class="hr"></div>
-
-        <label>
-          Upload custom PDF
-          <input id="uploadPdf" type="file" accept="application/pdf" />
-        </label>
-
-        <div style="margin-top:10px;">
-          <div class="pill" id="uploadPill" style="display:none;">Uploaded: —</div>
+        <div class="tabs">
+          <button class="tab active" id="tabTemplate" type="button">Use Template</button>
+          <button class="tab" id="tabUpload" type="button">Upload PDF</button>
+          <button class="tab" id="tabBuilder" type="button">Build from Scratch</button>
         </div>
+      </div>
 
-        <div class="toggle">
-          <input id="useUploadToggle" type="checkbox" />
-          <div>
-            <div style="font-weight:950;">Use uploaded PDF</div>
-            <div style="font-size:12px; color:rgba(255,255,255,.65); font-weight:800;">
-              If enabled, the uploaded document becomes the active agreement for signing.
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,.60); font-weight:800; line-height:1.45;">
-          Note: uploads are stored locally in your browser (no server). Refreshing or clearing storage may remove them.
-        </div>
-      </section>
-
-      <!-- PARTIES -->
-      <section class="card">
-        <h2>Parties</h2>
-        <p class="sub">Enter the sender (Party A) and recipient (Party B).</p>
-
-        <div class="hr"></div>
-
-        <label>
-          Party A (Sender) Name
-          <input id="aName" type="text" placeholder="Example: Mason Palmieri" />
-        </label>
-
-        <label style="margin-top:10px;">
-          Party A (Sender) Email
-          <input id="aEmail" type="email" placeholder="mason@palmweb.net" />
-        </label>
-
-        <div class="hr"></div>
-
-        <label>
-          Party B (Recipient) Name
-          <input id="bName" type="text" placeholder="Example: Matt Knych" />
-        </label>
-
-        <label style="margin-top:10px;">
-          Party B (Recipient) Email
-          <input id="bEmail" type="email" placeholder="matt@example.com" />
-        </label>
-      </section>
+      <div>
+        <button class="btn btn-danger" id="resetBtn" type="button">Reset Envelope</button>
+      </div>
     </div>
 
-    <div class="actions">
-      <div class="inline">
-        <button class="btn btn-outline" id="resetBtn" type="button">Reset Envelope</button>
-        <a class="btn btn-outline" href="dashboard.html">Back to Dashboard</a>
-      </div>
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="card pad">
+        <strong style="font-size:13px; font-weight:1000;">Agreement settings</strong>
+        <div class="divider"></div>
 
-      <div class="inline">
-        <button class="btn btn-primary" id="saveBtn" type="button">Save & Continue</button>
-      </div>
+        <div class="form-grid">
+          <label class="full">
+            Agreement name
+            <input id="agreementName" type="text" placeholder="Example: Consulting Agreement" />
+          </label>
+
+          <label>
+            Sender name (Party A)*
+            <input id="aName" type="text" placeholder="Your name or company" required />
+          </label>
+
+          <label>
+            Sender email (Party A)*
+            <input id="aEmail" type="email" placeholder="you@company.com" required />
+          </label>
+
+          <label>
+            Recipient name (Party B)*
+            <input id="bName" type="text" placeholder="Client name or company" required />
+          </label>
+
+          <label>
+            Recipient email (Party B)*
+            <input id="bEmail" type="email" placeholder="client@company.com" required />
+          </label>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- TEMPLATE -->
+        <div id="panelTemplate">
+          <label>
+            Template PDF
+            <select id="templateSelect">
+              <option value="nda.pdf">nda.pdf</option>
+              <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
+              <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
+              <option value="lease-waiver.pdf">lease-waiver.pdf</option>
+              <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
+              <option value="Photo-Release.pdf">Photo-Release.pdf</option>
+              <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
+            </select>
+          </label>
+
+          <p class="help">This uses PDFs stored in <code>/pdfs/</code>.</p>
+        </div>
+
+        <!-- UPLOAD -->
+        <div id="panelUpload" style="display:none;">
+          <label>
+            Upload a PDF
+            <input id="uploadPdf" type="file" accept="application/pdf" />
+          </label>
+          <p class="help">
+            Your uploaded PDF is stored locally in the browser (localStorage) for this demo — no server upload.
+          </p>
+          <div class="status warn" id="uploadStatus" style="display:none;"></div>
+        </div>
+
+        <!-- BUILDER -->
+        <div id="panelBuilder" style="display:none;">
+          <label>
+            Agreement title
+            <input id="builderTitle" type="text" placeholder="Example: Mutual NDA" />
+          </label>
+
+          <div class="clauses" id="clauseList"></div>
+
+          <p class="help">
+            This creates a real PDF from scratch (in-browser) from your selected clauses.
+          </p>
+          <div class="status warn" id="builderStatus" style="display:none;"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="actions">
+          <a class="btn btn-outline" href="dashboard.html">Back</a>
+          <button class="btn btn-primary" id="createBtn" type="button">Create Agreement</button>
+        </div>
+
+        <div class="status" id="statusBox" style="display:none;"></div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="card pad">
+        <strong style="font-size:13px; font-weight:1000;">Preview & next step</strong>
+        <div class="divider"></div>
+
+        <p style="margin:0; color:var(--muted); font-weight:800; font-size:13px;">
+          After you create the agreement, you’ll be taken to the Sign page.
+          The workflow will prompt: <strong>Sender signs → Send → Recipient completes → Download</strong>.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="status good">
+          Tip: If your goal is a clean sales demo, start with <strong>nda.pdf</strong> or build a simple NDA from scratch.
+        </div>
+      </section>
     </div>
   </main>
 
+  <!-- pdf-lib only needed for builder on this page -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="assets/app.js"></script>
+
   <script>
     FSS.guard();
 
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     document.getElementById("userEmail").textContent = user.email || "demo@client.com";
 
+    // Ensure doc exists
     let doc = FSS.loadDocState();
     if(!doc){
       doc = FSS.resetDoc();
-      FSS.logAudit("Envelope created.");
     }
 
-    const templateSelect = document.getElementById("templateSelect");
+    const statusBox = document.getElementById("statusBox");
+    function showStatus(type, msg){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+
+    // Tabs
+    const tabTemplate = document.getElementById("tabTemplate");
+    const tabUpload = document.getElementById("tabUpload");
+    const tabBuilder = document.getElementById("tabBuilder");
+
+    const panelTemplate = document.getElementById("panelTemplate");
+    const panelUpload = document.getElementById("panelUpload");
+    const panelBuilder = document.getElementById("panelBuilder");
+
+    function setTab(mode){
+      tabTemplate.classList.toggle("active", mode==="template");
+      tabUpload.classList.toggle("active", mode==="upload");
+      tabBuilder.classList.toggle("active", mode==="builder");
+
+      panelTemplate.style.display = mode==="template" ? "" : "none";
+      panelUpload.style.display = mode==="upload" ? "" : "none";
+      panelBuilder.style.display = mode==="builder" ? "" : "none";
+
+      doc = FSS.loadDocState();
+      doc.templateMode = mode;
+      FSS.saveDocState(doc);
+    }
+
+    tabTemplate.addEventListener("click", () => setTab("template"));
+    tabUpload.addEventListener("click", () => setTab("upload"));
+    tabBuilder.addEventListener("click", () => setTab("builder"));
+
+    // Clause builder
+    const clauseList = document.getElementById("clauseList");
+    const builderTitle = document.getElementById("builderTitle");
+    const builderStatus = document.getElementById("builderStatus");
+
+    const CLAUSES = [
+      { id:"conf", title:"Confidentiality", text:"Each party agrees to keep all non-public information confidential and to use it only for the intended business purpose." },
+      { id:"term", title:"Term", text:"This agreement remains in effect for two (2) years from the effective date unless terminated earlier in writing." },
+      { id:"return", title:"Return of Materials", text:"Upon request, each party will promptly return or destroy all confidential materials and copies." },
+      { id:"no_license", title:"No License", text:"No license or rights are granted to either party except as expressly stated in this agreement." },
+      { id:"governing", title:"Governing Law", text:"This agreement will be governed by and construed in accordance with the laws of the applicable jurisdiction." },
+      { id:"no_warranty", title:"No Warranty", text:"All information is provided “as is” without warranty of any kind." }
+    ];
+
+    function renderClauses(){
+      clauseList.innerHTML = "";
+      const selected = new Set((doc.builderClauses || []).map(c => c.id));
+
+      for(const c of CLAUSES){
+        const div = document.createElement("div");
+        div.className = "clause";
+        div.innerHTML = `
+          <input type="checkbox" ${selected.has(c.id) ? "checked" : ""} />
+          <div>
+            <strong>${c.title}</strong>
+            <p>${c.text}</p>
+          </div>
+        `;
+        const checkbox = div.querySelector("input");
+        checkbox.addEventListener("change", () => {
+          doc = FSS.loadDocState();
+          const set = new Set((doc.builderClauses || []).map(x => x.id));
+          if(checkbox.checked){
+            set.add(c.id);
+          }else{
+            set.delete(c.id);
+          }
+          doc.builderClauses = CLAUSES.filter(x => set.has(x.id));
+          FSS.saveDocState(doc);
+        });
+
+        clauseList.appendChild(div);
+      }
+    }
+
+    // Upload PDF
     const uploadPdf = document.getElementById("uploadPdf");
-    const uploadPill = document.getElementById("uploadPill");
-    const useUploadToggle = document.getElementById("useUploadToggle");
+    const uploadStatus = document.getElementById("uploadStatus");
 
-    const aName = document.getElementById("aName");
-    const aEmail = document.getElementById("aEmail");
-    const bName = document.getElementById("bName");
-    const bEmail = document.getElementById("bEmail");
-
-    // Load existing state
-    templateSelect.value = doc.template || "nda.pdf";
-    aName.value = doc.parties.aName || "";
-    aEmail.value = doc.parties.aEmail || "";
-    bName.value = doc.parties.bName || "";
-    bEmail.value = doc.parties.bEmail || "";
-
-    // Uploaded status
-    const hasUpload = !!FSS.getUploadedPDFBase64();
-    if(hasUpload){
-      uploadPill.style.display = "";
-      uploadPill.textContent = "Uploaded: " + FSS.getUploadedPDFName();
+    function showUpload(type, msg){
+      uploadStatus.style.display = "";
+      uploadStatus.className = "status " + type;
+      uploadStatus.textContent = msg;
     }
 
-    useUploadToggle.checked = (doc.templateSource === "upload") && hasUpload;
-
-    // Upload handler
-    uploadPdf.addEventListener("change", async () => {
-      const file = uploadPdf.files && uploadPdf.files[0];
+    uploadPdf.addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
       if(!file) return;
 
       if(file.type !== "application/pdf"){
-        alert("Please upload a PDF file.");
-        uploadPdf.value = "";
+        showUpload("bad","Please upload a valid PDF.");
         return;
       }
 
-      // Limit size (client-side) to keep localStorage stable
-      const maxMB = 8;
-      const sizeMB = file.size / (1024 * 1024);
-      if(sizeMB > maxMB){
-        alert("That PDF is too large for this static demo. Please upload a PDF under " + maxMB + "MB.");
-        uploadPdf.value = "";
-        return;
+      try{
+        showUpload("warn","Reading PDF…");
+        const buf = await file.arrayBuffer();
+
+        // Store raw bytes as base64
+        const bytes = new Uint8Array(buf);
+        let binary = "";
+        const chunk = 0x8000;
+        for(let i=0; i<bytes.length; i+=chunk){
+          binary += String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
+        }
+        const b64 = btoa(binary);
+
+        doc = FSS.loadDocState();
+        doc.templateMode = "upload";
+        doc.uploadName = file.name;
+        doc.uploadB64 = b64;
+        FSS.saveDocState(doc);
+
+        showUpload("good", `Uploaded: ${file.name} (saved locally for this demo)`);
+      }catch(err){
+        console.error(err);
+        showUpload("bad","Upload failed. Try again.");
       }
-
-      const arrayBuf = await file.arrayBuffer();
-      const bytes = new Uint8Array(arrayBuf);
-
-      // Convert to base64 (fast, safe)
-      let binary = "";
-      const chunkSize = 0x8000;
-      for(let i=0; i<bytes.length; i += chunkSize){
-        const chunk = bytes.subarray(i, i + chunkSize);
-        binary += String.fromCharCode.apply(null, chunk);
-      }
-      const b64 = btoa(binary);
-
-      FSS.setUploadedPDFBase64(b64, file.name);
-      uploadPill.style.display = "";
-      uploadPill.textContent = "Uploaded: " + file.name;
-
-      // Auto enable toggle
-      useUploadToggle.checked = true;
-
-      alert("Upload saved. Turn on 'Use uploaded PDF' to use it for this envelope.");
     });
 
-    // Save & continue
-    document.getElementById("saveBtn").addEventListener("click", () => {
+    // Load doc into fields
+    function hydrate(){
       doc = FSS.loadDocState() || FSS.defaultDoc();
 
-      // parties
-      doc.parties.aName = aName.value.trim();
-      doc.parties.aEmail = aEmail.value.trim();
-      doc.parties.bName = bName.value.trim();
-      doc.parties.bEmail = bEmail.value.trim();
+      document.getElementById("agreementName").value = doc.uploadName || "";
+      document.getElementById("aName").value = doc.parties?.aName || "";
+      document.getElementById("aEmail").value = doc.parties?.aEmail || "";
+      document.getElementById("bName").value = doc.parties?.bName || "";
+      document.getElementById("bEmail").value = doc.parties?.bEmail || "";
+      document.getElementById("templateSelect").value = doc.template || "nda.pdf";
 
-      // template selection
-      doc.template = templateSelect.value;
+      builderTitle.value = doc.builderTitle || "Confidential Agreement";
+      renderClauses();
 
-      // source selection
-      const wantsUpload = useUploadToggle.checked;
-      const uploadExists = !!FSS.getUploadedPDFBase64();
+      setTab(doc.templateMode || "template");
+    }
 
-      if(wantsUpload && uploadExists){
-        doc.templateSource = "upload";
-      }else{
-        doc.templateSource = "library";
+    // Reset
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset the envelope and clear saved state?")) return;
+      FSS.resetDoc();
+      showStatus("good","Envelope reset.");
+      hydrate();
+    });
+
+    // Create Agreement
+    document.getElementById("createBtn").addEventListener("click", async () => {
+      doc = FSS.loadDocState() || FSS.defaultDoc();
+
+      const aName = document.getElementById("aName").value.trim();
+      const aEmail = document.getElementById("aEmail").value.trim();
+      const bName = document.getElementById("bName").value.trim();
+      const bEmail = document.getElementById("bEmail").value.trim();
+
+      if(!aName || !aEmail || !bName || !bEmail){
+        showStatus("warn","Please fill out Party A and Party B details.");
+        return;
+      }
+
+      doc.parties.aName = aName;
+      doc.parties.aEmail = aEmail;
+      doc.parties.bName = bName;
+      doc.parties.bEmail = bEmail;
+
+      const mode = doc.templateMode || "template";
+
+      if(mode === "template"){
+        doc.template = document.getElementById("templateSelect").value;
+        doc.uploadName = null;
+        doc.uploadB64 = null;
+      }
+
+      if(mode === "upload"){
+        if(!doc.uploadB64){
+          showStatus("warn","Please upload a PDF first.");
+          return;
+        }
+      }
+
+      if(mode === "builder"){
+        doc.builderTitle = builderTitle.value.trim() || "Confidential Agreement";
+        if(!doc.builderClauses || doc.builderClauses.length === 0){
+          builderStatus.style.display = "";
+          builderStatus.className = "status warn";
+          builderStatus.textContent = "Select at least one clause.";
+          return;
+        }
+
+        try{
+          showStatus("warn","Generating PDF from scratch…");
+          FSS.saveDocState(doc);
+          await FSS.generateBuilderPDF();
+        }catch(err){
+          console.error(err);
+          showStatus("bad","Builder PDF failed. Check console.");
+          return;
+        }
       }
 
       doc.status = "draft";
       FSS.saveDocState(doc);
+      FSS.logAudit("Agreement created/updated.");
 
-      // Reset signed PDF if creating new doc details
-      // (keeps the flow clean)
-      localStorage.removeItem("fss_signed_pdf_b64");
-
-      FSS.logAudit("Agreement details saved.");
-      location.href = "sign.html";
-    });
-
-    // Reset envelope
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if(!confirm("Reset the current envelope? (Your uploaded PDF will remain saved.)")) return;
-      FSS.resetDoc();
-      location.reload();
+      showStatus("good","Agreement created. Redirecting to Sign…");
+      setTimeout(() => location.href = "sign.html", 600);
     });
 
     // Logout
@@ -372,6 +506,8 @@
       FSS.logout();
       location.href = "index.html";
     });
+
+    hydrate();
   </script>
 </body>
 </html>
