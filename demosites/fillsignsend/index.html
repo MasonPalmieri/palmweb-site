@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FSS — Fill • Sign • Send (Demo)</title>
+  <link rel="stylesheet" href="assets/app.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <div class="brand-badge">FSS</div>
+        <div>
+          <strong>FSS</strong>
+          <span>Fill • Sign • Send</span>
+        </div>
+      </a>
+
+      <div class="navlinks">
+        <a href="index.html">Login</a>
+        <a href="dashboard.html">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="container hero-grid">
+      <section>
+        <h1>Agreements and NDAs with built-in eSignature.</h1>
+        <p>
+          This demo simulates a SaaS platform where paid users can generate NDAs and agreements,
+          send them to clients, and complete signing with a DocuSign-like workflow.
+        </p>
+
+        <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn btn-outline" href="dashboard.html">Skip to Dashboard</a>
+          <a class="btn btn-outline" href="../../demos.html">Back to PalmWeb Demos</a>
+        </div>
+
+        <p class="small">Demo only • no real emails are sent</p>
+      </section>
+
+      <aside class="card">
+        <div class="topbar">
+          <div>
+            <div style="font-weight:950; font-size:16px;">Sign in</div>
+            <div class="small">Use any email + any password (4+ chars)</div>
+          </div>
+          <span class="badge">Demo Access</span>
+        </div>
+
+        <div class="form-grid" style="margin-top:14px;">
+          <label class="full">
+            Email
+            <input id="email" type="email" placeholder="you@company.com" />
+          </label>
+
+          <label class="full">
+            Password
+            <input id="pw" type="password" placeholder="••••••••" />
+          </label>
+        </div>
+
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="loginBtn" type="button">Login</button>
+          <a class="btn btn-outline" href="dashboard.html">Preview</a>
+        </div>
+
+        <p id="msg" class="small" style="margin-top:12px; display:none; color:#fca5a5;">
+          Invalid login.
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module">
+    import { demoLogin } from "./assets/app.js";
+
+    const email = document.getElementById("email");
+    const pw = document.getElementById("pw");
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("loginBtn");
+
+    btn.addEventListener("click", () => {
+      msg.style.display = "none";
+      const ok = demoLogin(email.value.trim(), pw.value);
+      if(ok) window.location.href = "dashboard.html";
+      else msg.style.display = "";
+    });
+
+    pw.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>
