@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FSS — Create Document</title>
+  <link rel="stylesheet" href="assets/app.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-badge">FSS</div>
+        <div>
+          <strong>FSS</strong>
+          <span>Create Document</span>
+        </div>
+      </a>
+
+      <div class="navlinks">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create.html">Create</a>
+        <a href="sign.html">eSign</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h2 style="margin:0;">Create NDA / Agreement</h2>
+          <div class="small">Demo: this “sends” to the eSignature page.</div>
+        </div>
+        <a class="btn btn-outline" href="dashboard.html">Back</a>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <div class="badge">Step 1 of 2 — Parties</div>
+
+        <div class="form-grid">
+          <label class="full">
+            Document Title
+            <input id="title" placeholder="Example: Mutual NDA — FSS Demo" />
+          </label>
+
+          <label>
+            Document Type
+            <select id="type">
+              <option value="NDA">NDA</option>
+              <option value="Agreement">Agreement</option>
+              <option value="Event NDA">Event NDA</option>
+            </select>
+          </label>
+
+          <label>
+            Mode
+            <select id="mode">
+              <option value="Direct Signatory">Direct Signatory</option>
+              <option value="Intermediary">Intermediary</option>
+            </select>
+          </label>
+        </div>
+
+        <hr />
+
+        <div class="badge">Party A Information</div>
+        <div class="form-grid">
+          <label class="full">Company Name <input id="a_company" placeholder="Your Company" /></label>
+          <label>First Name <input id="a_first" placeholder="First name" /></label>
+          <label>Last Name <input id="a_last" placeholder="Last name" /></label>
+          <label class="full">Email <input id="a_email" placeholder="you@company.com" /></label>
+        </div>
+
+        <hr />
+
+        <div class="badge">Party B Information</div>
+        <div class="form-grid">
+          <label class="full">Company Name <input id="b_company" placeholder="Client Company" /></label>
+          <label>First Name <input id="b_first" placeholder="First name" /></label>
+          <label>Last Name <input id="b_last" placeholder="Last name" /></label>
+          <label class="full">Email <input id="b_email" placeholder="client@company.com" /></label>
+        </div>
+
+        <hr />
+
+        <div class="badge">Terms / Notes</div>
+        <label style="margin-top:10px;">
+          Notes (optional)
+          <textarea id="notes" placeholder="Add any notes, scope, or special terms..."></textarea>
+        </label>
+
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
+          <a class="btn btn-outline" href="dashboard.html">Cancel</a>
+          <button class="btn btn-primary" id="sendBtn" type="button">Send for Signature →</button>
+        </div>
+
+        <p id="msg" class="small" style="margin-top:12px; display:none; color:#fca5a5;">
+          Please enter a title and Party B email.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { requireAuth, saveAgreement, uid } from "./assets/app.js";
+
+    requireAuth();
+
+    // read ?type=NDA etc
+    const params = new URLSearchParams(window.location.search);
+    const typeParam = params.get("type");
+
+    const title = document.getElementById("title");
+    const type = document.getElementById("type");
+    const mode = document.getElementById("mode");
+
+    const msg = document.getElementById("msg");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const fields = {
+      a_company: document.getElementById("a_company"),
+      a_first: document.getElementById("a_first"),
+      a_last: document.getElementById("a_last"),
+      a_email: document.getElementById("a_email"),
+      b_company: document.getElementById("b_company"),
+      b_first: document.getElementById("b_first"),
+      b_last: document.getElementById("b_last"),
+      b_email: document.getElementById("b_email"),
+      notes: document.getElementById("notes"),
+    };
+
+    if(typeParam){
+      const found = [...type.options].find(o => o.value === typeParam);
+      if(found) type.value = typeParam;
+    }
+
+    // nice demo defaults
+    title.value = "Mutual NDA — FSS Demo";
+    fields.a_company.value = "FSS Platform";
+    fields.a_first.value = "Mason";
+    fields.a_last.value = "Palmieri";
+    fields.a_email.value = "mason@palmweb.net";
+    fields.b_company.value = "Client Company";
+    fields.b_email.value = "client@company.com";
+
+    sendBtn.addEventListener("click", () => {
+      msg.style.display = "none";
+
+      if(!title.value.trim() || !fields.b_email.value.trim()){
+        msg.style.display = "";
+        return;
+      }
+
+      const agreement = {
+        id: uid(),
+        createdAt: Date.now(),
+        title: title.value.trim(),
+        type: type.value,
+        mode: mode.value,
+        status: "Sent for Signature",
+        partyA: {
+          company: fields.a_company.value.trim(),
+          first: fields.a_first.value.trim(),
+          last: fields.a_last.value.trim(),
+          email: fields.a_email.value.trim(),
+        },
+        partyB: {
+          company: fields.b_company.value.trim(),
+          first: fields.b_first.value.trim(),
+          last: fields.b_last.value.trim(),
+          email: fields.b_email.value.trim(),
+        },
+        notes: fields.notes.value.trim(),
+        signatureDataUrl: null
+      };
+
+      saveAgreement(agreement);
+
+      // go to signing page (loads latest doc)
+      window.location.href = "sign.html";
+    });
+  </script>
+</body>
+</html>
