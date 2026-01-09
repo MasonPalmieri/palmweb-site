@@ -3,496 +3,137 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard • FSS Demo</title>
+  <title>Dashboard</title>
+  <meta name="theme-color" content="#0b0f14" />
 
   <link rel="stylesheet" href="assets/app.css" />
-
-  <style>
-    /* Page-specific polish */
-    .wrap{
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 24px 18px 44px;
-    }
-
-    .dash-grid{
-      display:grid;
-      grid-template-columns: 1fr 0.42fr;
-      gap: 16px;
-      align-items:start;
-      margin-top: 14px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .env-title{
-      display:flex;
-      flex-direction:column;
-      gap: 4px;
-      min-width:0;
-    }
-
-    .env-title h1{
-      margin:0;
-      font-size: 22px;
-      letter-spacing: -0.2px;
-      font-weight: 950;
-    }
-
-    .env-title p{
-      margin:0;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.06);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      width: fit-content;
-    }
-
-    .pill .dot{
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.25);
-    }
-    .pill[data-state="draft"] .dot{ background: rgba(255,255,255,.25); }
-    .pill[data-state="ready"] .dot{ background: rgba(67, 203, 255, .95); }
-    .pill[data-state="sent"] .dot{ background: rgba(255, 196, 82, .95); }
-    .pill[data-state="completed"] .dot{ background: rgba(96, 255, 157, .95); }
-
-    .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 16px;
-    }
-
-    .card h2{
-      margin:0;
-      font-size: 15px;
-      font-weight: 950;
-      letter-spacing: -0.1px;
-    }
-
-    .card p{
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .next-actions{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .btn-lg{
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 950;
-    }
-
-    .btn-muted{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-    }
-    .btn-muted:hover{
-      background: rgba(255,255,255,.09);
-    }
-
-    .mini{
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      margin-top: 10px;
-    }
-
-    .summary{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .summary .item{
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-    }
-
-    .summary .label{
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
-      font-weight: 850;
-      margin-bottom: 6px;
-    }
-
-    .summary .value{
-      font-weight: 950;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .side .card{
-      position: sticky;
-      top: 18px;
-    }
-
-    .audit{
-      margin-top: 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      padding-top: 12px;
-    }
-
-    .audit-item{
-      padding: 10px 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      margin-top: 10px;
-    }
-
-    .audit-item strong{
-      display:block;
-      font-size: 12.5px;
-      font-weight: 950;
-      margin-bottom: 4px;
-      color: rgba(255,255,255,.92);
-    }
-
-    .audit-item span{
-      display:block;
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      line-height: 1.45;
-    }
-
-    .row{
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top: 14px;
-    }
-
-    .danger{
-      color: rgba(255,255,255,.92);
-      background: rgba(255, 79, 99, .14);
-      border: 1px solid rgba(255, 79, 99, .35);
-    }
-
-    @media (max-width: 980px){
-      .dash-grid{ grid-template-columns: 1fr; }
-      .side .card{ position: static; }
-      .summary{ grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
 
-<body class="app">
-  <header class="app-top">
-    <div class="app-top-inner">
-      <a class="app-brand" href="dashboard.html">
-        <span class="logo-badge">FSS</span>
-        <div class="brand-text">
-          <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
-        </div>
-      </a>
-
-      <div class="app-nav">
-        <a class="nav-link active" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="create.html">Create</a>
-        <a class="nav-link" href="sign.html">Sign</a>
-        <a class="nav-link" href="success.html">Completed</a>
-      </div>
-
-      <div class="app-user">
-        <span id="userEmail" class="user-pill">—</span>
-        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div class="topbar">
-      <div class="env-title">
-        <h1 id="envHeader">Envelope —</h1>
-        <p id="envSub">Create an agreement, sign it, then send to recipient.</p>
-      </div>
-
-      <div class="pill" id="statusPill" data-state="draft">
-        <span class="dot"></span>
-        <span id="statusLabel">Draft</span>
+<body class="dark">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo-badge">F</div>
+      <div class="brand-text">
+        <div class="brand-title">Client Portal</div>
+        <div class="brand-sub">Agreements • Signatures • Delivery</div>
       </div>
     </div>
 
-    <div class="dash-grid">
+    <div class="topbar-actions">
+      <a class="btn btn-ghost" href="create.html">New Agreement</a>
+      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <main class="container">
+    <div class="page-head">
+      <h1>Dashboard</h1>
+      <p>Manage agreements, view audit history, and send documents.</p>
+    </div>
+
+    <div class="grid-2">
       <!-- LEFT -->
       <section class="card">
-        <h2>Next step</h2>
-        <p id="nextText">—</p>
+        <h2 class="card-title">Active Agreement</h2>
+        <p class="card-sub">Current envelope and status.</p>
 
-        <div class="next-actions">
-          <a class="btn btn-primary btn-lg" id="continueBtn" href="create.html">Continue</a>
-          <button class="btn btn-muted btn-lg" id="downloadBtn" type="button" style="display:none;">Download signed PDF</button>
-        </div>
+        <div id="docBox" class="info-box"></div>
 
-        <div class="summary">
-          <div class="item">
-            <div class="label">Template</div>
-            <div class="value" id="templateVal">—</div>
-          </div>
-
-          <div class="item">
-            <div class="label">Created</div>
-            <div class="value" id="createdVal">—</div>
-          </div>
-
-          <div class="item">
-            <div class="label">Sender</div>
-            <div class="value" id="senderVal">—</div>
-          </div>
-
-          <div class="item">
-            <div class="label">Recipient</div>
-            <div class="value" id="recipientVal">—</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <a class="btn btn-outline" href="create.html">Edit agreement</a>
-          <button class="btn btn-outline danger" id="resetBtn" type="button">Reset demo</button>
-        </div>
-
-        <div class="mini">
-          This is a static demo: “Send” simulates delivery and completion.
-          It still generates a <strong>real signed PDF</strong> in your browser.
+        <div class="actions">
+          <a class="btn btn-primary" href="create.html">Create / Edit</a>
+          <a class="btn btn-outline" href="sign.html">Fill + Sign</a>
         </div>
       </section>
 
       <!-- RIGHT -->
-      <aside class="side">
-        <section class="card">
-          <h2>Activity log</h2>
-          <p>Audit style events showing what happened and when.</p>
+      <section class="card">
+        <h2 class="card-title">Audit Trail</h2>
+        <p class="card-sub">Recent events for the envelope.</p>
 
-          <div class="audit" id="auditWrap">
-            <!-- audit items injected here -->
-          </div>
-        </section>
-      </aside>
+        <div id="auditBox" class="audit-list"></div>
+      </section>
     </div>
+
+    <section class="card" style="margin-top:16px;">
+      <h2 class="card-title">Completed Document</h2>
+      <p class="card-sub">If the PDF has been signed, you can preview and download it here.</p>
+
+      <div id="signedPanel" class="signed-panel"></div>
+    </section>
   </main>
 
+  <!-- Load app.js as a script, not a link -->
   <script src="assets/app.js"></script>
+
   <script>
-    // Auth guard
+    // Guard: must be logged in
     FSS.guard();
 
     // Ensure doc exists
-    let doc = FSS.loadDocState();
-    if(!doc){
+    if(!FSS.loadDocState()){
       FSS.resetDoc();
-      doc = FSS.loadDocState();
-      FSS.logAudit("Envelope created.");
+      FSS.logAudit("Envelope created (auto).");
     }
 
-    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
+    // Populate active doc
+    const d = FSS.loadDocState();
+    const docBox = document.getElementById("docBox");
 
-    // Elements
-    const envHeader = document.getElementById("envHeader");
-    const envSub = document.getElementById("envSub");
-    const templateVal = document.getElementById("templateVal");
-    const createdVal = document.getElementById("createdVal");
-    const senderVal = document.getElementById("senderVal");
-    const recipientVal = document.getElementById("recipientVal");
-    const statusPill = document.getElementById("statusPill");
-    const statusLabel = document.getElementById("statusLabel");
-    const nextText = document.getElementById("nextText");
-    const continueBtn = document.getElementById("continueBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const auditWrap = document.getElementById("auditWrap");
+    docBox.innerHTML = `
+      <div class="kv">
+        <div><span>Envelope ID</span><strong>${FSS.escape(d.id)}</strong></div>
+        <div><span>Status</span><strong class="pill">${FSS.escape(d.status)}</strong></div>
+        <div><span>Template</span><strong>${FSS.escape(d.template)}</strong></div>
+      </div>
 
-    // Header values
-    envHeader.textContent = `Envelope • ${doc.id}`;
-    templateVal.textContent = doc.template || "—";
-    createdVal.textContent = new Date(doc.createdAt).toLocaleString();
-    senderVal.textContent = (doc.parties.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "Not provided");
-    recipientVal.textContent = (doc.parties.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "Not provided");
+      <div class="divider"></div>
 
-    // Determine state based on fields + signed pdf
-    const fields = FSS.loadFields();
-    const hasFields = fields && fields.length > 0;
-    const signedReady = FSS.hasSignedPDF();
+      <div class="kv">
+        <div><span>Sender</span><strong>${FSS.escape(d.parties.aName || "—")}</strong></div>
+        <div><span>Sender Email</span><strong>${FSS.escape(d.parties.aEmail || "—")}</strong></div>
+        <div><span>Recipient</span><strong>${FSS.escape(d.parties.bName || "—")}</strong></div>
+        <div><span>Recipient Email</span><strong>${FSS.escape(d.parties.bEmail || "—")}</strong></div>
+      </div>
+    `;
 
-    // Stage tracking
-    // draft = nothing done
-    // ready = filled + sender signed
-    // sent = user clicked send (doc.status === sent)
-    // completed = doc.status === completed
+    // Populate audit
+    const audit = FSS.loadAudit();
+    const auditBox = document.getElementById("auditBox");
 
-    function setState(state){
-      statusPill.setAttribute("data-state", state);
-      if(state === "draft"){ statusLabel.textContent = "Draft"; }
-      if(state === "ready"){ statusLabel.textContent = "Ready to Send"; }
-      if(state === "sent"){ statusLabel.textContent = "Sent"; }
-      if(state === "completed"){ statusLabel.textContent = "Completed"; }
-    }
-
-    // Compute "next step"
-    function updateNext(){
-      doc = FSS.loadDocState();
-
-      // Completed state
-      if(doc.status === "completed"){
-        setState("completed");
-        nextText.innerHTML = `✅ Agreement completed. Download the signed PDF or open the completed view.`;
-        continueBtn.textContent = "View completed";
-        continueBtn.href = "success.html";
-        if(signedReady){
-          downloadBtn.style.display = "";
-        }
-        return;
-      }
-
-      // Sent but not completed
-      if(doc.status === "sent"){
-        setState("sent");
-        nextText.innerHTML =
-          `📨 Agreement sent to <strong>${FSS.escape(doc.parties.bEmail || "recipient")}</strong>. <br>
-           Use the “Recipient signing” link on the Sign page to simulate completion.`;
-        continueBtn.textContent = "Open Sign page";
-        continueBtn.href = "sign.html";
-        if(signedReady){
-          downloadBtn.style.display = "";
-        }
-        return;
-      }
-
-      // If no sender/recipient info yet
-      if(!doc.parties.aName || !doc.parties.bName){
-        setState("draft");
-        nextText.innerHTML = `Start by filling in party details and choosing a template.`;
-        continueBtn.textContent = "Create agreement";
-        continueBtn.href = "create.html";
-        downloadBtn.style.display = "none";
-        return;
-      }
-
-      // If agreement created but no fields placed yet
-      if(!hasFields){
-        setState("draft");
-        nextText.innerHTML = `Now place required signature fields and sign the agreement as the sender.`;
-        continueBtn.textContent = "Sign as sender";
-        continueBtn.href = "sign.html";
-        downloadBtn.style.display = "none";
-        return;
-      }
-
-      // If fields exist but no signed PDF generated
-      if(hasFields && !signedReady){
-        setState("draft");
-        nextText.innerHTML = `Required fields placed. Next: complete sender signature to generate the signed PDF.`;
-        continueBtn.textContent = "Continue signing";
-        continueBtn.href = "sign.html";
-        downloadBtn.style.display = "none";
-        return;
-      }
-
-      // Sender signed → ready to send
-      setState("ready");
-      nextText.innerHTML =
-        `✅ Sender signature complete. Next: send the agreement to the recipient.`;
-      continueBtn.textContent = "Send agreement";
-      continueBtn.href = "sign.html";
-      downloadBtn.style.display = "";
-    }
-
-    updateNext();
-
-    // Audit log
-    function renderAudit(){
-      const a = FSS.loadAudit() || [];
-      if(!a.length){
-        auditWrap.innerHTML = `<div class="audit-item"><strong>No activity yet</strong><span>Create an agreement to begin.</span></div>`;
-        return;
-      }
-
-      auditWrap.innerHTML = a.slice(0, 8).map(item => `
-        <div class="audit-item">
-          <strong>${FSS.escape(item.at)}</strong>
-          <span>${FSS.escape(item.msg)}</span>
+    if(!audit || audit.length === 0){
+      auditBox.innerHTML = `<div class="muted">No activity yet.</div>`;
+    } else {
+      auditBox.innerHTML = audit.slice(0, 10).map(a => `
+        <div class="audit-row">
+          <div class="audit-time">${FSS.escape(a.at)}</div>
+          <div class="audit-msg">${FSS.escape(a.msg)}</div>
         </div>
       `).join("");
     }
-    renderAudit();
 
-    // Download signed PDF
-    downloadBtn.addEventListener("click", () => {
+    // Signed PDF preview + download
+    const signedPanel = document.getElementById("signedPanel");
+
+    if(FSS.hasSignedPDF()){
       const b64 = FSS.getSignedBase64();
-      if(!b64){
-        alert("No signed PDF found yet.");
-        return;
-      }
+      const url = "data:application/pdf;base64," + b64;
 
-      const byteChars = atob(b64);
-      const bytes = new Uint8Array(byteChars.length);
-      for(let i=0; i<byteChars.length; i++){
-        bytes[i] = byteChars.charCodeAt(i);
-      }
-
-      const blob = new Blob([bytes], { type:"application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `FSS-${doc.id}-signed.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    });
-
-    // Reset demo
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      const ok = confirm("Reset the demo? This clears the envelope + fields + signed PDF.");
-      if(!ok) return;
-      FSS.resetDoc();
-      FSS.logAudit("Demo reset.");
-      location.reload();
-    });
+      signedPanel.innerHTML = `
+        <div class="signed-actions">
+          <a class="btn btn-primary" href="${url}" download="signed_${FSS.escape(d.template)}">Download Signed PDF</a>
+          <a class="btn btn-outline" href="${url}" target="_blank" rel="noreferrer">Open in New Tab</a>
+        </div>
+        <div class="pdf-frame">
+          <iframe src="${url}" title="Signed PDF Preview"></iframe>
+        </div>
+      `;
+    } else {
+      signedPanel.innerHTML = `
+        <div class="muted">
+          No signed PDF yet. Go to <strong>Fill + Sign</strong> to complete the document.
+        </div>
+      `;
+    }
 
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
