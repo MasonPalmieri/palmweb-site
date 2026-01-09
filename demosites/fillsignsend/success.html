@@ -6,7 +6,7 @@
   <title>Client Portal — Completed</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
-<body class="app dark">
+<body class="app light">
 
   <header class="topbar">
     <div class="brand">
@@ -26,46 +26,29 @@
   </header>
 
   <main class="page">
-    <div class="shell" style="max-width:980px;">
-      <section class="panel" style="padding:24px;">
-        <div class="successGrid">
+    <div class="shell" style="max-width:1100px;">
+      <section class="panel">
+        <div class="panelHead">
           <div>
-            <div class="successBadge">✅</div>
-            <h2 style="margin:14px 0 6px;">Document completed</h2>
-            <p class="muted">
-              The signed PDF has been generated locally in your browser.
+            <h2 style="margin:0;">Agreement Completed ✅</h2>
+            <p class="muted" style="margin:6px 0 0;">
+              This signed PDF was generated locally in your browser.
               Original templates were not modified.
             </p>
-
-            <div class="divider"></div>
-
-            <div class="actions">
-              <button class="btn primary" id="downloadBtn" type="button">Download Signed PDF</button>
-              <button class="btn secondary" id="viewBtn" type="button">View</button>
-              <a class="btn outline" href="audit.html">View Audit Trail</a>
-            </div>
-
-            <p class="tiny muted" id="metaLine" style="margin-top:12px;"></p>
-
-            <div class="divider"></div>
-
-            <p class="tiny muted">
-              Upgrade path: true DocuSign features require a backend (envelope storage, email sending, identity, tamper proof audit logs).
-              PalmWeb can implement this with Supabase/Firebase + email sending + file storage.
-            </p>
           </div>
-
-          <div class="panel mini" style="margin:0; box-shadow:none; background: rgba(0,0,0,.18);">
-            <b>Signed PDF Preview</b>
-            <p class="muted tiny" style="margin-top:6px;">Preview appears after clicking “View”.</p>
-
-            <div class="divider"></div>
-
-            <div id="previewBox" class="previewBox" style="height:420px;">
-              <div class="muted tiny">No preview loaded.</div>
-            </div>
+          <div class="actions">
+            <button class="btn primary" id="downloadBtn" type="button">Download Signed PDF</button>
+            <button class="btn secondary" id="viewBtn" type="button">View</button>
           </div>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="bigPreview" id="previewBox">
+          <div class="muted tiny" style="padding:14px;">Click “View” to preview the signed PDF.</div>
+        </div>
+
+        <p class="tiny muted" id="metaLine" style="margin-top:10px;"></p>
       </section>
     </div>
   </main>
@@ -83,13 +66,13 @@
     const state = FSS.loadDocState();
 
     if(!signed){
-      metaLine.textContent = "No signed document found yet. Complete a signing flow first.";
-      metaLine.style.color = "#fda4af";
+      metaLine.textContent = "No signed document found yet. Complete the signing flow first.";
+      metaLine.className = "tiny textBad";
       downloadBtn.disabled = true;
       viewBtn.disabled = true;
     } else {
-      metaLine.textContent = `Ready • Template: ${state?.template || "PDF"} • Generated: ${new Date(signed.generatedAt).toLocaleString()}`;
-      metaLine.style.color = "#86efac";
+      metaLine.textContent = `Template: ${state?.template || "PDF"} • Generated: ${new Date(signed.generatedAt).toLocaleString()}`;
+      metaLine.className = "tiny textGood";
     }
 
     downloadBtn.addEventListener("click", () => {
@@ -100,7 +83,7 @@
     viewBtn.addEventListener("click", () => {
       if(!signed) return;
       const url = FSS.getSignedObjectUrl();
-      previewBox.innerHTML = `<iframe class="previewFrame" src="${url}" title="Signed PDF"></iframe>`;
+      previewBox.innerHTML = `<iframe class="previewFrame" style="height:640px;" src="${url}" title="Signed PDF"></iframe>`;
     });
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
