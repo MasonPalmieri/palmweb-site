@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PalmWeb — Demos</title>
+  <meta name="description" content="PalmWeb demo samples for prospective customers." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <style>
+    :root{
+      --blue:#1d79c6;
+      --green:#2cab4b;
+      --panel2:#f7fbff;
+      --border:#e5e7eb;
+      --text:#0f172a;
+      --muted:#475569;
+      --shadow: 0 14px 34px rgba(15,23,42,.10);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      padding:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:#fff;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a{ color: inherit; }
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      text-decoration:none;
+      min-width: 0;
+    }
+    .brand img{
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 12px;
+      flex: 0 0 auto;
+    }
+    .brand-title strong{
+      font-size: 14px;
+      letter-spacing: .2px;
+      font-weight: 950;
+      display:block;
+    }
+    .brand-title span{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 750;
+      display:block;
+    }
+    nav{
+      display:flex;
+      align-items:center;
+      gap: 18px;
+    }
+    nav a{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 14px;
+    }
+    nav a:hover{ color: var(--text); }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      text-decoration:none;
+      font-weight: 950;
+      cursor:pointer;
+      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+      user-select:none;
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      box-shadow: 0 12px 26px rgba(29,121,198,.22);
+    }
+    .btn-outline{
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover{ background: #f8fafc; }
+
+    .hero{
+      padding: 42px 0 44px;
+      background:
+        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.20), transparent 60%),
+        radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.16), transparent 60%),
+        linear-gradient(180deg, var(--panel2), #fff 60%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .box{
+      background:#fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    input{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      outline:none;
+      font-size: 14px;
+    }
+    input:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card{
+      background:#fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .card h3{ margin: 0 0 6px; font-size: 16px; font-weight: 950; }
+    .card p{ margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+
+    footer{
+      border-top: 1px solid var(--border);
+      background:#fff;
+      padding: 18px 0;
+      color:#64748b;
+      font-size: 12px;
+      text-align:center;
+    }
+
+    @media (max-width: 980px){
+      nav{ display:none; }
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="PalmWeb logo" />
+        <div class="brand-title">
+          <strong>PalmWeb</strong>
+          <span>Websites • Automation • Consulting</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#work">Work</a>
+        <a href="demos.html">Demos</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="container">
+      <h1 style="margin:0 0 10px; font-size: clamp(30px, 4vw, 44px); line-height:1.05;">
+        Demos
+      </h1>
+      <p style="margin:0; color: var(--muted); max-width:70ch;">
+        These demo pages are for prospective customers. Enter the password to view.
+      </p>
+
+      <!-- LOGIN BOX -->
+      <div class="box" id="loginBox">
+        <h2 style="margin:0 0 10px; font-size: 18px; font-weight:950;">Enter Password</h2>
+
+        <label style="max-width:420px;">
+          Password
+          <input id="pw" type="password" placeholder="Enter password" />
+        </label>
+
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="unlockBtn" type="button">Unlock</button>
+          <a class="btn btn-outline" href="index.html">Back to Home</a>
+        </div>
+
+        <p id="msg" style="margin:12px 0 0; color:#b91c1c; font-weight:800; display:none;">
+          Incorrect password.
+        </p>
+      </div>
+
+      <!-- DEMOS CONTENT -->
+      <div class="box" id="demosBox" style="display:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <h2 style="margin:0; font-size: 18px; font-weight:950;">Available Demos</h2>
+          <button class="btn btn-outline" id="lockBtn" type="button">Lock</button>
+        </div>
+
+        <p style="margin:10px 0 0; color: var(--muted); font-size:14px;">
+          Here are the demos currently available:
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Demo #1 — Small Business Website</h3>
+            <p>A clean template with contact flow and modern layout.</p>
+            <a class="btn btn-outline" href="demo-sites/sample1/index.html" target="_blank" rel="noreferrer">
+              Open Demo
+            </a>
+          </div>
+
+          <div class="card">
+            <h3>Demo #2 — Automation Intake</h3>
+            <p>Form → email + logging example for admin automation.</p>
+            <a class="btn btn-outline" href="demo-sites/sample2/index.html" target="_blank" rel="noreferrer">
+              Open Demo
+            </a>
+          </div>
+        </div>
+
+        <p style="margin:16px 0 0; font-size:12px; color:#64748b; font-weight:700;">
+          Want access? Email <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      © <span id="year"></span> PalmWeb. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // === CHANGE THIS PASSWORD ===
+    const DEMO_PASSWORD = "PalmWeb2026"; // <-- change me
+
+    const loginBox = document.getElementById("loginBox");
+    const demosBox = document.getElementById("demosBox");
+    const pw = document.getElementById("pw");
+    const msg = document.getElementById("msg");
+
+    const unlockBtn = document.getElementById("unlockBtn");
+    const lockBtn = document.getElementById("lockBtn");
+
+    function unlock(){
+      loginBox.style.display = "none";
+      demosBox.style.display = "";
+      msg.style.display = "none";
+      pw.value = "";
+    }
+
+    function lock(){
+      demosBox.style.display = "none";
+      loginBox.style.display = "";
+      msg.style.display = "none";
+      pw.value = "";
+      localStorage.removeItem("palmweb_demo_unlocked");
+    }
+
+    // Keep them unlocked if they refresh (optional)
+    const saved = localStorage.getItem("palmweb_demo_unlocked");
+    if(saved === "true"){
+      unlock();
+    }
+
+    function tryUnlock(){
+      const entered = pw.value.trim();
+
+      if(entered === DEMO_PASSWORD){
+        localStorage.setItem("palmweb_demo_unlocked", "true");
+        unlock();
+        return;
+      }
+
+      msg.style.display = "";
+      pw.focus();
+      pw.select();
+    }
+
+    unlockBtn.addEventListener("click", tryUnlock);
+    lockBtn.addEventListener("click", lock);
+
+    pw.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        tryUnlock();
+      }
+    });
+  </script>
+</body>
+</html>
