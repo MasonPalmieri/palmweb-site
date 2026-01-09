@@ -1,12 +1,12 @@
 /* ============================================================
-   FSS Demo App — app.js
-   Static, works on GitHub Pages. No backend.
+   FSS Demo App — app.js (FULL UPDATED)
+   Static demo for GitHub Pages.
    Uses localStorage + pdf-lib (loaded only on sign.html).
    ============================================================ */
 
 window.FSS = (() => {
   // ===== CONFIG =====
-  const DEMO_PASSWORD = "hallam";              // demos.html / main demo gate
+  const DEMO_PASSWORD = "hallam";              // demo gate password
   const FSS_LOGIN_EMAIL = "demo@client.com";   // login credential for FSS
   const FSS_LOGIN_PASS  = "hallam";            // login credential for FSS
 
@@ -20,7 +20,10 @@ window.FSS = (() => {
     signed: "fss_signed",
   };
 
-  // ===== HELPERS =====
+  // ============================================================
+  // Helpers
+  // ============================================================
+
   function escape(str){
     return String(str || "")
       .replaceAll("&","&amp;")
@@ -31,8 +34,11 @@ window.FSS = (() => {
   }
 
   function now(){
-    const d = new Date();
-    return d.toLocaleString();
+    return new Date().toLocaleString();
+  }
+
+  function uid(){
+    return "F-" + Math.random().toString(16).slice(2, 10).toUpperCase();
   }
 
   function set(key, val){
@@ -51,7 +57,10 @@ window.FSS = (() => {
     return localStorage.getItem(key);
   }
 
-  // ===== DEMO PASSWORD GATE =====
+  // ============================================================
+  // Demo Password Gate
+  // ============================================================
+
   function isDemoUnlocked(){
     return get(K.demoGate, false) === true;
   }
@@ -64,9 +73,13 @@ window.FSS = (() => {
     return false;
   }
 
-  // ===== AUTH =====
+  // ============================================================
+  // Auth
+  // ============================================================
+
   function isAuthed(){
-    return get(K.auth, null) && get(K.auth).ok === true;
+    const a = get(K.auth, null);
+    return a && a.ok === true;
   }
 
   function login(email, pass){
@@ -82,14 +95,11 @@ window.FSS = (() => {
 
   function logout(){
     localStorage.removeItem(K.auth);
-    // do NOT wipe demo gate password
-    // optional: keep doc + signed pdf for demo continuity
   }
 
   function guard(){
-    // for pages inside demosites/fillsignsend/
+    // For pages inside demosites/fillsignsend/
     if(!isAuthed()){
-      // If user is not authenticated, bounce to index
       const here = location.pathname.toLowerCase();
       if(!here.endsWith("/index.html") && !here.endsWith("/index")){
         location.href = "index.html";
@@ -97,7 +107,10 @@ window.FSS = (() => {
     }
   }
 
-  // ===== DOC STATE =====
+  // ============================================================
+  // Document State
+  // ============================================================
+
   function defaultDoc(){
     return {
       id: "ENV-" + Math.random().toString(16).slice(2, 10).toUpperCase(),
@@ -110,10 +123,6 @@ window.FSS = (() => {
         aEmail: "",
         bName: "",
         bEmail: ""
-      },
-      meta: {
-        subject: "Agreement Signature Request",
-        message: "Please review and sign."
       }
     };
   }
@@ -145,7 +154,12 @@ window.FSS = (() => {
     saveDocState(d);
   }
 
-  // ===== FIELDS =====
+  // ============================================================
+  // Fields
+  // Each field:
+  // { id, type, page, x, y, w, h, value, required, label, role }
+  // ============================================================
+
   function loadFields(){
     return get(K.fields, []);
   }
@@ -154,7 +168,20 @@ window.FSS = (() => {
     set(K.fields, fields || []);
   }
 
-  // ===== AUDIT =====
+  function setFieldValue(type, value){
+    const fields = loadFields() || [];
+    const ix = fields.findIndex(f => f.type === type);
+    if(ix === -1) return false;
+
+    fields[ix].value = value;
+    saveFields(fields);
+    return true;
+  }
+
+  // ============================================================
+  // Audit
+  // ============================================================
+
   function loadAudit(){
     return get(K.audit, []);
   }
@@ -170,7 +197,10 @@ window.FSS = (() => {
     set(K.audit, audit);
   }
 
-  // ===== FILE UTILS =====
+  // ============================================================
+  // File helpers
+  // ============================================================
+
   async function fetchAsArrayBuffer(url){
     const res = await fetch(url);
     if(!res.ok) throw new Error("Failed to fetch PDF: " + url);
@@ -188,30 +218,33 @@ window.FSS = (() => {
   }
 
   // ============================================================
-  // ✅ PDF SIGNING / PDF FIELD WRITING (pdf-lib)
-  // Requires pdf-lib loaded on sign.html:
-  // <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  // PDF Signing (pdf-lib)
   // ============================================================
 
-  function mapOverlayToPdfCoords(overlayEl, field){
-    // overlay top-left = (0,0)
-    // pdf-lib uses bottom-left = (0,0)
-    const rect = overlayEl.getBoundingClientRect();
+  function mapFieldToPdfCoords(field, overlayWidth, overlayHeight, pdfW, pdfH){
+    // Convert overlay pixels into normalized ratios
+    const xNorm = field.x / overlayWidth;
+    const yNorm = field.y / overlayHeight;
+    const wNorm = field.w / overlayWidth;
+    const hNorm = field.h / overlayHeight;
 
-    // Convert from overlay pixel coords to normalized
-    const xNorm = field.x / rect.width;
-    const yNorm = field.y / rect.height;
-    const wNorm = field.w / rect.width;
-    const hNorm = field.h / rect.height;
+    // PDF coordinates are bottom-left based
+    const x = xNorm * pdfW;
+    const yTop = yNorm * pdfH;
+    const y = pdfH - yTop - (hNorm * pdfH);
 
-    return { xNorm, yNorm, wNorm, hNorm };
+    return {
+      x,
+      y,
+      boxW: wNorm * pdfW,
+      boxH: hNorm * pdfH
+    };
   }
 
   async function generateSignedPDF(){
     try{
-      // Ensure pdf-lib exists
       if(!window.PDFLib){
-        console.error("pdf-lib not loaded.");
+        console.error("pdf-lib is not loaded. Add script tag to sign.html.");
         return false;
       }
 
@@ -222,89 +255,81 @@ window.FSS = (() => {
       }
 
       const fields = loadFields();
-
-      // Fetch the actual PDF template
-      const templateUrl = `pdfs/${docState.template}`;
-      const templateBytes = await fetchAsArrayBuffer(templateUrl);
-
-      // Load it into pdf-lib
-      const pdfDoc = await PDFLib.PDFDocument.load(templateBytes);
-
-      // We'll write on page 1 for demo. (You can extend to multi-page later)
-      const pageIndex = 0;
-      const page = pdfDoc.getPage(pageIndex);
-
-      // Measure page size
-      const { width: pdfW, height: pdfH } = page.getSize();
-
-      // Overlay DOM size (needed to map pixels → PDF points)
-      const overlayEl = document.getElementById("overlay");
-      if(!overlayEl){
-        console.error("overlay element missing.");
+      if(!fields || fields.length === 0){
+        console.error("No fields to apply.");
         return false;
       }
 
-      // Font
+      // Fetch PDF template
+      const templateUrl = `pdfs/${docState.template}`;
+      const templateBytes = await fetchAsArrayBuffer(templateUrl);
+
+      // Load into pdf-lib
+      const pdfDoc = await PDFLib.PDFDocument.load(templateBytes);
+      const page = pdfDoc.getPage(0);
+
+      const { width: pdfW, height: pdfH } = page.getSize();
+
+      // We need overlay dimensions. If overlay element exists, use it.
+      // If not (rare), fallback to a known size.
+      const overlayEl = document.getElementById("overlay");
+      let overlayW = 800;
+      let overlayH = 1000;
+
+      if(overlayEl){
+        const r = overlayEl.getBoundingClientRect();
+        overlayW = Math.max(1, r.width);
+        overlayH = Math.max(1, r.height);
+      }
+
+      // Fonts
       const helv = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
       const helvBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
 
-      // Draw each field value onto PDF
+      // Draw each field
       for(const f of fields){
-        const val = (f.value || "").trim();
-        if(!val) continue;
+        const value = (f.value || "").trim();
+        if(!value) continue;
 
-        // Map overlay pixels into PDF coordinates
-        const { xNorm, yNorm, wNorm, hNorm } = mapOverlayToPdfCoords(overlayEl, f);
+        const { x, y, boxW, boxH } = mapFieldToPdfCoords(f, overlayW, overlayH, pdfW, pdfH);
 
-        const x = xNorm * pdfW;
-        const yTop = yNorm * pdfH;
-
-        // Convert overlay top-left to PDF bottom-left
-        const y = pdfH - yTop - (hNorm * pdfH);
-
-        const boxW = wNorm * pdfW;
-        const boxH = hNorm * pdfH;
-
-        // Draw a subtle border box (looks DocuSign-ish)
+        // Box background for readability
         page.drawRectangle({
           x,
           y,
           width: boxW,
           height: boxH,
+          color: PDFLib.rgb(1, 1, 1),
+          opacity: 0.92,
           borderColor: PDFLib.rgb(0.2, 0.45, 1),
           borderWidth: 1,
-          color: PDFLib.rgb(1,1,1),
-          opacity: 0.02
         });
 
-        // Field label
-        page.drawText(f.type.toUpperCase(), {
-          x: x + 4,
+        // Label
+        page.drawText((f.label || f.type).toUpperCase(), {
+          x: x + 5,
           y: y + boxH - 10,
           size: 7,
           font: helvBold,
-          color: PDFLib.rgb(0.1, 0.2, 0.4),
-          opacity: 0.7
+          color: PDFLib.rgb(0.15, 0.2, 0.35),
+          opacity: 0.75
         });
 
-        // Field content
-        let drawValue = val;
-        let fontSize = 12;
+        // Value formatting
+        let drawValue = value;
         let font = helv;
+        let fontSize = 12;
 
         if(f.type === "signature"){
-          // mimic signature feel
+          font = helvBold;
           fontSize = 16;
-          font = helvBold;
         }
-        if(f.type === "date"){
-          fontSize = 12;
-          font = helv;
-        }
+
         if(f.type === "checkbox"){
-          drawValue = (val.toLowerCase() === "true" || val.toLowerCase() === "yes" || val === "1") ? "☑" : "☐";
-          fontSize = 18;
+          const checked = ["true","yes","1","checked"].includes(value.toLowerCase());
+          drawValue = checked ? "☑" : "☐";
           font = helvBold;
+          fontSize = 18;
         }
 
         page.drawText(drawValue, {
@@ -316,32 +341,33 @@ window.FSS = (() => {
         });
       }
 
-      // Add a footer stamp to show it was completed
-      const stampText = `Completed via FSS Demo — ${now()}`;
-      page.drawText(stampText, {
+      // Footer stamp
+      const stamp = `Completed via FSS Demo — ${now()}`;
+      page.drawText(stamp, {
         x: 40,
-        y: 25,
+        y: 22,
         size: 9,
         font: helv,
-        color: PDFLib.rgb(0.3, 0.3, 0.35),
+        color: PDFLib.rgb(0.35, 0.35, 0.4),
         opacity: 0.9
       });
 
-      // Save PDF bytes
+      // Save to bytes + store base64
       const signedBytes = await pdfDoc.save();
-
-      // Store base64 so success.html can display it
       const b64 = arrayBufferToBase64(signedBytes);
       setStr(K.signed, b64);
 
       return true;
     }catch(err){
-      console.error(err);
+      console.error("generateSignedPDF failed:", err);
       return false;
     }
   }
 
-  // ===== DASHBOARD / STATUS HELPERS =====
+  // ============================================================
+  // Signed PDF Access
+  // ============================================================
+
   function getSignedBase64(){
     return getStr(K.signed);
   }
@@ -350,14 +376,21 @@ window.FSS = (() => {
     return !!getStr(K.signed);
   }
 
-  // ===== PUBLIC API =====
+  // ============================================================
+  // Public API
+  // ============================================================
+
   return {
-    // config access (optional)
+    // config
     DEMO_PASSWORD,
     FSS_LOGIN_EMAIL,
     FSS_LOGIN_PASS,
 
-    // demo gate
+    // helpers
+    escape,
+    uid,
+
+    // gate
     isDemoUnlocked,
     unlockDemo,
 
@@ -367,7 +400,7 @@ window.FSS = (() => {
     logout,
     guard,
 
-    // state
+    // doc
     defaultDoc,
     loadDocState,
     saveDocState,
@@ -378,15 +411,13 @@ window.FSS = (() => {
     // fields + audit
     loadFields,
     saveFields,
+    setFieldValue,
     loadAudit,
     logAudit,
 
-    // pdf signing
+    // pdf
     generateSignedPDF,
     getSignedBase64,
     hasSignedPDF,
-
-    // utils
-    escape
   };
 })();
