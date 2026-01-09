@@ -7,9 +7,12 @@
 
   <link rel="stylesheet" href="assets/app.css" />
 
+  <!-- PDF.js for rendering + click placement -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     .wrap{
-      max-width: 1320px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 18px 18px 40px;
     }
@@ -35,7 +38,7 @@
       font-size: 13px;
       color: var(--muted);
       font-weight: 750;
-      max-width: 88ch;
+      max-width: 72ch;
       line-height: 1.5;
     }
 
@@ -57,7 +60,6 @@
     .pill[data-state="sender"] .dot{ background: rgba(67,203,255,.95); }
     .pill[data-state="ready"] .dot{ background: rgba(96,255,157,.95); }
     .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="recipient"] .dot{ background: rgba(255,196,82,.95); }
     .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
 
     .layout{
@@ -137,6 +139,7 @@
       border-radius: 14px;
       font-size: 14px;
       font-weight: 950;
+      width: 100%;
     }
 
     .btn-muted{
@@ -158,7 +161,7 @@
     .viewer-card{
       overflow:hidden;
       padding: 0;
-      min-height: 620px;
+      position: relative;
     }
 
     .viewer-head{
@@ -228,17 +231,44 @@
       background: radial-gradient(900px 450px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
     }
 
-    /* Bigger + readable by default */
-    #pdfFrame{
+    /* PDF.js canvas */
+    .pdf-stage{
+      position: relative;
       width: 100%;
-      height: min(82vh, 980px);
-      border: 0;
+      overflow: auto;
       border-radius: 18px;
-      background: #fff;
+      background: #111;
       box-shadow: 0 18px 50px rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 12px;
+      min-height: 70vh;
     }
 
-    /* Status message */
+    canvas{
+      display:block;
+      margin: 0 auto;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    /* Placed fields overlay */
+    .field{
+      position:absolute;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 950;
+      font-size: 13px;
+      user-select:none;
+      cursor: grab;
+      border: 2px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.88);
+      color: #111;
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+    }
+    .field.sig{ border-color: rgba(255,79,165,.55); }
+    .field.date{ border-color: rgba(96,255,157,.55); }
+    .field:active{ cursor: grabbing; }
+
     .status{
       margin-top: 12px;
       padding: 10px 12px;
@@ -253,62 +283,10 @@
     .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
     .status.bad{ border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.08); }
 
-    /* FULL SCREEN MODAL VIEWER */
-    .modal{
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: none;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(6px);
-      padding: 18px;
-    }
-    .modal.show{ display:block; }
-
-    .modal-inner{
-      height: 100%;
-      width: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-      display:flex;
-      flex-direction: column;
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(18,18,20,.92);
-      box-shadow: 0 30px 90px rgba(0,0,0,.60);
-    }
-
-    .modal-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.35);
-    }
-
-    .modal-head strong{
-      font-weight: 950;
-      font-size: 13px;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 60vw;
-    }
-
-    #pdfFrameModal{
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      border: 0;
-      background: #fff;
-    }
-
     @media (max-width: 1020px){
       .layout{ grid-template-columns: 1fr; }
-      #pdfFrame{ height: 72vh; }
+      .pdf-stage{ min-height: 60vh; }
+      .btn-lg{ width: auto; }
     }
   </style>
 </head>
@@ -343,8 +321,8 @@
       <div>
         <h1>Sign & Send</h1>
         <p>
-          This demo follows the real workflow: <strong>the sender signs first</strong>, then the agreement is “sent”,
-          then the recipient completes it. The final output is a <strong>real signed PDF</strong> generated in-browser.
+          Click to place required fields. Drag them into the perfect location.
+          Then sign as sender → send → recipient completes.
         </p>
       </div>
       <div class="pill" id="flowPill" data-state="sender">
@@ -354,7 +332,7 @@
     </div>
 
     <div class="layout">
-      <!-- LEFT SIDEBAR -->
+      <!-- LEFT -->
       <aside class="card">
         <h2>Workflow</h2>
         <p id="flowText">—</p>
@@ -363,15 +341,13 @@
 
         <div class="info">
           <div class="row">
-            <div class="label">Document</div>
+            <div class="label">Template / Source</div>
             <div class="value" id="templateVal">—</div>
           </div>
-
           <div class="row">
             <div class="label">Sender</div>
             <div class="value" id="senderVal">—</div>
           </div>
-
           <div class="row">
             <div class="label">Recipient</div>
             <div class="value" id="recipientVal">—</div>
@@ -381,20 +357,24 @@
         <div class="divider"></div>
 
         <div class="actions">
+          <button class="btn btn-muted btn-lg" id="placeSigBtn" type="button">Place Signature</button>
+          <button class="btn btn-muted btn-lg" id="placeDateBtn" type="button">Place Date</button>
+
           <button class="btn btn-primary btn-lg" id="senderSignBtn" type="button">Sign as sender</button>
           <button class="btn btn-primary btn-lg" id="sendBtn" type="button" style="display:none;">Send to recipient</button>
-          <button class="btn btn-primary btn-lg" id="recipientBtn" type="button" style="display:none;">Open recipient signing</button>
+          <button class="btn btn-primary btn-lg" id="recipientBtn" type="button" style="display:none;">Recipient completes</button>
+
           <a class="btn btn-muted btn-lg" id="downloadBtn" href="#" style="display:none;">Download signed PDF</a>
         </div>
 
         <div class="hint" id="hintText">
-          Tip: use a template first — it’s the fastest for a demo. Uploads + scratch agreements also work.
+          Click “Place Signature” then click the PDF. Drag it where you want.
         </div>
 
         <div class="status warn" id="statusBox" style="display:none;"></div>
       </aside>
 
-      <!-- RIGHT VIEWER -->
+      <!-- VIEWER -->
       <section class="card viewer-card">
         <div class="viewer-head">
           <div class="viewer-title">
@@ -405,13 +385,14 @@
           <div class="viewer-tools">
             <button class="tool" id="zoomOutBtn" type="button">−</button>
             <button class="tool" id="zoomInBtn" type="button">+</button>
-            <button class="tool" id="fullscreenBtn" type="button">Open full screen</button>
             <button class="tool" id="refreshBtn" type="button">Refresh</button>
           </div>
         </div>
 
         <div class="viewer-body">
-          <iframe id="pdfFrame" title="PDF Preview"></iframe>
+          <div class="pdf-stage" id="pdfStage">
+            <canvas id="pdfCanvas"></canvas>
+          </div>
 
           <div class="status" id="viewerStatus">Loading PDF…</div>
         </div>
@@ -419,46 +400,35 @@
     </div>
   </main>
 
-  <!-- Fullscreen modal -->
-  <div class="modal" id="pdfModal" aria-hidden="true">
-    <div class="modal-inner">
-      <div class="modal-head">
-        <strong id="pdfModalTitle">—</strong>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <button class="tool" id="zoomOutBtnModal" type="button">−</button>
-          <button class="tool" id="zoomInBtnModal" type="button">+</button>
-          <button class="tool" id="closeModalBtn" type="button">Close</button>
-        </div>
-      </div>
-      <iframe id="pdfFrameModal" title="PDF Preview Fullscreen"></iframe>
-    </div>
-  </div>
-
-  <!-- app.js -->
   <script src="assets/app.js"></script>
-
-  <!-- pdf-lib (must be loaded on sign page for signing + scratch pdf support) -->
-  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
   <script>
-    // Auth guard
     FSS.guard();
 
-    // user pill
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     document.getElementById("userEmail").textContent = user.email || "demo@client.com";
 
-    // Ensure doc exists
+    const statusBox = document.getElementById("statusBox");
+    const viewerStatus = document.getElementById("viewerStatus");
+
+    function showStatus(type, msg){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+    function clearStatus(){
+      statusBox.style.display = "none";
+      statusBox.textContent = "";
+    }
+
     let doc = FSS.loadDocState();
     if(!doc){
       FSS.resetDoc();
       doc = FSS.loadDocState();
-      FSS.logAudit("Envelope created.");
     }
 
-    const templateVal = document.getElementById("templateVal");
-    const senderVal = document.getElementById("senderVal");
-    const recipientVal = document.getElementById("recipientVal");
+    document.getElementById("templateVal").textContent = doc.template || (doc.customPdfBase64 ? "Custom PDF" : "—");
+    document.getElementById("senderVal").textContent = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "—";
+    document.getElementById("recipientVal").textContent = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "—";
 
     const flowPill = document.getElementById("flowPill");
     const flowLabel = document.getElementById("flowLabel");
@@ -470,128 +440,238 @@
     const recipientBtn = document.getElementById("recipientBtn");
     const downloadBtn = document.getElementById("downloadBtn");
 
-    const statusBox = document.getElementById("statusBox");
-    const viewerStatus = document.getElementById("viewerStatus");
-    const pdfFrame = document.getElementById("pdfFrame");
-    const pdfName = document.getElementById("pdfName");
+    const placeSigBtn = document.getElementById("placeSigBtn");
+    const placeDateBtn = document.getElementById("placeDateBtn");
 
-    // Modal
-    const pdfModal = document.getElementById("pdfModal");
-    const pdfFrameModal = document.getElementById("pdfFrameModal");
-    const pdfModalTitle = document.getElementById("pdfModalTitle");
+    // PDF.js setup
+    const canvas = document.getElementById("pdfCanvas");
+    const ctx = canvas.getContext("2d");
+    const stage = document.getElementById("pdfStage");
 
-    // Viewer state
-    let zoom = 125;
+    let pdfDoc = null;
+    let pdfPage = null;
+    let zoom = 1.3;
 
-    function showStatus(type, msg){
-      statusBox.style.display = "";
-      statusBox.className = "status " + type;
-      statusBox.textContent = msg;
-    }
-
-    function clearStatus(){
-      statusBox.style.display = "none";
-      statusBox.textContent = "";
-    }
-
-    function getDisplayDocName(d){
-      if(!d) return "—";
-
-      if(d.sourceType === "upload" || d.sourceType === "scratch"){
-        return d.customPdfName || d.title || "Custom PDF";
-      }
-
-      return d.template || d.title || "Template PDF";
-    }
-
-    function syncSidebar(){
-      doc = FSS.loadDocState();
-
-      templateVal.textContent = getDisplayDocName(doc);
-
-      senderVal.textContent =
-        doc.parties.aName
-          ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})`
-          : "Not provided";
-
-      recipientVal.textContent =
-        doc.parties.bName
-          ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})`
-          : "Not provided";
-    }
+    // Field placement mode
+    let placingType = null;
 
     function setFlow(state){
       flowPill.setAttribute("data-state", state);
 
       if(state === "sender"){
         flowLabel.textContent = "Sender signing";
-        flowText.innerHTML =
-          `Step 1: the sender signs the document.<br><br>
-           Once sender signs, the agreement becomes <strong>Ready to Send</strong>.`;
-        hintText.innerHTML =
-          `Click <strong>Sign as sender</strong> to apply a real signature + date and generate the signed PDF.`;
+        flowText.innerHTML = `1) Place Signature + Date<br>2) Sign as sender<br>3) Send to recipient`;
+        hintText.innerHTML = `Click a field button, then click the document. Drag to adjust.`;
       }
-
       if(state === "ready"){
         flowLabel.textContent = "Ready to send";
-        flowText.innerHTML =
-          `Step 2: send the agreement to the recipient.<br><br>
-           The recipient will receive a signing link (simulated).`;
-        hintText.innerHTML =
-          `Click <strong>Send to recipient</strong> to simulate delivery.`;
+        flowText.innerHTML = `✅ Sender signed<br>Click Send to simulate delivery.`;
+        hintText.innerHTML = `Send is now available.`;
       }
-
       if(state === "sent"){
         flowLabel.textContent = "Recipient signing";
-        flowText.innerHTML =
-          `Step 3: recipient completes signing.<br><br>
-           In this demo, clicking the button completes the agreement.`;
-        hintText.innerHTML =
-          `Click <strong>Open recipient signing</strong> to complete the agreement.`;
+        flowText.innerHTML = `📨 Sent to recipient<br>Click “Recipient completes” to finish.`;
+        hintText.innerHTML = `Recipient signing is simulated here.`;
       }
-
       if(state === "completed"){
         flowLabel.textContent = "Completed";
-        flowText.innerHTML =
-          `✅ Agreement completed.<br><br>
-           Download the signed PDF or view the completed screen.`;
-        hintText.innerHTML =
-          `You can return to the dashboard or download the signed PDF.`;
+        flowText.innerHTML = `✅ Completed<br>Download the signed PDF below.`;
+        hintText.innerHTML = `Your signed PDF is ready to download.`;
       }
     }
 
-    // ✅ Load PDF correctly for template OR upload OR scratch
-    async function loadActivePDF(){
+    function getFields(){
+      return FSS.loadFields() || [];
+    }
+
+    function saveFields(fields){
+      FSS.saveFields(fields);
+    }
+
+    function clearOverlayFields(){
+      [...stage.querySelectorAll(".field")].forEach(el => el.remove());
+    }
+
+    function renderOverlayFields(){
+      clearOverlayFields();
+      const fields = getFields();
+
+      const rect = canvas.getBoundingClientRect();
+      const stageRect = stage.getBoundingClientRect();
+
+      fields.forEach(f => {
+        const el = document.createElement("div");
+        el.className = `field ${f.type === "signature" ? "sig" : "date"}`;
+        el.textContent = f.type === "signature" ? "Signature" : "Date";
+
+        // coords are stored relative to canvas pixel space
+        el.style.left = f.x + "px";
+        el.style.top = f.y + "px";
+        el.style.width = (f.w || 160) + "px";
+        el.style.height = (f.h || 44) + "px";
+
+        el.dataset.id = f.id;
+
+        // drag logic
+        let drag = false;
+        let sx = 0;
+        let sy = 0;
+
+        el.addEventListener("mousedown", (e) => {
+          drag = true;
+          sx = e.clientX - parseFloat(el.style.left);
+          sy = e.clientY - parseFloat(el.style.top);
+          e.preventDefault();
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          if(!drag) return;
+          const x = e.clientX - sx;
+          const y = e.clientY - sy;
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+        });
+
+        window.addEventListener("mouseup", () => {
+          if(!drag) return;
+          drag = false;
+
+          const id = el.dataset.id;
+          const fields = getFields();
+          const idx = fields.findIndex(ff => ff.id === id);
+          if(idx >= 0){
+            fields[idx].x = parseFloat(el.style.left);
+            fields[idx].y = parseFloat(el.style.top);
+            saveFields(fields);
+          }
+        });
+
+        stage.appendChild(el);
+      });
+    }
+
+    function addField(type){
+      const fields = getFields();
+      const id = crypto.randomUUID();
+
+      fields.push({
+        id,
+        type,
+        page: 1,
+        x: 80,
+        y: 80,
+        w: type === "signature" ? 180 : 130,
+        h: 44,
+        required: true,
+        role: "sender"
+      });
+
+      saveFields(fields);
+      renderOverlayFields();
+    }
+
+    // Placement click mode
+    stage.addEventListener("click", (e) => {
+      if(!placingType) return;
+
+      const fields = getFields();
+      const id = crypto.randomUUID();
+
+      // click position relative to canvas
+      const stageRect = stage.getBoundingClientRect();
+      const x = (e.clientX - stageRect.left) + stage.scrollLeft;
+      const y = (e.clientY - stageRect.top) + stage.scrollTop;
+
+      fields.push({
+        id,
+        type: placingType,
+        page: 1,
+        x,
+        y,
+        w: placingType === "signature" ? 190 : 140,
+        h: 44,
+        required: true,
+        role: "sender"
+      });
+
+      saveFields(fields);
+      renderOverlayFields();
+
+      placingType = null;
+      showStatus("good", "Placed. Drag to adjust.");
+    });
+
+    placeSigBtn.addEventListener("click", () => {
+      placingType = "signature";
+      showStatus("warn", "Click the PDF to place the signature.");
+    });
+
+    placeDateBtn.addEventListener("click", () => {
+      placingType = "date";
+      showStatus("warn", "Click the PDF to place the date.");
+    });
+
+    // Load PDF for preview
+    function base64ToUint8(b64){
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      return bytes;
+    }
+
+    async function loadPDFBytes(){
       doc = FSS.loadDocState();
 
-      const displayName = getDisplayDocName(doc);
-      pdfName.textContent = displayName;
-      pdfModalTitle.textContent = displayName;
-
-      const url = FSS.getActivePdfViewerURL(zoom);
-
-      if(!url){
-        pdfFrame.src = "";
-        pdfFrameModal.src = "";
-        viewerStatus.textContent = "No PDF selected. Go to Create.";
-        viewerStatus.className = "status warn";
-        return;
+      // If signed PDF exists, show it by default
+      const signedB64 = FSS.getSignedBase64?.() || null;
+      if(signedB64){
+        return { bytes: base64ToUint8(signedB64), name: "Signed PDF (preview)" };
       }
 
-      // set both viewer + modal viewer
-      pdfFrame.src = url;
-      pdfFrameModal.src = url;
+      // Custom PDF (upload or builder)
+      if(doc.customPdfBase64){
+        return { bytes: base64ToUint8(doc.customPdfBase64), name: "Custom PDF" };
+      }
 
-      viewerStatus.textContent = `Showing ${displayName} (zoom: ${zoom}%)`;
-      viewerStatus.className = "status good";
+      // Template PDF from /pdfs/
+      const template = doc.template || "nda.pdf";
+      const res = await fetch(`pdfs/${encodeURIComponent(template)}`);
+      if(!res.ok) throw new Error("Template PDF not found: " + template);
+      const ab = await res.arrayBuffer();
+      return { bytes: new Uint8Array(ab), name: template };
     }
 
+    async function renderPDF(){
+      viewerStatus.className = "status warn";
+      viewerStatus.textContent = "Loading PDF…";
+
+      const { bytes, name } = await loadPDFBytes();
+      document.getElementById("pdfName").textContent = name;
+
+      const loadingTask = pdfjsLib.getDocument({ data: bytes });
+      pdfDoc = await loadingTask.promise;
+
+      pdfPage = await pdfDoc.getPage(1);
+      const viewport = pdfPage.getViewport({ scale: zoom });
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = { canvasContext: ctx, viewport };
+      await pdfPage.render(renderContext).promise;
+
+      renderOverlayFields();
+
+      viewerStatus.className = "status good";
+      viewerStatus.textContent = `Ready • Zoom ${(zoom*100).toFixed(0)}%`;
+    }
+
+    // State logic
     function refreshState(){
       doc = FSS.loadDocState();
+      const hasSigned = FSS.hasSignedPDF?.() || false;
+      const hasFields = (getFields().length > 0);
 
-      const hasSigned = FSS.hasSignedPDF();
-
-      // Completed
       if(doc.status === "completed"){
         setFlow("completed");
         senderSignBtn.style.display = "none";
@@ -601,7 +681,6 @@
         return;
       }
 
-      // Sent
       if(doc.status === "sent"){
         setFlow("sent");
         senderSignBtn.style.display = "none";
@@ -611,7 +690,6 @@
         return;
       }
 
-      // Signed => ready to send
       if(hasSigned){
         setFlow("ready");
         senderSignBtn.style.display = "none";
@@ -621,139 +699,90 @@
         return;
       }
 
-      // If missing party info
-      if(!doc.parties.aName || !doc.parties.bName){
-        setFlow("sender");
-        senderSignBtn.style.display = "";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = "none";
-        showStatus("warn", "Go to Create first: enter sender + recipient details, then choose a template, upload a PDF, or build from scratch.");
-        return;
-      }
-
-      // If missing any PDF source
-      const hasPDFSource =
-        (doc.sourceType === "template" && !!doc.template) ||
-        ((doc.sourceType === "upload" || doc.sourceType === "scratch") && !!doc.customPdfBase64);
-
-      if(!hasPDFSource){
-        setFlow("sender");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = "none";
-        showStatus("warn", "No agreement selected yet. Go to Create and pick a template, upload a PDF, or build from scratch.");
-        return;
-      }
-
-      // Normal sender stage
       setFlow("sender");
       senderSignBtn.style.display = "";
       sendBtn.style.display = "none";
       recipientBtn.style.display = "none";
       downloadBtn.style.display = "none";
-      clearStatus();
+
+      if(!hasFields){
+        showStatus("warn", "Place Signature + Date first, then sign.");
+      } else {
+        clearStatus();
+      }
     }
 
-    // Core action: Sign as sender
+    // Sender sign → generates signed PDF using your app.js generator
     senderSignBtn.addEventListener("click", async () => {
       clearStatus();
 
-      doc = FSS.loadDocState();
-
-      if(!doc.parties.aName || !doc.parties.bName){
-        showStatus("warn", "Missing party info. Go to Create first.");
-        return;
-      }
-
-      // Must have a PDF source
-      const hasPDFSource =
-        (doc.sourceType === "template" && !!doc.template) ||
-        ((doc.sourceType === "upload" || doc.sourceType === "scratch") && !!doc.customPdfBase64);
-
-      if(!hasPDFSource){
-        showStatus("warn", "No agreement selected. Go to Create first.");
+      const fields = getFields();
+      if(fields.length === 0){
+        showStatus("warn", "Place signature + date first.");
         return;
       }
 
       try{
         showStatus("warn", "Generating signed PDF…");
 
+        const now = new Date();
+        const doc = FSS.loadDocState();
+
+        // Fill values into internal store
+        FSS.setFieldValue?.("signature", doc.parties?.aName || "Sender");
+        FSS.setFieldValue?.("date", now.toLocaleDateString());
+
         const ok = await FSS.generateSignedPDF();
 
         if(!ok){
-          showStatus("bad", "Error generating signed PDF. Check console.");
+          showStatus("bad", "builder pdf failed — open DevTools → Console for the exact error.");
           return;
         }
 
-        FSS.logAudit("Sender signed the agreement.");
-        showStatus("good", "✅ Sender signature complete. Agreement is ready to send.");
+        showStatus("good", "✅ Signed PDF generated. Updating preview…");
         refreshState();
+        await renderPDF();
       }catch(err){
         console.error(err);
-        showStatus("bad", "Error generating signed PDF. See console for details.");
+        showStatus("bad", "builder pdf failed — open DevTools → Console for the exact error.");
       }
     });
 
-    // Send (simulation)
+    // Send simulation
     sendBtn.addEventListener("click", () => {
-      clearStatus();
-
       doc = FSS.loadDocState();
-      if(!FSS.hasSignedPDF()){
-        showStatus("warn", "Please sign first before sending.");
-        return;
-      }
-
       doc.status = "sent";
       doc.sentAt = new Date().toISOString();
       FSS.saveDocState(doc);
-
-      FSS.logAudit(`Agreement sent to ${doc.parties.bEmail || "recipient"}.`);
-      showStatus("good", "📨 Sent! Recipient step enabled.");
+      showStatus("good", "📨 Sent! Recipient can now complete.");
       refreshState();
     });
 
-    // Recipient completion simulation
+    // Recipient completes
     recipientBtn.addEventListener("click", () => {
-      clearStatus();
-
       doc = FSS.loadDocState();
       doc.status = "completed";
       doc.completedAt = new Date().toISOString();
       FSS.saveDocState(doc);
-
-      FSS.logAudit("Recipient completed signing.");
-      showStatus("good", "✅ Recipient completed signing. Redirecting…");
-
-      setTimeout(() => {
-        location.href = "success.html";
-      }, 900);
+      showStatus("good", "✅ Completed. Redirecting…");
+      setTimeout(() => location.href="success.html", 700);
     });
 
     // Download signed PDF
     downloadBtn.addEventListener("click", (e) => {
       e.preventDefault();
-
-      const b64 = FSS.getSignedBase64();
+      const b64 = FSS.getSignedBase64?.();
       if(!b64){
         showStatus("warn", "No signed PDF exists yet.");
         return;
       }
-
-      const byteChars = atob(b64);
-      const bytes = new Uint8Array(byteChars.length);
-      for(let i=0; i<byteChars.length; i++){
-        bytes[i] = byteChars.charCodeAt(i);
-      }
-
-      const blob = new Blob([bytes], { type:"application/pdf" });
+      const bytes = base64ToUint8(b64);
+      const blob = new Blob([bytes], {type:"application/pdf"});
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = `FSS-${(doc.id || "agreement")}-signed.pdf`;
+      a.download = "signed.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -763,52 +792,17 @@
 
     // Tools
     document.getElementById("zoomInBtn").addEventListener("click", async () => {
-      zoom = Math.min(200, zoom + 10);
-      await loadActivePDF();
+      zoom = Math.min(2.2, zoom + 0.1);
+      await renderPDF();
     });
-
     document.getElementById("zoomOutBtn").addEventListener("click", async () => {
-      zoom = Math.max(70, zoom - 10);
-      await loadActivePDF();
+      zoom = Math.max(0.8, zoom - 0.1);
+      await renderPDF();
     });
-
     document.getElementById("refreshBtn").addEventListener("click", async () => {
-      await loadActivePDF();
-      syncSidebar();
-      refreshState();
       clearStatus();
-    });
-
-    // Fullscreen open
-    document.getElementById("fullscreenBtn").addEventListener("click", () => {
-      pdfModal.classList.add("show");
-      pdfModal.setAttribute("aria-hidden", "false");
-    });
-
-    // Modal zoom
-    document.getElementById("zoomInBtnModal").addEventListener("click", async () => {
-      zoom = Math.min(200, zoom + 10);
-      await loadActivePDF();
-    });
-
-    document.getElementById("zoomOutBtnModal").addEventListener("click", async () => {
-      zoom = Math.max(70, zoom - 10);
-      await loadActivePDF();
-    });
-
-    // Modal close
-    function closeModal(){
-      pdfModal.classList.remove("show");
-      pdfModal.setAttribute("aria-hidden", "true");
-    }
-
-    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
-    pdfModal.addEventListener("click", (e) => {
-      if(e.target === pdfModal) closeModal();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") closeModal();
+      refreshState();
+      await renderPDF();
     });
 
     // Logout
@@ -819,10 +813,15 @@
 
     // Boot
     (async function boot(){
-      syncSidebar();
-      await loadActivePDF();
-      refreshState();
-      clearStatus();
+      try{
+        refreshState();
+        await renderPDF();
+      }catch(err){
+        console.error(err);
+        showStatus("bad", "Could not load PDF preview. Confirm template or custom PDF exists.");
+        viewerStatus.className = "status bad";
+        viewerStatus.textContent = "PDF failed to load.";
+      }
     })();
   </script>
 </body>
