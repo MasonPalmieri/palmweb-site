@@ -6,14 +6,15 @@
   <title>Client Portal — Dashboard</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
-<body class="app dark">
+
+<body class="app light">
 
   <header class="topbar">
     <div class="brand">
       <div class="logo">FSS</div>
       <div>
         <div class="title">Dashboard</div>
-        <div class="sub">Start a new agreement or review recent activity.</div>
+        <div class="sub">Manage agreements from creation through completion.</div>
       </div>
     </div>
 
@@ -21,85 +22,176 @@
       <a href="dashboard.html" class="active">Dashboard</a>
       <a href="create.html">Create</a>
       <a href="audit.html">Audit</a>
-      <a href="../../demos.html" id="logoutLink">Logout</a>
+      <a href="../../demos.html" id="logoutBtn">Logout</a>
     </nav>
   </header>
 
   <main class="page">
     <div class="shell">
 
+      <!-- OVERVIEW -->
       <section class="panel">
-        <h2>Welcome</h2>
-        <p class="muted" id="welcomeLine">Loading...</p>
+        <div class="panelHead">
+          <div>
+            <h2 style="margin:0;">Welcome back</h2>
+            <p class="muted" style="margin:6px 0 0;">
+              This demo shows a modern agreement workflow: <b>Fill → Sign → Send</b>.
+            </p>
+          </div>
+
+          <div class="actions">
+            <a class="btn primary" href="create.html">+ Create New Agreement</a>
+            <a class="btn secondary" href="audit.html">View Audit Trail</a>
+          </div>
+        </div>
 
         <div class="divider"></div>
 
-        <div class="grid2">
+        <div class="dashGrid">
 
-          <div class="panel mini" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
-            <h3 class="h3">Create a new agreement</h3>
-            <p class="muted" style="margin-top:6px;">
-              Choose a document template, assign parties, and send to sign.
-            </p>
-
-            <div class="actions" style="margin-top:12px;">
-              <a class="btn primary" href="create.html">New Agreement</a>
-              <a class="btn secondary" href="create.html">New NDA</a>
-              <a class="btn outline" href="audit.html">Audit Trail</a>
+          <!-- STATUS CARD -->
+          <div class="dashCard">
+            <div class="dashCardTop">
+              <b>Current Envelope</b>
+              <span class="pill" id="statusPill">No Active</span>
             </div>
 
-            <div class="divider"></div>
+            <div class="dashMeta" id="docMeta">
+              <div class="muted tiny">No envelope created yet.</div>
+            </div>
 
-            <h3 class="h3">Available templates</h3>
-            <p class="tiny muted" style="margin-top:6px;">
-              PDFs loaded directly from <code>/pdfs/</code>
+            <div class="divider" style="margin:14px 0;"></div>
+
+            <div class="dashActions" id="docActions">
+              <a class="btn primary" href="create.html">Start a new agreement</a>
+            </div>
+
+            <p class="tiny muted" style="margin-top:12px;">
+              Templates are stored at: <code>/demosites/fillsignsend/pdfs/</code>
             </p>
-
-            <ul class="muted" style="margin:10px 0 0; padding-left:18px; font-weight:800;">
-              <li>NDA</li>
-              <li>Consulting Agreement</li>
-              <li>Lease Waiver</li>
-              <li>Event Accident Waiver</li>
-              <li>Non-Compete Agreement</li>
-              <li>Photo Release</li>
-              <li>Real Estate Agreement</li>
-            </ul>
           </div>
 
-          <div class="panel mini" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
-            <h3 class="h3">Recent activity</h3>
-            <p class="muted" style="margin-top:6px;">
-              Simulated DocuSign-style lifecycle + audit events.
-            </p>
-
-            <div class="divider"></div>
-
-            <div style="display:grid; gap:10px;">
-              <div class="hintBox">
-                <b>Created</b>
-                <div class="muted" style="margin-top:6px;">Envelope created and template selected.</div>
-              </div>
-
-              <div class="hintBox">
-                <b>Viewed</b>
-                <div class="muted" style="margin-top:6px;">Recipient opened signing link.</div>
-              </div>
-
-              <div class="hintBox">
-                <b>Signed + Completed</b>
-                <div class="muted" style="margin-top:6px;">Signed PDF generated for download.</div>
-              </div>
+          <!-- FLOW CARD -->
+          <div class="dashCard">
+            <div class="dashCardTop">
+              <b>How it Works</b>
+              <span class="pill">FSS Flow</span>
             </div>
 
-            <div class="divider"></div>
+            <div class="flow">
+              <div class="flowStep">
+                <div class="flowDot">1</div>
+                <div>
+                  <div class="flowTitle">Fill</div>
+                  <div class="muted tiny">
+                    Choose a PDF template and enter Party A + Party B details.
+                  </div>
+                </div>
+              </div>
 
-            <p class="tiny muted">
-              Want real sending + storage + non-editable audit logs? PalmWeb can build a production version.
+              <div class="flowStep">
+                <div class="flowDot">2</div>
+                <div>
+                  <div class="flowTitle">Sign (Sender)</div>
+                  <div class="muted tiny">
+                    Party A signs first inside the signing room.
+                  </div>
+                </div>
+              </div>
+
+              <div class="flowStep">
+                <div class="flowDot">3</div>
+                <div>
+                  <div class="flowTitle">Send</div>
+                  <div class="muted tiny">
+                    A signing link is generated for Party B (demo mimics email sending).
+                  </div>
+                </div>
+              </div>
+
+              <div class="flowStep">
+                <div class="flowDot">4</div>
+                <div>
+                  <div class="flowTitle">Sign (Recipient)</div>
+                  <div class="muted tiny">
+                    Party B signs and completes the envelope.
+                  </div>
+                </div>
+              </div>
+
+              <div class="flowStep">
+                <div class="flowDot">5</div>
+                <div>
+                  <div class="flowTitle">Complete + Download</div>
+                  <div class="muted tiny">
+                    Signed PDF is generated locally and becomes downloadable.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUICK LINKS -->
+          <div class="dashCard">
+            <div class="dashCardTop">
+              <b>Quick Links</b>
+              <span class="pill">Tools</span>
+            </div>
+
+            <div class="quickLinks">
+              <a class="quickLink" href="create.html">
+                <div>
+                  <b>Create Agreement</b>
+                  <div class="muted tiny">Pick a template and build an envelope.</div>
+                </div>
+                <span class="arrow">→</span>
+              </a>
+
+              <a class="quickLink" href="sign.html?role=sender" id="senderLink">
+                <div>
+                  <b>Sender Signing Room</b>
+                  <div class="muted tiny">Party A signs first.</div>
+                </div>
+                <span class="arrow">→</span>
+              </a>
+
+              <a class="quickLink" href="sign.html?role=recipient" id="recipientLink">
+                <div>
+                  <b>Recipient Signing Room</b>
+                  <div class="muted tiny">Party B signs after it’s sent.</div>
+                </div>
+                <span class="arrow">→</span>
+              </a>
+
+              <a class="quickLink" href="success.html">
+                <div>
+                  <b>Completion Page</b>
+                  <div class="muted tiny">Download the signed document.</div>
+                </div>
+                <span class="arrow">→</span>
+              </a>
+
+              <a class="quickLink" href="audit.html">
+                <div>
+                  <b>Audit Trail</b>
+                  <div class="muted tiny">Review activity and timestamps.</div>
+                </div>
+                <span class="arrow">→</span>
+              </a>
+            </div>
+
+            <div class="divider" style="margin:14px 0;"></div>
+
+            <button class="btn secondary" id="resetBtn" type="button" style="width:100%;">
+              Reset Demo (Clear Envelope)
+            </button>
+
+            <p class="tiny muted" style="margin-top:10px;">
+              Reset clears the envelope, placed fields, signed output, and audit log.
             </p>
           </div>
 
         </div>
-
       </section>
 
     </div>
@@ -107,22 +199,264 @@
 
   <script src="assets/app.js"></script>
   <script>
-    function getAuth(){
-      const raw = localStorage.getItem("fss_auth");
-      try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+    FSS.guard();
+
+    const statusPill = document.getElementById("statusPill");
+    const docMeta = document.getElementById("docMeta");
+    const docActions = document.getElementById("docActions");
+
+    const senderLink = document.getElementById("senderLink");
+    const recipientLink = document.getElementById("recipientLink");
+
+    const resetBtn = document.getElementById("resetBtn");
+
+    const state = FSS.loadDocState();
+    const signed = FSS.getSignedBlob();
+
+    // Helper
+    function fmt(ts){
+      if(!ts) return "—";
+      return new Date(ts).toLocaleString();
     }
 
-    const auth = getAuth();
-    if(!auth){
-      window.location.href = "index.html";
+    function setStatus(label, type="neutral"){
+      statusPill.textContent = label;
+
+      // Simple class swap by type
+      statusPill.style.borderColor = "#cbd5e1";
+      statusPill.style.background = "#f8fafc";
+      statusPill.style.color = "#0f172a";
+
+      if(type === "good"){
+        statusPill.style.borderColor = "#86efac";
+        statusPill.style.background = "#dcfce7";
+        statusPill.style.color = "#14532d";
+      }
+      if(type === "warn"){
+        statusPill.style.borderColor = "#fdba74";
+        statusPill.style.background = "#ffedd5";
+        statusPill.style.color = "#7c2d12";
+      }
+      if(type === "blue"){
+        statusPill.style.borderColor = "#c7d2fe";
+        statusPill.style.background = "#eef2ff";
+        statusPill.style.color = "#1e3a8a";
+      }
+      if(type === "bad"){
+        statusPill.style.borderColor = "#fecaca";
+        statusPill.style.background = "#fee2e2";
+        statusPill.style.color = "#7f1d1d";
+      }
+    }
+
+    // Default state
+    if(!state || !state.template){
+      setStatus("No Active", "neutral");
+      docMeta.innerHTML = `<div class="muted tiny">No envelope created yet.</div>`;
+      docActions.innerHTML = `<a class="btn primary" href="create.html">+ Create New Agreement</a>`;
+
+      // Disable signer room links if empty
+      senderLink.style.opacity = ".6";
+      senderLink.style.pointerEvents = "none";
+      recipientLink.style.opacity = ".6";
+      recipientLink.style.pointerEvents = "none";
     } else {
-      document.getElementById("welcomeLine").textContent =
-        `Signed in as ${auth.email} • Demo portal active`;
+      const parties = state.parties || {};
+
+      // Status logic
+      if(signed){
+        setStatus("Completed", "good");
+      } else if(state.stage === "sender"){
+        setStatus("Sender Signing", "warn");
+      } else if(state.stage === "recipient" && state.status === "sent"){
+        setStatus("Awaiting Recipient", "blue");
+      } else {
+        setStatus(state.status || "Active", "neutral");
+      }
+
+      docMeta.innerHTML = `
+        <div class="metaRow"><span class="metaKey">Template</span><span class="metaVal">${FSS.escape(state.template)}</span></div>
+        <div class="metaRow"><span class="metaKey">Created</span><span class="metaVal">${fmt(state.createdAt)}</span></div>
+        <div class="metaRow"><span class="metaKey">Sent</span><span class="metaVal">${fmt(state.sentAt)}</span></div>
+        <div class="divider" style="margin:12px 0;"></div>
+        <div class="metaRow"><span class="metaKey">Sender</span><span class="metaVal">${FSS.escape(parties.aName || "—")} (${FSS.escape(parties.aEmail || "—")})</span></div>
+        <div class="metaRow"><span class="metaKey">Recipient</span><span class="metaVal">${FSS.escape(parties.bName || "—")} (${FSS.escape(parties.bEmail || "—")})</span></div>
+      `;
+
+      // Actions
+      if(signed){
+        docActions.innerHTML = `
+          <a class="btn primary" href="success.html">View + Download Signed PDF</a>
+          <a class="btn secondary" href="audit.html">View Audit Trail</a>
+        `;
+      } else if(state.stage === "sender"){
+        docActions.innerHTML = `
+          <a class="btn primary" href="sign.html?role=sender">Continue Sender Signing</a>
+          <a class="btn secondary" href="create.html">Edit Details</a>
+        `;
+      } else if(state.stage === "recipient" && state.status === "sent"){
+        docActions.innerHTML = `
+          <a class="btn primary" href="sign.html?role=recipient">Open Recipient Signing</a>
+          <a class="btn secondary" href="audit.html">View Audit Trail</a>
+        `;
+      } else {
+        docActions.innerHTML = `
+          <a class="btn primary" href="create.html">Open Envelope</a>
+          <a class="btn secondary" href="audit.html">View Audit Trail</a>
+        `;
+      }
+
+      // Enable links
+      senderLink.style.opacity = "1";
+      senderLink.style.pointerEvents = "auto";
+      recipientLink.style.opacity = "1";
+      recipientLink.style.pointerEvents = "auto";
     }
 
-    document.getElementById("logoutLink").addEventListener("click", () => {
+    // Reset
+    resetBtn.addEventListener("click", () => {
+      const ok = confirm(
+        "Reset the demo?\n\nThis will clear:\n• Envelope state\n• Placed fields\n• Signed PDF\n• Audit trail"
+      );
+      if(!ok) return;
+
+      // Clear only demo keys (auth stays)
+      localStorage.removeItem("fss_doc");
+      localStorage.removeItem("fss_fields");
+      localStorage.removeItem("fss_signed");
+      localStorage.removeItem("fss_audit");
+
+      location.reload();
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
     });
   </script>
+
+  <!-- Small dashboard-only styling (keeps app.css clean) -->
+  <style>
+    .dashGrid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr .95fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .dashCard{
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 12px 28px rgba(15,23,42,.06);
+    }
+    .dashCardTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .dashMeta{
+      margin-top: 12px;
+    }
+    .metaRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(203,213,225,.7);
+    }
+    .metaRow:last-child{ border-bottom: 0; }
+    .metaKey{
+      font-size: 12px;
+      font-weight: 950;
+      color: #334155;
+      flex: 0 0 auto;
+      min-width: 90px;
+    }
+    .metaVal{
+      font-size: 12px;
+      font-weight: 850;
+      color: #0f172a;
+      text-align:right;
+      max-width: 280px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .dashActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+
+    .flow{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .flowStep{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(226,232,240,.9);
+      background: #f8fafc;
+    }
+    .flowDot{
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1000;
+      border: 1px solid rgba(29,121,198,.22);
+      background: rgba(29,121,198,.08);
+      flex: 0 0 auto;
+    }
+    .flowTitle{
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .quickLinks{
+      margin-top: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .quickLink{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(226,232,240,.9);
+      background: #f8fafc;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .quickLink:hover{
+      background:#fff;
+      transform: translateY(-1px);
+    }
+    .arrow{
+      font-weight: 1000;
+      color: #64748b;
+      flex: 0 0 auto;
+    }
+
+    @media(max-width: 1040px){
+      .dashGrid{ grid-template-columns: 1fr; }
+      .metaVal{ text-align:left; white-space: normal; }
+    }
+  </style>
+
 </body>
 </html>
