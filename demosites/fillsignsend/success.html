@@ -3,59 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS — Completed</title>
+  <title>Create • Client Demo</title>
+
   <link rel="stylesheet" href="assets/app.css" />
+
+  <style>
+    .wrap{ max-width:1120px; margin:0 auto; padding:18px 18px 40px; }
+    .page-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .page-head h1{ margin:0; font-size:18px; font-weight:950; letter-spacing:-.2px; }
+    .page-head p{ margin:6px 0 0; font-size:13px; color:var(--muted); font-weight:750; max-width:78ch; line-height:1.5; }
+
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start; margin-top:10px; }
+    .card{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:20px; padding:14px; }
+    .card h2{ margin:0; font-size:14px; font-weight:950; letter-spacing:-.1px; }
+    .card p{ margin:8px 0 0; color:rgba(255,255,255,.72); font-weight:750; font-size:13px; line-height:1.5; }
+
+    .divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
+
+    label{
+      display:grid;
+      gap:6px;
+      font-weight:900;
+      font-size:13px;
+      color:rgba(255,255,255,.86);
+      margin-top: 10px;
+    }
+
+    input, select{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      outline:none;
+      font-weight:850;
+      font-size:14px;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(67,203,255,.55);
+      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
+    }
+
+    .two{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .btn-lg{ padding:12px 16px; border-radius:14px; font-size:14px; font-weight:950; }
+
+    .hint{ margin-top:12px; color:rgba(255,255,255,.62); font-size:12px; font-weight:750; line-height:1.45; }
+
+    .status{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(255,255,255,.84);
+    }
+    .status.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
+    .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; }
+      .two{ grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 
-<body class="app light">
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">FSS</div>
+<body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="dashboard.html">
+        <span class="logo-badge">FSS</span>
+        <div class="brand-text">
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
+        </div>
+      </a>
+
+      <div class="app-nav">
+        <a class="nav-link" href="dashboard.html">Dashboard</a>
+        <a class="nav-link active" href="create.html">Create</a>
+        <a class="nav-link" href="sign.html">Sign</a>
+        <a class="nav-link" href="success.html">Completed</a>
+      </div>
+
+      <div class="app-user">
+        <span id="userEmail" class="user-pill">—</span>
+        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
       <div>
-        <div class="title">Envelope Completed</div>
-        <div class="sub">Signed PDF is ready to view and download.</div>
+        <h1>Create Envelope</h1>
+        <p>
+          Choose a template (PDF), then enter sender + recipient details.
+          This simulates a paid SaaS workflow for preparing agreements before signature.
+        </p>
       </div>
     </div>
 
-    <nav class="navlinks">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="create.html">Create</a>
-      <a href="audit.html">Audit</a>
-      <a href="../../demos.html" id="logoutBtn">Logout</a>
-    </nav>
-  </header>
-
-  <main class="page">
-    <div class="shell">
-      <section class="panel">
-        <div class="panelHead">
-          <div>
-            <h2 style="margin:0;">✅ Document Completed</h2>
-            <p class="muted" style="margin:6px 0 0;">
-              The signed PDF below was generated directly in-browser using the real template file.
-            </p>
-          </div>
-
-          <div class="actions">
-            <a class="btn secondary" href="dashboard.html">Back to Dashboard</a>
-            <a class="btn primary" id="downloadBtn" download="signed-document.pdf" href="#">Download Signed PDF</a>
-          </div>
-        </div>
+    <div class="grid">
+      <!-- Template -->
+      <section class="card">
+        <h2>Template</h2>
+        <p>Select which agreement you want to generate. These are real PDFs stored in your repo.</p>
 
         <div class="divider"></div>
 
-        <div id="errorBox" style="display:none; padding:14px; border-radius:14px; border:1px solid #fecaca; background:#fee2e2; color:#7f1d1d; font-weight:900;">
-          No signed PDF was found. Please complete signing again.
-        </div>
+        <label>
+          Choose a template PDF
+          <select id="templateSelect">
+            <option value="nda.pdf">nda.pdf</option>
+            <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
+            <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
+            <option value="lease-waiver.pdf">lease-waiver.pdf</option>
+            <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
+            <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
+            <option value="Photo-Release.pdf">Photo-Release.pdf</option>
+          </select>
+        </label>
 
-        <div class="pdfWrap">
-          <iframe id="signedFrame" title="Signed PDF Preview"></iframe>
+        <div class="hint">
+          These files must exist here: <strong>demosites/fillsignsend/pdfs/</strong><br />
+          (Your screenshot confirms this is set up correctly.)
         </div>
-
-        <p class="tiny muted" style="margin-top:10px;">
-          In a production system this PDF would be stored in a database and a secure link would be emailed to both parties.
-        </p>
       </section>
+
+      <!-- Parties -->
+      <aside class="card">
+        <h2>Parties</h2>
+        <p>Enter the sender (your client) and the recipient (their customer).</p>
+
+        <div class="divider"></div>
+
+        <div class="two">
+          <label>
+            Sender name
+            <input id="aName" type="text" placeholder="Example: John Smith" />
+          </label>
+
+          <label>
+            Sender email
+            <input id="aEmail" type="email" placeholder="john@company.com" />
+          </label>
+        </div>
+
+        <div class="two">
+          <label>
+            Recipient name
+            <input id="bName" type="text" placeholder="Example: Sarah Johnson" />
+          </label>
+
+          <label>
+            Recipient email
+            <input id="bEmail" type="email" placeholder="sarah@email.com" />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary btn-lg" id="saveBtn" type="button">Save & Continue</button>
+          <button class="btn btn-outline btn-lg" id="resetBtn" type="button">Reset Envelope</button>
+        </div>
+
+        <div class="status warn" id="statusBox" style="display:none;"></div>
+      </aside>
     </div>
   </main>
 
@@ -63,43 +179,87 @@
   <script>
     FSS.guard();
 
-    const base64 = localStorage.getItem("fss_signed");
-    const frame = document.getElementById("signedFrame");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const errorBox = document.getElementById("errorBox");
+    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
 
-    if(!base64){
-      errorBox.style.display = "block";
-      frame.style.display = "none";
-      downloadBtn.style.display = "none";
-    } else {
-      const pdfData = `data:application/pdf;base64,${base64}`;
-      frame.src = pdfData;
-      downloadBtn.href = pdfData;
+    let doc = FSS.loadDocState();
+    if(!doc){
+      doc = FSS.resetDoc();
+      FSS.logAudit("Envelope created.");
     }
+
+    const templateSelect = document.getElementById("templateSelect");
+    const aName = document.getElementById("aName");
+    const aEmail = document.getElementById("aEmail");
+    const bName = document.getElementById("bName");
+    const bEmail = document.getElementById("bEmail");
+
+    const statusBox = document.getElementById("statusBox");
+
+    function showStatus(type, msg){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+
+    function load(){
+      doc = FSS.loadDocState() || doc;
+
+      templateSelect.value = doc.template || "nda.pdf";
+      aName.value = doc.parties?.aName || "";
+      aEmail.value = doc.parties?.aEmail || "";
+      bName.value = doc.parties?.bName || "";
+      bEmail.value = doc.parties?.bEmail || "";
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      doc = FSS.loadDocState() || doc;
+
+      const t = templateSelect.value.trim();
+      const an = aName.value.trim();
+      const bn = bName.value.trim();
+
+      if(!t){
+        showStatus("warn", "Please choose a template PDF.");
+        return;
+      }
+
+      if(!an || !bn){
+        showStatus("warn", "Sender name and Recipient name are required for the demo flow.");
+        return;
+      }
+
+      doc.template = t;
+      doc.parties = {
+        aName: an,
+        aEmail: aEmail.value.trim(),
+        bName: bn,
+        bEmail: bEmail.value.trim()
+      };
+
+      // reset signature if changing template
+      FSS.saveDocState(doc);
+      localStorage.removeItem("fss_signed_pdf_b64");
+      FSS.logAudit("Envelope details saved (template + parties).");
+      FSS.setDocStage("draft");
+
+      showStatus("good", "Saved. Redirecting to Sign & Send…");
+
+      setTimeout(() => location.href = "sign.html", 650);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset the envelope? This clears signatures + audit history.")) return;
+      FSS.resetDoc();
+      location.reload();
+    });
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
+      location.href = "index.html";
     });
-  </script>
 
-  <style>
-    .pdfWrap{
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow: 0 18px 40px rgba(15,23,42,.08);
-    }
-    iframe{
-      width: 100%;
-      height: 920px;
-      border: 0;
-      background:#fff;
-    }
-    @media(max-width: 980px){
-      iframe{ height: 650px; }
-    }
-  </style>
+    load();
+  </script>
 </body>
 </html>
