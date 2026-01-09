@@ -6,14 +6,14 @@
   <title>Client Portal — Create</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
-<body class="app dark">
+<body class="app light">
 
   <header class="topbar">
     <div class="brand">
       <div class="logo">FSS</div>
       <div>
-        <div class="title">Create Document</div>
-        <div class="sub">Choose a PDF, set parties, then send for signature.</div>
+        <div class="title">Create Agreement</div>
+        <div class="sub">Fill details, then sign as the sender.</div>
       </div>
     </div>
 
@@ -29,13 +29,21 @@
     <div class="shell">
 
       <section class="panel">
-        <h2>Step 1 — Select a template</h2>
-        <p class="muted">These PDFs are served from <code>/demosites/fillsignsend/pdfs/</code>.</p>
+        <div class="panelHead">
+          <div>
+            <h2 style="margin:0;">Step 1 — Choose a PDF</h2>
+            <p class="muted" style="margin:6px 0 0;">
+              Templates load from <code>/demosites/fillsignsend/pdfs/</code>
+            </p>
+          </div>
+          <div class="pill">Fill → Sign → Send</div>
+        </div>
 
         <div class="divider"></div>
 
-        <div class="grid2">
-          <div>
+        <div class="layout">
+          <!-- LEFT -->
+          <div class="left">
             <label class="lbl">Template</label>
             <select class="input" id="docSelect">
               <option value="">Select a PDF…</option>
@@ -51,74 +59,72 @@
             <div class="divider"></div>
 
             <h3 class="h3">Step 2 — Parties</h3>
-            <p class="muted">Add Party A (sender) and Party B (recipient).</p>
+            <p class="muted tiny" style="margin-top:6px;">
+              Party A will be prompted to sign immediately after creating.
+            </p>
 
-            <div class="grid2">
-              <div class="panel mini">
+            <div class="twoMini">
+              <div class="miniCard">
                 <div class="miniHead">
                   <b>Party A (Sender)</b>
-                  <span class="pill">Required</span>
+                  <span class="tag">Signs First</span>
                 </div>
 
-                <label class="lbl">Full name</label>
+                <label class="lbl">Full name*</label>
                 <input class="input" id="aName" type="text" placeholder="Example: Mason Palmieri" />
 
-                <label class="lbl" style="margin-top:10px;">Email</label>
+                <label class="lbl" style="margin-top:10px;">Email*</label>
                 <input class="input" id="aEmail" type="email" placeholder="Example: mason@palmweb.net" />
               </div>
 
-              <div class="panel mini">
+              <div class="miniCard">
                 <div class="miniHead">
                   <b>Party B (Recipient)</b>
-                  <span class="pill">Required</span>
+                  <span class="tag gray">Receives After</span>
                 </div>
 
-                <label class="lbl">Full name</label>
+                <label class="lbl">Full name*</label>
                 <input class="input" id="bName" type="text" placeholder="Example: Client Name" />
 
-                <label class="lbl" style="margin-top:10px;">Email</label>
+                <label class="lbl" style="margin-top:10px;">Email*</label>
                 <input class="input" id="bEmail" type="email" placeholder="Example: client@email.com" />
               </div>
             </div>
 
             <div class="divider"></div>
 
-            <h3 class="h3">Step 3 — Message (optional)</h3>
-            <label class="lbl">Email subject</label>
+            <h3 class="h3">Optional Message</h3>
+            <label class="lbl">Subject</label>
             <input class="input" id="subject" type="text" placeholder="Signature requested" />
 
             <label class="lbl" style="margin-top:10px;">Message</label>
-            <textarea class="input" id="message" style="min-height:120px;" placeholder="Hi — please review and sign this document at your earliest convenience."></textarea>
+            <textarea class="input" id="message" style="min-height:110px;" placeholder="Hi — please review and sign."></textarea>
 
-            <div class="actions" style="margin-top:14px;">
-              <button class="btn secondary" id="saveBtn" type="button">Save</button>
-              <button class="btn primary" id="sendBtn" type="button">Send for Signature</button>
+            <div class="divider"></div>
+
+            <div class="actions">
+              <button class="btn secondary" id="saveBtn" type="button">Save Draft</button>
+              <button class="btn primary" id="continueBtn" type="button">Continue to Sender Signing</button>
             </div>
 
-            <p class="tiny muted" id="statusLine" style="margin-top:10px;"></p>
+            <p class="tiny" id="statusLine" style="margin-top:10px;"></p>
           </div>
 
-          <aside class="panel mini" style="height:fit-content;">
-            <b>Preview</b>
-            <p class="muted" style="margin-top:6px;">
-              Preview loads here after you select a template.
-            </p>
-
-            <div class="divider"></div>
-
-            <div id="previewBox" class="previewBox">
-              <div class="muted tiny">No document selected.</div>
+          <!-- RIGHT -->
+          <div class="right">
+            <div class="previewHeader">
+              <b>Preview</b>
+              <span class="muted tiny" id="previewName">No template selected</span>
             </div>
 
-            <div class="divider"></div>
+            <div class="previewBox" id="previewBox">
+              <div class="muted tiny" style="padding:14px;">Select a template to preview.</div>
+            </div>
 
-            <b>Signing Link (demo)</b>
-            <p class="muted tiny" style="margin-top:6px;">
-              When you click “Send”, you’ll be able to copy a signing link and open it as the recipient.
+            <p class="tiny muted" style="margin-top:10px;">
+              After you continue, the sender will be prompted to sign required fields.
             </p>
-
-            <button class="btn outlineFull" id="copyLinkBtn" type="button" disabled>Copy Signing Link</button>
-          </aside>
+          </div>
         </div>
       </section>
 
@@ -127,11 +133,11 @@
 
   <script src="assets/app.js"></script>
   <script>
-    // Guard
     FSS.guard();
 
     const docSelect = document.getElementById("docSelect");
     const previewBox = document.getElementById("previewBox");
+    const previewName = document.getElementById("previewName");
     const statusLine = document.getElementById("statusLine");
 
     const aName = document.getElementById("aName");
@@ -142,8 +148,7 @@
     const message = document.getElementById("message");
 
     const saveBtn = document.getElementById("saveBtn");
-    const sendBtn = document.getElementById("sendBtn");
-    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const continueBtn = document.getElementById("continueBtn");
 
     // Load saved state
     const state = FSS.loadDocState();
@@ -161,32 +166,27 @@
     }
 
     docSelect.addEventListener("change", () => {
-      const val = docSelect.value;
+      const val = docSelect.value.trim();
       if(!val){
-        previewBox.innerHTML = `<div class="muted tiny">No document selected.</div>`;
+        previewName.textContent = "No template selected";
+        previewBox.innerHTML = `<div class="muted tiny" style="padding:14px;">Select a template to preview.</div>`;
         return;
       }
       renderPreview(val);
     });
 
     function renderPreview(filename){
+      previewName.textContent = filename;
       const url = `pdfs/${filename}`;
-      previewBox.innerHTML = `
-        <div class="previewTop">
-          <span class="pill">PDF</span>
-          <span class="muted tiny">${filename}</span>
-        </div>
-        <iframe class="previewFrame" src="${url}" title="PDF preview"></iframe>
-      `;
+      previewBox.innerHTML = `<iframe class="previewFrame" src="${url}" title="PDF preview"></iframe>`;
     }
 
     function validate(){
-      const template = docSelect.value.trim();
-      if(!template) return "Select a PDF template.";
-      if(!aName.value.trim()) return "Party A name required.";
-      if(!aEmail.value.trim()) return "Party A email required.";
-      if(!bName.value.trim()) return "Party B name required.";
-      if(!bEmail.value.trim()) return "Party B email required.";
+      if(!docSelect.value.trim()) return "Select a PDF template.";
+      if(!aName.value.trim()) return "Sender name is required.";
+      if(!aEmail.value.trim()) return "Sender email is required.";
+      if(!bName.value.trim()) return "Recipient name is required.";
+      if(!bEmail.value.trim()) return "Recipient email is required.";
       return null;
     }
 
@@ -204,6 +204,7 @@
       FSS.saveDocState({
         template,
         parties,
+        status: "draft",
         ...extra
       });
     }
@@ -212,55 +213,42 @@
       const err = validate();
       if(err){
         statusLine.textContent = err;
-        statusLine.style.color = "#fda4af";
+        statusLine.className = "tiny textBad";
         return;
       }
       saveState();
-      statusLine.textContent = "Saved.";
-      statusLine.style.color = "#86efac";
+      statusLine.textContent = "Saved draft.";
+      statusLine.className = "tiny textGood";
     });
 
-    sendBtn.addEventListener("click", () => {
+    continueBtn.addEventListener("click", () => {
       const err = validate();
       if(err){
         statusLine.textContent = err;
-        statusLine.style.color = "#fda4af";
+        statusLine.className = "tiny textBad";
         return;
       }
 
+      // Clear any old fields from previous envelopes
+      FSS.saveFields([]);
+
+      // Set flow state
       saveState({
-        status: "sent",
-        sentAt: Date.now()
+        status: "sender_signing",
+        createdAt: Date.now(),
+        stage: "sender"
       });
 
-      // Create initial audit entries
-      FSS.auditAdd("Created", "Sender created the envelope and selected a template.");
-      FSS.auditAdd("Sent", "Envelope sent to recipient for signature.");
+      // Audit
+      FSS.auditAdd("Created", "Envelope created. Sender prompted to sign.");
 
-      statusLine.textContent = "Sent for signature (demo). You can now copy the signing link.";
-      statusLine.style.color = "#86efac";
-
-      copyLinkBtn.disabled = false;
-    });
-
-    copyLinkBtn.addEventListener("click", async () => {
-      // For demo purposes, the "signing link" is just sign.html
-      const link = `${window.location.origin}${window.location.pathname.replace("create.html","")}sign.html`;
-
-      try{
-        await navigator.clipboard.writeText(link);
-        statusLine.textContent = "Signing link copied to clipboard.";
-        statusLine.style.color = "#86efac";
-      }catch{
-        statusLine.textContent = "Could not copy. Here is the link: " + link;
-        statusLine.style.color = "#fde68a";
-      }
+      // Go to signing room as sender
+      window.location.href = "sign.html?role=sender";
     });
 
     document.getElementById("logoutLink").addEventListener("click", () => {
       FSS.logout();
     });
   </script>
-
 </body>
 </html>
