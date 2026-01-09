@@ -5,6 +5,81 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FSS — Create Document</title>
   <link rel="stylesheet" href="assets/app.css" />
+
+  <style>
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.60);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+      z-index: 999;
+    }
+    .modal.show{ display:flex; }
+
+    .modal-card{
+      width: min(720px, 100%);
+      background: rgba(16,24,34,.96);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .modal-head{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .modal-title{
+      margin:0;
+      font-size: 16px;
+      font-weight: 950;
+    }
+    .modal-sub{
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: rgba(148,163,184,.95);
+      font-weight: 750;
+    }
+    .close-btn{
+      border: 1px solid rgba(255,255,255,.12);
+      background: transparent;
+      color: rgba(255,255,255,.9);
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor:pointer;
+      font-weight: 950;
+      line-height: 1;
+    }
+    .close-btn:hover{ background: rgba(255,255,255,.06); }
+
+    .modal-body{
+      padding: 14px 16px 16px;
+    }
+    .kv{
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(15,20,28,.9);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,.92);
+    }
+    .kv div{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .kv div:last-child{ border-bottom: 0; }
+    .kv span{ color: rgba(148,163,184,.95); font-weight: 850; }
+  </style>
 </head>
 
 <body>
@@ -31,7 +106,7 @@
       <div class="topbar">
         <div>
           <h2 style="margin:0;">Create NDA / Agreement</h2>
-          <div class="small">Demo: this “sends” to the eSignature page.</div>
+          <div class="small">Demo: sending triggers a “client delivery” modal.</div>
         </div>
         <a class="btn btn-outline" href="dashboard.html">Back</a>
       </div>
@@ -103,12 +178,39 @@
     </div>
   </main>
 
+  <!-- ✅ SENT MODAL -->
+  <div class="modal" id="sentModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <h3 class="modal-title">Document Sent</h3>
+          <p class="modal-sub">This simulates sending a DocuSign-style signing request.</p>
+        </div>
+        <button class="close-btn" id="closeModal" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="badge">Delivery Summary</div>
+
+        <div class="kv" id="summary"></div>
+
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
+          <a class="btn btn-outline" href="dashboard.html">Back to Dashboard</a>
+          <a class="btn btn-primary" href="sign.html">Continue to eSignature →</a>
+        </div>
+
+        <p class="small" style="margin-top:12px;">
+          Real product: email delivery, reminders, and PDF audit trail.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { requireAuth, saveAgreement, uid } from "./assets/app.js";
 
     requireAuth();
 
-    // read ?type=NDA etc
     const params = new URLSearchParams(window.location.search);
     const typeParam = params.get("type");
 
@@ -136,7 +238,7 @@
       if(found) type.value = typeParam;
     }
 
-    // nice demo defaults
+    // demo defaults
     title.value = "Mutual NDA — FSS Demo";
     fields.a_company.value = "FSS Platform";
     fields.a_first.value = "Mason";
@@ -144,6 +246,29 @@
     fields.a_email.value = "mason@palmweb.net";
     fields.b_company.value = "Client Company";
     fields.b_email.value = "client@company.com";
+
+    // Modal helpers
+    const modal = document.getElementById("sentModal");
+    const closeModal = document.getElementById("closeModal");
+    const summary = document.getElementById("summary");
+
+    function openModal(){
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function close(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    closeModal.addEventListener("click", close);
+    modal.addEventListener("click", (e) => { if(e.target === modal) close(); });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && modal.classList.contains("show")) close();
+    });
 
     sendBtn.addEventListener("click", () => {
       msg.style.display = "none";
@@ -153,9 +278,10 @@
         return;
       }
 
+      const createdAt = Date.now();
       const agreement = {
         id: uid(),
-        createdAt: Date.now(),
+        createdAt,
         title: title.value.trim(),
         type: type.value,
         mode: mode.value,
@@ -178,8 +304,16 @@
 
       saveAgreement(agreement);
 
-      // go to signing page (loads latest doc)
-      window.location.href = "sign.html";
+      // Build modal summary
+      summary.innerHTML = `
+        <div><span>Recipient</span><b>${agreement.partyB.email}</b></div>
+        <div><span>Document</span><b>${agreement.title}</b></div>
+        <div><span>Type</span><b>${agreement.type}</b></div>
+        <div><span>Status</span><b>${agreement.status}</b></div>
+        <div><span>Timestamp</span><b>${new Date(createdAt).toLocaleString()}</b></div>
+      `;
+
+      openModal();
     });
   </script>
 </body>
