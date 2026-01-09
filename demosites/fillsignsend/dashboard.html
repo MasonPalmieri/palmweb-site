@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS Demo — Dashboard</title>
+  <title>Client Portal — Dashboard</title>
   <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body class="app dark">
@@ -20,6 +20,7 @@
     <nav class="navlinks">
       <a href="dashboard.html" class="active">Dashboard</a>
       <a href="create.html">Create</a>
+      <a href="audit.html">Audit</a>
       <a href="../../demos.html" id="logoutLink">Logout</a>
     </nav>
   </header>
@@ -35,8 +36,7 @@
 
         <div class="grid2">
 
-          <!-- Left -->
-          <div class="panel" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
+          <div class="panel mini" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
             <h3 class="h3">Create a new agreement</h3>
             <p class="muted" style="margin-top:6px;">
               Choose a document template, assign parties, and send to sign.
@@ -45,56 +45,56 @@
             <div class="actions" style="margin-top:12px;">
               <a class="btn primary" href="create.html">New Agreement</a>
               <a class="btn secondary" href="create.html">New NDA</a>
+              <a class="btn outline" href="audit.html">Audit Trail</a>
             </div>
 
             <div class="divider"></div>
 
             <h3 class="h3">Available templates</h3>
             <p class="tiny muted" style="margin-top:6px;">
-              These PDFs are loaded directly from <code>/pdfs/</code>
+              PDFs loaded directly from <code>/pdfs/</code>
             </p>
 
             <ul class="muted" style="margin:10px 0 0; padding-left:18px; font-weight:800;">
               <li>NDA</li>
               <li>Consulting Agreement</li>
-              <li>Lease Release</li>
+              <li>Lease Waiver</li>
               <li>Event Accident Waiver</li>
-              <li>Non-Compete Release</li>
+              <li>Non-Compete Agreement</li>
               <li>Photo Release</li>
-              <li>Real Estate Mutual Release</li>
+              <li>Real Estate Agreement</li>
             </ul>
           </div>
 
-          <!-- Right -->
-          <div class="panel" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
+          <div class="panel mini" style="box-shadow:none; margin:0; padding:16px; background: rgba(0,0,0,.18);">
             <h3 class="h3">Recent activity</h3>
             <p class="muted" style="margin-top:6px;">
-              This demo simulates an audit trail and completion workflow.
+              Simulated DocuSign-style lifecycle + audit events.
             </p>
 
             <div class="divider"></div>
 
             <div style="display:grid; gap:10px;">
               <div class="hintBox">
-                <b>Agreement created</b>
-                <div class="muted" style="margin-top:6px;">Party A assigned, Party B invited.</div>
+                <b>Created</b>
+                <div class="muted" style="margin-top:6px;">Envelope created and template selected.</div>
               </div>
 
               <div class="hintBox">
-                <b>Signature requested</b>
-                <div class="muted" style="margin-top:6px;">Recipient opened and placed fields.</div>
+                <b>Viewed</b>
+                <div class="muted" style="margin-top:6px;">Recipient opened signing link.</div>
               </div>
 
               <div class="hintBox">
-                <b>Completed</b>
-                <div class="muted" style="margin-top:6px;">Signed PDF generated and downloaded.</div>
+                <b>Signed + Completed</b>
+                <div class="muted" style="margin-top:6px;">Signed PDF generated for download.</div>
               </div>
             </div>
 
             <div class="divider"></div>
 
             <p class="tiny muted">
-              Want this to be real (email sending + storage + audit logs)? We can connect Firebase/Supabase + email delivery.
+              Want real sending + storage + non-editable audit logs? PalmWeb can build a production version.
             </p>
           </div>
 
@@ -105,8 +105,8 @@
     </div>
   </main>
 
+  <script src="assets/app.js"></script>
   <script>
-    // Auth guard
     function getAuth(){
       const raw = localStorage.getItem("fss_auth");
       try { return raw ? JSON.parse(raw) : null; } catch { return null; }
@@ -120,11 +120,8 @@
         `Signed in as ${auth.email} • Demo portal active`;
     }
 
-    // Logout clears auth
     document.getElementById("logoutLink").addEventListener("click", () => {
-      localStorage.removeItem("fss_auth");
-      localStorage.removeItem("fss_doc");
-      localStorage.removeItem("fss_parties");
+      FSS.logout();
     });
   </script>
 </body>
