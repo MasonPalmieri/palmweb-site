@@ -3,70 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Create • Client Demo</title>
-
+  <title>Create • FSS Demo</title>
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{ max-width:1120px; margin:0 auto; padding:18px 18px 40px; }
-    .page-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
-    .page-head h1{ margin:0; font-size:18px; font-weight:950; letter-spacing:-.2px; }
-    .page-head p{ margin:6px 0 0; font-size:13px; color:var(--muted); font-weight:750; max-width:78ch; line-height:1.5; }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 18px 60px;
+    }
 
-    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; align-items:start; margin-top:10px; }
-    .card{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:20px; padding:14px; }
-    .card h2{ margin:0; font-size:14px; font-weight:950; letter-spacing:-.1px; }
-    .card p{ margin:8px 0 0; color:rgba(255,255,255,.72); font-weight:750; font-size:13px; line-height:1.5; }
+    .hero{
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 18px 70px rgba(0,0,0,.40);
+    }
 
-    .divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
+    .hero h1{
+      margin: 0;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.4px;
+    }
+    .hero p{
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.72);
+      font-weight: 800;
+      font-size: 13px;
+      max-width: 78ch;
+    }
 
-    label{
+    .grid{
+      margin-top: 14px;
       display:grid;
-      gap:6px;
-      font-weight:900;
-      font-size:13px;
-      color:rgba(255,255,255,.86);
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card{
+      padding: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+    }
+
+    .card h2{
+      margin: 0;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .sub{
+      margin: 8px 0 0;
+      color: rgba(255,255,255,.70);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .hr{
+      height:1px;
+      background: rgba(255,255,255,.08);
+      margin: 12px 0;
+    }
+
+    .actions{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .inline{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.86);
+      font-weight: 850;
+      font-size: 12.5px;
+      max-width: 100%;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
       margin-top: 10px;
     }
+    .toggle input{ transform: scale(1.15); }
 
-    input, select{
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.92);
-      outline:none;
-      font-weight:850;
-      font-size:14px;
-    }
-
-    input:focus, select:focus{
-      border-color: rgba(67,203,255,.55);
-      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
-    }
-
-    .two{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-    .btn-lg{ padding:12px 16px; border-radius:14px; font-size:14px; font-weight:950; }
-
-    .hint{ margin-top:12px; color:rgba(255,255,255,.62); font-size:12px; font-weight:750; line-height:1.45; }
-
-    .status{
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.84);
-    }
-    .status.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
-    .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
-
-    @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
-      .two{ grid-template-columns:1fr; }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -97,81 +147,101 @@
   </header>
 
   <main class="wrap">
-    <div class="page-head">
-      <div>
-        <h1>Create Envelope</h1>
-        <p>
-          Choose a template (PDF), then enter sender + recipient details.
-          This simulates a paid SaaS workflow for preparing agreements before signature.
-        </p>
-      </div>
-    </div>
+    <section class="hero">
+      <h1>Create a new agreement</h1>
+      <p>
+        Choose a PDF template (or upload your own), then enter Party A (sender) and Party B (recipient).
+        Next step is sender signing.
+      </p>
+    </section>
 
     <div class="grid">
-      <!-- Template -->
+      <!-- TEMPLATE / UPLOAD -->
       <section class="card">
-        <h2>Template</h2>
-        <p>Select which agreement you want to generate. These are real PDFs stored in your repo.</p>
+        <h2>Agreement PDF</h2>
+        <p class="sub">Pick from the template library or upload a custom agreement (PDF).</p>
 
-        <div class="divider"></div>
+        <div class="hr"></div>
 
         <label>
-          Choose a template PDF
+          Template library
           <select id="templateSelect">
             <option value="nda.pdf">nda.pdf</option>
             <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
-            <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
-            <option value="lease-waiver.pdf">lease-waiver.pdf</option>
             <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
-            <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
+            <option value="lease-waiver.pdf">lease-waiver.pdf</option>
+            <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
             <option value="Photo-Release.pdf">Photo-Release.pdf</option>
+            <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
           </select>
         </label>
 
-        <div class="hint">
-          These files must exist here: <strong>demosites/fillsignsend/pdfs/</strong><br />
-          (Your screenshot confirms this is set up correctly.)
+        <div class="hr"></div>
+
+        <label>
+          Upload custom PDF
+          <input id="uploadPdf" type="file" accept="application/pdf" />
+        </label>
+
+        <div style="margin-top:10px;">
+          <div class="pill" id="uploadPill" style="display:none;">Uploaded: —</div>
+        </div>
+
+        <div class="toggle">
+          <input id="useUploadToggle" type="checkbox" />
+          <div>
+            <div style="font-weight:950;">Use uploaded PDF</div>
+            <div style="font-size:12px; color:rgba(255,255,255,.65); font-weight:800;">
+              If enabled, the uploaded document becomes the active agreement for signing.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,.60); font-weight:800; line-height:1.45;">
+          Note: uploads are stored locally in your browser (no server). Refreshing or clearing storage may remove them.
         </div>
       </section>
 
-      <!-- Parties -->
-      <aside class="card">
+      <!-- PARTIES -->
+      <section class="card">
         <h2>Parties</h2>
-        <p>Enter the sender (your client) and the recipient (their customer).</p>
+        <p class="sub">Enter the sender (Party A) and recipient (Party B).</p>
 
-        <div class="divider"></div>
+        <div class="hr"></div>
 
-        <div class="two">
-          <label>
-            Sender name
-            <input id="aName" type="text" placeholder="Example: John Smith" />
-          </label>
+        <label>
+          Party A (Sender) Name
+          <input id="aName" type="text" placeholder="Example: Mason Palmieri" />
+        </label>
 
-          <label>
-            Sender email
-            <input id="aEmail" type="email" placeholder="john@company.com" />
-          </label>
-        </div>
+        <label style="margin-top:10px;">
+          Party A (Sender) Email
+          <input id="aEmail" type="email" placeholder="mason@palmweb.net" />
+        </label>
 
-        <div class="two">
-          <label>
-            Recipient name
-            <input id="bName" type="text" placeholder="Example: Sarah Johnson" />
-          </label>
+        <div class="hr"></div>
 
-          <label>
-            Recipient email
-            <input id="bEmail" type="email" placeholder="sarah@email.com" />
-          </label>
-        </div>
+        <label>
+          Party B (Recipient) Name
+          <input id="bName" type="text" placeholder="Example: Matt Knych" />
+        </label>
 
-        <div class="actions">
-          <button class="btn btn-primary btn-lg" id="saveBtn" type="button">Save & Continue</button>
-          <button class="btn btn-outline btn-lg" id="resetBtn" type="button">Reset Envelope</button>
-        </div>
+        <label style="margin-top:10px;">
+          Party B (Recipient) Email
+          <input id="bEmail" type="email" placeholder="matt@example.com" />
+        </label>
+      </section>
+    </div>
 
-        <div class="status warn" id="statusBox" style="display:none;"></div>
-      </aside>
+    <div class="actions">
+      <div class="inline">
+        <button class="btn btn-outline" id="resetBtn" type="button">Reset Envelope</button>
+        <a class="btn btn-outline" href="dashboard.html">Back to Dashboard</a>
+      </div>
+
+      <div class="inline">
+        <button class="btn btn-primary" id="saveBtn" type="button">Save & Continue</button>
+      </div>
     </div>
   </main>
 
@@ -179,8 +249,8 @@
   <script>
     FSS.guard();
 
-    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
+    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
 
     let doc = FSS.loadDocState();
     if(!doc){
@@ -189,77 +259,119 @@
     }
 
     const templateSelect = document.getElementById("templateSelect");
+    const uploadPdf = document.getElementById("uploadPdf");
+    const uploadPill = document.getElementById("uploadPill");
+    const useUploadToggle = document.getElementById("useUploadToggle");
+
     const aName = document.getElementById("aName");
     const aEmail = document.getElementById("aEmail");
     const bName = document.getElementById("bName");
     const bEmail = document.getElementById("bEmail");
 
-    const statusBox = document.getElementById("statusBox");
+    // Load existing state
+    templateSelect.value = doc.template || "nda.pdf";
+    aName.value = doc.parties.aName || "";
+    aEmail.value = doc.parties.aEmail || "";
+    bName.value = doc.parties.bName || "";
+    bEmail.value = doc.parties.bEmail || "";
 
-    function showStatus(type, msg){
-      statusBox.style.display = "";
-      statusBox.className = "status " + type;
-      statusBox.textContent = msg;
+    // Uploaded status
+    const hasUpload = !!FSS.getUploadedPDFBase64();
+    if(hasUpload){
+      uploadPill.style.display = "";
+      uploadPill.textContent = "Uploaded: " + FSS.getUploadedPDFName();
     }
 
-    function load(){
-      doc = FSS.loadDocState() || doc;
+    useUploadToggle.checked = (doc.templateSource === "upload") && hasUpload;
 
-      templateSelect.value = doc.template || "nda.pdf";
-      aName.value = doc.parties?.aName || "";
-      aEmail.value = doc.parties?.aEmail || "";
-      bName.value = doc.parties?.bName || "";
-      bEmail.value = doc.parties?.bEmail || "";
-    }
+    // Upload handler
+    uploadPdf.addEventListener("change", async () => {
+      const file = uploadPdf.files && uploadPdf.files[0];
+      if(!file) return;
 
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      doc = FSS.loadDocState() || doc;
-
-      const t = templateSelect.value.trim();
-      const an = aName.value.trim();
-      const bn = bName.value.trim();
-
-      if(!t){
-        showStatus("warn", "Please choose a template PDF.");
+      if(file.type !== "application/pdf"){
+        alert("Please upload a PDF file.");
+        uploadPdf.value = "";
         return;
       }
 
-      if(!an || !bn){
-        showStatus("warn", "Sender name and Recipient name are required for the demo flow.");
+      // Limit size (client-side) to keep localStorage stable
+      const maxMB = 8;
+      const sizeMB = file.size / (1024 * 1024);
+      if(sizeMB > maxMB){
+        alert("That PDF is too large for this static demo. Please upload a PDF under " + maxMB + "MB.");
+        uploadPdf.value = "";
         return;
       }
 
-      doc.template = t;
-      doc.parties = {
-        aName: an,
-        aEmail: aEmail.value.trim(),
-        bName: bn,
-        bEmail: bEmail.value.trim()
-      };
+      const arrayBuf = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuf);
 
-      // reset signature if changing template
-      FSS.saveDocState(doc);
-      localStorage.removeItem("fss_signed_pdf_b64");
-      FSS.logAudit("Envelope details saved (template + parties).");
-      FSS.setDocStage("draft");
+      // Convert to base64 (fast, safe)
+      let binary = "";
+      const chunkSize = 0x8000;
+      for(let i=0; i<bytes.length; i += chunkSize){
+        const chunk = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, chunk);
+      }
+      const b64 = btoa(binary);
 
-      showStatus("good", "Saved. Redirecting to Sign & Send…");
+      FSS.setUploadedPDFBase64(b64, file.name);
+      uploadPill.style.display = "";
+      uploadPill.textContent = "Uploaded: " + file.name;
 
-      setTimeout(() => location.href = "sign.html", 650);
+      // Auto enable toggle
+      useUploadToggle.checked = true;
+
+      alert("Upload saved. Turn on 'Use uploaded PDF' to use it for this envelope.");
     });
 
+    // Save & continue
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      doc = FSS.loadDocState() || FSS.defaultDoc();
+
+      // parties
+      doc.parties.aName = aName.value.trim();
+      doc.parties.aEmail = aEmail.value.trim();
+      doc.parties.bName = bName.value.trim();
+      doc.parties.bEmail = bEmail.value.trim();
+
+      // template selection
+      doc.template = templateSelect.value;
+
+      // source selection
+      const wantsUpload = useUploadToggle.checked;
+      const uploadExists = !!FSS.getUploadedPDFBase64();
+
+      if(wantsUpload && uploadExists){
+        doc.templateSource = "upload";
+      }else{
+        doc.templateSource = "library";
+      }
+
+      doc.status = "draft";
+      FSS.saveDocState(doc);
+
+      // Reset signed PDF if creating new doc details
+      // (keeps the flow clean)
+      localStorage.removeItem("fss_signed_pdf_b64");
+
+      FSS.logAudit("Agreement details saved.");
+      location.href = "sign.html";
+    });
+
+    // Reset envelope
     document.getElementById("resetBtn").addEventListener("click", () => {
-      if(!confirm("Reset the envelope? This clears signatures + audit history.")) return;
+      if(!confirm("Reset the current envelope? (Your uploaded PDF will remain saved.)")) return;
       FSS.resetDoc();
       location.reload();
     });
 
+    // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
-
-    load();
   </script>
 </body>
 </html>
