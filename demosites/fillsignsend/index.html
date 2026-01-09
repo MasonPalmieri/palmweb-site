@@ -3,142 +3,249 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard</title>
-  <meta name="theme-color" content="#0b0f14" />
+  <title>Client Portal • Demo</title>
 
-  <link rel="stylesheet" href="assets/app.css" />
+  <!-- Cache-bust for GitHub Pages -->
+  <link rel="stylesheet" href="assets/app.css?v=20260109" />
+
+  <style>
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 18px 48px;
+    }
+
+    .hero{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .card{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 22px 70px rgba(0,0,0,.35);
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: -0.6px;
+      line-height: 1.08;
+      font-weight: 950;
+    }
+
+    p{
+      margin: 0;
+      color: rgba(255,255,255,.72);
+      font-weight: 750;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .bullets{
+      margin-top: 12px;
+      display:grid;
+      gap: 10px;
+    }
+
+    .bullet{
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight: 800;
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .login h2{
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+
+    .login p{
+      margin-bottom: 12px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.85);
+    }
+
+    input{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      outline:none;
+      font-weight: 850;
+      font-size: 14px;
+    }
+
+    input:focus{
+      border-color: rgba(67,203,255,.55);
+      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    .note{
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 750;
+      color: rgba(255,255,255,.60);
+      line-height: 1.45;
+    }
+
+    .err{
+      display:none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,79,99,.30);
+      background: rgba(255,79,99,.10);
+      color: rgba(255,255,255,.92);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .err.show{ display:block; }
+
+    @media (max-width: 920px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
-<body class="dark">
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo-badge">F</div>
-      <div class="brand-text">
-        <div class="brand-title">Client Portal</div>
-        <div class="brand-sub">Agreements • Signatures • Delivery</div>
+<body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="./index.html">
+        <span class="logo-badge">CP</span>
+        <div class="brand-text">
+          <strong>Client Portal</strong>
+          <span>Agreements • Signatures • Delivery</span>
+        </div>
+      </a>
+
+      <div class="app-user">
+        <a class="btn btn-outline" href="../../index.html">Back to PalmWeb</a>
       </div>
     </div>
+  </header>
 
-    <div class="topbar-actions">
-      <a class="btn btn-ghost" href="create.html">New Agreement</a>
-      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
-    </div>
-  </div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="card">
+        <h1>Document workflow demo</h1>
+        <p>
+          This is a product-style demonstration showing how a paying customer would:
+          <strong>create</strong> an agreement, <strong>sign</strong> it, and <strong>send</strong> it to a client —
+          resulting in a completed, downloadable PDF.
+        </p>
 
-  <main class="container">
-    <div class="page-head">
-      <h1>Dashboard</h1>
-      <p>Manage agreements, view audit history, and send documents.</p>
-    </div>
-
-    <div class="grid-2">
-      <!-- LEFT -->
-      <section class="card">
-        <h2 class="card-title">Active Agreement</h2>
-        <p class="card-sub">Current envelope and status.</p>
-
-        <div id="docBox" class="info-box"></div>
-
-        <div class="actions">
-          <a class="btn btn-primary" href="create.html">Create / Edit</a>
-          <a class="btn btn-outline" href="sign.html">Fill + Sign</a>
+        <div class="bullets">
+          <div class="bullet">✅ Create an agreement from a PDF template</div>
+          <div class="bullet">✅ Sender signs first (Fill → Sign → Send)</div>
+          <div class="bullet">✅ “Send” generates a recipient signing step</div>
+          <div class="bullet">✅ Completed document becomes available for download</div>
         </div>
-      </section>
 
-      <!-- RIGHT -->
-      <section class="card">
-        <h2 class="card-title">Audit Trail</h2>
-        <p class="card-sub">Recent events for the envelope.</p>
+        <p class="note">
+          This demo uses browser storage only (no backend). Closing the browser may reset the session.
+        </p>
+      </div>
 
-        <div id="auditBox" class="audit-list"></div>
-      </section>
-    </div>
+      <div class="card login">
+        <h2>Sign in</h2>
+        <p>Use the demo login to access the portal.</p>
 
-    <section class="card" style="margin-top:16px;">
-      <h2 class="card-title">Completed Document</h2>
-      <p class="card-sub">If the PDF has been signed, you can preview and download it here.</p>
+        <div class="grid">
+          <label>
+            Email
+            <input id="email" type="email" value="demo@client.com" autocomplete="off" />
+          </label>
 
-      <div id="signedPanel" class="signed-panel"></div>
+          <label>
+            Password
+            <input id="password" type="password" value="hallam" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="err" id="errBox">Incorrect credentials.</div>
+
+        <div class="row">
+          <button class="btn btn-primary" id="loginBtn" type="button">Login</button>
+          <a class="btn btn-muted" href="./dashboard.html">Skip (if already logged in)</a>
+        </div>
+
+        <p class="note">
+          Demo credentials are local-only. Nothing is sent to a server.
+        </p>
+      </div>
     </section>
   </main>
 
-  <!-- Load app.js as a script, not a link -->
-  <script src="assets/app.js"></script>
+  <!-- Cache-bust for GitHub Pages -->
+  <script src="assets/app.js?v=20260109"></script>
 
   <script>
-    // Guard: must be logged in
-    FSS.guard();
-
-    // Ensure doc exists
-    if(!FSS.loadDocState()){
-      FSS.resetDoc();
-      FSS.logAudit("Envelope created (auto).");
+    // If the JS didn't load, show a clear message instead of "spazzing"
+    if(!window.FSS){
+      alert("FSS app.js failed to load. Check /assets/app.js and /assets/app.css paths.");
     }
 
-    // Populate active doc
-    const d = FSS.loadDocState();
-    const docBox = document.getElementById("docBox");
-
-    docBox.innerHTML = `
-      <div class="kv">
-        <div><span>Envelope ID</span><strong>${FSS.escape(d.id)}</strong></div>
-        <div><span>Status</span><strong class="pill">${FSS.escape(d.status)}</strong></div>
-        <div><span>Template</span><strong>${FSS.escape(d.template)}</strong></div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="kv">
-        <div><span>Sender</span><strong>${FSS.escape(d.parties.aName || "—")}</strong></div>
-        <div><span>Sender Email</span><strong>${FSS.escape(d.parties.aEmail || "—")}</strong></div>
-        <div><span>Recipient</span><strong>${FSS.escape(d.parties.bName || "—")}</strong></div>
-        <div><span>Recipient Email</span><strong>${FSS.escape(d.parties.bEmail || "—")}</strong></div>
-      </div>
-    `;
-
-    // Populate audit
-    const audit = FSS.loadAudit();
-    const auditBox = document.getElementById("auditBox");
-
-    if(!audit || audit.length === 0){
-      auditBox.innerHTML = `<div class="muted">No activity yet.</div>`;
-    } else {
-      auditBox.innerHTML = audit.slice(0, 10).map(a => `
-        <div class="audit-row">
-          <div class="audit-time">${FSS.escape(a.at)}</div>
-          <div class="audit-msg">${FSS.escape(a.msg)}</div>
-        </div>
-      `).join("");
+    // If already authed, go to dashboard
+    if(window.FSS && FSS.isAuthed()){
+      location.href = "dashboard.html";
     }
 
-    // Signed PDF preview + download
-    const signedPanel = document.getElementById("signedPanel");
+    const loginBtn = document.getElementById("loginBtn");
+    const errBox = document.getElementById("errBox");
 
-    if(FSS.hasSignedPDF()){
-      const b64 = FSS.getSignedBase64();
-      const url = "data:application/pdf;base64," + b64;
+    loginBtn.addEventListener("click", () => {
+      errBox.classList.remove("show");
 
-      signedPanel.innerHTML = `
-        <div class="signed-actions">
-          <a class="btn btn-primary" href="${url}" download="signed_${FSS.escape(d.template)}">Download Signed PDF</a>
-          <a class="btn btn-outline" href="${url}" target="_blank" rel="noreferrer">Open in New Tab</a>
-        </div>
-        <div class="pdf-frame">
-          <iframe src="${url}" title="Signed PDF Preview"></iframe>
-        </div>
-      `;
-    } else {
-      signedPanel.innerHTML = `
-        <div class="muted">
-          No signed PDF yet. Go to <strong>Fill + Sign</strong> to complete the document.
-        </div>
-      `;
-    }
+      const email = (document.getElementById("email").value || "").trim();
+      const pw = (document.getElementById("password").value || "").trim();
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      FSS.logout();
-      location.href = "index.html";
+      // Demo login check (matches app.js config)
+      const ok = FSS.login(email, pw);
+      if(!ok){
+        errBox.classList.add("show");
+        return;
+      }
+
+      location.href = "dashboard.html";
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") loginBtn.click();
     });
   </script>
 </body>
