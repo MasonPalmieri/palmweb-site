@@ -3,739 +3,575 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FSS — eSignature</title>
+  <title>FSS — Sign Document</title>
+
   <link rel="stylesheet" href="assets/app.css" />
 
+  <!-- PDF.js (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.76/pdf.worker.min.js";
+  </script>
+
   <style>
-    /* DocuSign-like signing layout */
-    .sign-layout{
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap: 14px;
-      align-items:start;
-      margin-top: 14px;
-    }
-
-    .doc-shell{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(15,20,28,.80);
-      box-shadow: 0 22px 70px rgba(0,0,0,.55);
-      overflow:hidden;
-      min-height: 560px;
+    /* Just for this page (keeps it clean) */
+    .paper {
       position: relative;
-    }
-
-    .doc-top{
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(15,20,28,.95);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-    }
-
-    .doc-top strong{
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      font-size: 14px;
-    }
-    .doc-top span{
-      display:block;
-      color: rgba(148,163,184,.95);
-      font-weight: 750;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .page{
-      padding: 18px 18px 40px;
-      position: relative;
-    }
-
-    .paper{
       border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.98);
-      color: #0f172a;
-      box-shadow: 0 16px 50px rgba(0,0,0,.18);
-      padding: 18px;
-      min-height: 540px;
-      position: relative;
-    }
-
-    .paper h3{
-      margin: 0 0 10px;
-      font-size: 18px;
-      font-weight: 950;
-      letter-spacing: -.2px;
-    }
-
-    .paper p{
-      margin: 0 0 10px;
-      color: #334155;
-      font-weight: 650;
-      line-height: 1.6;
-      font-size: 13.5px;
-    }
-
-    .paper .meta{
-      display:flex;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin: 12px 0 14px;
-      color:#334155;
-      font-size: 13px;
-      font-weight: 750;
-    }
-    .meta b{ font-weight: 950; color:#0f172a; }
-
-    /* Signature fields on the paper */
-    .field{
-      position:absolute;
-      border-radius: 10px;
-      border: 1px dashed rgba(29,121,198,.55);
-      background: rgba(29,121,198,.12);
-      padding: 8px 10px;
-      font-size: 12px;
-      font-weight: 950;
-      color:#0b3a5f;
-      cursor:pointer;
-      user-select:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      min-width: 190px;
-      backdrop-filter: blur(6px);
-    }
-
-    .field small{
-      font-weight: 950;
-      color:#0b3a5f;
-      opacity:.88;
-    }
-
-    .field.done{
-      border-style: solid;
-      border-color: rgba(34,197,94,.45);
-      background: rgba(34,197,94,.12);
-      color:#14532d;
-    }
-
-    .sig-text{
-      font-family: "Brush Script MT", "Segoe Script", cursive;
-      font-size: 20px;
-      color:#111827;
-      font-weight: 900;
-      letter-spacing: .3px;
-    }
-
-    .init-text{
-      font-family: ui-sans-serif, system-ui;
-      font-size: 16px;
-      font-weight: 950;
-      color:#111827;
-    }
-
-    /* Right panel */
-    .panel{
-      border-radius: 18px;
+      overflow: hidden;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(15,20,28,.75);
-      box-shadow: 0 22px 70px rgba(0,0,0,.55);
-      padding: 16px;
-    }
-
-    .panel h3{
-      margin:0;
-      font-size: 16px;
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-    }
-
-    .panel .sub{
-      margin-top: 6px;
-      color: rgba(148,163,184,.95);
-      font-weight: 750;
-      font-size: 13px;
-    }
-
-    .step{
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(2,6,23,.30);
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      align-items:flex-start;
-    }
-
-    .step b{
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      font-size: 13.5px;
-    }
-    .step p{
-      margin: 6px 0 0;
-      color: rgba(148,163,184,.95);
-      font-weight: 750;
-      font-size: 12.5px;
-      line-height: 1.5;
-    }
-
-    .step .check{
-      width: 18px;
-      height: 18px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      flex: 0 0 auto;
-      margin-top: 2px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
-    .step.done .check{
-      border-color: rgba(34,197,94,.35);
-      background: rgba(34,197,94,.18);
-      position: relative;
-    }
-    .step.done .check::after{
-      content:"✓";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 950;
-      color: rgba(34,197,94,.95);
-      font-size: 12px;
-    }
-
-    .panel-actions{
-      margin-top: 12px;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-    }
-
-    .note{
-      margin-top: 12px;
-      padding: 12px;
+    /* PDF page canvas styling */
+    .pdf-canvas {
+      background: #fff;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: rgba(226,232,240,.92);
-      font-size: 12.5px;
-      font-weight: 750;
-      line-height: 1.55;
+      box-shadow: 0 14px 40px rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.08);
     }
 
-    /* Adopt signature modal */
-    .modal{
+    /* Clickable fields */
+    .field {
+      position: absolute;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 14px;
+      padding: 10px 12px;
+      min-width: 190px;
+      cursor: pointer;
+      user-select: none;
+      backdrop-filter: blur(10px);
+      transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .field:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.35);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    .field span {
+      display:block;
+      font-weight: 950;
+      font-size: 14px;
+      color:#fff;
+    }
+    .field small {
+      display:block;
+      margin-top: 2px;
+      font-weight: 750;
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+    }
+
+    /* Signature Modal */
+    .sig-modal {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.60);
-      display:none;
-      align-items:center;
-      justify-content:center;
+      display: none;
+      align-items: center;
+      justify-content: center;
       padding: 14px;
       z-index: 999;
     }
-    .modal.show{ display:flex; }
+    .sig-modal.show { display: flex; }
 
-    .modal-card{
-      width: min(720px, 100%);
-      background: rgba(16,24,34,.96);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 20px;
-      box-shadow: 0 22px 70px rgba(0,0,0,.55);
-      overflow:hidden;
-    }
-    .modal-head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      align-items:flex-start;
-    }
-    .modal-title{
-      margin:0;
-      font-size: 16px;
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-    }
-    .modal-sub{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: rgba(148,163,184,.95);
-      font-weight: 750;
-    }
-    .close-btn{
+    .sig-card {
+      width: min(700px, 100%);
+      background: #0f172a;
       border: 1px solid rgba(255,255,255,.12);
-      background: transparent;
-      color: rgba(255,255,255,.9);
+      border-radius: 22px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+      overflow: hidden;
+    }
+
+    .sig-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .sig-head strong {
+      color:#fff;
+      font-weight: 950;
+      font-size: 14px;
+    }
+    .sig-close {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: #fff;
       border-radius: 999px;
       padding: 8px 10px;
       cursor:pointer;
       font-weight: 950;
-      line-height: 1;
     }
-    .close-btn:hover{ background: rgba(255,255,255,.06); }
+    .sig-close:hover { background: rgba(255,255,255,.10); }
 
-    .modal-body{
-      padding: 14px 16px 16px;
-    }
-
-    .sig-preview{
-      margin-top: 12px;
+    .sig-body {
       padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(2,6,23,.35);
-      color: rgba(255,255,255,.92);
     }
 
-    .sig-preview .big{
-      font-family: "Brush Script MT", "Segoe Script", cursive;
-      font-size: 42px;
-      line-height: 1;
-      font-weight: 900;
-    }
-
-    .sig-preview .small{
-      margin-top: 8px;
-      color: rgba(148,163,184,.95);
-      font-size: 12px;
-      font-weight: 750;
-    }
-
-    .row{
+    .sig-tabs {
       display:flex;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
-      margin-top: 10px;
-      align-items:center;
     }
-
-    .row label{
-      font-size: 12.5px;
+    .sig-tab {
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
       font-weight: 900;
-      color: rgba(255,255,255,.92);
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      flex: 1 1 220px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-size: 13px;
+    }
+    .sig-tab.active {
+      background: linear-gradient(135deg, rgba(220,38,38,.95), rgba(234,88,12,.95));
+      border-color: transparent;
+      color: #fff;
     }
 
-    .row input{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
+    .sig-preview {
+      border: 1px dashed rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 16px;
       background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.92);
-      outline:none;
-      font-size: 14px;
+      color: #fff;
+      min-height: 160px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    canvas#sigPad {
+      width:100%;
+      height: 220px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(255,255,255,.12);
+      display:none;
+    }
+
+    .sig-actions {
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .sig-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.70);
       font-weight: 750;
     }
 
-    .row input:focus{
-      border-color: rgba(29,121,198,.55);
-      box-shadow: 0 0 0 4px rgba(29,121,198,.12);
-    }
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .sign-layout{ grid-template-columns: 1fr; }
-      .doc-shell{ min-height: 440px; }
-      .paper{ min-height: 520px; }
+    /* Ensure the field layer stays above viewer */
+    #sigField, #initField {
+      z-index: 15;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="dashboard.html">
-        <div class="brand-badge">FSS</div>
+  <div class="app-shell">
+    <header class="app-top">
+      <div class="app-brand">
+        <div class="app-logo">FSS</div>
         <div>
-          <strong>FSS</strong>
-          <span>eSignature Session</span>
+          <div class="app-title">Fill • Send • Sign</div>
+          <div class="app-sub">Document Signing Demo</div>
         </div>
-      </a>
-
-      <div class="navlinks">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="create.html">Create</a>
-        <a href="email-preview.html">Email</a>
-        <a href="#" id="logout">Logout</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="section">
-    <div class="container">
-      <div class="topbar">
-        <div>
-          <h2 style="margin:0;">Review & Sign</h2>
-          <div class="small">
-            This is a DocuSign-like signing demo (local-only). Click fields on the document to complete.
-          </div>
-        </div>
-        <a class="btn btn-outline" href="dashboard.html">Back</a>
       </div>
 
-      <div class="sign-layout">
-        <!-- Document -->
-        <div class="doc-shell">
-          <div class="doc-top">
-            <div>
-              <strong id="docTitle">Mutual NDA — FSS Demo</strong>
-              <span id="docMeta">Client: client@company.com • Status: Sent</span>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn btn-outline" id="scrollToFields" type="button">Go to Fields</button>
-            </div>
-          </div>
+      <div class="app-actions">
+        <a class="btn btn-outline" href="dashboard.html">← Dashboard</a>
+        <button class="btn btn-primary" id="completeBtn" type="button">Complete</button>
+      </div>
+    </header>
 
-          <div class="page" id="page">
-            <div class="paper" id="paper">
-              <h3 id="paperTitle">Mutual Non-Disclosure Agreement</h3>
-
-              <div class="meta">
-                <div><b>Party A:</b> <span id="partyA">FSS Platform</span></div>
-                <div><b>Party B:</b> <span id="partyB">Client Company</span></div>
-                <div><b>Date:</b> <span id="createdAt">—</span></div>
-              </div>
-
-              <p>
-                This Agreement is entered into by and between <b id="partyA2">FSS Platform</b> (“Disclosing Party”)
-                and <b id="partyB2">Client Company</b> (“Receiving Party”) to protect confidential information.
-              </p>
-
-              <p>
-                The Receiving Party agrees to keep all Confidential Information private and not disclose it
-                to any third party without written consent. The obligations of confidentiality remain in effect
-                for a period of two (2) years from the date of execution.
-              </p>
-
-              <p>
-                By signing below, the parties acknowledge and agree to the terms of this Agreement.
-              </p>
-
-              <!-- Fields -->
-              <div
-                class="field"
-                id="sigField"
-                style="left: 22px; bottom: 88px;"
-                role="button"
-                tabindex="0"
-              >
-                <span>Sign here</span>
-                <small>Party B</small>
-              </div>
-
-              <div
-                class="field"
-                id="initField"
-                style="right: 22px; bottom: 88px; min-width: 160px;"
-                role="button"
-                tabindex="0"
-              >
-                <span>Initial here</span>
-                <small>Party B</small>
-              </div>
-
-              <div style="position:absolute; left: 22px; bottom: 26px; font-size: 11.5px; color:#64748b; font-weight:750;">
-                Demo note: in a real product, the PDF is rendered and fields are anchored by coordinates + audit trail.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Panel -->
+    <main class="app-main">
+      <div class="layout-two">
+        <!-- Left Panel -->
         <aside class="panel">
-          <h3>Complete these steps</h3>
-          <div class="sub">Signed in as <b id="who"></b></div>
+          <h2 class="panel-title">Signing Summary</h2>
+          <p class="panel-sub">Review the details and complete required fields.</p>
 
-          <div class="step done" id="stepReview">
-            <div>
-              <b>1) Review document</b>
-              <p>Scroll through the document and confirm details.</p>
+          <div class="info-block">
+            <div class="info-row">
+              <span class="muted">Document</span>
+              <span id="docName" style="font-weight:950;">NDA</span>
             </div>
-            <div class="check"></div>
+            <div class="info-row">
+              <span class="muted">Recipient</span>
+              <span id="docRecipient" style="font-weight:950;">client@example.com</span>
+            </div>
+            <div class="info-row">
+              <span class="muted">Status</span>
+              <span style="font-weight:950; color:#22c55e;">Pending signature</span>
+            </div>
           </div>
 
-          <div class="step" id="stepSig">
-            <div>
-              <b>2) Add signature</b>
-              <p>Click “Sign here” on the document.</p>
-            </div>
-            <div class="check"></div>
-          </div>
+          <div class="info-block">
+            <div style="font-weight:950; margin-bottom:8px;">Required</div>
 
-          <div class="step" id="stepInit">
-            <div>
-              <b>3) Add initials</b>
-              <p>Click “Initial here” on the document.</p>
+            <div class="req-item" id="reqSig">
+              <div>
+                <div style="font-weight:950;">Signature</div>
+                <div class="muted" style="font-size:12px;">Tap “Sign here” on the document</div>
+              </div>
+              <div class="chip" id="sigChip">Required</div>
             </div>
-            <div class="check"></div>
-          </div>
 
-          <div class="step" id="stepFinish">
-            <div>
-              <b>4) Finish</b>
-              <p>Complete signing and mark document as completed.</p>
+            <div class="req-item" id="reqInit">
+              <div>
+                <div style="font-weight:950;">Initial</div>
+                <div class="muted" style="font-size:12px;">Tap “Initial here” on the document</div>
+              </div>
+              <div class="chip" id="initChip">Required</div>
             </div>
-            <div class="check"></div>
-          </div>
-
-          <div class="panel-actions">
-            <a class="btn btn-outline" href="email-preview.html">Back to Email</a>
-            <button class="btn btn-primary" id="finishBtn" type="button" disabled>Finish →</button>
           </div>
 
           <div class="note">
-            <b>Demo realism:</b> This simulates DocuSign behavior with fields, adopt signature, and audit-style completion.
-            The document state updates in your Dashboard.
-          </div>
-
-          <div style="margin-top:12px;">
-            <a class="btn btn-outline" href="../../demos.html">← Back to PalmWeb Demos</a>
+            <strong>Demo note:</strong>
+            This is a simulated DocuSign-style workflow using browser storage.
           </div>
         </aside>
+
+        <!-- Right: PDF Viewer -->
+        <section class="panel panel-wide" style="padding:0;">
+          <div class="paper" id="paper">
+            <!-- Viewer Header -->
+            <div style="padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.10); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <div>
+                <div style="font-weight:950; font-size:14px; color:#fff;">Document Preview</div>
+                <div style="font-size:12px; color:rgba(255,255,255,.70); font-weight:750;">Scroll through the PDF and complete fields.</div>
+              </div>
+
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-outline" id="zoomOutBtn" type="button">−</button>
+                <button class="btn btn-outline" id="zoomInBtn" type="button">+</button>
+              </div>
+            </div>
+
+            <!-- PDF Canvas Stack -->
+            <div id="pdfWrap" style="height:560px; overflow:auto; background: radial-gradient(800px 340px at 30% 10%, rgba(220,38,38,.22), transparent 60%), #070b14; padding:18px;">
+              <div id="pdfPages" style="display:flex; flex-direction:column; gap:14px; align-items:center;"></div>
+            </div>
+
+            <!-- Clickable fields (Demo overlay) -->
+            <div
+              class="field"
+              id="sigField"
+              style="left: 22px; bottom: 122px;"
+              role="button"
+              tabindex="0"
+            >
+              <span>Sign here</span>
+              <small>Party B</small>
+            </div>
+
+            <div
+              class="field"
+              id="initField"
+              style="right: 22px; bottom: 122px; min-width: 170px;"
+              role="button"
+              tabindex="0"
+            >
+              <span>Initial here</span>
+              <small>Party B</small>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <!-- ✅ Adopt Signature Modal -->
-  <div class="modal" id="sigModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <div>
-          <h3 class="modal-title" id="modalTitle">Adopt Your Signature</h3>
-          <p class="modal-sub" id="modalSub">
-            Confirm your name and click “Adopt & Apply”.
-          </p>
-        </div>
-        <button class="close-btn" id="closeModal" aria-label="Close">✕</button>
+    <footer class="app-foot">
+      <span>FSS Demo — PDFs rendered with PDF.js</span>
+    </footer>
+  </div>
+
+  <!-- Signature Modal -->
+  <div class="sig-modal" id="sigModal" aria-hidden="true">
+    <div class="sig-card" role="dialog" aria-modal="true">
+      <div class="sig-head">
+        <strong id="sigTitle">Add Signature</strong>
+        <button class="sig-close" id="sigCloseBtn" type="button">✕</button>
       </div>
 
-      <div class="modal-body">
-        <div class="row">
-          <label>
-            Full name
-            <input id="fullName" placeholder="Jane Doe" />
-          </label>
-
-          <label>
-            Initials
-            <input id="initials" placeholder="JD" maxlength="4" />
-          </label>
+      <div class="sig-body">
+        <div class="sig-tabs">
+          <button class="sig-tab active" id="tabType" type="button">Type</button>
+          <button class="sig-tab" id="tabDraw" type="button">Draw</button>
         </div>
 
-        <div class="sig-preview" id="preview">
-          <div class="big" id="sigPreview">Jane Doe</div>
-          <div class="small">
-            By adopting your signature, you agree your electronic signature is legally binding.
+        <div class="sig-preview" id="typedPreview">
+          <div>
+            <div style="font-weight:950; font-size:28px; letter-spacing:.5px;" id="typedText">Mason Palmieri</div>
+            <div style="margin-top:8px; font-size:12px; color:rgba(255,255,255,.70); font-weight:750;">Typed signature preview</div>
           </div>
         </div>
 
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
-          <button class="btn btn-outline" id="cancelApply" type="button">Cancel</button>
-          <button class="btn btn-primary" id="applyBtn" type="button">Adopt & Apply</button>
+        <canvas id="sigPad"></canvas>
+
+        <div style="margin-top:12px;">
+          <label style="display:block; color:#fff; font-weight:900; font-size:13px; margin-bottom:6px;">Your name</label>
+          <input id="sigNameInput" type="text" value="Mason Palmieri" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:#fff; outline:none; font-size:14px;" />
+        </div>
+
+        <div class="sig-actions">
+          <button class="btn btn-outline" id="clearSigBtn" type="button">Clear</button>
+          <button class="btn btn-primary" id="applySigBtn" type="button">Apply</button>
+        </div>
+
+        <div class="sig-note">
+          This is a demo signature tool. In production you’d store a cryptographic audit trail + signed PDF.
         </div>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    import { requireAuth, getUser, demoLogout, getAgreements, saveAgreements } from "./assets/app.js";
+  <script src="assets/app.js"></script>
 
-    requireAuth();
+  <script>
+    // ===============================
+    // Load doc selection + recipient
+    // ===============================
+    const selectedPdf = localStorage.getItem("fss_selected_pdf") || "nda.pdf";
+    const docNameEl = document.getElementById("docName");
+    const recipient = localStorage.getItem("fss_recipient") || "client@example.com";
+    document.getElementById("docRecipient").textContent = recipient;
 
-    // top nav
-    document.getElementById("who").textContent = getUser();
-    document.getElementById("logout").addEventListener("click", (e) => {
-      e.preventDefault();
-      demoLogout();
-      window.location.href = "index.html";
-    });
+    // Friendly names in UI
+    const niceName = selectedPdf
+      .replace(/[-_]/g, " ")
+      .replace(".pdf", "")
+      .replace(/\b\w/g, c => c.toUpperCase());
 
-    // load latest agreement
-    const list = getAgreements();
-    const agreement = list[list.length - 1];
+    docNameEl.textContent = niceName;
 
-    const docTitle = document.getElementById("docTitle");
-    const docMeta = document.getElementById("docMeta");
-    const paperTitle = document.getElementById("paperTitle");
-    const partyA = document.getElementById("partyA");
-    const partyB = document.getElementById("partyB");
-    const partyA2 = document.getElementById("partyA2");
-    const partyB2 = document.getElementById("partyB2");
-    const createdAt = document.getElementById("createdAt");
+    // ===============================
+    // PDF.js Rendering
+    // ===============================
+    let currentScale = 1.2;
 
-    if(agreement){
-      docTitle.textContent = agreement.title || "Document";
-      docMeta.textContent = `Client: ${agreement.partyB?.email || "client@company.com"} • Status: ${agreement.status || "Sent"}`;
-      paperTitle.textContent = agreement.type === "Agreement"
-        ? "Service Agreement"
-        : (agreement.type === "Event NDA" ? "Event Non-Disclosure Agreement" : "Mutual Non-Disclosure Agreement");
+    const pdfPagesEl = document.getElementById("pdfPages");
+    const zoomInBtn = document.getElementById("zoomInBtn");
+    const zoomOutBtn = document.getElementById("zoomOutBtn");
 
-      partyA.textContent = agreement.partyA?.company || "FSS Platform";
-      partyB.textContent = agreement.partyB?.company || "Client Company";
-      partyA2.textContent = agreement.partyA?.company || "FSS Platform";
-      partyB2.textContent = agreement.partyB?.company || "Client Company";
-      createdAt.textContent = new Date(agreement.createdAt || Date.now()).toLocaleDateString();
-    }else{
-      docTitle.textContent = "No document found — create one first";
-      docMeta.textContent = "Return to Create";
+    async function renderPdf() {
+      pdfPagesEl.innerHTML = "";
+
+      const url = `pdfs/${selectedPdf}`;
+      const pdf = await pdfjsLib.getDocument(url).promise;
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: currentScale });
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "pdf-canvas";
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        pdfPagesEl.appendChild(canvas);
+        await page.render({ canvasContext: ctx, viewport }).promise;
+      }
     }
 
-    // Signing steps
-    const stepSig = document.getElementById("stepSig");
-    const stepInit = document.getElementById("stepInit");
-    const stepFinish = document.getElementById("stepFinish");
-    const finishBtn = document.getElementById("finishBtn");
+    zoomInBtn.addEventListener("click", async () => {
+      currentScale = Math.min(currentScale + 0.15, 2.2);
+      await renderPdf();
+    });
 
+    zoomOutBtn.addEventListener("click", async () => {
+      currentScale = Math.max(currentScale - 0.15, 0.7);
+      await renderPdf();
+    });
+
+    renderPdf();
+
+    // ===============================
+    // Signature flow logic
+    // ===============================
     const sigField = document.getElementById("sigField");
     const initField = document.getElementById("initField");
 
-    // Modal
-    const modal = document.getElementById("sigModal");
-    const closeModal = document.getElementById("closeModal");
-    const cancelApply = document.getElementById("cancelApply");
-    const applyBtn = document.getElementById("applyBtn");
-    const fullName = document.getElementById("fullName");
-    const initials = document.getElementById("initials");
-    const sigPreview = document.getElementById("sigPreview");
+    const reqSig = document.getElementById("reqSig");
+    const reqInit = document.getElementById("reqInit");
+    const sigChip = document.getElementById("sigChip");
+    const initChip = document.getElementById("initChip");
 
-    // Mode: signature or initials?
-    let applyTarget = null;
+    const completeBtn = document.getElementById("completeBtn");
 
-    function openModal(target){
-      applyTarget = target;
+    const sigModal = document.getElementById("sigModal");
+    const sigCloseBtn = document.getElementById("sigCloseBtn");
+    const applySigBtn = document.getElementById("applySigBtn");
+    const clearSigBtn = document.getElementById("clearSigBtn");
 
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden", "false");
+    const tabType = document.getElementById("tabType");
+    const tabDraw = document.getElementById("tabDraw");
+    const typedPreview = document.getElementById("typedPreview");
+    const typedText = document.getElementById("typedText");
+    const sigPad = document.getElementById("sigPad");
+    const sigNameInput = document.getElementById("sigNameInput");
+    const sigTitle = document.getElementById("sigTitle");
+
+    let activeField = null;
+    let hasSignature = false;
+    let hasInitials = false;
+
+    function openSigModal(field) {
+      activeField = field;
+      sigTitle.textContent = field === "signature" ? "Add Signature" : "Add Initials";
+      sigModal.classList.add("show");
+      sigModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-
-      // default values (pull from Party B)
-      const defaultName =
-        (agreement?.partyB?.first && agreement?.partyB?.last)
-          ? `${agreement.partyB.first} ${agreement.partyB.last}`
-          : "Jane Doe";
-
-      fullName.value = defaultName;
-
-      const defaultInitials = defaultName
-        .split(" ")
-        .filter(Boolean)
-        .slice(0,2)
-        .map(s => s[0]?.toUpperCase())
-        .join("") || "JD";
-
-      initials.value = defaultInitials;
-      sigPreview.textContent = fullName.value.trim() || "Jane Doe";
-
-      requestAnimationFrame(() => fullName.focus());
     }
 
-    function close(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
+    function closeSigModal() {
+      sigModal.classList.remove("show");
+      sigModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
-      applyTarget = null;
+      activeField = null;
     }
 
-    closeModal.addEventListener("click", close);
-    cancelApply.addEventListener("click", close);
-    modal.addEventListener("click", (e) => { if(e.target === modal) close(); });
-    document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modal.classList.contains("show")) close(); });
-
-    fullName.addEventListener("input", () => {
-      sigPreview.textContent = fullName.value.trim() || "Jane Doe";
+    sigCloseBtn.addEventListener("click", closeSigModal);
+    sigModal.addEventListener("click", (e) => {
+      if (e.target === sigModal) closeSigModal();
     });
 
-    function markDone(fieldEl, type){
-      fieldEl.classList.add("done");
-      fieldEl.innerHTML = type === "sig"
-        ? `<span class="sig-text">${fullName.value.trim() || "Jane Doe"}</span><small>Signed</small>`
-        : `<span class="init-text">${(initials.value.trim() || "JD").toUpperCase()}</span><small>Initialed</small>`;
+    sigField.addEventListener("click", () => openSigModal("signature"));
+    initField.addEventListener("click", () => openSigModal("initials"));
+
+    // Update typed preview
+    sigNameInput.addEventListener("input", () => {
+      typedText.textContent = sigNameInput.value.trim() || "Your Name";
+    });
+
+    // Tabs
+    function setTab(mode) {
+      const isType = mode === "type";
+      tabType.classList.toggle("active", isType);
+      tabDraw.classList.toggle("active", !isType);
+
+      typedPreview.style.display = isType ? "flex" : "none";
+      sigPad.style.display = isType ? "none" : "block";
+
+      if (!isType) resizePad();
     }
 
-    function updateFinishButton(){
-      const sigDone = sigField.classList.contains("done");
-      const initDone = initField.classList.contains("done");
+    tabType.addEventListener("click", () => setTab("type"));
+    tabDraw.addEventListener("click", () => setTab("draw"));
 
-      stepSig.classList.toggle("done", sigDone);
-      stepInit.classList.toggle("done", initDone);
+    // Canvas draw signature
+    let drawing = false;
+    let ctx = sigPad.getContext("2d");
 
-      const canFinish = sigDone && initDone;
-      finishBtn.disabled = !canFinish;
-
-      if(canFinish) stepFinish.classList.add("done");
-      else stepFinish.classList.remove("done");
+    function resizePad() {
+      const rect = sigPad.getBoundingClientRect();
+      sigPad.width = rect.width * devicePixelRatio;
+      sigPad.height = 220 * devicePixelRatio;
+      ctx = sigPad.getContext("2d");
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#0f172a";
     }
 
-    sigField.addEventListener("click", () => openModal("sig"));
-    initField.addEventListener("click", () => openModal("init"));
+    function startDraw(e) {
+      drawing = true;
+      ctx.beginPath();
+      const { x, y } = getPos(e);
+      ctx.moveTo(x, y);
+    }
 
-    sigField.addEventListener("keydown", (e) => { if(e.key === "Enter") openModal("sig"); });
-    initField.addEventListener("keydown", (e) => { if(e.key === "Enter") openModal("init"); });
+    function draw(e) {
+      if (!drawing) return;
+      const { x, y } = getPos(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
 
-    applyBtn.addEventListener("click", () => {
-      if(!applyTarget) return;
+    function stopDraw() {
+      drawing = false;
+    }
 
-      if(applyTarget === "sig"){
-        markDone(sigField, "sig");
+    function getPos(e) {
+      const rect = sigPad.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    sigPad.addEventListener("mousedown", startDraw);
+    sigPad.addEventListener("mousemove", draw);
+    sigPad.addEventListener("mouseup", stopDraw);
+    sigPad.addEventListener("mouseleave", stopDraw);
+
+    sigPad.addEventListener("touchstart", startDraw, { passive: true });
+    sigPad.addEventListener("touchmove", draw, { passive: true });
+    sigPad.addEventListener("touchend", stopDraw);
+
+    clearSigBtn.addEventListener("click", () => {
+      ctx.clearRect(0, 0, sigPad.width, sigPad.height);
+    });
+
+    applySigBtn.addEventListener("click", () => {
+      if (activeField === "signature") {
+        hasSignature = true;
+        sigChip.textContent = "Done";
+        sigChip.classList.add("done");
+        reqSig.classList.add("done");
+        sigField.style.opacity = "0.35";
+        sigField.style.pointerEvents = "none";
       }
-      if(applyTarget === "init"){
-        markDone(initField, "init");
+
+      if (activeField === "initials") {
+        hasInitials = true;
+        initChip.textContent = "Done";
+        initChip.classList.add("done");
+        reqInit.classList.add("done");
+        initField.style.opacity = "0.35";
+        initField.style.pointerEvents = "none";
       }
 
-      close();
-      updateFinishButton();
+      closeSigModal();
     });
 
-    // scroll helper
-    document.getElementById("scrollToFields").addEventListener("click", () => {
-      document.getElementById("paper").scrollIntoView({ behavior: "smooth", block: "end" });
-    });
+    // Complete
+    completeBtn.addEventListener("click", () => {
+      if (!hasSignature || !hasInitials) {
+        alert("Please complete all required fields before finishing.");
+        return;
+      }
 
-    // Finish -> mark agreement completed + save signature
-    finishBtn.addEventListener("click", () => {
-      if(finishBtn.disabled) return;
-      if(!agreement) return;
+      // Save a tiny audit log for demo
+      const audit = {
+        document: selectedPdf,
+        recipient,
+        signedBy: sigNameInput.value.trim() || "Signer",
+        signedAt: new Date().toISOString()
+      };
 
-      const signerName = fullName.value.trim() || "Jane Doe";
-      const signerInitials = (initials.value.trim() || "JD").toUpperCase();
-
-      const updated = list.map(a => {
-        if(a.id !== agreement.id) return a;
-        return {
-          ...a,
-          status: "Completed",
-          completedAt: Date.now(),
-          signer: {
-            name: signerName,
-            initials: signerInitials,
-            email: a.partyB?.email || "client@company.com"
-          }
-        };
-      });
-
-      saveAgreements(updated);
-
-      // redirect
+      localStorage.setItem("fss_last_signed", JSON.stringify(audit));
       window.location.href = "success.html";
     });
 
-    updateFinishButton();
+    // Default
+    setTab("type");
   </script>
 </body>
 </html>
