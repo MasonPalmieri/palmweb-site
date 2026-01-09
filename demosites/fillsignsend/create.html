@@ -7,314 +7,287 @@
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .modal{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.60);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-      z-index: 999;
+    .doc-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
     }
-    .modal.show{ display:flex; }
 
-    .modal-card{
-      width: min(720px, 100%);
-      background: rgba(16,24,34,.96);
+    .doc-card{
       border: 1px solid rgba(255,255,255,.10);
-      border-radius: 20px;
-      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 18px 55px rgba(0,0,0,.30);
+      cursor:pointer;
+      transition: transform .08s ease, border-color .18s ease, background .18s ease;
+      min-height: 120px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 8px;
+      position: relative;
       overflow:hidden;
     }
-    .modal-head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      align-items:flex-start;
-    }
-    .modal-title{
-      margin:0;
-      font-size: 16px;
-      font-weight: 950;
-    }
-    .modal-sub{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: rgba(148,163,184,.95);
-      font-weight: 750;
-    }
-    .close-btn{
-      border: 1px solid rgba(255,255,255,.12);
-      background: transparent;
-      color: rgba(255,255,255,.9);
-      border-radius: 999px;
-      padding: 8px 10px;
-      cursor:pointer;
-      font-weight: 950;
-      line-height: 1;
-    }
-    .close-btn:hover{ background: rgba(255,255,255,.06); }
 
-    .modal-body{
-      padding: 14px 16px 16px;
+    .doc-card:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
     }
-    .kv{
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(15,20,28,.9);
-      border-radius: 16px;
-      padding: 12px;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
+
+    .doc-card.selected{
+      border-color: rgba(220,38,38,.65);
+      background: rgba(220,38,38,.10);
+      box-shadow: 0 22px 70px rgba(220,38,38,.15);
     }
-    .kv div{
+
+    .doc-pill{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      width: fit-content;
+      color: rgba(255,255,255,.86);
+    }
+
+    .doc-title{
+      font-weight: 950;
+      font-size: 15px;
+      color: #fff;
+      margin: 0;
+      letter-spacing: .2px;
+    }
+
+    .doc-sub{
+      color: rgba(255,255,255,.70);
+      font-size: 12.5px;
+      font-weight: 750;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .doc-check{
+      position:absolute;
+      top: 12px;
+      right: 12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
       display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.85);
+      font-weight: 950;
+      font-size: 14px;
+      opacity: .55;
     }
-    .kv div:last-child{ border-bottom: 0; }
-    .kv span{ color: rgba(148,163,184,.95); font-weight: 850; }
+
+    .doc-card.selected .doc-check{
+      opacity: 1;
+      background: rgba(220,38,38,.95);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    @media(max-width: 980px){
+      .doc-grid{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="dashboard.html">
-        <div class="brand-badge">FSS</div>
+  <div class="app-shell">
+    <header class="app-top">
+      <div class="app-brand">
+        <div class="app-logo">FSS</div>
         <div>
-          <strong>FSS</strong>
-          <span>Create Document</span>
+          <div class="app-title">Fill • Send • Sign</div>
+          <div class="app-sub">Create & Send Document</div>
         </div>
-      </a>
-
-      <div class="navlinks">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="create.html">Create</a>
-        <a href="sign.html">eSign</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="section">
-    <div class="container">
-      <div class="topbar">
-        <div>
-          <h2 style="margin:0;">Create NDA / Agreement</h2>
-          <div class="small">Demo: sending triggers a “client delivery” modal.</div>
-        </div>
-        <a class="btn btn-outline" href="dashboard.html">Back</a>
       </div>
 
-      <div class="card" style="margin-top:14px;">
-        <div class="badge">Step 1 of 2 — Parties</div>
-
-        <div class="form-grid">
-          <label class="full">
-            Document Title
-            <input id="title" placeholder="Example: Mutual NDA — FSS Demo" />
-          </label>
-
-          <label>
-            Document Type
-            <select id="type">
-              <option value="NDA">NDA</option>
-              <option value="Agreement">Agreement</option>
-              <option value="Event NDA">Event NDA</option>
-            </select>
-          </label>
-
-          <label>
-            Mode
-            <select id="mode">
-              <option value="Direct Signatory">Direct Signatory</option>
-              <option value="Intermediary">Intermediary</option>
-            </select>
-          </label>
-        </div>
-
-        <hr />
-
-        <div class="badge">Party A Information</div>
-        <div class="form-grid">
-          <label class="full">Company Name <input id="a_company" placeholder="Your Company" /></label>
-          <label>First Name <input id="a_first" placeholder="First name" /></label>
-          <label>Last Name <input id="a_last" placeholder="Last name" /></label>
-          <label class="full">Email <input id="a_email" placeholder="you@company.com" /></label>
-        </div>
-
-        <hr />
-
-        <div class="badge">Party B Information</div>
-        <div class="form-grid">
-          <label class="full">Company Name <input id="b_company" placeholder="Client Company" /></label>
-          <label>First Name <input id="b_first" placeholder="First name" /></label>
-          <label>Last Name <input id="b_last" placeholder="Last name" /></label>
-          <label class="full">Email <input id="b_email" placeholder="client@company.com" /></label>
-        </div>
-
-        <hr />
-
-        <div class="badge">Terms / Notes</div>
-        <label style="margin-top:10px;">
-          Notes (optional)
-          <textarea id="notes" placeholder="Add any notes, scope, or special terms..."></textarea>
-        </label>
-
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
-          <a class="btn btn-outline" href="dashboard.html">Cancel</a>
-          <button class="btn btn-primary" id="sendBtn" type="button">Send for Signature →</button>
-        </div>
-
-        <p id="msg" class="small" style="margin-top:12px; display:none; color:#fca5a5;">
-          Please enter a title and Party B email.
-        </p>
+      <div class="app-actions">
+        <a class="btn btn-outline" href="dashboard.html">← Dashboard</a>
+        <button class="btn btn-primary" id="sendBtn" type="button">Send for Signature</button>
       </div>
-    </div>
-  </main>
+    </header>
 
-  <!-- ✅ SENT MODAL -->
-  <div class="modal" id="sentModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <div>
-          <h3 class="modal-title">Document Sent</h3>
-          <p class="modal-sub">This simulates sending a DocuSign-style signing request.</p>
-        </div>
-        <button class="close-btn" id="closeModal" aria-label="Close">✕</button>
+    <main class="app-main">
+      <div class="layout-two">
+        <!-- Left -->
+        <aside class="panel">
+          <h2 class="panel-title">Document Setup</h2>
+          <p class="panel-sub">
+            Choose a template, add recipient details, then send.
+          </p>
+
+          <div class="info-block">
+            <label style="display:flex; flex-direction:column; gap:6px; font-weight:900; font-size:13px; color:#fff;">
+              Recipient Email*
+              <input
+                id="recipientEmail"
+                type="email"
+                placeholder="client@example.com"
+                style="padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:#fff; outline:none; font-size:14px;"
+              />
+            </label>
+
+            <label style="display:flex; flex-direction:column; gap:6px; font-weight:900; font-size:13px; color:#fff; margin-top:10px;">
+              Message (optional)
+              <textarea
+                id="message"
+                placeholder="Hi — please sign this document when you can."
+                style="padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color:#fff; outline:none; font-size:14px; resize:vertical; min-height:110px;"
+              ></textarea>
+            </label>
+
+            <div class="note" style="margin-top:12px;">
+              <strong>Demo note:</strong>
+              This simulates sending a signing request. No emails are sent.
+            </div>
+          </div>
+
+          <div class="info-block">
+            <div style="font-weight:950; color:#fff; margin-bottom:8px;">Selected Template</div>
+            <div class="info-row">
+              <span class="muted">Name</span>
+              <span id="selectedName" style="font-weight:950;">None</span>
+            </div>
+            <div class="info-row">
+              <span class="muted">File</span>
+              <span id="selectedFile" style="font-weight:950;">—</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right -->
+        <section class="panel panel-wide">
+          <h2 class="panel-title">Choose a Template</h2>
+          <p class="panel-sub">
+            These PDFs are stored inside <code style="opacity:.85;">/pdfs</code> and rendered using PDF.js on the signing screen.
+          </p>
+
+          <div class="doc-grid" id="docGrid"></div>
+        </section>
       </div>
+    </main>
 
-      <div class="modal-body">
-        <div class="badge">Delivery Summary</div>
-
-        <div class="kv" id="summary"></div>
-
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between;">
-          <a class="btn btn-outline" href="dashboard.html">Back to Dashboard</a>
-          <a class="btn btn-primary" href="email-preview.html">Continue → Email Preview</a>
-        </div>
-
-        <p class="small" style="margin-top:12px;">
-          Real product: email delivery, reminders, and PDF audit trail.
-        </p>
-      </div>
-    </div>
+    <footer class="app-foot">
+      <span>FSS Demo — Template selection</span>
+    </footer>
   </div>
 
-  <script type="module">
-    import { requireAuth, saveAgreement, uid } from "./assets/app.js";
+  <script src="assets/app.js"></script>
 
-    requireAuth();
+  <script>
+    // ================================
+    // Templates (your real PDFs)
+    // ================================
+    const templates = [
+      { name: "NDA", file: "nda.pdf", tag: "Confidentiality", desc: "Standard NDA for client/vendor discussions." },
+      { name: "Consulting Agreement", file: "consulting_agreement.pdf", tag: "Services", desc: "Basic consulting / service agreement template." },
+      { name: "Real Estate Agreement", file: "real-estate-agreement.pdf", tag: "Real Estate", desc: "Purchase/engagement agreement for property-related work." },
+      { name: "Non-Compete Agreement", file: "non-compete-agreement.pdf", tag: "Employment", desc: "Protect business interests and restrict competition." },
+      { name: "Lease Waiver", file: "lease-waiver.pdf", tag: "Liability", desc: "Waiver for lease-related situations." },
+      { name: "Event Accident Waiver", file: "event-accident-waiver.pdf", tag: "Events", desc: "Assumption of risk waiver for events." },
+      { name: "Photo Release", file: "Photo-Release.pdf", tag: "Media", desc: "Simple photo release consent form." }
+    ];
 
-    const params = new URLSearchParams(window.location.search);
-    const typeParam = params.get("type");
+    const docGrid = document.getElementById("docGrid");
+    const selectedName = document.getElementById("selectedName");
+    const selectedFile = document.getElementById("selectedFile");
 
-    const title = document.getElementById("title");
-    const type = document.getElementById("type");
-    const mode = document.getElementById("mode");
-
-    const msg = document.getElementById("msg");
+    const recipientEmail = document.getElementById("recipientEmail");
+    const message = document.getElementById("message");
     const sendBtn = document.getElementById("sendBtn");
 
-    const fields = {
-      a_company: document.getElementById("a_company"),
-      a_first: document.getElementById("a_first"),
-      a_last: document.getElementById("a_last"),
-      a_email: document.getElementById("a_email"),
-      b_company: document.getElementById("b_company"),
-      b_first: document.getElementById("b_first"),
-      b_last: document.getElementById("b_last"),
-      b_email: document.getElementById("b_email"),
-      notes: document.getElementById("notes"),
-    };
+    // Default select NDA unless something already chosen
+    let selectedTemplate = localStorage.getItem("fss_selected_pdf") || "nda.pdf";
 
-    if(typeParam){
-      const found = [...type.options].find(o => o.value === typeParam);
-      if(found) type.value = typeParam;
+    function niceName(file){
+      return file
+        .replace(/[-_]/g, " ")
+        .replace(".pdf", "")
+        .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    // demo defaults
-    title.value = "Mutual NDA — FSS Demo";
-    fields.a_company.value = "FSS Platform";
-    fields.a_first.value = "Mason";
-    fields.a_last.value = "Palmieri";
-    fields.a_email.value = "mason@palmweb.net";
-    fields.b_company.value = "Client Company";
-    fields.b_email.value = "client@company.com";
+    function renderTemplates(){
+      docGrid.innerHTML = "";
 
-    // Modal helpers
-    const modal = document.getElementById("sentModal");
-    const closeModal = document.getElementById("closeModal");
-    const summary = document.getElementById("summary");
+      templates.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "doc-card";
+        if(t.file === selectedTemplate) card.classList.add("selected");
 
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+        card.innerHTML = `
+          <div class="doc-check">✓</div>
+          <div class="doc-pill">${t.tag}</div>
+          <div>
+            <h3 class="doc-title">${t.name}</h3>
+            <p class="doc-sub">${t.desc}</p>
+          </div>
+        `;
+
+        card.addEventListener("click", () => {
+          selectedTemplate = t.file;
+          localStorage.setItem("fss_selected_pdf", selectedTemplate);
+          renderTemplates();
+          updateSelected();
+        });
+
+        docGrid.appendChild(card);
+      });
     }
-    function close(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+
+    function updateSelected(){
+      selectedName.textContent = niceName(selectedTemplate);
+      selectedFile.textContent = selectedTemplate;
     }
 
-    closeModal.addEventListener("click", close);
-    modal.addEventListener("click", (e) => { if(e.target === modal) close(); });
-
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && modal.classList.contains("show")) close();
-    });
+    // Pre-fill recipient if exists
+    const storedRecipient = localStorage.getItem("fss_recipient");
+    if(storedRecipient) recipientEmail.value = storedRecipient;
 
     sendBtn.addEventListener("click", () => {
-      msg.style.display = "none";
+      const email = recipientEmail.value.trim();
 
-      if(!title.value.trim() || !fields.b_email.value.trim()){
-        msg.style.display = "";
+      if(!email){
+        alert("Please enter a recipient email.");
+        recipientEmail.focus();
         return;
       }
 
-      const createdAt = Date.now();
-      const agreement = {
-        id: uid(),
-        createdAt,
-        title: title.value.trim(),
-        type: type.value,
-        mode: mode.value,
-        status: "Sent for Signature",
-        partyA: {
-          company: fields.a_company.value.trim(),
-          first: fields.a_first.value.trim(),
-          last: fields.a_last.value.trim(),
-          email: fields.a_email.value.trim(),
-        },
-        partyB: {
-          company: fields.b_company.value.trim(),
-          first: fields.b_first.value.trim(),
-          last: fields.b_last.value.trim(),
-          email: fields.b_email.value.trim(),
-        },
-        notes: fields.notes.value.trim(),
-        signatureDataUrl: null
-      };
+      // Store values
+      localStorage.setItem("fss_selected_pdf", selectedTemplate);
+      localStorage.setItem("fss_recipient", email);
+      localStorage.setItem("fss_message", message.value.trim());
 
-      saveAgreement(agreement);
+      // Save fake outgoing request for dashboard log
+      const outbox = JSON.parse(localStorage.getItem("fss_outbox") || "[]");
+      outbox.unshift({
+        id: crypto.randomUUID(),
+        file: selectedTemplate,
+        name: niceName(selectedTemplate),
+        recipient: email,
+        status: "Sent",
+        sentAt: new Date().toISOString()
+      });
+      localStorage.setItem("fss_outbox", JSON.stringify(outbox));
 
-      // Build modal summary
-      summary.innerHTML = `
-        <div><span>Recipient</span><b>${agreement.partyB.email}</b></div>
-        <div><span>Document</span><b>${agreement.title}</b></div>
-        <div><span>Type</span><b>${agreement.type}</b></div>
-        <div><span>Status</span><b>${agreement.status}</b></div>
-        <div><span>Timestamp</span><b>${new Date(createdAt).toLocaleString()}</b></div>
-      `;
-
-      openModal();
+      // Go sign
+      window.location.href = "sign.html";
     });
+
+    renderTemplates();
+    updateSelected();
   </script>
 </body>
 </html>
