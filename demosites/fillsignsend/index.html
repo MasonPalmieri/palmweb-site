@@ -3,127 +3,143 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Client Portal</title>
+  <title>Dashboard</title>
+  <meta name="theme-color" content="#0b0f14" />
+
   <link rel="stylesheet" href="assets/app.css" />
 </head>
-<body class="app dark">
 
-  <header class="topbar">
+<body class="dark">
+  <div class="topbar">
     <div class="brand">
-      <div class="logo">FSS</div>
-      <div>
-        <div class="title">Client Portal</div>
-        <div class="sub">Sign in to access agreements and documents.</div>
+      <div class="logo-badge">F</div>
+      <div class="brand-text">
+        <div class="brand-title">Client Portal</div>
+        <div class="brand-sub">Agreements • Signatures • Delivery</div>
       </div>
     </div>
 
-    <nav class="navlinks">
-      <a href="../../demos.html">Back</a>
-    </nav>
-  </header>
+    <div class="topbar-actions">
+      <a class="btn btn-ghost" href="create.html">New Agreement</a>
+      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+    </div>
+  </div>
 
-  <main class="page">
-    <div class="shell" style="max-width:980px;">
-      <section class="panel" style="padding:0; overflow:hidden;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; min-height:520px;">
+  <main class="container">
+    <div class="page-head">
+      <h1>Dashboard</h1>
+      <p>Manage agreements, view audit history, and send documents.</p>
+    </div>
 
-          <!-- Left -->
-          <div style="padding:22px; border-right:1px solid var(--border); background: rgba(0,0,0,.18);">
-            <h2 style="margin:0 0 10px;">Sign in to your account</h2>
-            <p class="muted" style="margin:0 0 16px;">
-              Demo access is password-protected. Use the credentials provided by PalmWeb.
-            </p>
+    <div class="grid-2">
+      <!-- LEFT -->
+      <section class="card">
+        <h2 class="card-title">Active Agreement</h2>
+        <p class="card-sub">Current envelope and status.</p>
 
-            <div class="divider"></div>
+        <div id="docBox" class="info-box"></div>
 
-            <label class="lbl">Email</label>
-            <input class="input" id="email" type="email" placeholder="demo@fss.com" />
-
-            <label class="lbl" style="margin-top:10px;">Password</label>
-            <input class="input" id="password" type="password" placeholder="••••••••" />
-
-            <div class="actions" style="margin-top:14px;">
-              <button class="btn primary" id="loginBtn" type="button">Login</button>
-              <button class="btn secondary" id="hintBtn" type="button">Need help?</button>
-            </div>
-
-            <p class="tiny muted" id="status" style="margin-top:12px;"></p>
-
-            <div class="divider"></div>
-            <p class="tiny muted">
-              This portal is a static demo. Documents are loaded directly from the repository and signed copies are generated in the browser.
-            </p>
-          </div>
-
-          <!-- Right -->
-          <div style="padding:22px; display:flex; align-items:center; justify-content:center;">
-            <div style="max-width:420px;">
-              <div style="font-size:42px; font-weight:1000; line-height:1.05;">
-                Create, send, and complete agreements online.
-              </div>
-              <p class="muted" style="margin-top:12px;">
-                A DocuSign-style experience built for modern teams. Select a document, assign parties, add a signature, and complete.
-              </p>
-
-              <div class="divider"></div>
-
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <div class="hintBox" style="flex:1;">
-                  <b>Fast</b>
-                  <div class="muted" style="margin-top:6px;">Simple workflows that save time.</div>
-                </div>
-                <div class="hintBox" style="flex:1;">
-                  <b>Secure</b>
-                  <div class="muted" style="margin-top:6px;">Access controlled for clients.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div class="actions">
+          <a class="btn btn-primary" href="create.html">Create / Edit</a>
+          <a class="btn btn-outline" href="sign.html">Fill + Sign</a>
         </div>
       </section>
+
+      <!-- RIGHT -->
+      <section class="card">
+        <h2 class="card-title">Audit Trail</h2>
+        <p class="card-sub">Recent events for the envelope.</p>
+
+        <div id="auditBox" class="audit-list"></div>
+      </section>
     </div>
+
+    <section class="card" style="margin-top:16px;">
+      <h2 class="card-title">Completed Document</h2>
+      <p class="card-sub">If the PDF has been signed, you can preview and download it here.</p>
+
+      <div id="signedPanel" class="signed-panel"></div>
+    </section>
   </main>
 
+  <!-- Load app.js as a script, not a link -->
+  <script src="assets/app.js"></script>
+
   <script>
-    // Demo login (static)
-    const loginBtn = document.getElementById("loginBtn");
-    const hintBtn = document.getElementById("hintBtn");
-    const statusEl = document.getElementById("status");
+    // Guard: must be logged in
+    FSS.guard();
 
-    const DEMO_EMAIL = "demo@fss.com";
-    const DEMO_PASSWORD = "hallam";
-
-    function setAuth(val){
-      localStorage.setItem("fss_auth", JSON.stringify(val));
-    }
-    function getAuth(){
-      const raw = localStorage.getItem("fss_auth");
-      try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+    // Ensure doc exists
+    if(!FSS.loadDocState()){
+      FSS.resetDoc();
+      FSS.logAudit("Envelope created (auto).");
     }
 
-    // Auto-redirect if already logged in
-    if(getAuth()){
-      window.location.href = "dashboard.html";
+    // Populate active doc
+    const d = FSS.loadDocState();
+    const docBox = document.getElementById("docBox");
+
+    docBox.innerHTML = `
+      <div class="kv">
+        <div><span>Envelope ID</span><strong>${FSS.escape(d.id)}</strong></div>
+        <div><span>Status</span><strong class="pill">${FSS.escape(d.status)}</strong></div>
+        <div><span>Template</span><strong>${FSS.escape(d.template)}</strong></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="kv">
+        <div><span>Sender</span><strong>${FSS.escape(d.parties.aName || "—")}</strong></div>
+        <div><span>Sender Email</span><strong>${FSS.escape(d.parties.aEmail || "—")}</strong></div>
+        <div><span>Recipient</span><strong>${FSS.escape(d.parties.bName || "—")}</strong></div>
+        <div><span>Recipient Email</span><strong>${FSS.escape(d.parties.bEmail || "—")}</strong></div>
+      </div>
+    `;
+
+    // Populate audit
+    const audit = FSS.loadAudit();
+    const auditBox = document.getElementById("auditBox");
+
+    if(!audit || audit.length === 0){
+      auditBox.innerHTML = `<div class="muted">No activity yet.</div>`;
+    } else {
+      auditBox.innerHTML = audit.slice(0, 10).map(a => `
+        <div class="audit-row">
+          <div class="audit-time">${FSS.escape(a.at)}</div>
+          <div class="audit-msg">${FSS.escape(a.msg)}</div>
+        </div>
+      `).join("");
     }
 
-    loginBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim().toLowerCase();
-      const pw = document.getElementById("password").value.trim();
+    // Signed PDF preview + download
+    const signedPanel = document.getElementById("signedPanel");
 
-      if(email === DEMO_EMAIL && pw === DEMO_PASSWORD){
-        setAuth({ email, at: Date.now() });
-        window.location.href = "dashboard.html";
-      } else {
-        statusEl.textContent = "Invalid email or password.";
-        statusEl.style.color = "#fda4af";
-      }
-    });
+    if(FSS.hasSignedPDF()){
+      const b64 = FSS.getSignedBase64();
+      const url = "data:application/pdf;base64," + b64;
 
-    hintBtn.addEventListener("click", () => {
-      alert("Demo login:\n\nEmail: demo@fss.com\nPassword: hallam");
+      signedPanel.innerHTML = `
+        <div class="signed-actions">
+          <a class="btn btn-primary" href="${url}" download="signed_${FSS.escape(d.template)}">Download Signed PDF</a>
+          <a class="btn btn-outline" href="${url}" target="_blank" rel="noreferrer">Open in New Tab</a>
+        </div>
+        <div class="pdf-frame">
+          <iframe src="${url}" title="Signed PDF Preview"></iframe>
+        </div>
+      `;
+    } else {
+      signedPanel.innerHTML = `
+        <div class="muted">
+          No signed PDF yet. Go to <strong>Fill + Sign</strong> to complete the document.
+        </div>
+      `;
+    }
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+      location.href = "index.html";
     });
   </script>
-
 </body>
 </html>
