@@ -1,126 +1,127 @@
-/* ============================================================================
+/* ============================================================
    FSS Demo App — app.js (Static / GitHub Pages)
-   - No backend. Uses localStorage for auth + envelope/doc state.
-   - Supports:
-     • Template PDFs in /pdfs/
-     • Custom PDFs (upload / builder) stored in localStorage as base64
-   - PDF Signing:
-     • Uses pdf-lib (must be available on pages that call generateSignedPDF)
-       <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-   ========================================================================== */
+   No backend. Uses localStorage.
+   Requires pdf-lib loaded on sign.html (window.PDFLib).
+============================================================ */
 
 window.FSS = (() => {
-  /* ============================= CONFIG ================================== */
-  const DEMO_PASSWORD = "hallam";        // demo gate password (index.html gate)
-  const DEMO_EMAIL = "demo@client.com";  // login email (index.html)
-  const DEMO_PASS  = "hallam";           // login password
+  /* =========================
+     CONFIG
+  ========================= */
+  const DEMO_PASSWORD = "hallam";       // demo gate password (optional)
+  const DEMO_LOGIN_EMAIL = "demo@client.com";
+  const DEMO_LOGIN_PASS  = "hallam";
 
   const STORE_KEYS = {
-    demoGate: "palmweb_demo_gate",
-    auth: "fss_auth",
-
-    doc: "fss_doc",
-    fields: "fss_fields",
-    values: "fss_values",
+    auth:  "fss_auth",
+    doc:   "fss_doc",
+    fields:"fss_fields",
+    values:"fss_values",
     audit: "fss_audit",
-
-    signed: "fss_signed_pdf_b64",
-    customPdf: "fss_custom_pdf_b64" // custom uploaded/built pdf base64
+    signed:"fss_signed_pdf_b64",
+    demoGate: "palmweb_demo_gate",
+    customPdf: "fss_custom_pdf_b64"
   };
 
-  /* ============================= HELPERS ================================= */
-  function escapeHtml(str = "") {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+  /* =========================
+     HELPERS
+  ========================= */
+  function safeJSONParse(str, fallback){
+    try { return JSON.parse(str); } catch(e){ return fallback; }
   }
 
-  function safeJSONParse(str, fallback) {
-    try { return JSON.parse(str); } catch { return fallback; }
-  }
-
-  function getKey(key, fallback = null) {
+  function getKey(key, fallback){
     const raw = localStorage.getItem(key);
-    if (raw === null || raw === undefined) return fallback;
+    if(raw === null || raw === undefined) return fallback;
     return safeJSONParse(raw, fallback);
   }
 
-  function setKey(key, value) {
+  function setKey(key, value){
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  function removeKey(key) {
+  function removeKey(key){
     localStorage.removeItem(key);
   }
 
-  function nowStamp() {
+  function nowStamp(){
     return new Date().toLocaleString();
   }
 
-  function uid() {
-    return String(Date.now()) + String(Math.floor(Math.random() * 100000));
+  function uid(){
+    return Math.random().toString(16).slice(2) + Date.now().toString(16);
   }
 
-  function isDemoUnlocked() {
-    return localStorage.getItem(STORE_KEYS.demoGate) === "true";
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
-  function unlockDemo() {
-    localStorage.setItem(STORE_KEYS.demoGate, "true");
+  function clamp(n, min, max){
+    return Math.max(min, Math.min(max, n));
   }
 
-  function isAuthed() {
+  /* =========================
+     AUTH
+  ========================= */
+  function isAuthed(){
     const auth = getKey(STORE_KEYS.auth, null);
-    return !!(auth && auth.email);
+    return !!(auth && auth.email && auth.ok === true);
   }
 
-  /* ============================== AUTH =================================== */
-  function login(email, password) {
-    email = String(email || "").trim().toLowerCase();
-    password = String(password || "").trim();
+  function login(email, password){
+    const em = String(email || "").trim().toLowerCase();
+    const pw = String(password || "").trim();
 
-    if (email !== DEMO_EMAIL || password !== DEMO_PASS) return false;
+    // allow demo creds only (static demo)
+    if(em === DEMO_LOGIN_EMAIL && pw === DEMO_LOGIN_PASS){
+      const auth = { ok:true, email: em, at: Date.now() };
+      setKey(STORE_KEYS.auth, auth);
+      logAudit(`Login successful (${em}).`);
+      return { ok:true };
+    }
 
-    setKey(STORE_KEYS.auth, { email, at: Date.now() });
-    logAudit(`Login successful (${email}).`);
-    return true;
+    return { ok:false, error: "Invalid demo credentials." };
   }
 
-  function logout() {
+  function logout(){
     removeKey(STORE_KEYS.auth);
     logAudit("Logged out.");
   }
 
-  function guard() {
-    // demo gate required
-    if (!isDemoUnlocked()) {
-      const path = location.pathname.toLowerCase();
-      if (!path.endsWith("/index.html") && !path.endsWith("/index")) {
-        location.href = "index.html";
-        return;
-      }
+  function guard(){
+    const path = location.pathname.toLowerCase();
+    const onLogin = path.endsWith("/index.html") || path.endsWith("/login.html") || path.endsWith("/");
+
+    if(!isAuthed() && !onLogin){
+      // bounce to login
+      location.replace("index.html");
+      return false;
     }
 
-    // login required for internal pages
-    const path = location.pathname.toLowerCase();
-    const isPublic = path.endsWith("/index.html") || path.endsWith("/index");
-    if (!isPublic && !isAuthed()) {
-      location.href = "index.html";
-      return;
+    // already authed but on login page? send to dashboard
+    if(isAuthed() && onLogin){
+      location.replace("dashboard.html");
+      return true;
     }
+
+    return true;
   }
 
-  /* ============================ DOC STATE ================================ */
-  function defaultDoc() {
+  /* =========================
+     DOC STATE
+  ========================= */
+  function defaultDoc(){
     return {
-      id: "ENV-" + uid(),
+      id: "ENV-" + Math.random().toString(36).slice(2,10).toUpperCase(),
       createdAt: new Date().toISOString(),
       template: "nda.pdf",
-      source: "template", // "template" | "custom"
-      status: "draft",    // "draft" | "sent" | "completed"
+      source: "template", // "template" | "custom" | "builder"
+      status: "draft",    // draft | sent | completed
       parties: {
         aName: "",
         aEmail: "",
@@ -130,573 +131,448 @@ window.FSS = (() => {
     };
   }
 
-  function loadDocState() {
+  function loadDocState(){
     return getKey(STORE_KEYS.doc, null);
   }
 
-  function saveDocState(doc) {
+  function saveDocState(doc){
     setKey(STORE_KEYS.doc, doc);
   }
 
-  function resetDoc() {
-    const d = defaultDoc();
-    saveDocState(d);
+  function resetDoc(){
+    saveDocState(defaultDoc());
     setKey(STORE_KEYS.fields, []);
     setKey(STORE_KEYS.values, {});
-    setKey(STORE_KEYS.audit, []);
     removeKey(STORE_KEYS.signed);
+    removeKey(STORE_KEYS.customPdf);
     logAudit("Envelope reset.");
-    return d;
   }
 
-  function setStatus(stage) {
-    const doc = loadDocState() || defaultDoc();
-    doc.status = stage;
-    saveDocState(doc);
-    logAudit(`Status updated: ${stage}.`);
-  }
-
-  /* ============================ AUDIT LOG ================================ */
-  function loadAudit() {
+  /* =========================
+     AUDIT
+  ========================= */
+  function loadAudit(){
     return getKey(STORE_KEYS.audit, []);
   }
 
-  function saveAudit(list) {
-    setKey(STORE_KEYS.audit, list);
+  function saveAudit(audit){
+    setKey(STORE_KEYS.audit, audit);
   }
 
-  function logAudit(message) {
+  function logAudit(message){
     const audit = loadAudit();
-    audit.unshift({ at: nowStamp(), msg: message });
+    audit.unshift({
+      at: nowStamp(),
+      msg: message
+    });
     saveAudit(audit);
   }
 
-  /* ============================= FIELDS ================================== */
-  function loadFields() {
+  /* =========================
+     FIELDS + VALUES
+  ========================= */
+  function loadFields(){
     return getKey(STORE_KEYS.fields, []);
   }
 
-  function saveFields(fields) {
+  function saveFields(fields){
     setKey(STORE_KEYS.fields, fields);
   }
 
-  function loadValues() {
+  function loadValues(){
     return getKey(STORE_KEYS.values, {});
   }
 
-  function saveValues(values) {
+  function saveValues(values){
     setKey(STORE_KEYS.values, values);
   }
 
-  function setFieldValue(fieldId, value) {
+  function setFieldValue(fieldId, value){
     const values = loadValues();
     values[fieldId] = value;
     saveValues(values);
   }
 
-  function getFieldValue(fieldId) {
+  function getFieldValue(fieldId){
     const values = loadValues();
     return values[fieldId] || "";
   }
 
-  /* ======================== SIGNED PDF STORAGE =========================== */
-  function setSignedBase64(b64) {
+  /* =========================
+     SIGNED PDF STORAGE
+  ========================= */
+  function setSignedBase64(b64){
     setKey(STORE_KEYS.signed, b64);
   }
 
-  function getSignedBase64() {
+  function getSignedBase64(){
     return getKey(STORE_KEYS.signed, null);
   }
 
-  function hasSignedPDF() {
+  function hasSignedPDF(){
     const b64 = getSignedBase64();
-    return !!(b64 && String(b64).length > 50);
+    return !!(b64 && typeof b64 === "string" && b64.length > 100);
   }
 
-  /* ======================== CUSTOM PDF STORAGE =========================== */
-  function setCustomPdfBase64(b64) {
+  /* =========================
+     CUSTOM PDF STORAGE
+  ========================= */
+  function setCustomPdfBase64(b64){
     setKey(STORE_KEYS.customPdf, b64);
   }
 
-  function getCustomPdfBase64() {
+  function getCustomPdfBase64(){
     return getKey(STORE_KEYS.customPdf, null);
   }
 
-  function hasCustomPdf() {
-    const b64 = getCustomPdfBase64();
-    return !!(b64 && String(b64).length > 50);
-  }
-
-  /* =========================== FILE HELPERS ============================== */
-  async function fetchAsArrayBuffer(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Failed to fetch PDF: " + url);
+  /* =========================
+     FILE HELPERS
+  ========================= */
+  async function fetchAsArrayBuffer(url){
+    const res = await fetch(url, { cache: "no-store" });
+    if(!res.ok) throw new Error(`Failed to fetch PDF: ${url}`);
     return await res.arrayBuffer();
   }
 
-  function arrayBufferToBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
+  function arrayBufferToBase64(buffer){
     let binary = "";
+    const bytes = new Uint8Array(buffer);
     const chunkSize = 0x8000;
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    for(let i=0; i<bytes.length; i+=chunkSize){
+      binary += String.fromCharCode(...bytes.subarray(i, i+chunkSize));
     }
     return btoa(binary);
   }
 
-  function base64ToUint8Array(b64) {
-    const bin = atob(b64);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return bytes;
-  }
-
-  function base64ToBlobURL(b64) {
-    const bytes = base64ToUint8Array(b64);
-    const blob = new Blob([bytes], { type: "application/pdf" });
+  function base64ToBlobURL(b64){
+    const byteChars = atob(b64);
+    const bytes = new Uint8Array(byteChars.length);
+    for(let i=0; i<byteChars.length; i++){
+      bytes[i] = byteChars.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type:"application/pdf" });
     return URL.createObjectURL(blob);
   }
 
-  /* ====================== FIELD UI OVERLAYS (SIGN) ======================= */
-  // This is used by sign.html to create draggable/editable overlays
-  function overlayFieldToHTML(field, value = "") {
-    const label = field.type === "signature" ? "Signature"
-                : field.type === "date" ? "Date"
-                : field.type === "text" ? "Text"
-                : "Field";
+  /* =========================
+     FIELD OVERLAY HTML
+  ========================= */
+  function overlayFieldToHTML(field, value){
+    const v = escapeHtml(value || "");
+    const type = escapeHtml(field.type || "");
+    const id = escapeHtml(field.id || "");
 
-    const display = value ? String(value) : label;
+    const left = `${field.x}px`;
+    const top  = `${field.y}px`;
+    const width = `${field.w}px`;
+    const height= `${field.h}px`;
+
+    const label = (v || type).slice(0,80);
 
     return `
       <div class="fss-field"
-           data-id="${escapeHtml(field.id)}"
-           data-type="${escapeHtml(field.type)}"
+           data-id="${id}"
            style="
              position:absolute;
-             left:${field.x}px; top:${field.y}px;
-             width:${field.w}px; height:${field.h}px;
-             border-radius:12px;
-             border: 2px solid ${field.type === "signature" ? "rgba(255,70,145,.85)" :
-                               field.type === "date" ? "rgba(104,255,171,.85)" :
-                               "rgba(120,180,255,.85)"};
-             background: rgba(255,255,255,.06);
-             box-shadow: 0 16px 40px rgba(0,0,0,.35);
-             cursor: move;
-             user-select:none;
+             left:${left};
+             top:${top};
+             width:${width};
+             height:${height};
+             border-radius: 12px;
+             border: 2px solid rgba(255,255,255,.18);
+             background: rgba(20,20,20,.55);
+             color: rgba(255,255,255,.95);
+             font-weight: 900;
+             font-size: 13px;
              display:flex;
              align-items:center;
              justify-content:center;
-             font-weight: 950;
-             font-size: 13px;
-             color: rgba(10,10,10,.82);
-             padding: 8px 10px;
-             backdrop-filter: blur(10px);
+             cursor: grab;
+             user-select:none;
+             box-shadow: 0 10px 28px rgba(0,0,0,.35);
            ">
-        <span style="
-          display:block;
-          width:100%;
-          text-align:center;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
-          color: rgba(0,0,0,.80);
-          font-weight: 950;
-        ">${escapeHtml(display)}</span>
-
-        <button class="fss-x"
-          title="Remove"
-          type="button"
-          style="
-            position:absolute;
-            top:-10px;
-            right:-10px;
-            width:28px;
-            height:28px;
-            border-radius:999px;
-            border:1px solid rgba(255,255,255,.35);
-            background: rgba(0,0,0,.65);
-            color:#fff;
-            font-weight:950;
-            cursor:pointer;
-          ">×</button>
+        <span class="fss-field-label">${label || type}</span>
+        <button class="fss-field-x"
+                title="Remove"
+                style="
+                  position:absolute;
+                  right:-10px;
+                  top:-10px;
+                  width: 26px;
+                  height:26px;
+                  border-radius: 999px;
+                  border: 1px solid rgba(255,255,255,.16);
+                  background: rgba(0,0,0,.65);
+                  color:#fff;
+                  font-weight: 900;
+                  cursor:pointer;
+                ">×</button>
       </div>
-    `.trim();
+    `;
   }
 
-  /**
-   * Attach draggable + editable behavior to overlays inside a container.
-   * containerEl must be the "PDF stage" wrapper (position: relative).
-   */
-  function enableOverlayEditing(containerEl, onChanged) {
-    if (!containerEl) return;
+  function enableOverlayEditing(layerEl){
+    if(!layerEl) return;
 
-    // drag support
-    let drag = null;
+    let dragId = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
 
-    function getMousePos(e) {
-      const rect = containerEl.getBoundingClientRect();
-      return {
-        x: (e.clientX - rect.left),
-        y: (e.clientY - rect.top)
-      };
+    function select(el){
+      layerEl.querySelectorAll(".fss-field").forEach(x => x.classList.remove("is-selected"));
+      if(el) el.classList.add("is-selected");
     }
 
-    function startDrag(e, el) {
-      const id = el.getAttribute("data-id");
+    layerEl.addEventListener("mousedown", (e) => {
+      const fieldEl = e.target.closest(".fss-field");
+      if(!fieldEl) return;
+
+      // remove click
+      if(e.target.classList.contains("fss-field-x")){
+        const id = fieldEl.getAttribute("data-id");
+        const fields = loadFields().filter(f => f.id !== id);
+        const values = loadValues();
+        delete values[id];
+        saveFields(fields);
+        saveValues(values);
+        logAudit("Removed field.");
+        renderLayer(layerEl);
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      dragId = fieldEl.getAttribute("data-id");
+      const rect = fieldEl.getBoundingClientRect();
+      dragOffsetX = e.clientX - rect.left;
+      dragOffsetY = e.clientY - rect.top;
+      fieldEl.style.cursor = "grabbing";
+      select(fieldEl);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if(!dragId) return;
+      const fields = loadFields();
+      const f = fields.find(x => x.id === dragId);
+      if(!f) return;
+
+      const parentRect = layerEl.getBoundingClientRect();
+      f.x = clamp(Math.round(e.clientX - parentRect.left - dragOffsetX), 0, parentRect.width - f.w);
+      f.y = clamp(Math.round(e.clientY - parentRect.top  - dragOffsetY), 0, parentRect.height - f.h);
+      saveFields(fields);
+
+      const el = layerEl.querySelector(`.fss-field[data-id="${dragId}"]`);
+      if(el){
+        el.style.left = f.x + "px";
+        el.style.top  = f.y + "px";
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      if(!dragId) return;
+      const el = layerEl.querySelector(`.fss-field[data-id="${dragId}"]`);
+      if(el) el.style.cursor = "grab";
+      dragId = null;
+    });
+
+    // double click to edit value
+    layerEl.addEventListener("dblclick", (e) => {
+      const fieldEl = e.target.closest(".fss-field");
+      if(!fieldEl) return;
+
+      const id = fieldEl.getAttribute("data-id");
       const fields = loadFields();
       const f = fields.find(x => x.id === id);
-      if (!f) return;
+      if(!f) return;
 
-      const pos = getMousePos(e);
-      drag = {
-        id,
-        el,
-        startX: pos.x,
-        startY: pos.y,
-        origX: f.x,
-        origY: f.y
-      };
-    }
+      const current = getFieldValue(id) || "";
+      const promptLabel = f.type === "signature" ? "Signature name:" :
+                          f.type === "date" ? "Date:" :
+                          "Text:";
+      const next = prompt(promptLabel, current);
+      if(next === null) return; // canceled
 
-    function moveDrag(e) {
-      if (!drag) return;
-      const fields = loadFields();
-      const f = fields.find(x => x.id === drag.id);
-      if (!f) return;
-
-      const pos = getMousePos(e);
-      const dx = pos.x - drag.startX;
-      const dy = pos.y - drag.startY;
-
-      f.x = Math.max(0, Math.round(drag.origX + dx));
-      f.y = Math.max(0, Math.round(drag.origY + dy));
-
-      // update element
-      drag.el.style.left = f.x + "px";
-      drag.el.style.top  = f.y + "px";
-
-      saveFields(fields);
-      if (onChanged) onChanged();
-    }
-
-    function endDrag() {
-      drag = null;
-    }
-
-    function editFieldValue(fieldId) {
-      const fields = loadFields();
-      const f = fields.find(x => x.id === fieldId);
-      if (!f) return;
-
-      const existing = getFieldValue(fieldId) || "";
-      const label = f.type === "signature" ? "Signature"
-                  : f.type === "date" ? "Date"
-                  : f.type === "text" ? "Text"
-                  : "Value";
-
-      let next = prompt(`Enter ${label} value:`, existing);
-
-      if (next === null) return; // cancelled
-      next = String(next).trim();
-
-      // optional defaults for signature/date if user leaves blank
-      if (!next && f.type === "signature") {
-        const doc = loadDocState() || defaultDoc();
-        next = doc.parties?.aName || "";
-      }
-      if (!next && f.type === "date") {
-        next = new Date().toLocaleDateString();
-      }
-
-      setFieldValue(fieldId, next);
-
-      // update overlay label
-      const el = containerEl.querySelector(`.fss-field[data-id="${CSS.escape(fieldId)}"] span`);
-      if (el) el.textContent = next || label;
-
-      if (onChanged) onChanged();
-    }
-
-    function removeField(fieldId) {
-      const fields = loadFields().filter(f => f.id !== fieldId);
-      saveFields(fields);
-
-      // also remove stored value
-      const values = loadValues();
-      delete values[fieldId];
-      saveValues(values);
-
-      const el = containerEl.querySelector(`.fss-field[data-id="${CSS.escape(fieldId)}"]`);
-      if (el) el.remove();
-
-      logAudit("Field removed.");
-      if (onChanged) onChanged();
-    }
-
-    // mouse interactions
-    containerEl.addEventListener("mousedown", (e) => {
-      const fieldEl = e.target.closest(".fss-field");
-      if (!fieldEl) return;
-
-      // clicking X removes
-      if (e.target.classList.contains("fss-x")) return;
-
-      startDrag(e, fieldEl);
+      setFieldValue(id, next);
+      logAudit(`Edited ${f.type} field.`);
+      renderLayer(layerEl);
     });
 
-    window.addEventListener("mousemove", (e) => moveDrag(e));
-    window.addEventListener("mouseup", () => endDrag());
-
-    // remove button
-    containerEl.addEventListener("click", (e) => {
-      if (!e.target.classList.contains("fss-x")) return;
-      const fieldEl = e.target.closest(".fss-field");
-      if (!fieldEl) return;
-      const id = fieldEl.getAttribute("data-id");
-      removeField(id);
-    });
-
-    // double-click to edit value
-    containerEl.addEventListener("dblclick", (e) => {
-      const fieldEl = e.target.closest(".fss-field");
-      if (!fieldEl) return;
-      const id = fieldEl.getAttribute("data-id");
-      editFieldValue(id);
-    });
-
-    // keyboard: if a field is "selected" (clicked), allow Enter to edit
-    containerEl.addEventListener("click", (e) => {
-      const fieldEl = e.target.closest(".fss-field");
-      containerEl.querySelectorAll(".fss-field").forEach(n => n.classList.remove("is-selected"));
-      if (fieldEl && !e.target.classList.contains("fss-x")) fieldEl.classList.add("is-selected");
-    });
-
+    // Enter key to edit selected
     window.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter") return;
-      const selected = containerEl.querySelector(".fss-field.is-selected");
-      if (!selected) return;
-      const id = selected.getAttribute("data-id");
-      editFieldValue(id);
+      if(e.key !== "Enter") return;
+      const selected = layerEl.querySelector(".fss-field.is-selected");
+      if(!selected) return;
+      selected.dispatchEvent(new MouseEvent("dblclick", { bubbles:true }));
     });
-
-    return { editFieldValue };
   }
 
-  /* ====================== PDF SIGNING / GENERATION ======================= */
-  /**
-   * Load the active PDF bytes:
-   * - If doc.source === "custom", load from fss_custom_pdf_b64
-   * - Else load from /pdfs/<doc.template>
-   */
-  async function loadActivePdfBytes() {
-    const doc = loadDocState() || defaultDoc();
+  function renderLayer(layerEl){
+    if(!layerEl) return;
+    const fields = loadFields();
+    const values = loadValues();
+    layerEl.innerHTML = fields.map(f => overlayFieldToHTML(f, values[f.id] || "")).join("");
+  }
 
-    if (doc.source === "custom") {
+  /* =========================
+     PDF SIGN GENERATOR (REAL)
+  ========================= */
+  async function getTemplateArrayBuffer(){
+    const doc = loadDocState();
+    if(!doc) throw new Error("No document state found.");
+
+    // CUSTOM PDF base64
+    if(doc.source === "custom"){
       const b64 = getCustomPdfBase64();
-      if (!b64) throw new Error("No custom PDF stored.");
-      return base64ToUint8Array(b64);
+      if(!b64) throw new Error("Custom PDF missing.");
+      const byteChars = atob(b64);
+      const bytes = new Uint8Array(byteChars.length);
+      for(let i=0; i<byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+      return bytes.buffer;
     }
 
+    // TEMPLATE in /pdfs
     const template = doc.template || "nda.pdf";
     const url = `pdfs/${encodeURIComponent(template)}`;
-    const buf = await fetchAsArrayBuffer(url);
-    return new Uint8Array(buf);
+    return await fetchAsArrayBuffer(url);
   }
 
-  /**
-   * This creates a real signed PDF in-browser using pdf-lib
-   * It embeds:
-   * - sender signature
-   * - date
-   * - any text fields
-   * It stores result in localStorage (base64)
-   */
-  async function generateSignedPDF() {
-    // This is the #1 cause of “Sign as sender” errors:
-    // PDFLib not loaded or blocked.
-    if (!window.PDFLib) {
-      console.error("pdf-lib not loaded. Add the pdf-lib script before app.js on sign.html.");
-      return { ok: false, error: "pdf-lib not loaded (PDFLib missing)." };
-    }
+  async function generateSignedPDF(){
+    try{
+      if(!window.PDFLib){
+        console.error("pdf-lib not loaded (window.PDFLib missing)");
+        return { ok:false, error:"pdf-lib not loaded. Ensure sign.html includes pdf-lib script." };
+      }
 
-    try {
-      const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+      const docState = loadDocState();
+      if(!docState) return { ok:false, error:"No document state found." };
 
-      const docState = loadDocState() || defaultDoc();
       const fields = loadFields();
       const values = loadValues();
 
-      if (!fields || fields.length === 0) {
-        return { ok: false, error: "No fields placed. Place Signature/Date/Text first." };
+      if(!fields || fields.length === 0){
+        return { ok:false, error:"No fields placed. Place Signature/Date/Text fields first." };
       }
 
-      const pdfBytes = await loadActivePdfBytes();
-      const pdfDoc = await PDFDocument.load(pdfBytes);
+      // ensure required signature + date have values
+      const req = fields.filter(f => f.required);
+      for(const f of req){
+        const v = values[f.id];
+        if(!v || String(v).trim() === ""){
+          return { ok:false, error:`Missing required value for: ${f.type}` };
+        }
+      }
+
+      const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+
+      const templateBuffer = await getTemplateArrayBuffer();
+      const pdfDoc = await PDFDocument.load(templateBuffer);
 
       const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
       const helvBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
+      // Basic strategy:
+      // This demo doesn't convert overlay pixels to real PDF points perfectly.
+      // But it will still produce a valid signed PDF, and positions will be roughly correct.
+      // For perfect placement: upgrade to PDF.js canvas rendering (next step).
+
       const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      const { width: pw, height: ph } = firstPage.getSize();
 
-      // Helper: clamp page index
-      const getPage = (pageNum) => {
-        const idx = Math.max(0, Math.min((pageNum || 1) - 1, pages.length - 1));
-        return pages[idx];
-      };
+      // assume overlay layer is roughly "page size" scaled.
+      // we map x/y as percentages of a 1000px base and apply to PDF.
+      // (this is stable across PDFs with different sizes)
+      function mapX(x){ return (x / 1000) * pw; }
+      function mapY(y){ return ph - ((y / 1000) * ph); } // invert Y
 
-      // We place text using approximate mapping:
-      // sign.html overlays are pixel coords relative to the PDF viewer stage,
-      // NOT actual PDF coords. In a real solution we’d map canvas coords → PDF coords.
-      //
-      // For this demo, we assume stage coords roughly match a portrait PDF view.
-      // So we use a “best effort” conversion based on page width/height ratio.
-      //
-      // If your stage always represents the page at 1:1, this works nicely.
-      function overlayToPdfCoords(page, field) {
+      for(const f of fields){
+        const pageIndex = Math.max(0, (f.page || 1) - 1);
+        const page = pages[pageIndex] || pages[0];
         const { width, height } = page.getSize();
 
-        // these are "overlay pixels"
-        const x = field.x;
-        const y = field.y;
-        const w = field.w;
-        const h = field.h;
+        const x = (f.x / 1000) * width;
+        const y = height - ((f.y / 1000) * height) - 14;
 
-        // Convert overlay top-left to PDF bottom-left
-        // We treat overlay height as same as page height (approx),
-        // so we flip Y.
-        const pdfX = x;
-        const pdfY = height - (y + h);
+        const text = String(values[f.id] || "");
+        if(!text) continue;
 
-        return { pdfX, pdfY, pdfW: w, pdfH: h };
-      }
+        const fontSize = f.type === "signature" ? 14 : 12;
+        const font = f.type === "signature" ? helvBold : helv;
 
-      // Draw all fields
-      for (const f of fields) {
-        const page = getPage(f.page || 1);
-        const { pdfX, pdfY, pdfW, pdfH } = overlayToPdfCoords(page, f);
-
-        const v = (values[f.id] || "").trim();
-
-        // faint box so the signed PDF visibly contains the fields
         page.drawRectangle({
-          x: pdfX,
-          y: pdfY,
-          width: pdfW,
-          height: pdfH,
-          borderWidth: 1,
-          borderColor: rgb(0.2, 0.2, 0.2),
-          color: rgb(1, 1, 1),
-          opacity: 0.0
+          x: x - 4,
+          y: y - 10,
+          width: (f.w / 1000) * width + 8,
+          height: 26,
+          color: rgb(0,0,0),
+          opacity: 0.06,
+          borderColor: rgb(0.15,0.15,0.15),
+          borderWidth: 0.5
         });
 
-        // signature/date/text rendering
-        if (f.type === "signature") {
-          const sig = v || docState.parties?.aName || "Signed";
-          page.drawText(sig, {
-            x: pdfX + 8,
-            y: pdfY + (pdfH / 2) - 6,
-            size: Math.min(16, Math.max(10, pdfH * 0.45)),
-            font: helvBold,
-            color: rgb(0.05, 0.05, 0.05),
-            opacity: 0.92
-          });
-        }
-
-        if (f.type === "date") {
-          const dateVal = v || new Date().toLocaleDateString();
-          page.drawText(dateVal, {
-            x: pdfX + 8,
-            y: pdfY + (pdfH / 2) - 5,
-            size: Math.min(12, Math.max(9, pdfH * 0.42)),
-            font: helv,
-            color: rgb(0.05, 0.05, 0.05),
-            opacity: 0.92
-          });
-        }
-
-        if (f.type === "text") {
-          const textVal = v || "";
-          page.drawText(textVal, {
-            x: pdfX + 8,
-            y: pdfY + (pdfH / 2) - 5,
-            size: Math.min(12, Math.max(9, pdfH * 0.42)),
-            font: helv,
-            color: rgb(0.05, 0.05, 0.05),
-            opacity: 0.92
-          });
-        }
+        page.drawText(text, {
+          x,
+          y,
+          size: fontSize,
+          font,
+          color: rgb(0.15,0.15,0.15)
+        });
       }
 
-      // Add footer audit stamp
+      // add footer / audit stamp
       const last = pages[pages.length - 1];
-      const footer = `Signed via FSS Demo • ${nowStamp()} • Sender: ${docState.parties?.aEmail || "—"} • Recipient: ${docState.parties?.bEmail || "—"}`;
+      const footer = `Signed via FSS Demo • ${nowStamp()} • Sender: ${docState.parties.aEmail || "—"} • Recipient: ${docState.parties.bEmail || "—"}`;
       last.drawText(footer, {
-        x: 28,
+        x: 26,
         y: 18,
-        size: 9,
+        size: 8,
         font: helv,
-        color: rgb(0.35, 0.35, 0.35),
-        opacity: 0.85
+        color: rgb(0.35,0.35,0.35)
       });
 
-      const outBytes = await pdfDoc.save();
-      const b64 = arrayBufferToBase64(outBytes.buffer);
+      const signedBytes = await pdfDoc.save();
+      const b64 = arrayBufferToBase64(signedBytes);
 
       setSignedBase64(b64);
-      logAudit("Signed PDF generated.");
-
-      return { ok: true, base64: b64 };
-    } catch (err) {
+      return { ok:true };
+    }catch(err){
       console.error("generateSignedPDF error:", err);
-      return { ok: false, error: err?.message || String(err) };
+      return { ok:false, error: err?.message || String(err) };
     }
   }
 
-  /* ========================== PUBLIC API ================================ */
+  /* =========================
+     PUBLIC API
+  ========================= */
   return {
-    // config / demo gate
-    DEMO_PASSWORD,
-    isDemoUnlocked,
-    unlockDemo,
-
     // auth
-    login,
-    logout,
-    isAuthed,
-    guard,
+    login, logout, guard, isAuthed,
 
     // doc
-    defaultDoc,
-    loadDocState,
-    saveDocState,
-    resetDoc,
-    setStatus,
+    defaultDoc, loadDocState, saveDocState, resetDoc,
 
     // audit
-    loadAudit,
-    logAudit,
+    loadAudit, logAudit,
 
     // fields
-    uid,
-    loadFields,
-    saveFields,
-    loadValues,
-    saveValues,
-    setFieldValue,
-    getFieldValue,
-    overlayFieldToHTML,
-    enableOverlayEditing,
+    loadFields, saveFields, loadValues, saveValues,
+    setFieldValue, getFieldValue,
 
-    // signed
-    generateSignedPDF,
-    hasSignedPDF,
-    getSignedBase64,
-    setSignedBase64,
-    base64ToBlobURL,
+    // pdf storage
+    setSignedBase64, getSignedBase64, hasSignedPDF,
 
     // custom pdf
-    setCustomPdfBase64,
-    getCustomPdfBase64,
-    hasCustomPdf
+    setCustomPdfBase64, getCustomPdfBase64,
+
+    // helpers
+    uid, escapeHtml, base64ToBlobURL,
+
+    // overlays
+    overlayFieldToHTML,
+    enableOverlayEditing,
+    renderLayer,
+
+    // signing
+    generateSignedPDF
   };
 })();
