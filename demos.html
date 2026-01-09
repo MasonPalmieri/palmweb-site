@@ -3,64 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb — Demos</title>
-  <meta name="description" content="PalmWeb demo samples for prospective customers." />
+  <title>Client Demos</title>
+  <meta name="description" content="Password protected demo portal." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
       --blue:#1d79c6;
       --green:#2cab4b;
-      --blueSoft:#eaf5ff;
-      --greenSoft:#eafaf0;
-
       --bg:#ffffff;
       --panel:#ffffff;
       --panel2:#f7fbff;
       --border:#e5e7eb;
-
       --text:#0f172a;
       --muted:#475569;
-
       --shadow: 0 14px 34px rgba(15,23,42,.10);
       --radius: 18px;
-      --max: 1120px;
+      --max: 1000px;
     }
-
     *{ box-sizing:border-box; }
     html,body{
       margin:0;
       padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
+      background: radial-gradient(900px 420px at 10% -5%, rgba(29,121,198,.16), transparent 60%),
+                  radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
+                  var(--bg);
       color: var(--text);
       line-height: 1.55;
     }
+    a{ color: inherit; text-decoration:none; }
 
-    a{ color: inherit; }
-    img{ max-width:100%; display:block; }
-
-    .container{
+    .wrap{
       max-width: var(--max);
       margin: 0 auto;
-      padding: 0 18px;
+      padding: 18px 16px 40px;
     }
 
-    /* HEADER */
     header{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 18px;
+      gap: 14px;
       padding: 14px 0;
     }
 
@@ -68,53 +52,22 @@
       display:flex;
       align-items:center;
       gap: 12px;
-      text-decoration:none;
-      min-width: 0;
+      font-weight: 950;
+      letter-spacing: .2px;
     }
 
-    .brand img{
+    .badge{
       width: 42px;
       height: 42px;
-      object-fit: contain;
-      border-radius: 12px;
-      flex: 0 0 auto;
-    }
-
-    .brand-title{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width:0;
-    }
-
-    .brand-title strong{
-      font-size: 14px;
-      letter-spacing: .2px;
-      font-weight: 950;
-    }
-
-    .brand-title span{
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 750;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 520px;
-    }
-
-    nav{
+      border-radius: 14px;
       display:flex;
       align-items:center;
-      gap: 18px;
+      justify-content:center;
+      background: linear-gradient(135deg, rgba(29,121,198,.18), rgba(44,171,75,.16));
+      border: 1px solid rgba(29,121,198,.22);
+      box-shadow: var(--shadow);
+      font-weight: 1000;
     }
-    nav a{
-      text-decoration:none;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: 14px;
-    }
-    nav a:hover{ color: var(--text); }
 
     .btn{
       display:inline-flex;
@@ -123,7 +76,6 @@
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid transparent;
-      text-decoration:none;
       font-weight: 950;
       cursor:pointer;
       transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
@@ -132,72 +84,57 @@
     }
     .btn:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      color:#fff;
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 12px 26px rgba(29,121,198,.22);
-    }
-    .btn-primary:hover{
-      box-shadow: 0 16px 34px rgba(29,121,198,.28);
-    }
-
     .btn-outline{
       background: #fff;
       border: 1px solid var(--border);
       color: var(--text);
     }
-    .btn-outline:hover{ background: #f8fafc; }
+    .btn-outline:hover{ background:#f8fafc; }
 
-    /* HERO */
-    .hero{
-      padding: 52px 0 28px;
-      background:
-        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.20), transparent 60%),
-        radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.16), transparent 60%),
-        linear-gradient(180deg, var(--panel2), #fff 60%);
-      border-bottom: 1px solid var(--border);
+    .btn-primary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      box-shadow: 0 12px 26px rgba(29,121,198,.18);
     }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-      align-items:start;
-    }
-
-    .hero h1{
-      margin: 0 0 12px;
-      font-size: clamp(30px, 4vw, 46px);
-      line-height: 1.05;
-      letter-spacing: -0.8px;
-    }
-
-    .hero p{
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 16px;
-      max-width: 62ch;
-    }
-
-    .hero-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    /* CARD */
     .card{
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       border: 1px solid rgba(229,231,235,.85);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 18px;
-      position: relative;
-      overflow:hidden;
     }
 
-    .card::before{
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.6px;
+    }
+    p{ margin:0; color: var(--muted); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .demo{
+      background:#fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      position:relative;
+      overflow:hidden;
+      min-height: 180px;
+    }
+
+    .demo::before{
       content:"";
       position:absolute;
       inset:-2px;
@@ -206,29 +143,9 @@
         radial-gradient(260px 140px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
       pointer-events:none;
     }
-    .card > *{ position:relative; }
+    .demo > *{ position:relative; }
 
-    /* GRID */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .demo-card h3{
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 950;
-    }
-
-    .demo-card p{
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .pill{
+    .tag{
       display:inline-flex;
       padding: 7px 10px;
       border-radius: 999px;
@@ -238,17 +155,30 @@
       background: rgba(29,121,198,.08);
       width: fit-content;
       color:#0b3a5f;
-      margin-bottom: 10px;
     }
 
-    /* Inputs */
-    label{
+    .demo h3{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+    .demo p{
+      font-size: 14px;
+    }
+
+    .demo .actions{
+      margin-top:auto;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    .gate{
       display:flex;
       flex-direction:column;
-      gap: 6px;
-      font-weight: 900;
-      font-size: 13px;
-      color: var(--text);
+      gap: 10px;
+      margin-top: 14px;
     }
 
     input{
@@ -260,203 +190,121 @@
       outline:none;
       font-size: 14px;
     }
-
     input:focus{
       border-color: rgba(29,121,198,.55);
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
 
-    footer{
-      border-top: 1px solid var(--border);
-      background:#fff;
-      padding: 18px 0;
-      color:#64748b;
-      font-size: 12px;
-      text-align:center;
+    .err{
+      color:#dc2626;
+      font-weight: 850;
+      font-size: 13px;
+      display:none;
     }
 
-    @media (max-width: 980px){
-      .hero-grid{ grid-template-columns: 1fr; }
+    @media(max-width: 860px){
       .grid{ grid-template-columns: 1fr; }
-      nav{ display:none; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="index.html">
-        <img src="assets/logo.png" alt="PalmWeb logo" />
-        <div class="brand-title">
-          <strong>PalmWeb</strong>
-          <span>Websites • Automation • Consulting</span>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="badge">PW</div>
+        <div>
+          <div style="font-weight:1000;">Client Demos</div>
+          <div style="font-size:12px; color:var(--muted); font-weight:750;">Confidential portal</div>
         </div>
-      </a>
+      </div>
 
-      <nav aria-label="Main">
-        <a href="index.html#services">Services</a>
-        <a href="index.html#work">Work</a>
-        <a href="demos.html">Demos</a>
-        <a href="index.html#faq">FAQ</a>
-        <a href="index.html#about">About</a>
-        <a class="btn btn-primary" href="index.html#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-outline" href="index.html">← Back to PalmWeb</a>
+      </div>
+    </header>
 
-  <main class="hero">
-    <div class="container hero-grid">
-      <section>
-        <h1>Demos</h1>
-        <p>
-          These demos are for prospective customers. Enter the password to unlock and preview sample solutions.
-        </p>
+    <div class="card">
+      <h1>Confidential demos</h1>
+      <p>Enter password to view and open client demos.</p>
 
-        <div class="hero-actions">
-          <a class="btn btn-outline" href="index.html">Back to Home</a>
+      <div id="gate" class="gate">
+        <input id="pw" type="password" placeholder="Password" autocomplete="off" />
+        <div class="err" id="err">Incorrect password.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="enterBtn" type="button">Enter</button>
+          <button class="btn btn-outline" id="clearBtn" type="button">Clear</button>
         </div>
+      </div>
 
-        <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
-          Demo portal access is password protected.
-        </p>
-      </section>
-
-      <!-- Password Box -->
-      <aside class="card" id="loginBox">
-        <div class="pill">Protected Access</div>
-        <h2 style="margin:0 0 10px; font-size:18px; font-weight:950;">Enter Password</h2>
-
-        <label style="max-width:420px;">
-          Password
-          <input id="pw" type="password" placeholder="Enter password" />
-        </label>
-
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-primary" id="unlockBtn" type="button">Unlock</button>
-          <button class="btn btn-outline" id="lockBtn" type="button" style="display:none;">Lock</button>
-        </div>
-
-        <p id="msg" style="margin:12px 0 0; color:#b91c1c; font-weight:800; display:none;">
-          Incorrect password.
-        </p>
-
-        <p style="margin-top:12px; font-size:12px; color:#64748b; font-weight:700;">
-          If you need access, email <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
-        </p>
-      </aside>
-    </div>
-  </main>
-
-  <!-- Demo content -->
-  <section style="padding:44px 0;">
-    <div class="container">
-
-      <div class="card" id="demosBox" style="display:none;">
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-          <div>
-            <h2 style="margin:0; font-size:22px; font-weight:950;">Available Demos</h2>
-            <p style="margin-top:6px; color:var(--muted); font-size:14px;">
-              Click a demo to open it in a new tab.
-            </p>
-          </div>
-
-          <button class="btn btn-outline" id="lockBtn2" type="button">Lock</button>
-        </div>
-
+      <div id="demos" style="display:none;">
         <div class="grid">
-          <!-- FSS DEMO -->
-          <div class="card demo-card" style="min-height:auto;">
-            <div class="pill">SaaS Platform</div>
-            <h3>FSS — Fill • Sign • Send</h3>
-            <p>Users create agreements and NDAs, send to clients, and complete eSign (DocuSign-like flow).</p>
-            <a class="btn btn-outline" href="demosites/fillsignsend/index.html" target="_blank" rel="noreferrer">
-              Open FSS Demo
-            </a>
+          <div class="demo">
+            <div class="tag">Client Portal</div>
+            <h3>Document Workflow Demo</h3>
+            <p>A DocuSign-style flow: select a PDF, assign parties, sign, complete, and download a signed copy.</p>
+            <div class="actions">
+              <a class="btn btn-primary" href="demosites/fillsignsend/index.html">Open demo</a>
+              <a class="btn btn-outline" href="demosites/fillsignsend/dashboard.html">Dashboard</a>
+            </div>
           </div>
 
-          <!-- Placeholder demo -->
-          <div class="card demo-card" style="min-height:auto;">
-            <div class="pill">Website</div>
-            <h3>Small Business Website</h3>
-            <p>Clean business template with modern layout and contact flow (placeholder).</p>
-            <a class="btn btn-outline" href="index.html#work">
-              View examples
-            </a>
+          <div class="demo">
+            <div class="tag">Coming soon</div>
+            <h3>Additional demo slot</h3>
+            <p>Future client demos will appear here after password entry.</p>
+            <div class="actions">
+              <button class="btn btn-outline" type="button" disabled>Locked</button>
+            </div>
           </div>
         </div>
 
-        <p style="margin-top:16px; font-size:12px; color:#64748b; font-weight:700;">
-          Demos are intended for preview only.
+        <p style="margin-top:14px; font-size:12px; color:var(--muted); font-weight:750;">
+          Demo login (inside portal): <b>demo@fss.com</b> / <b>hallam</b>
         </p>
       </div>
     </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      © <span id="year"></span> PalmWeb. All rights reserved.
-    </div>
-  </footer>
+  </div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const ACCESS_PASSWORD = "hallam";
 
-    // ✅ Password for demo portal
-    const DEMO_PASSWORD = "hallam";
-
-    const loginBox = document.getElementById("loginBox");
-    const demosBox = document.getElementById("demosBox");
+    const gate = document.getElementById("gate");
+    const demos = document.getElementById("demos");
 
     const pw = document.getElementById("pw");
-    const msg = document.getElementById("msg");
-
-    const unlockBtn = document.getElementById("unlockBtn");
-    const lockBtn = document.getElementById("lockBtn");
-    const lockBtn2 = document.getElementById("lockBtn2");
+    const enterBtn = document.getElementById("enterBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const err = document.getElementById("err");
 
     function unlock(){
-      demosBox.style.display = "";
-      lockBtn.style.display = "";
-      msg.style.display = "none";
-      pw.value = "";
-      localStorage.setItem("palmweb_demos_unlocked", "true");
+      gate.style.display = "none";
+      demos.style.display = "";
     }
 
-    function lock(){
-      demosBox.style.display = "none";
-      lockBtn.style.display = "none";
-      msg.style.display = "none";
-      pw.value = "";
-      localStorage.removeItem("palmweb_demos_unlocked");
-      pw.focus();
-    }
-
-    function tryUnlock(){
-      const entered = pw.value.trim();
-      if(entered === DEMO_PASSWORD){
-        unlock();
-        return;
-      }
-      msg.style.display = "";
-      pw.focus();
-      pw.select();
-    }
-
-    // Restore unlock state
-    if(localStorage.getItem("palmweb_demos_unlocked") === "true"){
+    // If user came from index modal (session flag), auto-unlock
+    if(sessionStorage.getItem("pw_demo_access") === "true"){
       unlock();
     }
 
-    unlockBtn.addEventListener("click", tryUnlock);
-    lockBtn.addEventListener("click", lock);
-    lockBtn2.addEventListener("click", lock);
-
-    pw.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        e.preventDefault();
-        tryUnlock();
+    function tryEnter(){
+      if(pw.value.trim() === ACCESS_PASSWORD){
+        sessionStorage.setItem("pw_demo_access", "true");
+        unlock();
+      } else {
+        err.style.display = "block";
+        pw.focus();
       }
+    }
+
+    enterBtn.addEventListener("click", tryEnter);
+    clearBtn.addEventListener("click", () => {
+      pw.value = "";
+      err.style.display = "none";
+      pw.focus();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" && gate.style.display !== "none") tryEnter();
     });
   </script>
 </body>
