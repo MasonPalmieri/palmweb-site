@@ -3,258 +3,182 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sign & Send • FSS Demo</title>
+  <title>Sign & Send • Client Demo</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 18px 40px;
-    }
-
-    .page-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-      margin-bottom: 12px;
-    }
-
-    .page-head h1{
-      margin: 0;
-      font-size: 18px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-
-    .page-head p{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 750;
-      max-width: 72ch;
-      line-height: 1.5;
-    }
+    .wrap{ max-width:1200px; margin:0 auto; padding:18px 18px 40px; }
+    .page-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .page-head h1{ margin:0; font-size:18px; font-weight:950; letter-spacing:-.2px; }
+    .page-head p{ margin:6px 0 0; font-size:13px; color:var(--muted); font-weight:750; max-width:72ch; line-height:1.5; }
 
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      width: fit-content;
-      white-space: nowrap;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      font-weight:850; font-size:13px;
+      color:rgba(255,255,255,.92);
+      width:fit-content; white-space:nowrap;
     }
-    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.25); }
-    .pill[data-state="sender"] .dot{ background: rgba(67,203,255,.95); }
-    .pill[data-state="ready"] .dot{ background: rgba(96,255,157,.95); }
-    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="recipient"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
+    .pill .dot{ width:9px; height:9px; border-radius:999px; background:rgba(255,255,255,.25); }
+    .pill[data-state="sender"] .dot{ background:rgba(67,203,255,.95); }
+    .pill[data-state="ready"] .dot{ background:rgba(96,255,157,.95); }
+    .pill[data-state="sent"] .dot{ background:rgba(255,196,82,.95); }
+    .pill[data-state="completed"] .dot{ background:rgba(96,255,157,.95); }
 
-    .layout{
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap: 14px;
-      align-items:start;
-      margin-top: 10px;
-    }
+    .layout{ display:grid; grid-template-columns:360px 1fr; gap:14px; align-items:start; margin-top:10px; }
 
     .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      padding:14px;
     }
+    .card h2{ margin:0; font-size:14px; font-weight:950; letter-spacing:-.1px; }
+    .card p{ margin:8px 0 0; color:rgba(255,255,255,.72); font-weight:750; font-size:13px; line-height:1.5; }
 
-    .card h2{
-      margin: 0;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.1px;
-    }
+    .divider{ height:1px; background:rgba(255,255,255,.08); margin:12px 0; }
 
-    .card p{
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      margin: 12px 0;
-    }
-
-    .info{
-      display:grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
+    .info{ display:grid; gap:10px; margin-top:10px; }
     .info .row{
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
+      padding:10px 12px; border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
     }
+    .info .label{ font-size:12px; font-weight:900; color:rgba(255,255,255,.60); margin-bottom:6px; }
+    .info .value{ font-size:13px; font-weight:950; color:rgba(255,255,255,.92); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-    .info .label{
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(255,255,255,.60);
-      margin-bottom: 6px;
-    }
-
-    .info .value{
-      font-size: 13px;
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 12px;
-    }
-
-    .btn-lg{
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 950;
-    }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .btn-lg{ padding:12px 16px; border-radius:14px; font-size:14px; font-weight:950; }
 
     .btn-muted{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-    }
-    .btn-muted:hover{ background: rgba(255,255,255,.09); }
-
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
-      font-weight: 750;
-      line-height: 1.45;
-    }
-
-    /* Viewer */
-    .viewer-card{
-      overflow:hidden;
-      padding: 0;
-    }
-
-    .viewer-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.25);
-    }
-
-    .viewer-title{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      min-width:0;
-    }
-
-    .badge{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      font-weight: 950;
-    }
-
-    .viewer-title strong{
-      font-weight: 950;
-      font-size: 13px;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .viewer-tools{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .tool{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-weight: 900;
-      cursor:pointer;
-      user-select:none;
-      font-size: 13px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      text-decoration:none;
       display:inline-flex;
       align-items:center;
-      gap: 8px;
-      white-space: nowrap;
+      justify-content:center;
     }
-    .tool:hover{ background: rgba(255,255,255,.09); }
+    .btn-muted:hover{ background:rgba(255,255,255,.09); }
+
+    .hint{ margin-top:10px; font-size:12px; color:rgba(255,255,255,.62); font-weight:750; line-height:1.45; }
+
+    .viewer-card{ overflow:hidden; padding:0; }
+    .viewer-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.25);
+    }
+    .viewer-title{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .badge{
+      width:34px; height:34px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:950;
+    }
+    .viewer-title strong{ font-weight:950; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .viewer-tools{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .tool{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .tool:hover{ background:rgba(255,255,255,.09); }
 
     .viewer-body{
-      padding: 16px 18px 18px;
+      padding:16px 18px 18px;
       background: radial-gradient(900px 450px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
     }
 
-    /* Make the PDF very readable */
+    /* Crisp readable PDF */
     #pdfFrame{
-      width: 100%;
-      height: min(78vh, 860px);
-      border: 0;
-      border-radius: 18px;
-      background: #fff;
-      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+      width:100%;
+      height:min(78vh, 860px);
+      border:0;
+      border-radius:18px;
+      background:#fff;
+      box-shadow:0 18px 50px rgba(0,0,0,.45);
     }
 
-    /* Status message */
     .status{
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.84);
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      font-weight:850;
+      font-size:13px;
+      color:rgba(255,255,255,.84);
     }
-    .status.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
-    .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
-    .status.bad{ border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.08); }
+    .status.good{ border-color:rgba(96,255,157,.30); background:rgba(96,255,157,.08); }
+    .status.warn{ border-color:rgba(255,196,82,.30); background:rgba(255,196,82,.08); }
+    .status.bad{ border-color:rgba(255,79,99,.30); background:rgba(255,79,99,.08); }
 
-    @media (max-width: 1020px){
-      .layout{ grid-template-columns: 1fr; }
-      #pdfFrame{ height: 70vh; }
+    /* signature modal */
+    .modal{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      z-index:999;
+    }
+    .modal.show{ display:flex; }
+    .modal-card{
+      width:min(560px, 100%);
+      background:#0b0f14;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 22px 70px rgba(0,0,0,.55);
+    }
+    .modal-card h3{ margin:0; font-size:16px; font-weight:950; }
+    .modal-card p{ margin:8px 0 0; color:rgba(255,255,255,.72); font-weight:750; font-size:13px; }
+    .sig-row{ display:grid; gap:10px; margin-top:14px; }
+    .sig-row label{ font-weight:900; font-size:13px; color:rgba(255,255,255,.86); display:grid; gap:6px; }
+    .sig-row input{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.92);
+      outline:none;
+      font-weight:850;
+    }
+    .sig-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; justify-content:flex-end; }
+    .sig-preview{
+      margin-top:12px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,.18);
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+    .sig-font{
+      font-family: "Brush Script MT", "Segoe Script", "Pacifico", cursive;
+      font-size:34px;
+      line-height:1;
+      color:rgba(255,255,255,.92);
+    }
+
+    @media (max-width:1020px){
+      .layout{ grid-template-columns:1fr; }
+      #pdfFrame{ height:70vh; }
     }
   </style>
 </head>
@@ -289,10 +213,11 @@
       <div>
         <h1>Sign & Send</h1>
         <p>
-          This demo follows the real workflow: <strong>the sender signs first</strong>, then the agreement is “sent”,
-          then the recipient completes it. The final output is a <strong>real signed PDF</strong> generated in-browser.
+          Seamless flow: <strong>Fill → Sign → Send</strong>. The sender signs first, then the agreement is “sent”,
+          then the recipient completes it. A <strong>real signed PDF</strong> is generated in-browser.
         </p>
       </div>
+
       <div class="pill" id="flowPill" data-state="sender">
         <span class="dot"></span>
         <span id="flowLabel">Sender signing</span>
@@ -300,7 +225,7 @@
     </div>
 
     <div class="layout">
-      <!-- LEFT SIDEBAR -->
+      <!-- LEFT -->
       <aside class="card">
         <h2>Workflow</h2>
         <p id="flowText">—</p>
@@ -334,13 +259,13 @@
         </div>
 
         <div class="hint" id="hintText">
-          Tip: use an NDA template first — it’s the cleanest for a demo.
+          Tip: Use the NDA template first — it’s the cleanest for a demo.
         </div>
 
         <div class="status warn" id="statusBox" style="display:none;"></div>
       </aside>
 
-      <!-- RIGHT VIEWER -->
+      <!-- RIGHT -->
       <section class="card viewer-card">
         <div class="viewer-head">
           <div class="viewer-title">
@@ -356,7 +281,6 @@
         </div>
 
         <div class="viewer-body">
-          <!-- Uses native browser PDF viewer, crisp + readable -->
           <iframe id="pdfFrame" title="PDF Preview"></iframe>
 
           <div class="status" id="viewerStatus">
@@ -367,29 +291,55 @@
     </div>
   </main>
 
+  <!-- Signature Modal -->
+  <div class="modal" id="sigModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <h3 id="sigTitle">Sender Signature</h3>
+      <p id="sigSubtitle">Type your name to apply a signature to the PDF.</p>
+
+      <div class="sig-row">
+        <label>
+          Full name (signature)
+          <input id="sigName" type="text" placeholder="Type full name…" />
+        </label>
+
+        <div class="sig-preview">
+          <div class="muted small" style="margin-bottom:6px;">Preview</div>
+          <div class="sig-font" id="sigPreview">—</div>
+        </div>
+      </div>
+
+      <div class="sig-actions">
+        <button class="btn btn-outline" id="sigCancelBtn" type="button">Cancel</button>
+        <button class="btn btn-primary" id="sigApplyBtn" type="button">Apply Signature</button>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/app.js"></script>
+
+  <!-- pdf-lib loaded ONLY on this page -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
   <script>
     // Auth guard
     FSS.guard();
 
-    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
+    // User pill
+    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
 
     // Ensure doc exists
     let doc = FSS.loadDocState();
     if(!doc){
-      FSS.resetDoc();
-      doc = FSS.loadDocState();
+      doc = FSS.resetDoc();
       FSS.logAudit("Envelope created.");
     }
 
+    // UI refs
     const templateVal = document.getElementById("templateVal");
     const senderVal = document.getElementById("senderVal");
     const recipientVal = document.getElementById("recipientVal");
-
-    templateVal.textContent = doc.template || "—";
-    senderVal.textContent = doc.parties.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "Not provided";
-    recipientVal.textContent = doc.parties.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "Not provided";
 
     const flowPill = document.getElementById("flowPill");
     const flowLabel = document.getElementById("flowLabel");
@@ -406,8 +356,15 @@
     const pdfFrame = document.getElementById("pdfFrame");
     const pdfName = document.getElementById("pdfName");
 
+    // signature modal
+    const sigModal = document.getElementById("sigModal");
+    const sigName = document.getElementById("sigName");
+    const sigPreview = document.getElementById("sigPreview");
+    const sigCancelBtn = document.getElementById("sigCancelBtn");
+    const sigApplyBtn = document.getElementById("sigApplyBtn");
+
     // Viewer state
-    let zoom = 120;
+    let zoom = 125;
 
     function showStatus(type, msg){
       statusBox.style.display = "";
@@ -422,13 +379,14 @@
 
     function setFlow(state){
       flowPill.setAttribute("data-state", state);
+
       if(state === "sender"){
         flowLabel.textContent = "Sender signing";
         flowText.innerHTML =
           `Step 1: the sender signs the document.<br><br>
            Once sender signs, the agreement becomes <strong>Ready to Send</strong>.`;
         hintText.innerHTML =
-          `Click <strong>Sign as sender</strong> to place a real signature + date and generate the signed PDF.`;
+          `Click <strong>Sign as sender</strong> to apply a real signature + date and generate the signed PDF.`;
       }
 
       if(state === "ready"){
@@ -459,27 +417,42 @@
       }
     }
 
-    // PDF loading
-    async function loadTemplatePDF(){
+    function updateSidebar(){
+      doc = FSS.loadDocState() || doc;
+
+      templateVal.textContent = doc.template || "—";
+      senderVal.textContent = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "Not provided";
+      recipientVal.textContent = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "Not provided";
+    }
+
+    async function loadPDF(){
+      doc = FSS.loadDocState() || doc;
+
       const template = doc.template || "nda.pdf";
       pdfName.textContent = template;
 
-      // IMPORTANT: uses your repo directory
-      const url = `pdfs/${encodeURIComponent(template)}#zoom=${zoom}`;
+      // If we have a signed PDF, show it. Otherwise show template.
+      const signedB64 = FSS.getSignedBase64();
+      if(signedB64){
+        const url = FSS.base64ToBlobURL(signedB64, "application/pdf");
+        pdfFrame.src = `${url}#zoom=${zoom}`;
+        viewerStatus.textContent = `Showing SIGNED PDF (zoom: ${zoom}%)`;
+        viewerStatus.className = "status good";
+        return;
+      }
 
-      pdfFrame.src = url;
-      viewerStatus.textContent = `Showing ${template} (zoom: ${zoom}%)`;
-      viewerStatus.className = "status good";
+      // template
+      pdfFrame.src = `pdfs/${encodeURIComponent(template)}#zoom=${zoom}`;
+      viewerStatus.textContent = `Showing template: ${template} (zoom: ${zoom}%)`;
+      viewerStatus.className = "status";
     }
 
-    // Decide state based on doc + signed PDF
     function refreshState(){
-      doc = FSS.loadDocState();
+      doc = FSS.loadDocState() || doc;
+      updateSidebar();
 
-      const hasFields = (FSS.loadFields() || []).length > 0;
       const hasSigned = FSS.hasSignedPDF();
 
-      // Completed
       if(doc.status === "completed"){
         setFlow("completed");
         senderSignBtn.style.display = "none";
@@ -489,7 +462,6 @@
         return;
       }
 
-      // Sent
       if(doc.status === "sent"){
         setFlow("sent");
         senderSignBtn.style.display = "none";
@@ -499,7 +471,6 @@
         return;
       }
 
-      // If signed ready => ready to send
       if(hasSigned){
         setFlow("ready");
         senderSignBtn.style.display = "none";
@@ -509,8 +480,8 @@
         return;
       }
 
-      // If no party info or no template
-      if(!doc.template || !doc.parties.aName || !doc.parties.bName){
+      // missing info
+      if(!doc.template || !doc.parties?.aName || !doc.parties?.bName){
         setFlow("sender");
         senderSignBtn.style.display = "";
         sendBtn.style.display = "none";
@@ -520,18 +491,6 @@
         return;
       }
 
-      // If no fields placed yet
-      if(!hasFields){
-        setFlow("sender");
-        senderSignBtn.style.display = "";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = "none";
-        showStatus("warn", "Required fields are not placed yet. Click “Sign as sender” to place & complete signature fields.");
-        return;
-      }
-
-      // Fields exist but not signed
       setFlow("sender");
       senderSignBtn.style.display = "";
       sendBtn.style.display = "none";
@@ -540,53 +499,80 @@
       clearStatus();
     }
 
-    // Core action: Sign as sender (place + complete required fields, generate signed PDF)
+    // Signature modal helpers
+    function openSigModal(defaultName){
+      sigName.value = defaultName || "";
+      sigPreview.textContent = defaultName || "—";
+      sigModal.classList.add("show");
+      sigModal.setAttribute("aria-hidden", "false");
+      setTimeout(() => sigName.focus(), 60);
+    }
+
+    function closeSigModal(){
+      sigModal.classList.remove("show");
+      sigModal.setAttribute("aria-hidden", "true");
+    }
+
+    sigName.addEventListener("input", () => {
+      sigPreview.textContent = sigName.value.trim() || "—";
+    });
+
+    sigCancelBtn.addEventListener("click", closeSigModal);
+    sigModal.addEventListener("click", (e) => { if(e.target === sigModal) closeSigModal(); });
+    document.addEventListener("keydown", (e) => { if(e.key === "Escape" && sigModal.classList.contains("show")) closeSigModal(); });
+
+    // Sender sign -> generates real signed PDF (in-browser)
     senderSignBtn.addEventListener("click", async () => {
       clearStatus();
+      doc = FSS.loadDocState() || doc;
 
-      doc = FSS.loadDocState();
-
-      if(!doc.template || !doc.parties.aName || !doc.parties.bName){
+      if(!doc.template || !doc.parties?.aName || !doc.parties?.bName){
         showStatus("warn", "Missing agreement details. Go to Create first.");
         return;
       }
 
+      openSigModal(doc.parties.aName);
+    });
+
+    sigApplyBtn.addEventListener("click", async () => {
+      const name = sigName.value.trim();
+      if(!name){
+        showStatus("warn", "Please type a name for the signature.");
+        return;
+      }
+
+      closeSigModal();
+
       try{
         showStatus("warn", "Generating signed PDF…");
 
-        // Ensure required fields exist. If none, auto-place defaults near bottom.
-        let fields = FSS.loadFields() || [];
-        if(fields.length === 0){
-          // Place signature + date fields (defaults)
-          // These coords are "demo" placements, not real PDF coordinates.
-          // Your app.js uses these to overlay and embed.
-          fields = [
-            { id: FSS.uid(), type:"signature", page:1, x: 420, y: 700, w: 160, h: 42, required:true, label:"Sender signature", role:"sender" },
-            { id: FSS.uid(), type:"date",      page:1, x: 420, y: 750, w: 160, h: 34, required:true, label:"Date", role:"sender" }
-          ];
-          FSS.saveFields(fields);
-          FSS.logAudit("Required fields placed (sender signature + date).");
-        }
+        // store values
+        FSS.setFieldValue("sender_signature", name);
+        FSS.setFieldValue("sender_date", new Date().toLocaleDateString());
 
-        // Complete the required fields for sender
-        const now = new Date();
-        FSS.setFieldValue("signature", doc.parties.aName);
-        FSS.setFieldValue("date", now.toLocaleDateString());
-
-        // Generate signed PDF (real)
-        const ok = await FSS.generateSignedPDF();
+        // build signed PDF from template
+        const ok = await FSS.generateSignedPDF({
+          templateFile: doc.template,
+          senderName: name,
+          senderEmail: doc.parties.aEmail || "",
+          recipientName: doc.parties.bName || "",
+          recipientEmail: doc.parties.bEmail || ""
+        });
 
         if(!ok){
-          showStatus("bad", "Error generating signed PDF. Make sure the PDF template exists in /pdfs and try Refresh.");
+          showStatus("bad", "Error generating signed PDF. Ensure PDF exists in /pdfs and reload.");
           return;
         }
 
+        FSS.setDocStage("ready");
         FSS.logAudit("Sender signed the agreement.");
         showStatus("good", "✅ Sender signature complete. Agreement is ready to send.");
+
+        await loadPDF();
         refreshState();
       }catch(err){
         console.error(err);
-        showStatus("bad", "Error generating signed PDF. See console for details.");
+        showStatus("bad", "Error generating signed PDF. Open console for details.");
       }
     });
 
@@ -594,7 +580,7 @@
     sendBtn.addEventListener("click", () => {
       clearStatus();
 
-      doc = FSS.loadDocState();
+      doc = FSS.loadDocState() || doc;
       if(!FSS.hasSignedPDF()){
         showStatus("warn", "Please sign first before sending.");
         return;
@@ -609,69 +595,49 @@
       refreshState();
     });
 
-    // Recipient completion simulation
-    recipientBtn.addEventListener("click", () => {
-      // A real product would create a unique token link.
-      // Here, we simulate completion immediately with one click.
+    // Recipient completion simulation (instant)
+    recipientBtn.addEventListener("click", async () => {
       clearStatus();
 
-      doc = FSS.loadDocState();
+      doc = FSS.loadDocState() || doc;
+
+      // mark completed
       doc.status = "completed";
       doc.completedAt = new Date().toISOString();
       FSS.saveDocState(doc);
 
       FSS.logAudit("Recipient completed signing.");
-      showStatus("good", "✅ Recipient completed signing. Redirecting to completed view…");
+      showStatus("good", "✅ Recipient completed signing. Redirecting…");
 
-      setTimeout(() => {
-        location.href = "success.html";
-      }, 900);
+      setTimeout(() => location.href = "success.html", 850);
     });
 
     // Download signed PDF
     downloadBtn.addEventListener("click", (e) => {
       e.preventDefault();
-
       const b64 = FSS.getSignedBase64();
       if(!b64){
         showStatus("warn", "No signed PDF exists yet.");
         return;
       }
-
-      const byteChars = atob(b64);
-      const bytes = new Uint8Array(byteChars.length);
-      for(let i=0; i<byteChars.length; i++){
-        bytes[i] = byteChars.charCodeAt(i);
-      }
-
-      const blob = new Blob([bytes], { type:"application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `FSS-${(doc.id || "agreement")}-signed.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      FSS.downloadBase64PDF(b64, `FSS-${(doc.id || "agreement")}-signed.pdf`);
     });
 
     // Tools
     document.getElementById("zoomInBtn").addEventListener("click", async () => {
-      zoom = Math.min(200, zoom + 10);
-      await loadTemplatePDF();
+      zoom = Math.min(220, zoom + 10);
+      await loadPDF();
     });
 
     document.getElementById("zoomOutBtn").addEventListener("click", async () => {
       zoom = Math.max(70, zoom - 10);
-      await loadTemplatePDF();
+      await loadPDF();
     });
 
     document.getElementById("refreshBtn").addEventListener("click", async () => {
-      await loadTemplatePDF();
-      refreshState();
       clearStatus();
+      await loadPDF();
+      refreshState();
     });
 
     // Logout
@@ -682,8 +648,9 @@
 
     // Boot
     (async function boot(){
-      await loadTemplatePDF();
+      updateSidebar();
       refreshState();
+      await loadPDF();
       clearStatus();
     })();
   </script>
