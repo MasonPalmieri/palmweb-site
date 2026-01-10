@@ -1,630 +1,587 @@
-/* ============================================================
-   FSS Demo App — app.js (Static / GitHub Pages)
-   No backend. Uses localStorage for auth + doc state.
-   Supports:
-   - Template PDFs in /pdfs
-   - Uploaded PDFs stored as Base64 in localStorage
-   - Scratch-built PDFs (NDA Express style) built from text
-   - Overlay field placement + Signed PDF generation
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard • Client Demo</title>
 
-   NOTE:
-   - pdf-lib is loaded dynamically if not already present.
-   - Signature appearance uses a more "script-like" italic font.
-   ============================================================ */
+  <link rel="stylesheet" href="assets/app.css" />
 
-window.FSS = (() => {
-  /* =========================
-     CONFIG
-     ========================= */
-  const DEMO_PASSWORD = "hallam"; // You can change this — only used for local demo login
-  const DEMO_EMAIL = "demo@client.com";
-
-  const STORE_KEYS = {
-    auth: "fss_auth",
-    doc: "fss_doc",
-    fields: "fss_fields",
-    values: "fss_values",
-    audit: "fss_audit",
-    signed: "fss_signed_pdf_b64",
-    uploadedB64: "fss_uploaded_pdf_b64",
-    uploadedName: "fss_uploaded_pdf_name",
-  };
-
-  /* =========================
-     HELPERS
-     ========================= */
-  function nowStamp() {
-    return new Date().toISOString();
-  }
-
-  function uid() {
-    return String(Date.now()) + String(Math.floor(Math.random() * 100000));
-  }
-
-  function safeJSONParse(str, fallback) {
-    try {
-      return JSON.parse(str);
-    } catch {
-      return fallback;
-    }
-  }
-
-  function getKey(key, fallback) {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    return safeJSONParse(raw, fallback);
-  }
-
-  function setKey(key, val) {
-    localStorage.setItem(key, JSON.stringify(val));
-  }
-
-  function removeKey(key) {
-    localStorage.removeItem(key);
-  }
-
-  function escapeHtml(s) {
-    return (s || "").replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[m]));
-  }
-
-  function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, n));
-  }
-
-  /* =========================
-     AUTH
-     ========================= */
-  function isAuthed() {
-    const a = getKey(STORE_KEYS.auth, null);
-    return !!(a && a.email);
-  }
-
-  function login(email, password) {
-    const e = (email || "").trim().toLowerCase();
-    const p = (password || "").trim();
-    if (!e || !p) return { ok: false, msg: "Missing email or password." };
-
-    if (e === DEMO_EMAIL && p === DEMO_PASSWORD) {
-      setKey(STORE_KEYS.auth, { email: e, at: nowStamp() });
-      logAudit(`Login successful (${e}).`);
-      return { ok: true };
+  <style>
+    .wrap{
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 18px 46px;
     }
 
-    // allow "anything" for demo if you want:
-    // setKey(STORE_KEYS.auth, { email: e, at: nowStamp() });
-    // logAudit(`Login successful (${e}).`);
-    // return { ok: true };
+    .hero{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
 
-    return { ok: false, msg: "Invalid demo credentials." };
-  }
+    .hero h1{
+      margin: 0;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -0.25px;
+    }
 
-  function logout() {
-    removeKey(STORE_KEYS.auth);
-    logAudit("Logout.");
-  }
+    .hero p{
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 750;
+      max-width: 90ch;
+      line-height: 1.5;
+    }
 
-  function guard() {
-    if (!isAuthed()) {
-      // Don’t infinite loop if already on index.html
-      const path = location.pathname.toLowerCase();
-      if (!path.endsWith("index.html")) {
-        location.href = "index.html";
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.92);
+      white-space: nowrap;
+    }
+    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.25); }
+    .pill[data-state="draft"] .dot{ background: rgba(67,203,255,.95); }
+    .pill[data-state="ready"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      align-items:start;
+      margin-top: 12px;
+    }
+
+    .card{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 14px;
+      overflow:hidden;
+    }
+
+    .card h2{
+      margin:0;
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: -0.1px;
+    }
+
+    .sub{
+      margin: 8px 0 0;
+      color: rgba(255,255,255,.72);
+      font-weight: 750;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 12px 0;
+    }
+
+    .docRow{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      align-items:center;
+    }
+
+    .docMeta{
+      display:grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .docMeta strong{
+      font-weight: 950;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .docMeta span{
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.65);
+      line-height: 1.4;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .docActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn-lg{
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 950;
+      font-size: 14px;
+    }
+
+    .btn-muted{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+    }
+    .btn-muted:hover{ background: rgba(255,255,255,.09); }
+
+    .createGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .createTile{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .createTile:hover{ background: rgba(255,255,255,.08); }
+    .createTile:active{ transform: translateY(1px); }
+
+    .tileTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .tileTop strong{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
+    }
+    .tag{
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.80);
+      white-space: nowrap;
+    }
+    .tileDesc{
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 750;
+      color: rgba(255,255,255,.70);
+      line-height: 1.45;
+    }
+
+    .timeline{
+      display:grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .event{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+
+    .event .bubble{
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      flex: 0 0 auto;
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+    }
+
+    .event strong{
+      display:block;
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .event span{
+      display:block;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.65);
+      line-height: 1.4;
+    }
+
+    .status{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(255,255,255,.84);
+      display:none;
+    }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
+    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="dashboard.html">
+        <span class="logo-badge">FSS</span>
+        <div class="brand-text">
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
+        </div>
+      </a>
+
+      <div class="app-nav">
+        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" href="create.html">Create</a>
+        <a class="nav-link" href="sign.html">Sign</a>
+        <a class="nav-link" href="success.html">Completed</a>
+      </div>
+
+      <div class="app-user">
+        <span id="userEmail" class="user-pill">—</span>
+        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Dashboard</h1>
+        <p>
+          Welcome back. This home screen shows your active agreement, next actions,
+          and a quick way to create new documents.
+        </p>
+      </div>
+
+      <div class="pill" id="statePill" data-state="draft">
+        <span class="dot"></span>
+        <span id="stateLabel">Draft</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Active Docs -->
+      <section class="card">
+        <h2>Active Document</h2>
+        <p class="sub" id="docSubtitle">—</p>
+
+        <div class="divider"></div>
+
+        <div class="docRow">
+          <div class="docMeta">
+            <strong id="docTitle">—</strong>
+            <span id="docPeople">—</span>
+            <span id="docMode">—</span>
+          </div>
+
+          <div class="docActions">
+            <a class="btn btn-primary btn-lg" id="primaryAction" href="create.html">Open</a>
+            <button class="btn btn-muted btn-lg" id="resetBtn" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="status warn" id="statusBox"></div>
+
+        <div class="divider"></div>
+
+        <div class="row" style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn btn-outline" href="create.html">Edit / Create</a>
+          <a class="btn btn-outline" href="sign.html">Go to Sign</a>
+          <a class="btn btn-outline" href="success.html">View Completed</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: Create New + Timeline -->
+      <aside class="card">
+        <h2>Create New</h2>
+        <p class="sub">Start a new agreement using one of the options below.</p>
+
+        <div class="createGrid">
+          <div class="createTile" id="tileTemplate">
+            <div class="tileTop">
+              <strong>Use a template</strong>
+              <span class="tag">Fast</span>
+            </div>
+            <div class="tileDesc">Choose from NDA, Consulting, Non-Compete, Real Estate, and more.</div>
+          </div>
+
+          <div class="createTile" id="tileUpload">
+            <div class="tileTop">
+              <strong>Upload your own PDF</strong>
+              <span class="tag">Flexible</span>
+            </div>
+            <div class="tileDesc">Upload a custom agreement and use the same Fill → Sign → Send flow.</div>
+          </div>
+
+          <div class="createTile" id="tileBuilder">
+            <div class="tileTop">
+              <strong>Build from scratch</strong>
+              <span class="tag">Custom</span>
+            </div>
+            <div class="tileDesc">Write the agreement using prompts and rules (NDAExpress style).</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2 style="margin-top:0;">Recent Activity</h2>
+        <p class="sub">Latest steps performed in this demo environment.</p>
+
+        <div class="timeline" id="timeline">
+          <!-- events injected -->
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/app.js"></script>
+  <script>
+    FSS.guard();
+
+    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
+
+    const statusBox = document.getElementById("statusBox");
+    function showStatus(msg, type="warn"){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+    function clearStatus(){
+      statusBox.style.display = "none";
+      statusBox.textContent = "";
+    }
+
+    const pill = document.getElementById("statePill");
+    const label = document.getElementById("stateLabel");
+
+    function setState(state){
+      pill.setAttribute("data-state", state);
+      const map = {
+        draft: "Draft",
+        ready: "Ready to Send",
+        sent: "Sent to Recipient",
+        completed: "Completed"
+      };
+      label.textContent = map[state] || "Draft";
+    }
+
+    function getDocSummary(d){
+      // Determine mode
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        return "Mode: Uploaded PDF";
       }
-    }
-  }
-
-  /* =========================
-     DOC STATE
-     ========================= */
-  function defaultDoc() {
-    return {
-      id: uid(),
-      createdAt: nowStamp(),
-      updatedAt: nowStamp(),
-      stage: "create",
-      status: "draft",
-      template: "nda.pdf", // template file name OR null
-      parties: {
-        aName: "",
-        aEmail: "",
-        aTitle: "",
-        aAddr: "",
-        bName: "",
-        bEmail: "",
-        bTitle: "",
-        bAddr: "",
-      },
-      builder: null, // {title,text,selectedClauseIds,customClauses}
-    };
-  }
-
-  function loadDocState() {
-    return getKey(STORE_KEYS.doc, null);
-  }
-
-  function saveDocState(doc) {
-    doc.updatedAt = nowStamp();
-    setKey(STORE_KEYS.doc, doc);
-  }
-
-  function resetDoc() {
-    const d = defaultDoc();
-    setKey(STORE_KEYS.doc, d);
-    removeKey(STORE_KEYS.signed);
-    setKey(STORE_KEYS.fields, []);
-    setKey(STORE_KEYS.values, {});
-    setKey(STORE_KEYS.audit, []);
-    return d;
-  }
-
-  function setStage(stage) {
-    const d = loadDocState() || defaultDoc();
-    d.stage = stage;
-    saveDocState(d);
-    logAudit(`Stage set to ${stage}.`);
-  }
-
-  function setStatus(status) {
-    const d = loadDocState() || defaultDoc();
-    d.status = status;
-    saveDocState(d);
-    logAudit(`Status set to ${status}.`);
-  }
-
-  /* =========================
-     AUDIT
-     ========================= */
-  function loadAudit() {
-    return getKey(STORE_KEYS.audit, []);
-  }
-
-  function saveAudit(arr) {
-    setKey(STORE_KEYS.audit, arr);
-  }
-
-  function logAudit(message) {
-    const audit = loadAudit();
-    audit.unshift({ at: nowStamp(), msg: message });
-    saveAudit(audit);
-  }
-
-  /* =========================
-     FIELDS + VALUES
-     ========================= */
-  function loadFields() {
-    return getKey(STORE_KEYS.fields, []);
-  }
-
-  function saveFields(fields) {
-    setKey(STORE_KEYS.fields, fields || []);
-  }
-
-  function loadValues() {
-    return getKey(STORE_KEYS.values, {});
-  }
-
-  function saveValues(values) {
-    setKey(STORE_KEYS.values, values || {});
-  }
-
-  function setFieldValue(fieldIdOrType, value) {
-    // accept either fieldId or a type "signature"/"date"
-    const values = loadValues();
-    values[fieldIdOrType] = value;
-    saveValues(values);
-  }
-
-  function getFieldValue(fieldIdOrType) {
-    const values = loadValues();
-    return values[fieldIdOrType];
-  }
-
-  /* =========================
-     SIGNED PDF STORAGE
-     ========================= */
-  function setSignedBase64(b64) {
-    setKey(STORE_KEYS.signed, b64 || null);
-  }
-
-  function getSignedBase64() {
-    return getKey(STORE_KEYS.signed, null);
-  }
-
-  function hasSignedPDF() {
-    const b64 = getSignedBase64();
-    return !!(b64 && String(b64).length > 20);
-  }
-
-  /* =========================
-     UPLOAD HELPERS
-     ========================= */
-  function hasUploadedPDF() {
-    return !!localStorage.getItem(STORE_KEYS.uploadedB64);
-  }
-
-  function getUploadedPDFBase64() {
-    return localStorage.getItem(STORE_KEYS.uploadedB64);
-  }
-
-  function getUploadedPDFName() {
-    return localStorage.getItem(STORE_KEYS.uploadedName) || "Uploaded.pdf";
-  }
-
-  /* =========================
-     PDF LIB LOADER
-     ========================= */
-  async function ensurePdfLib() {
-    if (window.PDFLib) return true;
-
-    // load from CDN
-    return new Promise((resolve) => {
-      const s = document.createElement("script");
-      s.src = "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js";
-      s.onload = () => resolve(true);
-      s.onerror = () => resolve(false);
-      document.head.appendChild(s);
-    });
-  }
-
-  /* =========================
-     FILE UTILS
-     ========================= */
-  async function fetchAsArrayBuffer(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch PDF: ${url} (${res.status})`);
-    return await res.arrayBuffer();
-  }
-
-  function arrayBufferToBase64(buffer) {
-    let binary = "";
-    const bytes = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-    return btoa(binary);
-  }
-
-  function base64ToBytes(b64) {
-    const byteChars = atob(b64);
-    const bytes = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
-    return bytes;
-  }
-
-  function base64ToBlobURL(b64, mime = "application/pdf") {
-    const bytes = base64ToBytes(b64);
-    const blob = new Blob([bytes], { type: mime });
-    return URL.createObjectURL(blob);
-  }
-
-  /* =========================
-     BUILDER PDF (SCRATCH)
-     Creates a "real" PDF from doc.builder.text so viewer/signing works.
-     ========================= */
-  async function generateBuilderPDFBytes() {
-    const ok = await ensurePdfLib();
-    if (!ok || !window.PDFLib) {
-      console.error("pdf-lib failed to load");
-      return null;
-    }
-
-    const docState = loadDocState();
-    if (!docState || !docState.builder || !docState.builder.text) {
-      console.error("No builder text available in doc state.");
-      return null;
-    }
-
-    const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
-
-    const pdfDoc = await PDFDocument.create();
-
-    // US Letter-ish page
-    const pageW = 612;
-    const pageH = 792;
-    const margin = 54;
-    const lineHeight = 14;
-    const fontSize = 11;
-
-    const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-    const fontBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-
-    const title = (docState.builder.title || "Agreement").trim();
-    const text = (docState.builder.text || "").trim();
-
-    // Split into paragraphs
-    const lines = wrapText(text, font, fontSize, pageW - margin * 2);
-
-    // Create pages as needed
-    let page = pdfDoc.addPage([pageW, pageH]);
-    let y = pageH - margin;
-
-    // Title
-    page.drawText(title.toUpperCase(), {
-      x: margin,
-      y,
-      size: 16,
-      font: fontBold,
-      color: rgb(0, 0, 0), // BLACK text (fix invisible)
-    });
-    y -= 26;
-
-    // Body
-    for (const ln of lines) {
-      if (y < margin + 40) {
-        page = pdfDoc.addPage([pageW, pageH]);
-        y = pageH - margin;
+      if(d && d.builder && d.builder.text){
+        return "Mode: Built from scratch";
       }
-      page.drawText(ln, {
-        x: margin,
-        y,
-        size: fontSize,
-        font,
-        color: rgb(0, 0, 0), // BLACK text (fix invisible)
-      });
-      y -= lineHeight;
+      return "Mode: Template PDF";
     }
 
-    return await pdfDoc.save();
-  }
+    function templateName(d){
+      return d?.template || "Template";
+    }
 
-  function wrapText(text, font, fontSize, maxWidth) {
-    // preserves line breaks from the builder text,
-    // but wraps long lines to fit page width.
-    const paragraphs = String(text || "").split(/\n/);
-    const out = [];
-
-    for (const p of paragraphs) {
-      const line = p.replace(/\t/g, "    ");
-      if (!line.trim()) {
-        out.push(""); // blank line
-        continue;
+    function docTitle(d){
+      if(d?.builder?.title) return d.builder.title;
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        return localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded Agreement";
       }
+      return templateName(d);
+    }
 
-      const words = line.split(/\s+/);
-      let cur = "";
+    function render(){
+      const d = FSS.loadDocState() || FSS.resetDoc();
 
-      for (const w of words) {
-        const test = cur ? (cur + " " + w) : w;
-        const width = font.widthOfTextAtSize(test, fontSize);
-        if (width <= maxWidth) {
-          cur = test;
+      // Determine state
+      const hasSigned = FSS.hasSignedPDF();
+      let state = "draft";
+      if(d.status === "completed") state = "completed";
+      else if(d.status === "sent") state = "sent";
+      else if(hasSigned) state = "ready";
+      else state = "draft";
+
+      setState(state);
+
+      // Main doc card
+      document.getElementById("docTitle").textContent = docTitle(d);
+
+      const a = d?.parties?.aName ? `${d.parties.aName}${d.parties.aEmail ? " ("+d.parties.aEmail+")" : ""}` : "Sender not set";
+      const b = d?.parties?.bName ? `${d.parties.bName}${d.parties.bEmail ? " ("+d.parties.bEmail+")" : ""}` : "Recipient not set";
+      document.getElementById("docPeople").textContent = `Sender: ${a} • Recipient: ${b}`;
+
+      document.getElementById("docMode").textContent = getDocSummary(d);
+
+      const subtitle = document.getElementById("docSubtitle");
+      const primary = document.getElementById("primaryAction");
+
+      if(state === "draft"){
+        subtitle.textContent = "Complete setup, preview, and then sign as sender.";
+        primary.textContent = "Continue Setup";
+        primary.href = "create.html";
+        if(!d?.parties?.aName || !d?.parties?.bName){
+          showStatus("Start by entering sender + recipient details in Create.", "warn");
         } else {
-          if (cur) out.push(cur);
-          cur = w;
+          clearStatus();
         }
       }
 
-      if (cur) out.push(cur);
-    }
-
-    return out;
-  }
-
-  /* =========================
-     Resolve Current PDF Source
-     (Template / Upload / Builder)
-     ========================= */
-  async function getSourcePDFBytes() {
-    const docState = loadDocState();
-    if (!docState) throw new Error("No doc state found.");
-
-    // Uploaded PDF has priority if present and template is null
-    if (hasUploadedPDF()) {
-      const b64 = getUploadedPDFBase64();
-      if (!b64) throw new Error("Uploaded PDF is missing.");
-      return base64ToBytes(b64);
-    }
-
-    // Builder mode (scratch)
-    if (docState.builder && docState.builder.text) {
-      const bytes = await generateBuilderPDFBytes();
-      if (!bytes) throw new Error("Builder PDF generation failed.");
-      return bytes;
-    }
-
-    // Template
-    const template = docState.template || "nda.pdf";
-    const url = `pdfs/${encodeURIComponent(template)}`;
-    const buf = await fetchAsArrayBuffer(url);
-    return new Uint8Array(buf);
-  }
-
-  /* =========================
-     SIGNED PDF GENERATOR
-     Embeds fields into PDF bytes and stores as base64.
-     ========================= */
-  async function generateSignedPDF() {
-    const ok = await ensurePdfLib();
-    if (!ok || !window.PDFLib) {
-      console.error("pdf-lib not loaded");
-      return false;
-    }
-
-    try {
-      const docState = loadDocState();
-      if (!docState) throw new Error("Missing doc state.");
-
-      const fields = loadFields() || [];
-      const values = loadValues() || {};
-
-      // Ensure required signature/date values exist (fallback)
-      const senderName = docState.parties?.aName || "Sender";
-      const defaultDate = new Date().toLocaleDateString();
-
-      // If any "signature" type fields exist but no value, set it
-      // If any "date" type fields exist but no value, set it
-      if (!values.signature) values.signature = senderName;
-      if (!values.date) values.date = defaultDate;
-
-      // Load source PDF bytes
-      const srcBytes = await getSourcePDFBytes();
-
-      const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
-      const pdfDoc = await PDFDocument.load(srcBytes);
-
-      // Fonts:
-      // - Normal text
-      // - Signature script-like (as much as pdf-lib built-in fonts allow)
-      const fontText = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const fontTextBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-      // Best we can do without custom font:
-      // TimesItalic reads more like a signature than Helvetica
-      const fontSig = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
-
-      // Iterate fields and draw text
-      const pages = pdfDoc.getPages();
-
-      for (const f of fields) {
-        const pageIndex = clamp((f.page || 1) - 1, 0, pages.length - 1);
-        const page = pages[pageIndex];
-
-        const x = Number(f.x || 0);
-        const yTop = Number(f.y || 0);
-        const w = Number(f.w || 140);
-        const h = Number(f.h || 34);
-
-        // Convert "top-left y" (DOM style) to PDF "bottom-left"
-        // Our stored y was typically top-left style. We use:
-        // pdfY = pageHeight - yTop - h
-        const pageH = page.getHeight();
-        const pdfY = pageH - yTop - h;
-
-        let value = "";
-
-        // Field value resolution:
-        // - If f.id exists, prefer values[f.id]
-        // - else use values[f.type]
-        if (f.id && values[f.id] != null) value = String(values[f.id]);
-        else if (values[f.type] != null) value = String(values[f.type]);
-
-        // Default values if still empty
-        if (!value && f.type === "signature") value = senderName;
-        if (!value && f.type === "date") value = defaultDate;
-
-        // Normalize for checkbox
-        if (f.type === "checkbox") {
-          const checked = String(value).toLowerCase() === "true" || value === "1" || value === "yes";
-          value = checked ? "✔" : "";
-        }
-
-        // Choose font + size
-        let font = fontText;
-        let size = 12;
-
-        if (f.type === "signature") {
-          font = fontSig;
-          size = 18; // bigger for signature look
-        } else if (f.type === "date") {
-          font = fontTextBold;
-          size = 11;
-        } else if (f.type === "text") {
-          font = fontText;
-          size = 12;
-        } else if (f.type === "initials") {
-          font = fontTextBold;
-          size = 12;
-        } else if (f.type === "checkbox") {
-          font = fontTextBold;
-          size = 14;
-        }
-
-        // Draw the value in BLACK so it is never invisible.
-        // Keep padding small so it looks like it’s on the line.
-        const padX = 6;
-        const padY = 9;
-
-        page.drawText(value, {
-          x: x + padX,
-          y: pdfY + padY,
-          size,
-          font,
-          color: rgb(0, 0, 0), // BLACK
-          opacity: 1,
-        });
-
-        // Optional: draw a subtle bounding box when debugging
-        // page.drawRectangle({
-        //   x, y: pdfY, width: w, height: h,
-        //   borderColor: rgb(0.9, 0.2, 0.4),
-        //   borderWidth: 0.5,
-        //   opacity: 0.3,
-        // });
+      if(state === "ready"){
+        subtitle.textContent = "Sender signed. Next step: send to recipient.";
+        primary.textContent = "Go to Sign";
+        primary.href = "sign.html";
+        clearStatus();
       }
 
-      // Footer stamp (optional)
-      const last = pages[pages.length - 1];
-      const stampText = `Signed via FSS Demo — ${new Date().toLocaleString()}`;
-      last.drawText(stampText, {
-        x: 44,
-        y: 18,
-        size: 9,
-        font: fontText,
-        color: rgb(0.15, 0.15, 0.15),
-        opacity: 0.85,
-      });
+      if(state === "sent"){
+        subtitle.textContent = "Agreement sent. Next step: recipient completes signing.";
+        primary.textContent = "Open Sign";
+        primary.href = "sign.html";
+        clearStatus();
+      }
 
-      const signedBytes = await pdfDoc.save();
-      const b64 = arrayBufferToBase64(signedBytes);
+      if(state === "completed"){
+        subtitle.textContent = "Agreement completed. You can download the final signed PDF.";
+        primary.textContent = "View Completed";
+        primary.href = "success.html";
+        clearStatus();
+      }
 
-      setSignedBase64(b64);
-
-      return true;
-    } catch (err) {
-      console.error("generateSignedPDF error:", err);
-      return false;
+      renderTimeline();
     }
-  }
 
-  /* =========================
-     EXPORTED API
-     ========================= */
-  return {
-    // Auth
-    DEMO_EMAIL,
-    DEMO_PASSWORD,
-    isAuthed,
-    login,
-    logout,
-    guard,
+    function renderTimeline(){
+      const timeline = document.getElementById("timeline");
+      timeline.innerHTML = "";
 
-    // Doc state
-    uid,
-    defaultDoc,
-    loadDocState,
-    saveDocState,
-    resetDoc,
-    setStage,
-    setStatus,
+      const audit = FSS.loadAudit() || [];
+      const list = audit.slice(-6).reverse(); // show last 6
 
-    // Audit
-    loadAudit,
-    logAudit,
+      if(list.length === 0){
+        timeline.innerHTML = `
+          <div class="event">
+            <div class="bubble">—</div>
+            <div>
+              <strong>No activity yet</strong>
+              <span>Create an agreement to begin the demo workflow.</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
 
-    // Fields & values
-    loadFields,
-    saveFields,
-    loadValues,
-    saveValues,
-    setFieldValue,
-    getFieldValue,
+      for(const a of list){
+        const time = new Date(a.ts).toLocaleString();
+        timeline.insertAdjacentHTML("beforeend", `
+          <div class="event">
+            <div class="bubble">✓</div>
+            <div>
+              <strong>${escapeHtml(a.msg)}</strong>
+              <span>${time}</span>
+            </div>
+          </div>
+        `);
+      }
+    }
 
-    // Signed PDF storage
-    setSignedBase64,
-    getSignedBase64,
-    hasSignedPDF,
+    function escapeHtml(str){
+      return (str || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
 
-    // Upload helpers
-    hasUploadedPDF,
-    getUploadedPDFBase64,
-    getUploadedPDFName,
+    // Create tiles set mode flags then route to create
+    document.getElementById("tileTemplate").addEventListener("click", () => {
+      localStorage.removeItem("fss_uploaded_pdf_b64");
+      localStorage.removeItem("fss_uploaded_pdf_name");
+      location.href = "create.html";
+    });
 
-    // File utilities
-    base64ToBlobURL,
+    document.getElementById("tileUpload").addEventListener("click", () => {
+      // create.html will detect uploaded base64; we just route there
+      location.href = "create.html";
+      setTimeout(() => {
+        // optional: focus upload input if page stays fast
+      }, 10);
+    });
 
-    // PDF generation
-    ensurePdfLib,
-    generateBuilderPDFBytes,
-    generateSignedPDF,
-  };
-})();
+    document.getElementById("tileBuilder").addEventListener("click", () => {
+      const d = FSS.loadDocState() || FSS.resetDoc();
+      if(!d.builder){
+        d.builder = { title: "Custom Agreement", text: "", rules: [] };
+        FSS.saveDocState(d);
+      }
+      localStorage.removeItem("fss_uploaded_pdf_b64");
+      localStorage.removeItem("fss_uploaded_pdf_name");
+      location.href = "create.html";
+    });
+
+    // Reset demo
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset demo? This clears agreement + signatures in this browser.")) return;
+      FSS.hardReset();
+      location.reload();
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+      location.href = "index.html";
+    });
+
+    // Boot
+    render();
+  </script>
+</body>
+</html>
