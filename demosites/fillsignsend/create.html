@@ -8,76 +8,140 @@
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{ max-width: 1200px; margin:0 auto; padding: 18px 18px 46px; }
+    .wrap{ max-width: 1280px; margin: 0 auto; padding: 18px 18px 40px; }
+    .head{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap: 12px; flex-wrap:wrap; margin-bottom: 12px;
+    }
+    .head h1{ margin:0; font-size:18px; font-weight:950; letter-spacing:-0.2px; }
+    .head p{ margin:6px 0 0; font-size:13px; color:var(--muted); font-weight:750; max-width: 90ch; line-height:1.5; }
 
-    .page-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-      margin-bottom: 12px;
-    }
-    .page-head h1{
-      margin: 0;
-      font-size: 18px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .page-head p{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      max-width: 80ch;
-      line-height: 1.5;
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
+    .layout{ display:grid; grid-template-columns: 420px 1fr; gap: 14px; align-items:start; }
     .card{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 20px;
       padding: 14px;
     }
+    .card h2{ margin:0; font-size:14px; font-weight:950; letter-spacing:-0.1px; }
+    .divider{ height:1px; background:rgba(255,255,255,.08); margin: 12px 0; }
 
-    .card h2{
-      margin: 0;
+    .grid{ display:grid; gap: 10px; margin-top: 10px; }
+    label{
+      display:flex; flex-direction:column; gap: 6px;
+      font-weight: 900; font-size: 13px; color: rgba(255,255,255,.86);
+    }
+    input, select, textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.95);
+      outline:none;
       font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.1px;
+      font-weight: 850;
     }
-
-    .muted{
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      font-size: 13px;
-      line-height: 1.5;
+    select{
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.75) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.75) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) calc(50% - 4px),
+        calc(100% - 12px) calc(50% - 4px);
+      background-size: 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 34px;
     }
+    textarea{ min-height: 110px; resize: vertical; }
 
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.08);
-      margin: 12px 0;
-    }
+    .row{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
+    .btn-wide{ flex: 1 1 auto; justify-content:center; padding:12px 14px; border-radius:14px; font-weight:950; }
 
-    .tabs{
+    .modeRow{
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
       margin-top: 10px;
     }
-    .tab{
+    .modeBtn{
+      flex: 1 1 120px;
+      border-radius: 14px;
+      padding: 10px 12px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
+      color: rgba(255,255,255,.90);
+      font-weight: 950;
+      cursor:pointer;
+    }
+    .modeBtn.active{
+      background: linear-gradient(135deg, rgba(67,203,255,.18), rgba(96,255,157,.14));
+      border-color: rgba(67,203,255,.35);
+    }
+
+    .checks{
+      display:flex; flex-wrap:wrap; gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      margin-top: 8px;
+    }
+    .check{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
       border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      color: rgba(255,255,255,.86);
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+    }
+    .check input{ accent-color: rgba(67,203,255,.95); }
+
+    .status{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(255,255,255,.84);
+      display:none;
+    }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
+    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
+
+    /* Viewer */
+    .viewer-card{ overflow:hidden; padding: 0; }
+    .viewer-head{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.25);
+    }
+    .viewer-title{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .badge{
+      width:34px; height:34px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+    }
+    .viewer-title strong{
+      font-weight:950; font-size:13px;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .viewer-tools{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .tool{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
       padding: 8px 10px;
       font-weight: 900;
       cursor:pointer;
@@ -85,94 +149,33 @@
       font-size: 13px;
       display:inline-flex;
       align-items:center;
-      gap: 8px;
+      gap:8px;
       white-space: nowrap;
     }
-    .tab:hover{ background: rgba(255,255,255,.10); }
-    .tab.active{
-      border-color: rgba(255,73,128,.45);
-      background: rgba(255,73,128,.12);
-    }
+    .tool:hover{ background: rgba(255,255,255,.09); }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      align-items:start;
-      margin-top: 10px;
+    .viewer-body{
+      padding: 14px;
+      background: radial-gradient(900px 450px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
     }
-    @media(max-width: 980px){
-      .grid2{ grid-template-columns: 1fr; }
-    }
-
-    label{
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(255,255,255,.60);
-      display:block;
-      margin-bottom: 6px;
-    }
-
-    input, select, textarea{
+    .pdfStage{
+      position: relative;
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      color: rgba(255,255,255,.92);
-      font-weight: 850;
-      outline:none;
-    }
-    input:focus, select:focus, textarea:focus{
-      border-color: rgba(255,73,128,.55);
-      box-shadow: 0 0 0 4px rgba(255,73,128,.10);
-    }
-
-    /* 🔥 Fix invisible dropdown options */
-    select option{
-      background: #141416;
-      color: #fff;
-    }
-
-    textarea{
-      min-height: 140px;
-      resize: vertical;
-      line-height: 1.5;
-      font-weight: 800;
-    }
-
-    .row{
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.08);
+      min-height: 560px;
       display:flex;
-      gap: 12px;
       align-items:center;
-      flex-wrap:wrap;
+      justify-content:center;
     }
-
-    .btnbar{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 12px;
-      justify-content:flex-end;
+    canvas#pdfCanvas{
+      background:#fff;
+      border-radius: 12px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
     }
-
-    .btn{
-      border-radius: 14px;
-      font-weight: 950;
-      padding: 12px 16px;
-      cursor:pointer;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-    }
-    .btn:hover{ background: rgba(255,255,255,.10); }
-    .btn.primary{
-      border: 0;
-      background: linear-gradient(135deg, rgba(255,73,128,.95), rgba(255,126,73,.95));
-      color: #0a0a0a;
-    }
-
-    .status{
+    .viewerStatus{
       margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
@@ -181,99 +184,11 @@
       font-weight: 850;
       font-size: 13px;
       color: rgba(255,255,255,.84);
-      display:none;
-    }
-    .status.good{ display:block; border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
-    .status.warn{ display:block; border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
-    .status.bad { display:block; border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.08); }
-
-    /* Scratch builder */
-    .builder{
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap: 14px;
-      align-items:start;
-    }
-    @media(max-width: 980px){
-      .builder{ grid-template-columns: 1fr; }
     }
 
-    .clauseList{
-      display:grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .clauseItem{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      cursor:pointer;
-    }
-    .clauseItem:hover{ background: rgba(255,255,255,.06); }
-    .clauseItem input{ width:auto; margin-top: 2px; }
-    .clauseItem strong{
-      display:block;
-      font-weight: 950;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      margin-bottom: 4px;
-    }
-    .clauseItem span{
-      display:block;
-      font-weight: 750;
-      font-size: 12px;
-      color: rgba(255,255,255,.65);
-      line-height: 1.45;
-    }
-
-    .previewBox{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.20);
-      padding: 12px;
-      max-height: 520px;
-      overflow:auto;
-    }
-    .previewBox h3{
-      margin:0 0 8px;
-      font-size: 14px;
-      font-weight: 950;
-    }
-    .previewText{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      font-size: 13px;
-      font-weight: 750;
-      color: rgba(255,255,255,.82);
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      width: fit-content;
-      white-space: nowrap;
-    }
-    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,196,82,.95); }
-
-    .smallNote{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.58);
-      font-weight: 750;
-      line-height: 1.45;
+    @media (max-width: 1020px){
+      .layout{ grid-template-columns: 1fr; }
+      .pdfStage{ min-height: 60vh; }
     }
   </style>
 </head>
@@ -304,679 +219,506 @@
   </header>
 
   <main class="wrap">
-    <div class="page-head">
+    <div class="head">
       <div>
-        <h1>Create Agreement</h1>
+        <h1>Create an Agreement</h1>
         <p>
-          Choose a template, upload your own PDF, or build an agreement from scratch (NDA Express style).
-          Then add Party A and Party B details and continue to signing.
+          Choose a PDF template, upload your own agreement, or build one from scratch.
+          Then enter sender + recipient and continue to <strong>Sign</strong>.
         </p>
       </div>
-      <div class="pill" id="modePill"><span class="dot"></span><span id="modeLabel">Template</span></div>
     </div>
 
     <div class="layout">
-      <!-- SOURCE / MODE -->
-      <section class="card">
-        <h2>Agreement Source</h2>
-        <p class="muted">
-          Pick one option below. This becomes the agreement “envelope” stored in your browser for the demo.
-        </p>
+      <!-- LEFT -->
+      <aside class="card">
+        <h2>Agreement Setup</h2>
 
-        <div class="tabs">
-          <button class="tab active" id="tabTemplate" type="button">📄 Template PDF</button>
-          <button class="tab" id="tabUpload" type="button">⬆️ Upload PDF</button>
-          <button class="tab" id="tabScratch" type="button">✨ Build From Scratch</button>
+        <div class="modeRow">
+          <button class="modeBtn active" id="modeTemplate" type="button">Templates</button>
+          <button class="modeBtn" id="modeUpload" type="button">Upload PDF</button>
+          <button class="modeBtn" id="modeBuilder" type="button">Build from scratch</button>
         </div>
 
         <div class="divider"></div>
 
         <!-- TEMPLATE MODE -->
-        <div id="panelTemplate">
-          <div class="grid2">
-            <div>
-              <label for="templateSelect">Template PDF</label>
+        <div id="templateBlock">
+          <div class="grid">
+            <label>
+              Template PDF
               <select id="templateSelect">
-                <option value="nda.pdf">nda.pdf</option>
-                <option value="consulting_agreement.pdf">consulting_agreement.pdf</option>
-                <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
-                <option value="lease-waiver.pdf">lease-waiver.pdf</option>
-                <option value="event-accident-waiver.pdf">event-accident-waiver.pdf</option>
-                <option value="real-estate-agreement.pdf">real-estate-agreement.pdf</option>
-                <option value="Photo-Release.pdf">Photo-Release.pdf</option>
+                <option value="nda.pdf">NDA</option>
+                <option value="consulting_agreement.pdf">Consulting Agreement</option>
+                <option value="non-compete-agreement.pdf">Non-Compete Agreement</option>
+                <option value="real-estate-agreement.pdf">Real Estate Agreement</option>
+                <option value="lease-waiver.pdf">Lease Waiver</option>
+                <option value="event-accident-waiver.pdf">Event Accident Waiver</option>
+                <option value="Photo-Release.pdf">Photo Release</option>
               </select>
-              <div class="smallNote">
-                These must exist under <strong>/pdfs/</strong> in your site folder.
-              </div>
-            </div>
-
-            <div class="previewBox">
-              <h3>What happens next?</h3>
-              <div class="previewText">
-1) Choose a template
-2) Enter Party A + Party B
-3) Continue → Sign page
-4) Place signature/date/text fields, drag them into position, double-click to edit
-5) Sign as sender → generate signed PDF
-              </div>
-            </div>
+            </label>
           </div>
         </div>
 
         <!-- UPLOAD MODE -->
-        <div id="panelUpload" style="display:none;">
-          <div class="grid2">
-            <div>
-              <label for="uploadInput">Upload PDF</label>
+        <div id="uploadBlock" style="display:none;">
+          <div class="grid">
+            <label>
+              Upload PDF
               <input id="uploadInput" type="file" accept="application/pdf" />
-              <div class="smallNote">
-                Uploaded PDF is stored as Base64 in localStorage for the demo.
-              </div>
-            </div>
-
-            <div class="previewBox">
-              <h3>Upload status</h3>
-              <div class="previewText" id="uploadStatus">No PDF uploaded yet.</div>
+            </label>
+            <div style="font-size:12px; font-weight:800; color: rgba(255,255,255,.65); line-height:1.4;">
+              Uploaded PDFs are stored locally in your browser for the demo.
             </div>
           </div>
         </div>
 
-        <!-- SCRATCH MODE -->
-        <div id="panelScratch" style="display:none;">
-          <div class="builder">
-            <!-- LEFT: clauses -->
-            <div class="card" style="padding:14px;">
-              <h2>Choose clauses</h2>
-              <p class="muted" style="margin-top:8px;">
-                Select the clauses you want included (NDA Express style). Add custom clauses if needed.
-              </p>
+        <!-- BUILDER MODE -->
+        <div id="builderBlock" style="display:none;">
+          <div class="grid">
+            <label>
+              Document title
+              <input id="builderTitle" type="text" placeholder="Example: Mutual NDA Agreement" />
+            </label>
 
-              <div class="divider"></div>
+            <label>
+              Agreement text / clauses
+              <textarea id="builderBody" placeholder="Write the agreement content here..."></textarea>
+            </label>
 
-              <label for="builderTitle">Agreement Title</label>
-              <input id="builderTitle" value="Confidentiality Agreement" />
-
-              <div class="divider"></div>
-
-              <div class="clauseList" id="clauseList"></div>
-
-              <div class="divider"></div>
-
-              <button class="btn" id="addCustomBtn" type="button">➕ Add custom clause</button>
-              <div class="smallNote">
-                Custom clauses appear at the bottom of the agreement.
-              </div>
+            <div style="font-weight:950; margin-top: 4px;">Rules (NDAExpress-style)</div>
+            <div class="checks" id="builderRules">
+              <label class="check"><input type="checkbox" value="Mutual agreement"> Mutual agreement</label>
+              <label class="check"><input type="checkbox" value="One-way agreement"> One-way agreement</label>
+              <label class="check"><input type="checkbox" value="Non-disclosure (confidentiality)"> Non-disclosure</label>
+              <label class="check"><input type="checkbox" value="Non-solicitation"> Non-solicitation</label>
+              <label class="check"><input type="checkbox" value="Non-compete"> Non-compete</label>
+              <label class="check"><input type="checkbox" value="Governing law required"> Governing law required</label>
+              <label class="check"><input type="checkbox" value="Term / expiration required"> Term / expiration required</label>
+              <label class="check"><input type="checkbox" value="Add signature blocks"> Add signature blocks</label>
             </div>
 
-            <!-- RIGHT: preview -->
-            <div class="card" style="padding:14px;">
-              <h2>Agreement Preview</h2>
-              <p class="muted" style="margin-top:8px;">
-                This preview is what will become the generated PDF.
-              </p>
-
-              <div class="divider"></div>
-
-              <div class="previewBox">
-                <h3 id="previewTitle">Confidentiality Agreement</h3>
-                <div class="previewText" id="previewText">Select clauses on the left…</div>
-              </div>
-
-              <div class="smallNote">
-                Note: the PDF is built on the Sign page using your app.js builder generator.
-                If that function is missing, we’ll add it next.
-              </div>
+            <div style="font-size:12px; font-weight:800; color: rgba(255,255,255,.65); line-height:1.4;">
+              The builder generates a real PDF and previews it live.
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- PARTIES -->
-      <section class="card">
-        <h2>Party Information</h2>
-        <p class="muted">
-          These values populate the envelope and are used for sender signature defaults.
-        </p>
 
         <div class="divider"></div>
 
-        <div class="grid2">
-          <div class="card" style="padding:14px;">
-            <h2>Party A (Sender)</h2>
-            <div class="divider"></div>
+        <div class="grid">
+          <label>
+            Sender name
+            <input id="senderName" type="text" placeholder="Example: Mason Palmieri" />
+          </label>
+          <label>
+            Sender email
+            <input id="senderEmail" type="email" placeholder="sender@company.com" />
+          </label>
+          <label>
+            Recipient name
+            <input id="recipientName" type="text" placeholder="Example: Client Name" />
+          </label>
+          <label>
+            Recipient email
+            <input id="recipientEmail" type="email" placeholder="client@company.com" />
+          </label>
+        </div>
 
-            <label>Company / Name</label>
-            <input id="aName" placeholder="Company or individual name" />
+        <div class="divider"></div>
 
-            <label style="margin-top:10px;">Email</label>
-            <input id="aEmail" placeholder="sender@email.com" />
+        <div class="row">
+          <button class="btn btn-primary btn-wide" id="saveBtn" type="button">Save & Preview</button>
+          <button class="btn btn-outline btn-wide" id="continueBtn" type="button">Continue to Sign</button>
+        </div>
 
-            <label style="margin-top:10px;">Title (optional)</label>
-            <input id="aTitle" placeholder="CEO / Manager / etc." />
+        <div class="status warn" id="statusBox"></div>
+      </aside>
 
-            <label style="margin-top:10px;">Address (optional)</label>
-            <input id="aAddr" placeholder="Street, City, State" />
+      <!-- RIGHT VIEWER -->
+      <section class="card viewer-card">
+        <div class="viewer-head">
+          <div class="viewer-title">
+            <div class="badge">PDF</div>
+            <strong id="pdfName">—</strong>
           </div>
 
-          <div class="card" style="padding:14px;">
-            <h2>Party B (Recipient)</h2>
-            <div class="divider"></div>
-
-            <label>Company / Name</label>
-            <input id="bName" placeholder="Company or individual name" />
-
-            <label style="margin-top:10px;">Email</label>
-            <input id="bEmail" placeholder="recipient@email.com" />
-
-            <label style="margin-top:10px;">Title (optional)</label>
-            <input id="bTitle" placeholder="VP / Director / etc." />
-
-            <label style="margin-top:10px;">Address (optional)</label>
-            <input id="bAddr" placeholder="Street, City, State" />
+          <div class="viewer-tools">
+            <button class="tool" id="fitBtn" type="button">Fit</button>
+            <button class="tool" id="zoomOutBtn" type="button">−</button>
+            <button class="tool" id="zoomInBtn" type="button">+</button>
+            <button class="tool" id="openBtn" type="button">Open</button>
+            <button class="tool" id="refreshBtn" type="button">Refresh</button>
           </div>
         </div>
 
-        <div class="btnbar">
-          <button class="btn" id="resetBtn" type="button">Reset Envelope</button>
-          <button class="btn primary" id="continueBtn" type="button">Continue to Sign →</button>
+        <div class="viewer-body">
+          <div class="pdfStage" id="pdfStage">
+            <canvas id="pdfCanvas"></canvas>
+          </div>
+          <div class="viewerStatus" id="viewerStatus">Preview will appear here…</div>
         </div>
-
-        <div class="status" id="statusBox"></div>
       </section>
     </div>
   </main>
 
   <script src="assets/app.js"></script>
+  <script src="assets/pdfjs/pdf.min.js"></script>
 
   <script>
-    // ========= AUTH =========
     FSS.guard();
+
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     document.getElementById("userEmail").textContent = user.email || "demo@client.com";
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      FSS.logout();
-      location.href = "index.html";
-    });
 
-    // ========= STATE =========
     const statusBox = document.getElementById("statusBox");
-    function setStatus(type, msg){
+    function showStatus(msg, type="warn"){
+      statusBox.style.display = "";
       statusBox.className = "status " + type;
       statusBox.textContent = msg;
     }
     function clearStatus(){
-      statusBox.className = "status";
+      statusBox.style.display = "none";
       statusBox.textContent = "";
     }
 
-    function getDoc(){
-      return FSS.loadDocState() || null;
-    }
-    function saveDoc(doc){
-      FSS.saveDocState(doc);
-    }
+    // Mode buttons
+    const modeTemplate = document.getElementById("modeTemplate");
+    const modeUpload   = document.getElementById("modeUpload");
+    const modeBuilder  = document.getElementById("modeBuilder");
 
-    // Ensure doc exists
-    let doc = getDoc();
-    if(!doc){
-      FSS.resetDoc();
-      doc = getDoc();
-    }
+    const templateBlock = document.getElementById("templateBlock");
+    const uploadBlock   = document.getElementById("uploadBlock");
+    const builderBlock  = document.getElementById("builderBlock");
 
-    // ========= MODE TABS =========
-    let mode = "template"; // template | upload | scratch
-
-    const tabTemplate = document.getElementById("tabTemplate");
-    const tabUpload = document.getElementById("tabUpload");
-    const tabScratch = document.getElementById("tabScratch");
-
-    const panelTemplate = document.getElementById("panelTemplate");
-    const panelUpload = document.getElementById("panelUpload");
-    const panelScratch = document.getElementById("panelScratch");
-
-    const modePill = document.getElementById("modePill");
-    const modeLabel = document.getElementById("modeLabel");
-
-    function setMode(next){
-      mode = next;
-
-      [tabTemplate, tabUpload, tabScratch].forEach(x => x.classList.remove("active"));
-      panelTemplate.style.display = "none";
-      panelUpload.style.display = "none";
-      panelScratch.style.display = "none";
-
-      if(next === "template"){
-        tabTemplate.classList.add("active");
-        panelTemplate.style.display = "";
-        modeLabel.textContent = "Template";
-      }
-      if(next === "upload"){
-        tabUpload.classList.add("active");
-        panelUpload.style.display = "";
-        modeLabel.textContent = "Upload";
-      }
-      if(next === "scratch"){
-        tabScratch.classList.add("active");
-        panelScratch.style.display = "";
-        modeLabel.textContent = "Build From Scratch";
-      }
-    }
-
-    tabTemplate.addEventListener("click", () => setMode("template"));
-    tabUpload.addEventListener("click", () => setMode("upload"));
-    tabScratch.addEventListener("click", () => setMode("scratch"));
-
-    // ========= TEMPLATE SELECT =========
     const templateSelect = document.getElementById("templateSelect");
-
-    // ========= UPLOAD =========
     const uploadInput = document.getElementById("uploadInput");
-    const uploadStatus = document.getElementById("uploadStatus");
 
-    uploadInput.addEventListener("change", async () => {
+    const builderTitle = document.getElementById("builderTitle");
+    const builderBody  = document.getElementById("builderBody");
+    const builderRules = document.getElementById("builderRules");
+
+    let mode = "template"; // "template" | "upload" | "builder"
+
+    function setMode(m){
+      mode = m;
+      modeTemplate.classList.toggle("active", m === "template");
+      modeUpload.classList.toggle("active", m === "upload");
+      modeBuilder.classList.toggle("active", m === "builder");
+
+      templateBlock.style.display = (m === "template") ? "" : "none";
+      uploadBlock.style.display = (m === "upload") ? "" : "none";
+      builderBlock.style.display = (m === "builder") ? "" : "none";
+
       clearStatus();
-      const file = uploadInput.files && uploadInput.files[0];
-      if(!file){
-        uploadStatus.textContent = "No PDF uploaded yet.";
-        return;
-      }
-      if(file.type !== "application/pdf"){
-        setStatus("bad", "Please upload a PDF file.");
-        uploadInput.value = "";
-        return;
-      }
-
-      uploadStatus.textContent = "Reading PDF…";
-
-      const buf = await file.arrayBuffer();
-      const bytes = new Uint8Array(buf);
-      let binary = "";
-      for(let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
-      const b64 = btoa(binary);
-
-      localStorage.setItem("fss_uploaded_pdf_b64", b64);
-      localStorage.setItem("fss_uploaded_pdf_name", file.name);
-
-      uploadStatus.textContent = `✅ Uploaded: ${file.name}`;
-      setStatus("good", "Uploaded PDF stored for demo. Continue when ready.");
-    });
-
-    // ========= SCRATCH BUILDER (NDA EXPRESS STYLE) =========
-    const clauseListEl = document.getElementById("clauseList");
-    const builderTitleEl = document.getElementById("builderTitle");
-    const previewTitleEl = document.getElementById("previewTitle");
-    const previewTextEl = document.getElementById("previewText");
-    const addCustomBtn = document.getElementById("addCustomBtn");
-
-    // NDA Express style clause library (checkbox rules)
-    const CLAUSES = [
-      {
-        id: "exclusions",
-        title: "Exclusions from Confidential Information",
-        body:
-`Receiving Party’s obligations do not extend to information that is:
-(a) publicly known at the time of disclosure or becomes publicly known through no fault of Receiving Party;
-(b) discovered or created by Receiving Party before disclosure by Disclosing Party;
-(c) learned by Receiving Party through legitimate means other than from Disclosing Party or its representatives; or
-(d) disclosed by Receiving Party with Disclosing Party’s prior written approval.`
-      },
-      {
-        id: "obligations",
-        title: "Obligations of Receiving Party",
-        body:
-`Receiving Party will keep the Confidential Information strictly confidential, limit access to employees/contractors with a need to know, and use at least the same degree of care as it uses to protect its own confidential information (no less than reasonable care).`
-      },
-      {
-        id: "return_destroy",
-        title: "Return and/or Destruction of Information",
-        body:
-`Upon Disclosing Party’s request, Receiving Party will promptly return or destroy all copies of Confidential Information and certify such return or destruction in writing, except to the extent retained in routine backups or as required by law.`
-      },
-      {
-        id: "term",
-        title: "Term and Termination",
-        body:
-`This Agreement begins on the Effective Date and continues until terminated by either Party upon written notice. The confidentiality obligations survive termination for a period of (2) years, except for trade secrets which remain protected as long as they remain trade secrets.`
-      },
-      {
-        id: "ownership",
-        title: "Ownership of Information",
-        body:
-`All Confidential Information and copies thereof remain the property of Disclosing Party. No rights are granted by implication or otherwise except as expressly stated herein.`
-      },
-      {
-        id: "no_license",
-        title: "No License or Transfer of Rights",
-        body:
-`Nothing in this Agreement grants any license, ownership, or transfer of intellectual property rights. Each Party retains all rights, title, and interest in its intellectual property.`
-      },
-      {
-        id: "no_obligation",
-        title: "No Obligation to Proceed",
-        body:
-`The Parties acknowledge that this Agreement does not create an obligation for either Party to proceed with any proposed transaction or relationship. Either Party may terminate discussions at any time without liability.`
-      },
-      {
-        id: "no_warranty",
-        title: "No Warranty",
-        body:
-`Confidential Information is provided “as is.” Disclosing Party makes no warranties regarding accuracy or completeness, and disclaims all liability arising from its use.`
-      },
-      {
-        id: "entire_agreement",
-        title: "Entire Agreement and Severability",
-        body:
-`This Agreement constitutes the entire agreement between the Parties regarding the subject matter and supersedes prior agreements. If any provision is held invalid, the remaining provisions remain in effect.`
-      },
-      // Extra “NDA Express” flavor add-ons:
-      {
-        id: "no_photography",
-        title: "No Photography / Videography / Audio Recording",
-        body:
-`Receiving Party agrees not to photograph, record video, or make audio recordings of Confidential Information, meetings, or materials without Disclosing Party’s prior written consent.`
-      },
-      {
-        id: "no_social_media",
-        title: "No Social Media",
-        body:
-`Receiving Party agrees not to post, mention, or reference Disclosing Party, the relationship, or the Confidential Information on social media without prior written consent.`
-      },
-      {
-        id: "non_disparagement",
-        title: "No Disclosure of Personal Entanglement",
-        body:
-`The Parties agree not to publicly disclose personal relationships or entanglements related to this Agreement or the relationship between the Parties.`
-      },
-      {
-        id: "non_solicit_employees",
-        title: "Employee Non-Solicitation",
-        body:
-`During the term of this Agreement and for one (1) year thereafter, Receiving Party will not solicit for employment any employee of Disclosing Party that it interacted with through the Confidential Information relationship.`
-      },
-      {
-        id: "non_solicit_clients",
-        title: "Non-Solicitation of Clients",
-        body:
-`During the term of this Agreement and for one (1) year thereafter, Receiving Party will not solicit Disclosing Party’s clients or customers that it learned about through Confidential Information.`
-      },
-      {
-        id: "non_compete",
-        title: "Non-Compete (Optional)",
-        body:
-`For a period of six (6) months following the termination of discussions, Receiving Party agrees not to use Confidential Information to directly compete with Disclosing Party in the specific project area described in this Agreement. (Consult counsel for enforceability.)`
-      },
-      {
-        id: "data_protection",
-        title: "Data Protection",
-        body:
-`Receiving Party agrees to implement reasonable technical and organizational measures to protect Confidential Information, including access controls, encryption where appropriate, and prompt notice of any suspected breach.`
-      }
-    ];
-
-    let selectedClauseIds = new Set(["exclusions","obligations","return_destroy","ownership","no_license","no_obligation"]);
-    let customClauses = []; // {title, body}
-
-    function renderClauseList(){
-      clauseListEl.innerHTML = "";
-      for(const c of CLAUSES){
-        const checked = selectedClauseIds.has(c.id);
-        const el = document.createElement("div");
-        el.className = "clauseItem";
-        el.innerHTML = `
-          <input type="checkbox" ${checked ? "checked" : ""} />
-          <div>
-            <strong>${escapeHtml(c.title)}</strong>
-            <span>${escapeHtml(shorten(c.body, 120))}</span>
-          </div>
-        `;
-        el.addEventListener("click", (e) => {
-          // allow clicking anywhere to toggle
-          const isChecked = selectedClauseIds.has(c.id);
-          if(isChecked) selectedClauseIds.delete(c.id);
-          else selectedClauseIds.add(c.id);
-          renderClauseList();
-          renderPreview();
-        });
-        clauseListEl.appendChild(el);
-      }
-
-      // Add custom clauses display
-      if(customClauses.length){
-        const sep = document.createElement("div");
-        sep.className = "divider";
-        sep.style.margin = "12px 0";
-        clauseListEl.appendChild(sep);
-
-        customClauses.forEach((cc, idx) => {
-          const el = document.createElement("div");
-          el.className = "clauseItem";
-          el.style.cursor = "default";
-          el.innerHTML = `
-            <input type="checkbox" checked disabled />
-            <div>
-              <strong>Custom: ${escapeHtml(cc.title)}</strong>
-              <span>${escapeHtml(shorten(cc.body, 120))}</span>
-            </div>
-          `;
-          el.addEventListener("dblclick", () => {
-            const newTitle = prompt("Edit custom clause title:", cc.title);
-            if(newTitle === null) return;
-            const newBody = prompt("Edit custom clause body:", cc.body);
-            if(newBody === null) return;
-            customClauses[idx] = { title: newTitle.trim() || "Custom Clause", body: newBody.trim() || "" };
-            renderClauseList();
-            renderPreview();
-          });
-          clauseListEl.appendChild(el);
-        });
-      }
-    }
-
-    function buildAgreementText(){
-      const title = (builderTitleEl.value || "Confidentiality Agreement").trim();
-      const parts = [];
-
-      parts.push(`${title.toUpperCase()}\n`);
-      parts.push(`This Agreement (“Agreement”) is entered into on the Effective Date by and between:\n`);
-      parts.push(`Party A (“Disclosing Party”): [Party A Name]\nParty B (“Receiving Party”): [Party B Name]\n`);
-      parts.push(`The Parties agree as follows:\n`);
-
-      let section = 1;
-      for(const c of CLAUSES){
-        if(!selectedClauseIds.has(c.id)) continue;
-        parts.push(`${section}. ${c.title}\n${c.body}\n`);
-        section++;
-      }
-
-      for(const cc of customClauses){
-        parts.push(`${section}. ${cc.title}\n${cc.body}\n`);
-        section++;
-      }
-
-      parts.push(`IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.\n\n`);
-      parts.push(`Party A Signature: ____________________________\nDate: __________________\n\n`);
-      parts.push(`Party B Signature: ____________________________\nDate: __________________\n`);
-
-      return { title, text: parts.join("\n") };
-    }
-
-    function renderPreview(){
-      const { title, text } = buildAgreementText();
-      previewTitleEl.textContent = title;
-      previewTextEl.textContent = text;
-    }
-
-    function shorten(str, n){
-      const s = (str || "").replace(/\s+/g, " ").trim();
-      return s.length > n ? s.slice(0,n-1) + "…" : s;
-    }
-    function escapeHtml(str){
-      return (str || "").replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      })[m]);
-    }
-
-    addCustomBtn.addEventListener("click", () => {
-      const title = prompt("Custom clause title:", "Additional Terms");
-      if(title === null) return;
-      const body = prompt("Custom clause body:", "Enter the clause text here…");
-      if(body === null) return;
-      customClauses.push({ title: title.trim() || "Custom Clause", body: body.trim() || "" });
-      renderClauseList();
       renderPreview();
-    });
+    }
 
-    builderTitleEl.addEventListener("input", renderPreview);
+    modeTemplate.addEventListener("click", () => setMode("template"));
+    modeUpload.addEventListener("click", () => setMode("upload"));
+    modeBuilder.addEventListener("click", () => setMode("builder"));
 
-    // ========= PARTY INPUTS =========
-    const aName = document.getElementById("aName");
-    const aEmail = document.getElementById("aEmail");
-    const aTitle = document.getElementById("aTitle");
-    const aAddr = document.getElementById("aAddr");
+    // Parties
+    const senderName = document.getElementById("senderName");
+    const senderEmail = document.getElementById("senderEmail");
+    const recipientName = document.getElementById("recipientName");
+    const recipientEmail = document.getElementById("recipientEmail");
 
-    const bName = document.getElementById("bName");
-    const bEmail = document.getElementById("bEmail");
-    const bTitle = document.getElementById("bTitle");
-    const bAddr = document.getElementById("bAddr");
+    // PDF.js setup
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "assets/pdfjs/pdf.worker.min.js";
 
-    function loadExisting(){
-      doc = getDoc();
-      if(!doc) return;
+    const pdfStage = document.getElementById("pdfStage");
+    const canvas = document.getElementById("pdfCanvas");
+    const ctx = canvas.getContext("2d");
 
-      // Parties
-      aName.value = doc.parties?.aName || "";
-      aEmail.value = doc.parties?.aEmail || "";
-      aTitle.value = doc.parties?.aTitle || "";
-      aAddr.value = doc.parties?.aAddr || "";
+    const pdfName = document.getElementById("pdfName");
+    const viewerStatus = document.getElementById("viewerStatus");
 
-      bName.value = doc.parties?.bName || "";
-      bEmail.value = doc.parties?.bEmail || "";
-      bTitle.value = doc.parties?.bTitle || "";
-      bAddr.value = doc.parties?.bAddr || "";
+    let pdfScale = 1.2;
+    let fitMode = false;
+    let pdfDocRef = null;
+    let pdfPageRef = null;
 
-      // Source state
-      if(doc.builder){
-        setMode("scratch");
-        builderTitleEl.value = doc.builder.title || "Confidentiality Agreement";
-        selectedClauseIds = new Set(doc.builder.selectedClauseIds || []);
-        customClauses = doc.builder.customClauses || [];
-        renderClauseList();
-        renderPreview();
-        return;
+    async function getPDFBytesForPreview(){
+      if(mode === "upload"){
+        const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
+        if(!b64) return null;
+        return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
       }
 
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        // if they uploaded previously, keep upload mode selected
-        setMode("upload");
-        const nm = localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded PDF";
-        uploadStatus.textContent = `✅ Uploaded: ${nm}`;
-        return;
+      if(mode === "builder"){
+        // Create builder doc from current inputs
+        const rules = Array.from(builderRules.querySelectorAll("input[type=checkbox]:checked")).map(x => x.value);
+        const tempDoc = FSS.loadDocState() || FSS.resetDoc();
+        tempDoc.builder = {
+          title: (builderTitle.value || "Custom Agreement").trim(),
+          text: (builderBody.value || "").trim(),
+          rules
+        };
+        FSS.saveDocState(tempDoc);
+
+        const bytes = await FSS.generateBuilderPDFBytes();
+        return bytes || null;
       }
 
-      if(doc.template){
-        setMode("template");
-        templateSelect.value = doc.template;
+      // template
+      const t = templateSelect.value || "nda.pdf";
+      const url = `pdfs/${encodeURIComponent(t)}`;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error("Template not found: " + t);
+      const buf = await res.arrayBuffer();
+      return new Uint8Array(buf);
+    }
+
+    async function renderPreview(){
+      viewerStatus.textContent = "Loading preview…";
+      viewerStatus.className = "viewerStatus";
+
+      try{
+        const bytes = await getPDFBytesForPreview();
+        if(!bytes){
+          pdfName.textContent = "—";
+          viewerStatus.textContent = "Choose a template, upload a PDF, or build from scratch.";
+          ctx.clearRect(0,0,canvas.width, canvas.height);
+          return;
+        }
+
+        if(mode === "upload"){
+          pdfName.textContent = localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded PDF";
+        } else if(mode === "builder"){
+          pdfName.textContent = "Custom PDF";
+        } else {
+          pdfName.textContent = templateSelect.value || "Template PDF";
+        }
+
+        const loadingTask = window.pdfjsLib.getDocument({ data: bytes });
+        pdfDocRef = await loadingTask.promise;
+        pdfPageRef = await pdfDocRef.getPage(1);
+
+        if(fitMode){
+          const vp = pdfPageRef.getViewport({ scale: 1 });
+          const stageW = pdfStage.clientWidth - 40;
+          pdfScale = stageW / vp.width;
+          pdfScale = Math.max(0.6, Math.min(pdfScale, 2.5));
+        }
+
+        const viewport = pdfPageRef.getViewport({ scale: pdfScale });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await pdfPageRef.render({ canvasContext: ctx, viewport }).promise;
+
+        viewerStatus.textContent = `Ready • Zoom ${(pdfScale*100).toFixed(0)}%`;
+      }catch(err){
+        console.error(err);
+        showStatus("Preview failed. Check console.", "bad");
+        viewerStatus.textContent = "Preview failed.";
       }
     }
 
-    // ========= CONTINUE / SAVE =========
-    document.getElementById("continueBtn").addEventListener("click", () => {
+    // Viewer tools
+    document.getElementById("zoomInBtn").addEventListener("click", async () => {
+      fitMode = false;
+      pdfScale = Math.min(3.0, pdfScale + 0.15);
+      await renderPreview();
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", async () => {
+      fitMode = false;
+      pdfScale = Math.max(0.6, pdfScale - 0.15);
+      await renderPreview();
+    });
+
+    document.getElementById("fitBtn").addEventListener("click", async () => {
+      fitMode = true;
+      await renderPreview();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", async () => {
+      await renderPreview();
       clearStatus();
+    });
 
-      const A = (aName.value || "").trim();
-      const AE = (aEmail.value || "").trim();
-      const B = (bName.value || "").trim();
-      const BE = (bEmail.value || "").trim();
-
-      if(!A || !B){
-        setStatus("warn", "Please enter at least Party A Name and Party B Name.");
+    document.getElementById("openBtn").addEventListener("click", () => {
+      if(mode === "upload"){
+        const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
+        if(!b64) return;
+        const url = FSS.base64ToBlobURL(b64, "application/pdf");
+        window.open(url, "_blank");
+        return;
+      }
+      if(mode === "builder"){
+        // open builder bytes in new tab
+        (async () => {
+          const bytes = await getPDFBytesForPreview();
+          if(!bytes) return;
+          const blob = new Blob([bytes], { type:"application/pdf" });
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+        })();
         return;
       }
 
-      // Update doc
-      doc = getDoc() || {};
-      doc.parties = doc.parties || {};
-      doc.parties.aName = A;
-      doc.parties.aEmail = AE;
-      doc.parties.aTitle = (aTitle.value || "").trim();
-      doc.parties.aAddr  = (aAddr.value || "").trim();
+      const t = templateSelect.value || "nda.pdf";
+      window.open(`pdfs/${encodeURIComponent(t)}`, "_blank");
+    });
 
-      doc.parties.bName = B;
-      doc.parties.bEmail = BE;
-      doc.parties.bTitle = (bTitle.value || "").trim();
-      doc.parties.bAddr  = (bAddr.value || "").trim();
+    // Save / Continue
+    function validateParties(){
+      if(!(senderName.value || "").trim()) return "Sender name is required.";
+      if(!(recipientName.value || "").trim()) return "Recipient name is required.";
+      return null;
+    }
 
-      // Reset status / stage
-      doc.status = "draft";
-      doc.stage = "create";
-      doc.updatedAt = new Date().toISOString();
+    async function saveState(){
+      clearStatus();
 
-      // Apply source based on mode
+      const err = validateParties();
+      if(err){
+        showStatus(err, "bad");
+        return false;
+      }
+
+      const d = FSS.loadDocState() || FSS.resetDoc();
+
+      d.parties = {
+        aName: (senderName.value || "").trim(),
+        aEmail: (senderEmail.value || "").trim(),
+        bName: (recipientName.value || "").trim(),
+        bEmail: (recipientEmail.value || "").trim()
+      };
+
+      // reset workflow state
+      d.status = "draft";
+
+      // Save mode selection
       if(mode === "template"){
-        doc.template = templateSelect.value;
-        doc.builder = null;
-
-        // clear upload state (keep it optional, but prevents confusion)
+        d.template = templateSelect.value || "nda.pdf";
+        d.builder = null;
         localStorage.removeItem("fss_uploaded_pdf_b64");
         localStorage.removeItem("fss_uploaded_pdf_name");
       }
 
       if(mode === "upload"){
-        const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
-        if(!b64){
-          setStatus("warn", "Upload a PDF first.");
-          return;
+        d.template = null;
+        d.builder = null;
+        // keep upload base64 in localStorage
+        if(!localStorage.getItem("fss_uploaded_pdf_b64")){
+          showStatus("Upload a PDF first.", "bad");
+          return false;
         }
-        doc.template = null;
-        doc.builder = null;
       }
 
-      if(mode === "scratch"){
-        const built = buildAgreementText();
-        doc.template = null;
-
-        doc.builder = {
-          title: built.title,
-          text: built.text,
-          selectedClauseIds: Array.from(selectedClauseIds),
-          customClauses: customClauses
+      if(mode === "builder"){
+        d.template = null;
+        const rules = Array.from(builderRules.querySelectorAll("input[type=checkbox]:checked")).map(x => x.value);
+        d.builder = {
+          title: (builderTitle.value || "Custom Agreement").trim(),
+          text: (builderBody.value || "").trim(),
+          rules
         };
 
-        // clear upload state too (avoid conflicts)
-        localStorage.removeItem("fss_uploaded_pdf_b64");
-        localStorage.removeItem("fss_uploaded_pdf_name");
+        if(!d.builder.text){
+          showStatus("Builder content is empty — add text before saving.", "bad");
+          return false;
+        }
       }
 
-      saveDoc(doc);
+      FSS.saveDocState(d);
 
-      // Clean fields so Sign starts fresh
+      // clear existing fields/signature for new envelope
       FSS.saveFields([]);
       FSS.saveValues({});
+      FSS.clearSignedPDF();
 
-      setStatus("good", "✅ Envelope created. Sending you to Sign…");
+      showStatus("Saved. Preview updated.", "good");
+      await renderPreview();
+      return true;
+    }
 
-      setTimeout(() => {
-        location.href = "sign.html";
-      }, 650);
+    document.getElementById("saveBtn").addEventListener("click", saveState);
+
+    document.getElementById("continueBtn").addEventListener("click", async () => {
+      const ok = await saveState();
+      if(!ok) return;
+      location.href = "sign.html";
     });
 
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if(!confirm("Reset the current envelope? This clears selected template/upload/scratch and parties.")) return;
-      FSS.resetDoc();
-      FSS.saveFields([]);
-      FSS.saveValues({});
-      localStorage.removeItem("fss_uploaded_pdf_b64");
-      localStorage.removeItem("fss_uploaded_pdf_name");
-      location.reload();
-    });
-
-    // ========= BOOT =========
-    (function boot(){
-      // default scratch builder render
-      renderClauseList();
-      renderPreview();
-      loadExisting();
+    // Upload handler
+    uploadInput.addEventListener("change", async () => {
       clearStatus();
+      const file = uploadInput.files && uploadInput.files[0];
+      if(!file) return;
+
+      if(file.type !== "application/pdf"){
+        showStatus("Please upload a PDF file.", "bad");
+        uploadInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const arr = new Uint8Array(reader.result);
+        let b64 = "";
+        for(let i=0; i<arr.length; i++){
+          b64 += String.fromCharCode(arr[i]);
+        }
+        const out = btoa(b64);
+
+        localStorage.setItem("fss_uploaded_pdf_b64", out);
+        localStorage.setItem("fss_uploaded_pdf_name", file.name);
+
+        showStatus("PDF uploaded. Preview updated.", "good");
+        await renderPreview();
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    // Re-render on changes
+    templateSelect.addEventListener("change", renderPreview);
+    builderTitle.addEventListener("input", debounce(renderPreview, 450));
+    builderBody.addEventListener("input", debounce(renderPreview, 450));
+    builderRules.addEventListener("change", debounce(renderPreview, 450));
+
+    function debounce(fn, ms){
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+      };
+    }
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+      location.href = "index.html";
+    });
+
+    // Load existing state into UI
+    (function init(){
+      const d = FSS.loadDocState() || FSS.resetDoc();
+
+      senderName.value = d.parties?.aName || "";
+      senderEmail.value = d.parties?.aEmail || "";
+      recipientName.value = d.parties?.bName || "";
+      recipientEmail.value = d.parties?.bEmail || "";
+
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        setMode("upload");
+      } else if(d.builder && d.builder.text){
+        setMode("builder");
+        builderTitle.value = d.builder.title || "";
+        builderBody.value = d.builder.text || "";
+        const rules = d.builder.rules || [];
+        Array.from(builderRules.querySelectorAll("input[type=checkbox]")).forEach(cb => {
+          cb.checked = rules.includes(cb.value);
+        });
+      } else {
+        setMode("template");
+        templateSelect.value = d.template || "nda.pdf";
+      }
+
+      renderPreview();
     })();
   </script>
 </body>
