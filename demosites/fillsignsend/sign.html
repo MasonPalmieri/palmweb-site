@@ -3,77 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sign • Client Demo</title>
+  <title>Client Demo • Sign</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 18px 18px 50px;
-    }
+    .wrap{ max-width: 1280px; margin:0 auto; padding: 22px 18px 70px; }
 
-    .page-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin-bottom: 12px;
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px; flex-wrap:wrap; margin-bottom: 14px;
     }
-
-    .page-head h1{
-      margin:0;
-      font-size: 18px;
+    .brand{ display:flex; align-items:center; gap: 12px; }
+    .brand .logo{
+      width:44px; height:44px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
       font-weight: 950;
-      letter-spacing: -0.2px;
     }
+    .brand strong{ display:block; font-weight: 950; }
+    .brand span{ display:block; font-size:12px; color: rgba(255,255,255,.70); font-weight: 800; }
 
-    .page-head p{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
-      max-width: 90ch;
-      line-height: 1.5;
-    }
-
-    .layout{
+    .grid{
       display:grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 420px 1fr;
       gap: 14px;
       align-items:start;
-      margin-top: 10px;
     }
 
     .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
       border-radius: 22px;
-      padding: 14px;
-      box-shadow: 0 24px 80px rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 16px;
+      backdrop-filter: blur(12px);
     }
 
     .card h2{
-      margin:0;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.1px;
+      margin:0 0 6px;
+      font-size:16px;
+      font-weight:950;
+      letter-spacing:-.2px;
     }
 
-    .sub{
-      margin: 8px 0 0;
+    .muted{
+      margin:0 0 12px;
       color: rgba(255,255,255,.70);
       font-weight: 750;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
-    .divider{
-      height: 1px;
-      background: rgba(255,255,255,.10);
-      margin: 12px 0;
+    .kv{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    .kv strong{ display:block; font-weight: 950; margin-bottom: 2px; }
+    .kv span{ display:block; color: rgba(255,255,255,.70); font-weight: 750; font-size: 13px; }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+
+    /* Viewer */
+    .viewer{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      height: min(78vh, 860px);
+      display:flex;
+      flex-direction:column;
+      padding:0;
+    }
+
+    .viewerBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      flex-wrap:wrap;
     }
 
     .pill{
@@ -82,961 +96,545 @@
       gap: 8px;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      width: fit-content;
-      white-space: nowrap;
-    }
-    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.25); }
-    .pill[data-state="sender"] .dot{ background: rgba(67,203,255,.95); }
-    .pill[data-state="ready"] .dot{ background: rgba(96,255,157,.95); }
-    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
-
-    .info{
-      display:grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .info .row{
-      padding: 10px 12px;
-      border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-    }
-
-    .info .label{
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
       font-size: 12px;
-      font-weight: 900;
-      color: rgba(255,255,255,.60);
-      margin-bottom: 6px;
-    }
-
-    .info .value{
-      font-size: 13px;
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      overflow:hidden;
-      text-overflow: ellipsis;
+      color: rgba(255,255,255,.85);
       white-space: nowrap;
     }
 
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 12px;
+    .tools{
+      display:flex; gap: 8px; flex-wrap:wrap;
+      align-items:center; justify-content:flex-end;
     }
-
-    .btn-lg{
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 950;
-      width: 100%;
-      justify-content:center;
-    }
-
-    .btn-muted{
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-    }
-    .btn-muted:hover{ background: rgba(255,255,255,.09); }
-
-    /* Tools */
-    .toolbox{
-      display:grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .tool-btn{
-      width:100%;
-      justify-content:space-between;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      font-weight: 950;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      user-select:none;
-    }
-    .tool-btn:hover{ background: rgba(255,255,255,.09); }
-    .tool-btn span{ opacity:.9; font-weight: 900; }
-
-    /* Field editor */
-    .editor{
-      margin-top: 12px;
-      display:none;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-    }
-
-    .editor h3{
-      margin:0 0 8px;
-      font-size: 13px;
-      font-weight: 950;
-    }
-
-    label{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.86);
-    }
-
-    input, textarea{
-      padding: 11px 11px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.95);
-      outline:none;
-      font-size: 14px;
-      font-weight: 850;
-    }
-
-    input:focus, textarea:focus{
+    .tools .btn{ border-radius: 999px; padding: 9px 12px; font-size: 13px; }
+    .tools .btn.active{
       border-color: rgba(67,203,255,.55);
       box-shadow: 0 0 0 4px rgba(67,203,255,.12);
     }
 
-    .editor-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
-    .editor-actions .btn{ flex: 1 1 auto; justify-content:center; }
-
-    /* Viewer */
-    .viewer-card{
-      padding: 0;
-      overflow:hidden;
+    .stageLine{
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.70);
+      font-weight: 750;
+      font-size: 12px;
     }
 
-    .viewer-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.20);
-    }
-
-    .viewer-title{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      min-width:0;
-    }
-
-    .badge{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      font-weight: 950;
-    }
-
-    .viewer-title strong{
-      font-weight: 950;
-      font-size: 13px;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .viewer-tools{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .tool{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-weight: 900;
-      cursor:pointer;
-      user-select:none;
-      font-size: 13px;
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      white-space: nowrap;
-    }
-    .tool:hover{ background: rgba(255,255,255,.09); }
-
-    .viewer-body{
+    /* PDF canvas area (we use iframe + overlay for fields) */
+    .pdfWrap{
       position: relative;
-      padding: 14px;
-      background: radial-gradient(1000px 520px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
+      flex: 1 1 auto;
+      background: #0b1220;
+      overflow:auto;
     }
 
-    /* Big viewer */
-    #pdfFrame{
+    .pdfFrame{
       width: 100%;
-      height: min(82vh, 980px);
+      height: 100%;
+      min-height: 600px;
       border: 0;
-      border-radius: 18px;
-      background: #fff;
-      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+      display:block;
+      background:#111;
+      transform-origin: top left;
     }
 
-    /* Overlay layer for draggable fields */
-    #overlay{
+    /* Overlay fields */
+    .overlay{
       position:absolute;
-      inset: 14px;
-      border-radius: 18px;
-      pointer-events: none;
+      inset:0;
+      pointer-events:none; /* fields themselves will re-enable */
     }
 
     .field{
       position:absolute;
-      min-width: 140px;
-      min-height: 38px;
-      padding: 8px 10px;
+      min-width: 120px;
+      min-height: 34px;
       border-radius: 12px;
-      border: 1px solid rgba(67,203,255,.55);
-      background: rgba(15,23,42,.80);
-      color: rgba(255,255,255,.95);
-      font-weight: 950;
-      font-size: 14px;
-      cursor: move;
+      border: 2px solid rgba(255,79,99,.75);
+      background: rgba(255,255,255,.90);
+      box-shadow: 0 18px 44px rgba(0,0,0,.20);
+      padding: 8px 10px;
+      pointer-events:auto;
+      cursor: grab;
       user-select:none;
-      pointer-events: auto;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      justify-content:center;
+      color: #0f172a;
+      font-weight: 950;
+      font-size: 13px;
     }
+    .field:active{ cursor: grabbing; }
 
-    .field .type{
-      opacity:.85;
-      font-weight: 900;
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      white-space: nowrap;
-    }
-
-    .field.signature .label{
-      font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
+    .field.signature{
+      border-color: rgba(255,79,99,.75);
+      font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
       font-size: 18px;
       font-weight: 700;
-      letter-spacing: .2px;
+    }
+    .field.date{
+      border-color: rgba(96,255,157,.65);
+      font-weight: 950;
+    }
+    .field.text{
+      border-color: rgba(67,203,255,.65);
+      font-weight: 900;
     }
 
-    .field .label{
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 240px;
-    }
-
-    .status{
+    .toast{
       margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.84);
       font-weight: 850;
       font-size: 13px;
-      color: rgba(255,255,255,.84);
       display:none;
     }
-    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
-    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .toast.show{ display:block; }
+    .toast.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .toast.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
 
-    @media (max-width: 1020px){
-      .layout{ grid-template-columns: 1fr; }
-      #pdfFrame{ height: 72vh; }
+    @media (max-width: 1100px){
+      .grid{ grid-template-columns: 1fr; }
+      .viewer{ height: 62vh; }
     }
   </style>
 </head>
 
 <body class="app">
-  <header class="app-top">
-    <div class="app-top-inner">
-      <a class="app-brand" href="dashboard.html">
-        <span class="logo-badge">FSS</span>
-        <div class="brand-text">
-          <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
-        </div>
-      </a>
+  <div class="wrap">
 
-      <div class="app-nav">
-        <a class="nav-link" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="create.html">Create</a>
-        <a class="nav-link active" href="sign.html">Sign</a>
-        <a class="nav-link" href="success.html">Completed</a>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">FSS</div>
+        <div>
+          <strong>Client Demo</strong>
+          <span>Sign & Send • Place fields → Generate signed PDF</span>
+        </div>
       </div>
 
-      <div class="app-user">
-        <span id="userEmail" class="user-pill">—</span>
+      <div class="btnRow" style="margin-top:0;">
+        <a class="btn btn-outline" href="dashboard.html">Dashboard</a>
+        <a class="btn btn-outline" href="create.html">Create</a>
+        <a class="btn btn-outline" href="completed.html">Completed</a>
         <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
       </div>
     </div>
-  </header>
 
-  <main class="wrap">
-    <div class="page-head">
-      <div>
-        <h1>Fill → Sign → Send</h1>
-        <p>
-          Drag fields onto the PDF, click a field to edit its value, then generate the signed PDF.
-          This is a local demo (no external sending).
-        </p>
-      </div>
-
-      <div class="pill" id="flowPill" data-state="sender">
-        <span class="dot"></span>
-        <span id="flowLabel">Sender signing</span>
-      </div>
-    </div>
-
-    <div class="layout">
+    <div class="grid">
       <!-- LEFT -->
-      <aside class="card">
-        <h2>Envelope</h2>
-        <p class="sub" id="flowText">—</p>
+      <div class="card">
+        <h2>Workflow</h2>
+        <p class="muted">
+          Click a tool (Signature / Date / Text) then click on the PDF to place it. Drag to reposition.
+          <strong>Double-click</strong> a field to edit its value.
+        </p>
 
-        <div class="divider"></div>
-
-        <div class="info">
-          <div class="row">
-            <div class="label">Document</div>
-            <div class="value" id="templateVal">—</div>
-          </div>
-          <div class="row">
-            <div class="label">Sender</div>
-            <div class="value" id="senderVal">—</div>
-          </div>
-          <div class="row">
-            <div class="label">Recipient</div>
-            <div class="value" id="recipientVal">—</div>
-          </div>
+        <div class="kv">
+          <strong>Template / Source</strong>
+          <span id="sourceLabel">—</span>
         </div>
 
-        <div class="divider"></div>
-
-        <h2>Field Tools</h2>
-        <p class="sub">Click a tool, then click / drag onto the PDF.</p>
-
-        <div class="toolbox">
-          <button class="tool-btn" id="toolSignature" type="button">
-            <span>Signature</span> <span>+</span>
-          </button>
-          <button class="tool-btn" id="toolDate" type="button">
-            <span>Date</span> <span>+</span>
-          </button>
-          <button class="tool-btn" id="toolText" type="button">
-            <span>Text</span> <span>+</span>
-          </button>
+        <div class="kv">
+          <strong>Sender</strong>
+          <span id="senderLabel">—</span>
         </div>
 
-        <div class="divider"></div>
-
-        <div class="actions">
-          <button class="btn btn-primary btn-lg" id="senderSignBtn" type="button">Generate Signed PDF</button>
-
-          <button class="btn btn-primary btn-lg" id="sendBtn" type="button" style="display:none;">Send to Recipient</button>
-
-          <button class="btn btn-primary btn-lg" id="recipientBtn" type="button" style="display:none;">Simulate Recipient Completion</button>
-
-          <a class="btn btn-muted btn-lg" id="downloadBtn" href="#" style="display:none;">Download Signed PDF</a>
+        <div class="kv">
+          <strong>Recipient</strong>
+          <span id="recipientLabel">—</span>
         </div>
 
-        <div class="status warn" id="statusBox" style="display:none;"></div>
+        <hr style="border:0; height:1px; background: rgba(255,255,255,.08); margin: 14px 0;" />
 
-        <!-- Field editor -->
-        <div class="editor" id="editor">
-          <h3>Edit Field</h3>
+        <h2>Fields</h2>
+        <p class="muted" style="margin-bottom:10px;">
+          Click a tool, then click the PDF to place it.
+        </p>
 
-          <label>
-            Value
-            <input id="fieldValue" type="text" placeholder="Enter value..." />
-          </label>
-
-          <div class="editor-actions">
-            <button class="btn btn-outline" id="deleteFieldBtn" type="button">Delete</button>
-            <button class="btn btn-primary" id="saveFieldBtn" type="button">Save</button>
-          </div>
-
-          <div class="hint" style="margin-top:10px;">
-            Tip: signatures look best if you type a name like <strong>Mason Palmieri</strong>.
-          </div>
+        <div class="btnRow" style="margin-top:0;">
+          <button class="btn btn-outline" id="toolSig" type="button">✍️ Signature</button>
+          <button class="btn btn-outline" id="toolDate" type="button">📅 Date</button>
+          <button class="btn btn-outline" id="toolText" type="button">📝 Text</button>
         </div>
-      </aside>
+
+        <div class="btnRow">
+          <button class="btn btn-primary" id="genBtn" type="button">Generate Signed PDF</button>
+          <button class="btn btn-outline" id="clearBtn" type="button">Clear fields</button>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <div class="muted" style="margin-top:10px; font-size:12px;">
+          Tip: If tools “don’t work”, it’s almost always a redirect loop or missing auth.
+          This page is protected using <code>FSS.guard()</code>.
+        </div>
+      </div>
 
       <!-- RIGHT -->
-      <section class="card viewer-card">
-        <div class="viewer-head">
-          <div class="viewer-title">
-            <div class="badge">PDF</div>
-            <strong id="pdfName">—</strong>
-          </div>
+      <div class="viewer">
+        <div class="viewerBar">
+          <span class="pill" id="pdfPill">PDF —</span>
 
-          <div class="viewer-tools">
-            <button class="tool" id="refreshBtn" type="button">Refresh</button>
-            <button class="tool" id="clearFieldsBtn" type="button">Clear Fields</button>
+          <div class="tools">
+            <button class="btn btn-outline" id="fitBtn" type="button">Fit</button>
+            <button class="btn btn-outline" id="zoomOutBtn" type="button">−</button>
+            <button class="btn btn-outline" id="zoomInBtn" type="button">+</button>
+            <button class="btn btn-outline" id="openBtn" type="button">Open</button>
+            <button class="btn btn-outline" id="refreshBtn" type="button">Refresh</button>
           </div>
         </div>
 
-        <div class="viewer-body" id="viewerBody">
-          <iframe id="pdfFrame" title="PDF Preview"></iframe>
-          <div id="overlay"></div>
+        <div class="pdfWrap" id="pdfWrap">
+          <iframe class="pdfFrame" id="pdfFrame" title="PDF"></iframe>
+          <div class="overlay" id="overlay"></div>
         </div>
-      </section>
+
+        <div class="stageLine" id="stageLine">Loading PDF…</div>
+      </div>
     </div>
-  </main>
+  </div>
 
   <script src="assets/app.js"></script>
   <script>
-    // Auth guard
     FSS.guard();
+    FSS.setStage("sign");
 
-    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
-
-    // Ensure doc exists
-    let doc = FSS.loadDocState();
+    const doc = FSS.loadDocState();
     if(!doc){
-      doc = FSS.resetDoc();
-      FSS.logAudit("Envelope created.");
+      location.href = "create.html";
     }
 
     // UI refs
-    const templateVal = document.getElementById("templateVal");
-    const senderVal = document.getElementById("senderVal");
-    const recipientVal = document.getElementById("recipientVal");
+    const sourceLabel = document.getElementById("sourceLabel");
+    const senderLabel = document.getElementById("senderLabel");
+    const recipientLabel = document.getElementById("recipientLabel");
 
-    const flowPill = document.getElementById("flowPill");
-    const flowLabel = document.getElementById("flowLabel");
-    const flowText = document.getElementById("flowText");
+    const pdfPill = document.getElementById("pdfPill");
+    const stageLine = document.getElementById("stageLine");
 
-    const senderSignBtn = document.getElementById("senderSignBtn");
-    const sendBtn = document.getElementById("sendBtn");
-    const recipientBtn = document.getElementById("recipientBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-
-    const statusBox = document.getElementById("statusBox");
-    const pdfFrame = document.getElementById("pdfFrame");
-    const pdfName = document.getElementById("pdfName");
-
+    const wrap = document.getElementById("pdfWrap");
+    const frame = document.getElementById("pdfFrame");
     const overlay = document.getElementById("overlay");
 
-    // Editor
-    const editor = document.getElementById("editor");
-    const fieldValue = document.getElementById("fieldValue");
-    const saveFieldBtn = document.getElementById("saveFieldBtn");
-    const deleteFieldBtn = document.getElementById("deleteFieldBtn");
+    const toast = document.getElementById("toast");
 
-    // Tools
-    const toolSignature = document.getElementById("toolSignature");
-    const toolDate = document.getElementById("toolDate");
-    const toolText = document.getElementById("toolText");
-
-    let currentTool = null;          // "signature" | "date" | "text"
-    let selectedFieldId = null;      // field.id
-    let dragState = null;            // {id, startX, startY, origX, origY}
-
-    function showStatus(type, msg){
-      statusBox.style.display = "";
-      statusBox.className = "status " + type;
-      statusBox.textContent = msg;
-    }
-    function clearStatus(){
-      statusBox.style.display = "none";
-      statusBox.textContent = "";
+    function showToast(msg, type="good"){
+      toast.className = "toast show " + (type === "bad" ? "bad" : "good");
+      toast.textContent = msg;
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove("show"), 2600);
     }
 
-    function setFlow(state){
-      flowPill.setAttribute("data-state", state);
+    // Labels
+    const sender = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || ""})` : "—";
+    const recip  = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || ""})` : "—";
+    senderLabel.textContent = sender;
+    recipientLabel.textContent = recip;
 
-      if(state === "sender"){
-        flowLabel.textContent = "Sender signing";
-        flowText.innerHTML =
-          `Step 1: Drag signature/date/text fields onto the PDF.<br><br>
-           Then click <strong>Generate Signed PDF</strong> to stamp them into the PDF.`;
-      }
-
-      if(state === "ready"){
-        flowLabel.textContent = "Ready to send";
-        flowText.innerHTML =
-          `Step 2: The signed PDF is generated.<br><br>
-           Click <strong>Send to Recipient</strong> (simulated).`;
-      }
-
-      if(state === "sent"){
-        flowLabel.textContent = "Recipient signing";
-        flowText.innerHTML =
-          `Step 3: Recipient completes signing (simulated).`;
-      }
-
-      if(state === "completed"){
-        flowLabel.textContent = "Completed";
-        flowText.innerHTML =
-          `✅ Agreement completed.<br><br>
-           Download the signed PDF or view the completed screen.`;
-      }
-    }
-
-    // Resolve doc label (template/upload/scratch)
-    function getDocLabel(){
-      doc = FSS.loadDocState() || doc;
-
-      if(doc.builder && doc.builder.text){
-        return (doc.builder.title || "Scratch Agreement");
-      }
-
+    // Determine source
+    function getSourceLabel(){
       const upName = localStorage.getItem("fss_uploaded_pdf_name");
-      if(upName) return upName;
+      if(upName) return `Uploaded PDF: ${upName}`;
+      if(doc.builder?.title) return `Scratch-built: ${doc.builder.title}`;
+      return `Template: ${doc.template || "nda.pdf"}`;
+    }
+    sourceLabel.textContent = getSourceLabel();
 
-      return doc.template || "nda.pdf";
+    // Zoom logic: we scale iframe visually + field overlay
+    let zoom = 1;
+    function applyZoom(){
+      frame.style.transform = `scale(${zoom})`;
+      overlay.style.transform = `scale(${zoom})`;
+      overlay.style.transformOrigin = "top left";
+      stageLine.textContent = `Zoom: ${Math.round(zoom*100)}%`;
     }
 
-    function getBasePDFURL(){
-      doc = FSS.loadDocState() || doc;
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      zoom = Math.min(2.5, zoom + 0.1);
+      applyZoom();
+    });
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      zoom = Math.max(0.5, zoom - 0.1);
+      applyZoom();
+    });
 
-      // If signed exists, we show signed in viewer for instant feedback
-      if(FSS.hasSignedPDF()){
-        const b64 = FSS.getSignedBase64();
-        return FSS.base64ToBlobURL(b64);
-      }
+    document.getElementById("fitBtn").addEventListener("click", () => {
+      // Fit width-ish: estimate based on container width.
+      // For simplicity, set zoom so 800px PDF width fits container.
+      const w = wrap.clientWidth || 1000;
+      zoom = Math.max(0.5, Math.min(2.2, (w - 40) / 820));
+      applyZoom();
+    });
 
-      // Uploaded
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        return FSS.base64ToBlobURL(localStorage.getItem("fss_uploaded_pdf_b64"));
-      }
+    document.getElementById("openBtn").addEventListener("click", () => {
+      if(frame.src) window.open(frame.src, "_blank");
+    });
 
-      // Template or builder uses template viewer (builder preview isn't needed because signing will build PDF)
-      const template = doc.template || "nda.pdf";
-      return `pdfs/${encodeURIComponent(template)}`;
-    }
+    document.getElementById("refreshBtn").addEventListener("click", () => {
+      loadPDF();
+      renderFields();
+    });
 
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      FSS.logout();
+      location.href = "index.html";
+    });
+
+    // Load PDF into iframe
     async function loadPDF(){
-      const name = getDocLabel();
-      pdfName.textContent = name;
+      try{
+        stageLine.textContent = "Loading PDF…";
+        pdfPill.textContent = "PDF — Loading…";
 
-      const url = getBasePDFURL();
-      pdfFrame.src = url;
+        // 1) Builder
+        if(doc.builder && doc.builder.text){
+          const bytes = await FSS.generateBuilderPDFBytes();
+          if(!bytes) throw new Error("Builder PDF generation failed.");
+          const b64 = (function arrayBufferToBase64(buffer){
+            let binary = "";
+            const bytes = new Uint8Array(buffer);
+            for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+            return btoa(binary);
+          })(bytes);
+          const url = FSS.base64ToBlobURL(b64);
+          frame.src = url;
+          pdfPill.textContent = "PDF • Scratch-built";
+          stageLine.textContent = "PDF loaded (scratch-built).";
+          return;
+        }
+
+        // 2) Upload
+        const upB64 = localStorage.getItem("fss_uploaded_pdf_b64");
+        if(upB64){
+          const url = FSS.base64ToBlobURL(upB64);
+          frame.src = url;
+          pdfPill.textContent = "PDF • Uploaded";
+          stageLine.textContent = "PDF loaded (uploaded).";
+          return;
+        }
+
+        // 3) Template
+        const tpl = doc.template || "nda.pdf";
+        frame.src = `pdfs/${encodeURIComponent(tpl)}`;
+        pdfPill.textContent = `PDF • ${tpl}`;
+        stageLine.textContent = "PDF loaded (template).";
+      }catch(err){
+        console.error(err);
+        stageLine.textContent = "PDF failed — check console.";
+        showToast("PDF failed — check console.", "bad");
+      }
     }
 
-    // Field rendering
+    // ============ Field placement / drag / edit ============
+    let activeTool = null; // "signature" | "date" | "text"
+
+    const toolSig = document.getElementById("toolSig");
+    const toolDate= document.getElementById("toolDate");
+    const toolText= document.getElementById("toolText");
+
+    function setTool(t){
+      activeTool = t;
+      [toolSig, toolDate, toolText].forEach(b => b.classList.remove("active"));
+      if(t === "signature") toolSig.classList.add("active");
+      if(t === "date") toolDate.classList.add("active");
+      if(t === "text") toolText.classList.add("active");
+    }
+
+    toolSig.addEventListener("click", () => setTool("signature"));
+    toolDate.addEventListener("click", () => setTool("date"));
+    toolText.addEventListener("click", () => setTool("text"));
+
+    // field data is stored in FSS.fields with coords relative to pdfWrap scroll container at zoom=1
+    function getFields(){ return FSS.loadFields() || []; }
+    function setFields(arr){ FSS.saveFields(arr || []); }
+
+    function getValues(){ return FSS.loadValues() || {}; }
+    function setValues(obj){ FSS.saveValues(obj || {}); }
+
+    function defaultValueFor(type){
+      if(type === "signature"){
+        return doc.parties?.aName || "Sender";
+      }
+      if(type === "date"){
+        return new Date().toLocaleDateString();
+      }
+      return "Text";
+    }
+
+    function placeField(type, x, y){
+      const id = FSS.uid();
+      const w = type === "signature" ? 220 : type === "date" ? 170 : 220;
+      const h = 44;
+
+      // store values (used by pdf-lib signing)
+      const values = getValues();
+      values[id] = defaultValueFor(type);
+      setValues(values);
+
+      const fields = getFields();
+      fields.push({
+        id,
+        type,
+        page: 1,
+        x: Math.max(0, Math.round(x)),
+        y: Math.max(0, Math.round(y)),
+        w,
+        h
+      });
+      setFields(fields);
+
+      renderFields();
+    }
+
+    // Click on PDF to place
+    wrap.addEventListener("click", (e) => {
+      if(!activeTool) return;
+
+      // prevent placement when clicking on an existing field
+      const tgt = e.target;
+      if(tgt && tgt.classList && tgt.classList.contains("field")) return;
+
+      const rect = wrap.getBoundingClientRect();
+
+      // x/y at zoom=1 coordinates
+      const rawX = (e.clientX - rect.left + wrap.scrollLeft) / zoom;
+      const rawY = (e.clientY - rect.top + wrap.scrollTop) / zoom;
+
+      placeField(activeTool, rawX - 80, rawY - 20);
+    });
+
+    // Render fields
     function renderFields(){
       overlay.innerHTML = "";
-      const fields = FSS.loadFields() || [];
-      const values = FSS.loadValues() || {};
+      const fields = getFields();
+      const values = getValues();
 
-      fields.forEach(f=>{
+      fields.forEach(f => {
         const el = document.createElement("div");
         el.className = `field ${f.type}`;
         el.dataset.id = f.id;
 
-        const v = (values[f.id] != null ? values[f.id] :
-                  (values[f.type] != null ? values[f.type] : ""));
+        const val = values[f.id] ?? defaultValueFor(f.type);
+        el.textContent = val;
 
-        const labelText = v || (f.type === "signature" ? "Signature" : f.type === "date" ? "Date" : "Text");
+        el.style.left = `${f.x}px`;
+        el.style.top  = `${f.y}px`;
+        el.style.width = `${f.w}px`;
+        el.style.height= `${f.h}px`;
 
-        el.innerHTML = `
-          <div class="label">${escapeHtml(labelText)}</div>
-          <div class="type">${f.type}</div>
-        `;
+        // Dragging
+        let dragging = false;
+        let startX=0, startY=0, startLeft=0, startTop=0;
 
-        // positions stored as overlay coords
-        el.style.left = (f.x || 80) + "px";
-        el.style.top = (f.y || 80) + "px";
-        el.style.width = (f.w || (f.type === "signature" ? 200 : 160)) + "px";
-        el.style.height = (f.h || 44) + "px";
+        el.addEventListener("mousedown", (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          dragging = true;
+          el.style.cursor = "grabbing";
+          startX = ev.clientX;
+          startY = ev.clientY;
+          startLeft = f.x;
+          startTop  = f.y;
 
-        // Click selects field
-        el.addEventListener("mousedown", (e)=>{
-          e.stopPropagation();
-          selectField(f.id);
-
-          // start drag
-          dragState = {
-            id: f.id,
-            startX: e.clientX,
-            startY: e.clientY,
-            origX: f.x || 80,
-            origY: f.y || 80
+          const onMove = (mv) => {
+            if(!dragging) return;
+            const dx = (mv.clientX - startX) / zoom;
+            const dy = (mv.clientY - startY) / zoom;
+            f.x = Math.max(0, Math.round(startLeft + dx));
+            f.y = Math.max(0, Math.round(startTop + dy));
+            el.style.left = `${f.x}px`;
+            el.style.top  = `${f.y}px`;
           };
 
-          window.addEventListener("mousemove", onDragMove);
-          window.addEventListener("mouseup", onDragEnd);
+          const onUp = () => {
+            dragging = false;
+            el.style.cursor = "grab";
+            window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("mouseup", onUp);
+
+            const all = getFields();
+            const idx = all.findIndex(ff => ff.id === f.id);
+            if(idx >= 0){
+              all[idx].x = f.x;
+              all[idx].y = f.y;
+              setFields(all);
+            }
+          };
+
+          window.addEventListener("mousemove", onMove);
+          window.addEventListener("mouseup", onUp);
+        });
+
+        // Double-click to edit value
+        el.addEventListener("dblclick", (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+
+          const current = (getValues()[f.id] ?? "").toString();
+          let promptLabel = "Enter value:";
+          if(f.type === "signature") promptLabel = "Signature text:";
+          if(f.type === "date") promptLabel = "Date:";
+          if(f.type === "text") promptLabel = "Text:";
+
+          const next = window.prompt(promptLabel, current || defaultValueFor(f.type));
+          if(next == null) return;
+
+          const vals = getValues();
+          vals[f.id] = next;
+          setValues(vals);
+
+          el.textContent = next;
+          showToast("Field updated.", "good");
         });
 
         overlay.appendChild(el);
       });
-
-      // overlay should be interactive
-      overlay.style.pointerEvents = "none";
-      overlay.querySelectorAll(".field").forEach(x => x.style.pointerEvents = "auto");
     }
 
-    function selectField(id){
-      selectedFieldId = id;
-      const fields = FSS.loadFields() || [];
-      const values = FSS.loadValues() || {};
-
-      const f = fields.find(x => x.id === id);
-      if(!f){
-        editor.style.display = "none";
-        return;
-      }
-
-      const currentVal = (values[id] != null ? values[id] :
-                          (values[f.type] != null ? values[f.type] : ""));
-
-      fieldValue.value = currentVal || "";
-      editor.style.display = "";
-      fieldValue.focus();
-    }
-
-    function saveSelectedField(){
-      if(!selectedFieldId) return;
-
-      const fields = FSS.loadFields() || [];
-      const values = FSS.loadValues() || {};
-
-      const f = fields.find(x => x.id === selectedFieldId);
-      if(!f) return;
-
-      values[selectedFieldId] = fieldValue.value;
-      FSS.saveValues(values);
-      FSS.logAudit(`Field updated (${f.type}).`);
-
+    // Clear fields
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      FSS.saveFields([]);
+      FSS.saveValues({});
       renderFields();
-      showStatus("good", "Field updated.");
-      setTimeout(clearStatus, 900);
-    }
-
-    function deleteSelectedField(){
-      if(!selectedFieldId) return;
-
-      let fields = FSS.loadFields() || [];
-      const f = fields.find(x => x.id === selectedFieldId);
-
-      fields = fields.filter(x => x.id !== selectedFieldId);
-      FSS.saveFields(fields);
-
-      // also remove value
-      const values = FSS.loadValues() || {};
-      delete values[selectedFieldId];
-      FSS.saveValues(values);
-
-      FSS.logAudit(`Field deleted (${f?.type || "field"}).`);
-
-      selectedFieldId = null;
-      editor.style.display = "none";
-      renderFields();
-      showStatus("good", "Field removed.");
-      setTimeout(clearStatus, 900);
-    }
-
-    saveFieldBtn.addEventListener("click", saveSelectedField);
-    deleteFieldBtn.addEventListener("click", deleteSelectedField);
-
-    // Drag handlers
-    function onDragMove(e){
-      if(!dragState) return;
-
-      const dx = e.clientX - dragState.startX;
-      const dy = e.clientY - dragState.startY;
-
-      const fields = FSS.loadFields() || [];
-      const idx = fields.findIndex(x => x.id === dragState.id);
-      if(idx === -1) return;
-
-      fields[idx].x = dragState.origX + dx;
-      fields[idx].y = dragState.origY + dy;
-
-      FSS.saveFields(fields);
-      renderFields();
-    }
-
-    function onDragEnd(){
-      if(!dragState) return;
-
-      FSS.logAudit("Field moved.");
-      dragState = null;
-
-      window.removeEventListener("mousemove", onDragMove);
-      window.removeEventListener("mouseup", onDragEnd);
-    }
-
-    // Tools
-    function setTool(tool){
-      currentTool = tool;
-      showStatus("warn", `Tool selected: ${tool}. Click the PDF to place it, then drag into position.`);
-    }
-
-    toolSignature.addEventListener("click", ()=>setTool("signature"));
-    toolDate.addEventListener("click", ()=>setTool("date"));
-    toolText.addEventListener("click", ()=>setTool("text"));
-
-    // Place field by clicking viewer container
-    document.getElementById("viewerBody").addEventListener("click", (e)=>{
-      if(!currentTool) return;
-
-      // Place relative to overlay box
-      const rect = overlay.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      if(x < 0 || y < 0) return;
-
-      const id = FSS.uid();
-      const fields = FSS.loadFields() || [];
-      const values = FSS.loadValues() || {};
-
-      const base = {
-        id,
-        type: currentTool,
-        page: 1,
-        x: Math.max(0, x - 80),
-        y: Math.max(0, y - 18),
-        w: currentTool === "signature" ? 220 : 160,
-        h: 44,
-        required: false,
-        role: "sender"
-      };
-
-      fields.push(base);
-      FSS.saveFields(fields);
-
-      // default values
-      if(currentTool === "signature"){
-        values[id] = doc.parties?.aName || "Sender";
-      } else if(currentTool === "date"){
-        values[id] = new Date().toLocaleDateString();
-      } else {
-        values[id] = "Enter text";
-      }
-      FSS.saveValues(values);
-
-      FSS.logAudit(`Field placed (${currentTool}).`);
-      currentTool = null;
-
-      renderFields();
-      selectField(id);
-
-      showStatus("good", "Field placed. Drag it into position or edit the value.");
-      setTimeout(clearStatus, 1100);
+      showToast("Fields cleared.", "good");
     });
 
-    // Flow state refresh
-    function refreshState(){
-      doc = FSS.loadDocState() || doc;
-
-      templateVal.textContent = getDocLabel();
-      senderVal.textContent = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "Not set";
-      recipientVal.textContent = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "Not set";
-
-      const signed = FSS.hasSignedPDF();
-
-      if(doc.status === "completed"){
-        setFlow("completed");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = signed ? "" : "none";
-        return;
-      }
-
-      if(doc.status === "sent"){
-        setFlow("sent");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "";
-        downloadBtn.style.display = signed ? "" : "none";
-        return;
-      }
-
-      if(signed){
-        setFlow("ready");
-        senderSignBtn.style.display = "";
-        sendBtn.style.display = "";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = "";
-        return;
-      }
-
-      setFlow("sender");
-      senderSignBtn.style.display = "";
-      sendBtn.style.display = "none";
-      recipientBtn.style.display = "none";
-      downloadBtn.style.display = "none";
-    }
-
-    // Generate Signed PDF (real)
-    senderSignBtn.addEventListener("click", async ()=>{
-      clearStatus();
-      doc = FSS.loadDocState() || doc;
-
-      if(!doc.parties?.aName || !doc.parties?.bName){
-        showStatus("warn", "Missing sender or recipient. Go to Create first.");
-        return;
-      }
-
-      const fields = FSS.loadFields() || [];
-      if(fields.length === 0){
-        showStatus("warn", "Place at least one field (signature/date/text) before generating.");
-        return;
-      }
-
+    // Generate signed PDF
+    document.getElementById("genBtn").addEventListener("click", async () => {
       try{
-        showStatus("warn", "Generating signed PDF…");
-        const ok = await FSS.generateSignedPDF();
+        showToast("Generating signed PDF…", "good");
 
+        // ensure signature/date fallback values exist
+        const values = getValues();
+        if(!values.signature) values.signature = doc.parties?.aName || "Sender";
+        if(!values.date) values.date = new Date().toLocaleDateString();
+        setValues(values);
+
+        const ok = await FSS.generateSignedPDF();
         if(!ok){
-          showStatus("bad", "Signed PDF generation failed. Check console.");
+          showToast("Signed PDF failed — open console.", "bad");
           return;
         }
 
         FSS.logAudit("Signed PDF generated.");
-        showStatus("good", "✅ Signed PDF generated and loaded in viewer.");
-        refreshState();
-        await loadPDF();
+        FSS.setStatus("signed");
+
+        location.href = "success.html";
       }catch(err){
         console.error(err);
-        showStatus("bad", "Signed PDF generation failed. Check console.");
+        showToast("Signed PDF failed — open console.", "bad");
       }
     });
 
-    // Send (simulation)
-    sendBtn.addEventListener("click", ()=>{
-      clearStatus();
-      doc = FSS.loadDocState() || doc;
-
-      if(!FSS.hasSignedPDF()){
-        showStatus("warn", "Generate the signed PDF first.");
-        return;
-      }
-
-      doc.status = "sent";
-      doc.sentAt = new Date().toISOString();
-      FSS.saveDocState(doc);
-
-      FSS.logAudit(`Agreement sent to ${doc.parties?.bEmail || "recipient"}.`);
-      showStatus("good", "📨 Sent! Recipient completion enabled.");
-      refreshState();
-    });
-
-    // Recipient completion simulation
-    recipientBtn.addEventListener("click", ()=>{
-      clearStatus();
-      doc = FSS.loadDocState() || doc;
-
-      doc.status = "completed";
-      doc.completedAt = new Date().toISOString();
-      FSS.saveDocState(doc);
-
-      FSS.logAudit("Recipient completed signing.");
-      showStatus("good", "✅ Completed. Redirecting…");
-      setTimeout(()=>location.href="success.html", 700);
-    });
-
-    // Download signed
-    downloadBtn.addEventListener("click", (e)=>{
-      e.preventDefault();
-
-      const b64 = FSS.getSignedBase64();
-      if(!b64){
-        showStatus("warn", "No signed PDF available.");
-        return;
-      }
-
-      const byteChars = atob(b64);
-      const bytes = new Uint8Array(byteChars.length);
-      for(let i=0;i<byteChars.length;i++) bytes[i] = byteChars.charCodeAt(i);
-
-      const blob = new Blob([bytes], { type:"application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `FSS-${doc.id || "agreement"}-signed.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setTimeout(()=>URL.revokeObjectURL(url), 1500);
-    });
-
-    // Tools
-    document.getElementById("refreshBtn").addEventListener("click", async ()=>{
-      await loadPDF();
-      renderFields();
-      refreshState();
-      showStatus("good", "Viewer refreshed.");
-      setTimeout(clearStatus, 900);
-    });
-
-    document.getElementById("clearFieldsBtn").addEventListener("click", ()=>{
-      if(!confirm("Clear all placed fields?")) return;
-
-      localStorage.setItem("fss_fields", JSON.stringify([]));
-      localStorage.setItem("fss_values", JSON.stringify({}));
-      FSS.logAudit("All fields cleared.");
-      editor.style.display = "none";
-      selectedFieldId = null;
-      renderFields();
-      showStatus("good", "All fields cleared.");
-      setTimeout(clearStatus, 900);
-    });
-
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", ()=>{
-      FSS.logout();
-      location.replace("index.html");
-    });
-
-    // Escape helper
-    function escapeHtml(s) {
-      return (s || "").replace(/[&<>"']/g, (m) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[m]));
-    }
-
-    // Boot
-    (async function boot(){
-      doc = FSS.loadDocState() || doc;
-      refreshState();
-      await loadPDF();
-      renderFields();
-      clearStatus();
-    })();
+    // Initial load
+    loadPDF();
+    renderFields();
+    applyZoom();
   </script>
 </body>
 </html>
