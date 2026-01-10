@@ -3,44 +3,64 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Client Portal • Dashboard</title>
+  <title>Dashboard • Client Demo</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
     .wrap{
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 18px 18px 44px;
+      padding: 18px 18px 46px;
     }
 
     .hero{
       display:flex;
-      align-items:flex-end;
+      align-items:flex-start;
       justify-content:space-between;
       gap: 14px;
       flex-wrap:wrap;
-      margin: 8px 0 16px;
-    }
-    .hero h1{
-      margin: 0;
-      font-size: 28px;
-      font-weight: 950;
-      letter-spacing: -0.6px;
-      color: rgba(255,255,255,.95);
-    }
-    .hero p{
-      margin: 8px 0 0;
-      font-size: 14px;
-      font-weight: 750;
-      color: rgba(255,255,255,.70);
-      max-width: 70ch;
-      line-height: 1.55;
+      margin-bottom: 14px;
     }
 
-    .layout{
+    .hero h1{
+      margin: 0;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -0.25px;
+    }
+
+    .hero p{
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 750;
+      max-width: 90ch;
+      line-height: 1.5;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.92);
+      white-space: nowrap;
+    }
+    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.25); }
+    .pill[data-state="draft"] .dot{ background: rgba(67,203,255,.95); }
+    .pill[data-state="ready"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
+    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
+
+    .grid{
       display:grid;
-      grid-template-columns: 1.4fr .9fr;
+      grid-template-columns: 1.1fr .9fr;
       gap: 14px;
       align-items:start;
       margin-top: 12px;
@@ -51,23 +71,21 @@
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 20px;
       padding: 14px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.28);
       overflow:hidden;
     }
 
     .card h2{
-      margin: 0;
-      font-size: 15px;
+      margin:0;
+      font-size: 14px;
       font-weight: 950;
-      letter-spacing: -0.2px;
-      color: rgba(255,255,255,.92);
+      letter-spacing: -0.1px;
     }
 
     .sub{
       margin: 8px 0 0;
-      font-size: 13px;
+      color: rgba(255,255,255,.72);
       font-weight: 750;
-      color: rgba(255,255,255,.65);
+      font-size: 13px;
       line-height: 1.5;
     }
 
@@ -77,196 +95,158 @@
       margin: 12px 0;
     }
 
-    /* Active docs list */
-    .doc-list{
+    .docRow{
       display:grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .doc{
-      padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-      cursor:pointer;
-      transition: transform .08s ease, background .2s ease, border-color .2s ease;
-    }
-    .doc:hover{
-      background: rgba(255,255,255,.07);
-      border-color: rgba(255,255,255,.14);
-      transform: translateY(-1px);
-    }
-
-    .doc-left{
-      display:flex;
+      grid-template-columns: 1fr auto;
       gap: 12px;
-      min-width:0;
-      flex: 1 1 auto;
-    }
-
-    .doc-badge{
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display:flex;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
       align-items:center;
-      justify-content:center;
-      font-weight: 950;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      flex: 0 0 auto;
-      color: rgba(255,255,255,.90);
     }
 
-    .doc-meta{
-      min-width:0;
+    .docMeta{
+      display:grid;
+      gap: 6px;
+      min-width: 0;
     }
 
-    .doc-title{
-      margin: 0;
+    .docMeta strong{
       font-weight: 950;
-      font-size: 13px;
-      color: rgba(255,255,255,.95);
-      white-space: nowrap;
+      font-size: 14px;
+      color: rgba(255,255,255,.92);
       overflow:hidden;
       text-overflow: ellipsis;
-    }
-
-    .doc-small{
-      margin: 6px 0 0;
-      font-size: 12px;
-      font-weight: 750;
-      color: rgba(255,255,255,.68);
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-weight: 900;
-      font-size: 12px;
-      color: rgba(255,255,255,.88);
-      width: fit-content;
       white-space: nowrap;
     }
-    .pill .dot{
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.28);
-    }
-    .pill[data-state="draft"] .dot{ background: rgba(67,203,255,.95); }
-    .pill[data-state="signed"] .dot{ background: rgba(96,255,157,.95); }
-    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
 
-    .doc-right{
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-      align-items:flex-end;
-      flex: 0 0 auto;
-    }
-
-    .doc-id{
+    .docMeta span{
       font-size: 12px;
-      color: rgba(255,255,255,.55);
       font-weight: 800;
-      user-select:none;
+      color: rgba(255,255,255,.65);
+      line-height: 1.4;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .btn-row{
+    .docActions{
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
-      margin-top: 12px;
+      justify-content:flex-end;
     }
 
     .btn-lg{
-      padding: 12px 16px;
+      padding: 12px 14px;
       border-radius: 14px;
-      font-size: 14px;
       font-weight: 950;
-      white-space: nowrap;
+      font-size: 14px;
     }
 
     .btn-muted{
-      border: 1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.92);
     }
     .btn-muted:hover{ background: rgba(255,255,255,.09); }
 
-    /* Right column quick actions */
-    .quick{
+    .createGrid{
       display:grid;
+      grid-template-columns: 1fr;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
-    .quick a{
-      text-decoration:none;
-    }
-
-    .quick-item{
-      border-radius: 18px;
-      padding: 14px 14px;
+    .createTile{
+      padding: 12px;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      transition: transform .08s ease, background .2s ease;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .createTile:hover{ background: rgba(255,255,255,.08); }
+    .createTile:active{ transform: translateY(1px); }
+
+    .tileTop{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap: 10px;
     }
-    .quick-item:hover{
-      background: rgba(255,255,255,.07);
-      transform: translateY(-1px);
-    }
-
-    .quick-item strong{
+    .tileTop strong{
       font-weight: 950;
-      color: rgba(255,255,255,.95);
-      font-size: 13px;
-      display:block;
-      margin-bottom: 6px;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
     }
-    .quick-item span{
-      font-size: 12.5px;
+    .tag{
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.80);
+      white-space: nowrap;
+    }
+    .tileDesc{
+      margin-top: 8px;
+      font-size: 13px;
       font-weight: 750;
-      color: rgba(255,255,255,.68);
+      color: rgba(255,255,255,.70);
       line-height: 1.45;
-      display:block;
-      max-width: 46ch;
     }
 
-    .arrow{
-      width: 36px;
-      height: 36px;
+    .timeline{
+      display:grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .event{
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+
+    .event .bubble{
+      width: 34px;
+      height: 34px;
       border-radius: 14px;
       display:flex;
       align-items:center;
       justify-content:center;
-      background: rgba(255,255,255,.07);
+      background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.90);
-      font-weight: 950;
       flex: 0 0 auto;
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
     }
 
-    .status-box{
+    .event strong{
+      display:block;
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .event span{
+      display:block;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.65);
+      line-height: 1.4;
+    }
+
+    .status{
       margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
@@ -274,15 +254,15 @@
       background: rgba(255,255,255,.05);
       font-weight: 850;
       font-size: 13px;
-      color: rgba(255,255,255,.80);
+      color: rgba(255,255,255,.84);
+      display:none;
     }
-    .status-box.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.08); }
-    .status-box.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.08); }
-    .status-box.bad{ border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.08); }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
+    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
 
-    /* Mobile */
     @media (max-width: 980px){
-      .layout{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -291,10 +271,10 @@
   <header class="app-top">
     <div class="app-top-inner">
       <a class="app-brand" href="dashboard.html">
-        <span class="logo-badge">CP</span>
+        <span class="logo-badge">FSS</span>
         <div class="brand-text">
-          <strong>Client Portal</strong>
-          <span>Agreements • Signatures • Delivery</span>
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
         </div>
       </a>
 
@@ -317,187 +297,290 @@
       <div>
         <h1>Dashboard</h1>
         <p>
-          Start a new agreement, continue signing, or download completed documents.
-          This is a static demo (no backend). Everything is stored locally in your browser.
+          Welcome back. This home screen shows your active agreement, next actions,
+          and a quick way to create new documents.
         </p>
+      </div>
+
+      <div class="pill" id="statePill" data-state="draft">
+        <span class="dot"></span>
+        <span id="stateLabel">Draft</span>
       </div>
     </div>
 
-    <div class="layout">
-      <!-- LEFT: ACTIVE DOCUMENTS -->
+    <div class="grid">
+      <!-- LEFT: Active Docs -->
       <section class="card">
-        <h2>Active Documents</h2>
-        <p class="sub">Your current in-progress agreement(s).</p>
+        <h2>Active Document</h2>
+        <p class="sub" id="docSubtitle">—</p>
 
         <div class="divider"></div>
 
-        <div class="doc-list" id="docList"></div>
+        <div class="docRow">
+          <div class="docMeta">
+            <strong id="docTitle">—</strong>
+            <span id="docPeople">—</span>
+            <span id="docMode">—</span>
+          </div>
 
-        <div class="btn-row" id="leftActions" style="display:none;">
-          <a class="btn btn-primary btn-lg" href="create.html">Create new agreement</a>
-          <a class="btn btn-muted btn-lg" href="sign.html">Continue signing</a>
+          <div class="docActions">
+            <a class="btn btn-primary btn-lg" id="primaryAction" href="create.html">Open</a>
+            <button class="btn btn-muted btn-lg" id="resetBtn" type="button">Reset</button>
+          </div>
         </div>
 
-        <div class="status-box warn" id="emptyState" style="display:none;">
-          No active agreement yet. Click <strong>Create new agreement</strong> to start.
+        <div class="status warn" id="statusBox"></div>
+
+        <div class="divider"></div>
+
+        <div class="row" style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn btn-outline" href="create.html">Edit / Create</a>
+          <a class="btn btn-outline" href="sign.html">Go to Sign</a>
+          <a class="btn btn-outline" href="success.html">View Completed</a>
         </div>
       </section>
 
-      <!-- RIGHT: QUICK ACTIONS -->
+      <!-- RIGHT: Create New + Timeline -->
       <aside class="card">
-        <h2>Quick Actions</h2>
-        <p class="sub">Common next steps.</p>
+        <h2>Create New</h2>
+        <p class="sub">Start a new agreement using one of the options below.</p>
 
-        <div class="quick">
-          <a href="create.html">
-            <div class="quick-item">
-              <div>
-                <strong>Create new agreement</strong>
-                <span>Choose a PDF template, enter Party A & Party B, then continue to signing.</span>
-              </div>
-              <div class="arrow">→</div>
+        <div class="createGrid">
+          <div class="createTile" id="tileTemplate">
+            <div class="tileTop">
+              <strong>Use a template</strong>
+              <span class="tag">Fast</span>
             </div>
-          </a>
+            <div class="tileDesc">Choose from NDA, Consulting, Non-Compete, Real Estate, and more.</div>
+          </div>
 
-          <a href="sign.html">
-            <div class="quick-item">
-              <div>
-                <strong>Fill + Sign + Send</strong>
-                <span>Sender signs first, then you “send” it to the recipient and complete the agreement.</span>
-              </div>
-              <div class="arrow">→</div>
+          <div class="createTile" id="tileUpload">
+            <div class="tileTop">
+              <strong>Upload your own PDF</strong>
+              <span class="tag">Flexible</span>
             </div>
-          </a>
+            <div class="tileDesc">Upload a custom agreement and use the same Fill → Sign → Send flow.</div>
+          </div>
 
-          <a href="success.html">
-            <div class="quick-item">
-              <div>
-                <strong>View completed</strong>
-                <span>Preview or download your signed PDF (generated in-browser).</span>
-              </div>
-              <div class="arrow">→</div>
+          <div class="createTile" id="tileBuilder">
+            <div class="tileTop">
+              <strong>Build from scratch</strong>
+              <span class="tag">Custom</span>
             </div>
-          </a>
+            <div class="tileDesc">Write the agreement using prompts and rules (NDAExpress style).</div>
+          </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="status-box" id="statusBox" style="display:none;"></div>
+        <h2 style="margin-top:0;">Recent Activity</h2>
+        <p class="sub">Latest steps performed in this demo environment.</p>
+
+        <div class="timeline" id="timeline">
+          <!-- events injected -->
+        </div>
       </aside>
     </div>
   </main>
 
-  <!-- ✅ IMPORTANT: This MUST be a script tag (not inside <pre> / not mislinked) -->
   <script src="assets/app.js"></script>
-
   <script>
-    // Auth guard
     FSS.guard();
 
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     document.getElementById("userEmail").textContent = user.email || "demo@client.com";
 
-    const docList = document.getElementById("docList");
-    const emptyState = document.getElementById("emptyState");
-    const leftActions = document.getElementById("leftActions");
     const statusBox = document.getElementById("statusBox");
-
-    function showStatus(type, msg){
+    function showStatus(msg, type="warn"){
       statusBox.style.display = "";
-      statusBox.className = "status-box " + type;
+      statusBox.className = "status " + type;
       statusBox.textContent = msg;
     }
+    function clearStatus(){
+      statusBox.style.display = "none";
+      statusBox.textContent = "";
+    }
 
-    function getStatePill(doc){
-      const hasSigned = FSS.hasSignedPDF();
-      const status = (doc && doc.status) ? doc.status : "draft";
+    const pill = document.getElementById("statePill");
+    const label = document.getElementById("stateLabel");
 
-      // If signed pdf exists but doc.status not updated, treat as signed
-      if(hasSigned && status === "draft") return { key:"signed", label:"Signed (sender)" };
-      if(status === "sent") return { key:"sent", label:"Sent to recipient" };
-      if(status === "completed") return { key:"completed", label:"Completed" };
+    function setState(state){
+      pill.setAttribute("data-state", state);
+      const map = {
+        draft: "Draft",
+        ready: "Ready to Send",
+        sent: "Sent to Recipient",
+        completed: "Completed"
+      };
+      label.textContent = map[state] || "Draft";
+    }
 
-      return { key:"draft", label:"Draft" };
+    function getDocSummary(d){
+      // Determine mode
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        return "Mode: Uploaded PDF";
+      }
+      if(d && d.builder && d.builder.text){
+        return "Mode: Built from scratch";
+      }
+      return "Mode: Template PDF";
+    }
+
+    function templateName(d){
+      return d?.template || "Template";
+    }
+
+    function docTitle(d){
+      if(d?.builder?.title) return d.builder.title;
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        return localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded Agreement";
+      }
+      return templateName(d);
     }
 
     function render(){
-      const doc = FSS.loadDocState();
+      const d = FSS.loadDocState() || FSS.resetDoc();
 
-      // No doc yet
-      if(!doc || !doc.id){
-        docList.innerHTML = "";
-        emptyState.style.display = "";
-        leftActions.style.display = "flex";
-        showStatus("warn", "No active agreement. Start by creating one.");
+      // Determine state
+      const hasSigned = FSS.hasSignedPDF();
+      let state = "draft";
+      if(d.status === "completed") state = "completed";
+      else if(d.status === "sent") state = "sent";
+      else if(hasSigned) state = "ready";
+      else state = "draft";
+
+      setState(state);
+
+      // Main doc card
+      document.getElementById("docTitle").textContent = docTitle(d);
+
+      const a = d?.parties?.aName ? `${d.parties.aName}${d.parties.aEmail ? " ("+d.parties.aEmail+")" : ""}` : "Sender not set";
+      const b = d?.parties?.bName ? `${d.parties.bName}${d.parties.bEmail ? " ("+d.parties.bEmail+")" : ""}` : "Recipient not set";
+      document.getElementById("docPeople").textContent = `Sender: ${a} • Recipient: ${b}`;
+
+      document.getElementById("docMode").textContent = getDocSummary(d);
+
+      const subtitle = document.getElementById("docSubtitle");
+      const primary = document.getElementById("primaryAction");
+
+      if(state === "draft"){
+        subtitle.textContent = "Complete setup, preview, and then sign as sender.";
+        primary.textContent = "Continue Setup";
+        primary.href = "create.html";
+        if(!d?.parties?.aName || !d?.parties?.bName){
+          showStatus("Start by entering sender + recipient details in Create.", "warn");
+        } else {
+          clearStatus();
+        }
+      }
+
+      if(state === "ready"){
+        subtitle.textContent = "Sender signed. Next step: send to recipient.";
+        primary.textContent = "Go to Sign";
+        primary.href = "sign.html";
+        clearStatus();
+      }
+
+      if(state === "sent"){
+        subtitle.textContent = "Agreement sent. Next step: recipient completes signing.";
+        primary.textContent = "Open Sign";
+        primary.href = "sign.html";
+        clearStatus();
+      }
+
+      if(state === "completed"){
+        subtitle.textContent = "Agreement completed. You can download the final signed PDF.";
+        primary.textContent = "View Completed";
+        primary.href = "success.html";
+        clearStatus();
+      }
+
+      renderTimeline();
+    }
+
+    function renderTimeline(){
+      const timeline = document.getElementById("timeline");
+      timeline.innerHTML = "";
+
+      const audit = FSS.loadAudit() || [];
+      const list = audit.slice(-6).reverse(); // show last 6
+
+      if(list.length === 0){
+        timeline.innerHTML = `
+          <div class="event">
+            <div class="bubble">—</div>
+            <div>
+              <strong>No activity yet</strong>
+              <span>Create an agreement to begin the demo workflow.</span>
+            </div>
+          </div>
+        `;
         return;
       }
 
-      emptyState.style.display = "none";
-      leftActions.style.display = "flex";
-
-      const pill = getStatePill(doc);
-
-      const title = doc.template || "Agreement";
-      const sender = doc.parties?.aName || "Sender";
-      const recipient = doc.parties?.bName || "Recipient";
-
-      docList.innerHTML = `
-        <div class="doc" id="activeDoc">
-          <div class="doc-left">
-            <div class="doc-badge">PDF</div>
-            <div class="doc-meta">
-              <p class="doc-title">${title}</p>
-              <div class="doc-small">
-                <span><strong>Sender:</strong> ${sender}</span>
-                <span><strong>Recipient:</strong> ${recipient}</span>
-              </div>
-              <div style="margin-top:10px;">
-                <span class="pill" data-state="${pill.key}">
-                  <span class="dot"></span>
-                  <span>${pill.label}</span>
-                </span>
-              </div>
+      for(const a of list){
+        const time = new Date(a.ts).toLocaleString();
+        timeline.insertAdjacentHTML("beforeend", `
+          <div class="event">
+            <div class="bubble">✓</div>
+            <div>
+              <strong>${escapeHtml(a.msg)}</strong>
+              <span>${time}</span>
             </div>
           </div>
-
-          <div class="doc-right">
-            <div class="doc-id">ID: ${doc.id}</div>
-            <button class="btn btn-muted" id="openDocBtn" type="button">Open</button>
-          </div>
-        </div>
-      `;
-
-      const openBtn = document.getElementById("openDocBtn");
-      openBtn.addEventListener("click", () => {
-        // Smart routing based on status
-        if(doc.status === "completed"){
-          location.href = "success.html";
-          return;
-        }
-        if(doc.status === "sent"){
-          location.href = "sign.html";
-          return;
-        }
-        location.href = "create.html";
-      });
-
-      // Friendly guidance
-      if(doc.status === "completed"){
-        showStatus("good", "✅ Agreement completed. Download it from the Completed screen.");
-      } else if(doc.status === "sent"){
-        showStatus("warn", "📨 Agreement sent. Open Sign to simulate recipient completion.");
-      } else if(FSS.hasSignedPDF()){
-        showStatus("good", "✅ Sender signed. Next step: Send to recipient from the Sign screen.");
-      } else {
-        showStatus("warn", "Draft ready. Continue to Create or Sign to complete the workflow.");
+        `);
       }
     }
 
+    function escapeHtml(str){
+      return (str || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Create tiles set mode flags then route to create
+    document.getElementById("tileTemplate").addEventListener("click", () => {
+      localStorage.removeItem("fss_uploaded_pdf_b64");
+      localStorage.removeItem("fss_uploaded_pdf_name");
+      location.href = "create.html";
+    });
+
+    document.getElementById("tileUpload").addEventListener("click", () => {
+      // create.html will detect uploaded base64; we just route there
+      location.href = "create.html";
+      setTimeout(() => {
+        // optional: focus upload input if page stays fast
+      }, 10);
+    });
+
+    document.getElementById("tileBuilder").addEventListener("click", () => {
+      const d = FSS.loadDocState() || FSS.resetDoc();
+      if(!d.builder){
+        d.builder = { title: "Custom Agreement", text: "", rules: [] };
+        FSS.saveDocState(d);
+      }
+      localStorage.removeItem("fss_uploaded_pdf_b64");
+      localStorage.removeItem("fss_uploaded_pdf_name");
+      location.href = "create.html";
+    });
+
+    // Reset demo
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if(!confirm("Reset demo? This clears agreement + signatures in this browser.")) return;
+      FSS.hardReset();
+      location.reload();
+    });
+
+    // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
+    // Boot
     render();
   </script>
 </body>
