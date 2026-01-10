@@ -43,6 +43,7 @@
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.12);
       color: rgba(255,255,255,.92);
+      flex: 0 0 auto;
     }
     .brand strong{
       font-weight: 950;
@@ -111,7 +112,7 @@
     }
 
     .note{
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 12px;
       color: rgba(255,255,255,.60);
       font-weight: 750;
@@ -132,17 +133,26 @@
     .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
     .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
 
-    .footer-links{
+    .mini{
       display:flex;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin-top: 14px;
-      font-size: 12px;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      margin-top: 6px;
       color: rgba(255,255,255,.65);
+      font-size: 12px;
       font-weight: 750;
     }
-    .footer-links a{ color: rgba(255,255,255,.85); text-decoration:none; font-weight: 900; }
-    .footer-links a:hover{ text-decoration: underline; text-underline-offset: 4px; }
+
+    .mini a{
+      color: rgba(255,255,255,.90);
+      text-decoration:none;
+      font-weight: 900;
+    }
+    .mini a:hover{
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
   </style>
 </head>
 
@@ -181,10 +191,9 @@
           This is a <strong>demo experience</strong>. Nothing is sent externally — actions are simulated and stored locally in your browser.
         </div>
 
-        <div class="footer-links">
-          <a href="dashboard.html">Go to Dashboard</a>
-          <span>•</span>
-          <a href="create.html">Create an Agreement</a>
+        <div class="mini">
+          <span>Having trouble?</span>
+          <a href="#" id="clearBtn">Clear browser data</a>
         </div>
       </form>
     </div>
@@ -194,10 +203,11 @@
   <script>
     // If already logged in, go straight to dashboard
     (function(){
-      const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-      if(auth && auth.ok && auth.email){
-        location.href = "dashboard.html";
-      }
+      try{
+        if(FSS && FSS.isAuthed && FSS.isAuthed()){
+          location.replace("dashboard.html");
+        }
+      }catch(e){}
     })();
 
     const form = document.getElementById("loginForm");
@@ -227,14 +237,13 @@
         return;
       }
 
-      // REQUIRED PASSWORD: hallam
-      // (Not shown anywhere in UI)
-      if(pw !== "hallam"){
-        showStatus("Incorrect password.");
+      // IMPORTANT: Use the real login function (stores auth)
+      const result = FSS.login(email, pw);
+
+      if(!result || !result.ok){
+        showStatus(result?.msg || "Login failed.");
         return;
       }
-
-      FSS.login(email);
 
       // Ensure envelope exists
       if(!FSS.loadDocState()){
@@ -243,13 +252,21 @@
       }
 
       showStatus("Success. Redirecting…", "good");
-      setTimeout(() => location.href = "dashboard.html", 450);
+      setTimeout(() => location.replace("dashboard.html"), 350);
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      FSS.hardReset();
-      showStatus("Demo reset complete.", "good");
-      setTimeout(() => location.reload(), 500);
+      // Full reset (safe + consistent)
+      localStorage.clear();
+      showStatus("Demo reset complete. Reloading…", "good");
+      setTimeout(() => location.reload(), 450);
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.clear();
+      showStatus("Browser data cleared. Reloading…", "good");
+      setTimeout(() => location.reload(), 450);
     });
   </script>
 </body>
