@@ -9,143 +9,91 @@
 
   <style>
     .wrap{
-      max-width: 1120px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 22px 18px 54px;
+      padding: 18px 18px 50px;
     }
 
-    .hero{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 22px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.40);
-      padding: 18px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .hero:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(650px 300px at 15% 0%, rgba(29,121,198,.22), transparent 60%),
-        radial-gradient(650px 300px at 90% 0%, rgba(44,171,75,.18), transparent 60%);
-      pointer-events:none;
-    }
-
-    .hero > *{ position:relative; }
-
-    .row{
+    .head{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-    }
-
-    .title{
-      display:flex;
-      align-items:center;
       gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
     }
 
-    .check{
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight: 950;
-      color: rgba(255,255,255,.95);
-      background: rgba(96,255,157,.18);
-      border: 1px solid rgba(96,255,157,.35);
-      box-shadow: 0 10px 26px rgba(0,0,0,.25);
-      flex: 0 0 auto;
-    }
-
-    h1{
-      margin: 0;
+    .head h1{
+      margin:0;
       font-size: 18px;
       font-weight: 950;
       letter-spacing: -0.2px;
-      color: rgba(255,255,255,.95);
     }
 
-    .sub{
+    .head p{
       margin: 6px 0 0;
-      font-size: 13px;
-      color: rgba(255,255,255,.72);
+      color: rgba(255,255,255,.70);
       font-weight: 750;
+      font-size: 13px;
       max-width: 90ch;
       line-height: 1.5;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 9px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(96,255,157,.10);
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.90);
-      white-space: nowrap;
-    }
-    .pill .dot{
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: rgba(96,255,157,.95);
-    }
-
     .grid{
       display:grid;
-      grid-template-columns: 1.05fr .95fr;
+      grid-template-columns: 360px 1fr;
       gap: 14px;
-      margin-top: 14px;
+      align-items:start;
+      margin-top: 12px;
     }
 
     .card{
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
-      border-radius: 20px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      border-radius: 22px;
       padding: 14px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.30);
     }
 
     .card h2{
-      margin: 0;
+      margin:0;
       font-size: 14px;
       font-weight: 950;
-      color: rgba(255,255,255,.92);
-      letter-spacing: -.1px;
+      letter-spacing: -0.1px;
     }
 
-    .meta{
-      margin-top: 10px;
+    .sub{
+      margin: 8px 0 0;
+      color: rgba(255,255,255,.70);
+      font-weight: 750;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin: 12px 0;
+    }
+
+    .info{
       display:grid;
       gap: 10px;
+      margin-top: 10px;
     }
-
-    .meta .item{
+    .info .row{
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      background: rgba(255,255,255,.05);
     }
-
-    .meta .label{
+    .info .label{
       font-size: 12px;
       font-weight: 900;
-      color: rgba(255,255,255,.62);
+      color: rgba(255,255,255,.60);
       margin-bottom: 6px;
     }
-
-    .meta .value{
+    .info .value{
       font-size: 13px;
       font-weight: 950;
       color: rgba(255,255,255,.92);
@@ -160,43 +108,70 @@
       flex-wrap:wrap;
       margin-top: 12px;
     }
-
-    .btn-lg{
-      padding: 12px 16px;
+    .actions .btn{
+      flex: 1 1 auto;
+      justify-content:center;
+      padding: 12px 14px;
       border-radius: 14px;
       font-size: 14px;
       font-weight: 950;
     }
 
-    .btn-muted{
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-    }
-    .btn-muted:hover{ background: rgba(255,255,255,.09); }
-
-    .viewerWrap{
-      margin-top: 10px;
-      border-radius: 18px;
+    /* Viewer */
+    .viewer-card{
+      padding: 0;
       overflow:hidden;
+    }
+
+    .viewer-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+    }
+
+    .viewer-title{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width:0;
+    }
+
+    .badge{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.25);
+      font-weight: 950;
     }
 
-    iframe{
+    .viewer-title strong{
+      font-weight: 950;
+      font-size: 13px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .viewer-body{
+      padding: 14px;
+      background: radial-gradient(1000px 520px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
+    }
+
+    #pdfFrame{
       width: 100%;
-      height: 62vh;
+      height: min(82vh, 980px);
       border: 0;
+      border-radius: 18px;
       background: #fff;
-      display:block;
-    }
-
-    .note{
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      color: rgba(255,255,255,.62);
-      line-height: 1.5;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
     }
 
     .status{
@@ -210,13 +185,13 @@
       color: rgba(255,255,255,.84);
       display:none;
     }
-    .status.good{ border-color: rgba(96,255,157,.30); background: rgba(96,255,157,.10); }
-    .status.warn{ border-color: rgba(255,196,82,.30); background: rgba(255,196,82,.10); }
-    .status.bad{ border-color: rgba(255,79,99,.30); background: rgba(255,79,99,.10); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
+    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
 
-    @media (max-width: 980px){
+    @media (max-width: 1020px){
       .grid{ grid-template-columns: 1fr; }
-      iframe{ height: 70vh; }
+      #pdfFrame{ height: 72vh; }
     }
   </style>
 </head>
@@ -247,76 +222,74 @@
   </header>
 
   <main class="wrap">
-    <section class="hero">
-      <div class="row">
-        <div>
-          <div class="title">
-            <div class="check">✓</div>
-            <div>
-              <h1>Agreement completed</h1>
-              <p class="sub">
-                The signing workflow is complete. You can download the signed PDF, view it below, or return to your dashboard.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="pill">
-          <span class="dot"></span>
-          Completed
-        </div>
+    <div class="head">
+      <div>
+        <h1>Completed</h1>
+        <p>
+          The agreement is complete. Below is the signed PDF generated locally in your browser.
+          You can download it or restart the demo workflow.
+        </p>
       </div>
-
-      <div class="status warn" id="statusBox"></div>
-    </section>
+      <div class="actions" style="margin-top:0;">
+        <a class="btn btn-outline" href="dashboard.html">Dashboard</a>
+        <a class="btn btn-primary" href="create.html">New Agreement</a>
+      </div>
+    </div>
 
     <div class="grid">
-      <section class="card">
+      <!-- LEFT -->
+      <aside class="card">
         <h2>Summary</h2>
+        <p class="sub">Envelope details.</p>
 
-        <div class="meta">
-          <div class="item">
-            <div class="label">Agreement</div>
-            <div class="value" id="templateVal">—</div>
+        <div class="info">
+          <div class="row">
+            <div class="label">Document</div>
+            <div class="value" id="docName">—</div>
           </div>
-
-          <div class="item">
+          <div class="row">
             <div class="label">Sender</div>
             <div class="value" id="senderVal">—</div>
           </div>
-
-          <div class="item">
+          <div class="row">
             <div class="label">Recipient</div>
             <div class="value" id="recipientVal">—</div>
           </div>
-
-          <div class="item">
-            <div class="label">Completed at</div>
-            <div class="value" id="completedAtVal">—</div>
+          <div class="row">
+            <div class="label">Status</div>
+            <div class="value" id="statusVal">—</div>
+          </div>
+          <div class="row">
+            <div class="label">Sent At</div>
+            <div class="value" id="sentAt">—</div>
+          </div>
+          <div class="row">
+            <div class="label">Completed At</div>
+            <div class="value" id="completedAt">—</div>
           </div>
         </div>
 
+        <div class="divider"></div>
+
         <div class="actions">
-          <a class="btn btn-primary btn-lg" href="dashboard.html">Back to dashboard</a>
-          <a class="btn btn-muted btn-lg" href="create.html">Create another</a>
-          <a class="btn btn-muted btn-lg" id="downloadBtn" href="#">Download PDF</a>
-          <button class="btn btn-outline btn-lg" id="resetBtn" type="button">Reset demo</button>
+          <button class="btn btn-primary" id="downloadBtn" type="button">Download PDF</button>
+          <button class="btn btn-outline" id="resetBtn" type="button">Reset Demo</button>
         </div>
 
-        <div class="note">
-          This is a demo flow. In production, “send” would generate a secure recipient link and the signed PDF would be stored server-side.
+        <div class="status" id="statusBox"></div>
+      </aside>
+
+      <!-- RIGHT -->
+      <section class="card viewer-card">
+        <div class="viewer-head">
+          <div class="viewer-title">
+            <div class="badge">PDF</div>
+            <strong>Signed Agreement</strong>
+          </div>
         </div>
-      </section>
 
-      <section class="card">
-        <h2>Signed PDF preview</h2>
-
-        <div class="viewerWrap" style="margin-top:10px;">
+        <div class="viewer-body">
           <iframe id="pdfFrame" title="Signed PDF Preview"></iframe>
-        </div>
-
-        <div class="note">
-          If preview is blank, generate the signed PDF in the Sign step first.
         </div>
       </section>
     </div>
@@ -324,13 +297,20 @@
 
   <script src="assets/app.js"></script>
   <script>
+    // Auth guard
     FSS.guard();
 
-    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
+    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
+
+    let doc = FSS.loadDocState();
+    if(!doc){
+      doc = FSS.resetDoc();
+      FSS.logAudit("Envelope created.");
+    }
 
     const statusBox = document.getElementById("statusBox");
-    function showStatus(msg, type="warn"){
+    function showStatus(type, msg){
       statusBox.style.display = "";
       statusBox.className = "status " + type;
       statusBox.textContent = msg;
@@ -340,104 +320,87 @@
       statusBox.textContent = "";
     }
 
-    const doc = FSS.loadDocState() || {};
-    const templateVal = document.getElementById("templateVal");
-    const senderVal = document.getElementById("senderVal");
-    const recipientVal = document.getElementById("recipientVal");
-    const completedAtVal = document.getElementById("completedAtVal");
-    const pdfFrame = document.getElementById("pdfFrame");
-
-    function docDisplayName(){
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        return localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded Agreement";
-      }
-      if(doc?.builder?.title) return doc.builder.title;
-      return doc.template || "Agreement";
+    function formatDate(iso){
+      if(!iso) return "—";
+      const d = new Date(iso);
+      if(isNaN(d.getTime())) return "—";
+      return d.toLocaleString();
     }
 
-    templateVal.textContent = docDisplayName();
+    function resolveDocName(){
+      if(doc.builder && doc.builder.text){
+        return doc.builder.title || "Scratch Agreement";
+      }
+      const upName = localStorage.getItem("fss_uploaded_pdf_name");
+      if(upName) return upName;
+      return doc.template || "nda.pdf";
+    }
 
-    senderVal.textContent = doc.parties?.aName
-      ? `${doc.parties.aName}${doc.parties.aEmail ? " ("+doc.parties.aEmail+")" : ""}`
-      : "Not set";
+    document.getElementById("docName").textContent = resolveDocName();
+    document.getElementById("senderVal").textContent = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})` : "Not set";
+    document.getElementById("recipientVal").textContent = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || "—"})` : "Not set";
+    document.getElementById("statusVal").textContent = doc.status || "draft";
+    document.getElementById("sentAt").textContent = formatDate(doc.sentAt);
+    document.getElementById("completedAt").textContent = formatDate(doc.completedAt);
 
-    recipientVal.textContent = doc.parties?.bName
-      ? `${doc.parties.bName}${doc.parties.bEmail ? " ("+doc.parties.bEmail+")" : ""}`
-      : "Not set";
+    // Load signed PDF
+    const frame = document.getElementById("pdfFrame");
+    const signedB64 = FSS.getSignedBase64();
 
-    // completedAt
-    const completed = doc.completedAt || doc.updatedAt || null;
-    if(completed){
-      const d = new Date(completed);
-      completedAtVal.textContent = isNaN(d.getTime()) ? String(completed) : d.toLocaleString();
+    if(signedB64){
+      const url = FSS.base64ToBlobURL(signedB64);
+      frame.src = url;
     }else{
-      completedAtVal.textContent = "—";
+      showStatus("warn", "No signed PDF found yet. Go to Sign and generate it.");
     }
-
-    // Preview signed PDF if present
-    function loadSignedPreview(){
-      const b64 = FSS.getSignedBase64();
-      if(!b64){
-        pdfFrame.src = "";
-        showStatus("No signed PDF found yet. Go to Sign and click “Generate Signed PDF”.", "warn");
-        return;
-      }
-      clearStatus();
-      const url = FSS.base64ToBlobURL(b64, "application/pdf");
-      pdfFrame.src = url;
-    }
-
-    loadSignedPreview();
 
     // Download
-    document.getElementById("downloadBtn").addEventListener("click", (e) => {
-      e.preventDefault();
+    document.getElementById("downloadBtn").addEventListener("click", ()=>{
+      clearStatus();
 
       const b64 = FSS.getSignedBase64();
       if(!b64){
-        showStatus("No signed PDF exists yet.", "warn");
+        showStatus("warn", "No signed PDF available.");
         return;
       }
 
-      const url = FSS.base64ToBlobURL(b64, "application/pdf");
+      const byteChars = atob(b64);
+      const bytes = new Uint8Array(byteChars.length);
+      for(let i=0;i<byteChars.length;i++) bytes[i] = byteChars.charCodeAt(i);
+
+      const blob = new Blob([bytes], { type:"application/pdf" });
+      const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Completed-${(doc.id || "agreement")}.pdf`;
+      a.download = `FSS-${doc.id || "agreement"}-signed.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
+
+      setTimeout(()=>URL.revokeObjectURL(url), 1500);
+      showStatus("good", "Download started.");
+      setTimeout(clearStatus, 900);
     });
 
     // Reset demo
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      const ok = confirm("Reset this demo? This clears the current document, fields, and signed PDF in this browser.");
-      if(!ok) return;
+    document.getElementById("resetBtn").addEventListener("click", ()=>{
+      if(!confirm("Reset the demo? This clears doc state + fields + signed PDF (upload remains unless cleared in Create).")) return;
 
-      FSS.logout(); // clears auth + state using your app.js helper
-      // But user probably wants to stay logged in; re-auth after reset:
-      // We'll restore auth only if it existed
-      const priorAuth = user?.email ? user : null;
-
-      // Reset core demo data
-      localStorage.removeItem("fss_doc");
-      localStorage.removeItem("fss_fields");
-      localStorage.removeItem("fss_values");
+      FSS.resetDoc();
+      localStorage.setItem("fss_fields", JSON.stringify([]));
+      localStorage.setItem("fss_values", JSON.stringify({}));
       localStorage.removeItem("fss_signed_pdf_b64");
-      localStorage.removeItem("fss_uploaded_pdf_b64");
-      localStorage.removeItem("fss_uploaded_pdf_name");
-      localStorage.removeItem("fss_audit");
 
-      if(priorAuth){
-        localStorage.setItem("fss_auth", JSON.stringify(priorAuth));
-      }
-
-      location.href = "dashboard.html";
+      FSS.logAudit("Demo reset from Completed.");
+      showStatus("good", "Demo reset. Redirecting…");
+      setTimeout(()=>location.href="dashboard.html", 700);
     });
 
     // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
+    document.getElementById("logoutBtn").addEventListener("click", ()=>{
       FSS.logout();
-      location.href = "index.html";
+      location.replace("index.html");
     });
   </script>
 </body>
