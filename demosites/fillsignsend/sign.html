@@ -9,10 +9,11 @@
 
   <style>
     .wrap{
-      max-width: 1200px;
+      max-width: 1250px;
       margin: 0 auto;
       padding: 18px 18px 40px;
     }
+
     .page-head{
       display:flex;
       align-items:flex-start;
@@ -21,20 +22,23 @@
       flex-wrap:wrap;
       margin-bottom: 12px;
     }
+
     .page-head h1{
       margin: 0;
       font-size: 18px;
       font-weight: 950;
       letter-spacing: -0.2px;
     }
+
     .page-head p{
       margin: 6px 0 0;
       font-size: 13px;
       color: var(--muted);
       font-weight: 750;
-      max-width: 72ch;
+      max-width: 78ch;
       line-height: 1.5;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
@@ -150,7 +154,7 @@
       line-height: 1.45;
     }
 
-    /* Viewer */
+    /* ===== Viewer ===== */
     .viewer-card{
       overflow:hidden;
       padding: 0;
@@ -219,21 +223,35 @@
     .tool:hover{ background: rgba(255,255,255,.09); }
 
     .viewer-body{
-      padding: 16px 18px 18px;
+      padding: 14px;
       background: radial-gradient(900px 450px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
     }
 
-    /* Controlled PDF viewer */
-    #pdfFrame{
-      width: 100%;
-      height: min(80vh, 920px);
-      border: 0;
+    /* PDF.js canvas container */
+    .pdf-shell{
       border-radius: 18px;
-      background: #fff;
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 18px 50px rgba(0,0,0,.45);
     }
 
-    /* Status message */
+    .pdf-canvas-wrap{
+      width: 100%;
+      overflow:auto;
+      max-height: min(82vh, 980px);
+      background: #0b1220;
+      padding: 18px;
+    }
+
+    canvas{
+      display:block;
+      background:#fff;
+      border-radius: 10px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
     .status{
       margin-top: 12px;
       padding: 10px 12px;
@@ -250,7 +268,7 @@
 
     @media (max-width: 1020px){
       .layout{ grid-template-columns: 1fr; }
-      #pdfFrame{ height: 70vh; }
+      .pdf-canvas-wrap{ max-height: 70vh; }
     }
   </style>
 </head>
@@ -285,8 +303,8 @@
       <div>
         <h1>Sign & Send</h1>
         <p>
-          Sender signs first, then the agreement is sent, then the recipient completes it.
-          This page generates a <strong>real signed PDF</strong> directly in the browser.
+          This is the main workflow: <strong>sender signs</strong> → <strong>send</strong> → <strong>recipient completes</strong>.
+          You’re now viewing the PDF using <strong>PDF.js</strong> for a real product feel (fit-to-width, smooth zoom, stable tools).
         </p>
       </div>
       <div class="pill" id="flowPill" data-state="sender">
@@ -296,7 +314,7 @@
     </div>
 
     <div class="layout">
-      <!-- LEFT SIDEBAR -->
+      <!-- LEFT -->
       <aside class="card">
         <h2>Workflow</h2>
         <p id="flowText">—</p>
@@ -330,13 +348,13 @@
         </div>
 
         <div class="hint" id="hintText">
-          Tip: Double-click a placed field to edit it. Drag to reposition.
+          Tip: This viewer supports <strong>Fit to width</strong>. Zoom is smooth and consistent now.
         </div>
 
         <div class="status warn" id="statusBox" style="display:none;"></div>
       </aside>
 
-      <!-- RIGHT VIEWER -->
+      <!-- RIGHT -->
       <section class="card viewer-card">
         <div class="viewer-head">
           <div class="viewer-title">
@@ -345,15 +363,20 @@
           </div>
 
           <div class="viewer-tools">
+            <button class="tool" id="fitBtn" type="button">Fit</button>
             <button class="tool" id="zoomOutBtn" type="button">−</button>
             <button class="tool" id="zoomInBtn" type="button">+</button>
-            <button class="tool" id="openFullBtn" type="button">Open full screen</button>
+            <button class="tool" id="openFullBtn" type="button">Open</button>
             <button class="tool" id="refreshBtn" type="button">Refresh</button>
           </div>
         </div>
 
         <div class="viewer-body">
-          <iframe id="pdfFrame" title="PDF Preview"></iframe>
+          <div class="pdf-shell">
+            <div class="pdf-canvas-wrap" id="pdfWrap">
+              <canvas id="pdfCanvas"></canvas>
+            </div>
+          </div>
 
           <div class="status" id="viewerStatus">
             Loading PDF…
@@ -363,13 +386,17 @@
     </div>
   </main>
 
+  <!-- App -->
   <script src="assets/app.js"></script>
 
-  <!-- pdf-lib needed only for generating signed PDF -->
+  <!-- pdf-lib for signing -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
+  <!-- PDF.js (viewer rendering) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+
   <script>
-    // Guard
+    // ========= AUTH GUARD =========
     FSS.guard();
 
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
@@ -381,26 +408,40 @@
       doc = FSS.loadDocState();
     }
 
+    // ========= UI REFS =========
     const templateVal = document.getElementById("templateVal");
     const senderVal = document.getElementById("senderVal");
     const recipientVal = document.getElementById("recipientVal");
-    const pdfFrame = document.getElementById("pdfFrame");
     const pdfName = document.getElementById("pdfName");
     const viewerStatus = document.getElementById("viewerStatus");
+    const statusBox = document.getElementById("statusBox");
 
     const flowPill = document.getElementById("flowPill");
     const flowLabel = document.getElementById("flowLabel");
-    const flowText  = document.getElementById("flowText");
-    const hintText  = document.getElementById("hintText");
+    const flowText = document.getElementById("flowText");
+    const hintText = document.getElementById("hintText");
 
     const senderSignBtn = document.getElementById("senderSignBtn");
     const sendBtn = document.getElementById("sendBtn");
     const recipientBtn = document.getElementById("recipientBtn");
     const downloadBtn = document.getElementById("downloadBtn");
-    const statusBox = document.getElementById("statusBox");
 
-    let zoom = 120;
-    let currentBlobUrl = null; // IMPORTANT: revoke between reloads
+    // PDF.js elements
+    const pdfWrap = document.getElementById("pdfWrap");
+    const canvas = document.getElementById("pdfCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // ========= PDF.js CONFIG =========
+    // Use CDN worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+
+    let pdfDoc = null;
+    let pageNumber = 1;
+    let zoom = 1.15;
+    let fitMode = true;
+    let currentSourceLabel = "—";
+    let currentBlobUrl = null;
 
     function showStatus(type, msg){
       statusBox.style.display = "";
@@ -410,86 +451,6 @@
     function clearStatus(){
       statusBox.style.display = "none";
       statusBox.textContent = "";
-    }
-
-    function setFlow(state){
-      flowPill.setAttribute("data-state", state);
-
-      if(state === "sender"){
-        flowLabel.textContent = "Sender signing";
-        flowText.innerHTML =
-          `Step 1: sender signs the document.<br><br>
-           This generates a <strong>real signed PDF</strong> in-browser.`;
-        hintText.innerHTML =
-          `Click <strong>Sign as sender</strong>. If fields exist, you can double-click them to edit and drag to adjust.`;
-      }
-      if(state === "ready"){
-        flowLabel.textContent = "Ready to send";
-        flowText.innerHTML =
-          `Step 2: send the agreement to recipient.<br><br>
-           (Simulated delivery)`;
-        hintText.innerHTML =
-          `Click <strong>Send to recipient</strong>.`;
-      }
-      if(state === "sent"){
-        flowLabel.textContent = "Recipient signing";
-        flowText.innerHTML =
-          `Step 3: recipient completes signing.<br><br>
-           This demo simulates the recipient flow.`;
-        hintText.innerHTML =
-          `Click <strong>Open recipient signing</strong> to finish.`;
-      }
-      if(state === "completed"){
-        flowLabel.textContent = "Completed";
-        flowText.innerHTML =
-          `✅ Completed.<br><br>
-           Download the signed PDF or view Completed screen.`;
-        hintText.innerHTML =
-          `Use <strong>Download signed PDF</strong>.`;
-      }
-    }
-
-    function refreshState(){
-      doc = FSS.loadDocState();
-
-      const hasSigned = FSS.hasSignedPDF();
-
-      // Completed
-      if(doc.status === "completed"){
-        setFlow("completed");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = hasSigned ? "" : "none";
-        return;
-      }
-
-      // Sent
-      if(doc.status === "sent"){
-        setFlow("sent");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "none";
-        recipientBtn.style.display = "";
-        downloadBtn.style.display = hasSigned ? "" : "none";
-        return;
-      }
-
-      // Ready
-      if(hasSigned){
-        setFlow("ready");
-        senderSignBtn.style.display = "none";
-        sendBtn.style.display = "";
-        recipientBtn.style.display = "none";
-        downloadBtn.style.display = "";
-        return;
-      }
-
-      // Default
-      setFlow("sender");
-      senderSignBtn.style.display = "";
-      sendBtn.style.display = "none";
-      recipientBtn.style.display = "none";
-      downloadBtn.style.display = "none";
     }
 
     function updateSidebar(){
@@ -512,67 +473,235 @@
         : "Not provided";
     }
 
-    async function loadPdfIntoViewer(){
-      doc = FSS.loadDocState();
-      if(!doc){
-        viewerStatus.textContent = "No document.";
-        viewerStatus.className = "status bad";
-        return;
+    function setFlow(state){
+      flowPill.setAttribute("data-state", state);
+
+      if(state === "sender"){
+        flowLabel.textContent = "Sender signing";
+        flowText.innerHTML =
+          `Step 1: sender signs the document.<br><br>
+           This generates a <strong>real signed PDF</strong>.`;
+        hintText.innerHTML =
+          `Use <strong>Fit</strong> for a great viewing experience.`;
       }
-
-      // pick best PDF to show:
-      // 1) signed pdf if exists
-      // 2) custom pdf if uploaded
-      // 3) template pdf
-      let label = "";
-      let blobUrl = null;
-
-      try{
-        // Cleanup old blob url
-        if(currentBlobUrl){
-          URL.revokeObjectURL(currentBlobUrl);
-          currentBlobUrl = null;
-        }
-
-        // 1) signed
-        if(FSS.hasSignedPDF()){
-          const b64 = FSS.getSignedBase64();
-          blobUrl = FSS.base64ToBlobURL(b64);
-          label = "Signed PDF";
-        }
-        // 2) custom
-        else if(doc.source === "custom"){
-          const b64 = FSS.getCustomPdfBase64();
-          blobUrl = FSS.base64ToBlobURL(b64);
-          label = "Custom PDF";
-        }
-        // 3) template
-        else{
-          const template = doc.template || "nda.pdf";
-          const res = await fetch(`pdfs/${encodeURIComponent(template)}`, { cache:"no-store" });
-          if(!res.ok) throw new Error("Template PDF not found in /pdfs");
-          const buf = await res.arrayBuffer();
-          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
-          blobUrl = FSS.base64ToBlobURL(b64);
-          label = template;
-        }
-
-        currentBlobUrl = blobUrl;
-
-        // zoom works by passing a hash to viewer (reliable with blob urls)
-        pdfFrame.src = `${blobUrl}#zoom=${zoom}`;
-
-        pdfName.textContent = label;
-        viewerStatus.textContent = `Showing: ${label} (zoom ${zoom}%)`;
-        viewerStatus.className = "status good";
-      }catch(err){
-        console.error(err);
-        viewerStatus.textContent = "Could not load PDF. Check console.";
-        viewerStatus.className = "status bad";
+      if(state === "ready"){
+        flowLabel.textContent = "Ready to send";
+        flowText.innerHTML =
+          `Step 2: send the agreement to recipient.<br><br>
+           (Simulated delivery)`;
+        hintText.innerHTML = `Click <strong>Send to recipient</strong>.`;
+      }
+      if(state === "sent"){
+        flowLabel.textContent = "Recipient signing";
+        flowText.innerHTML =
+          `Step 3: recipient completes signing.<br><br>
+           This demo simulates the recipient flow.`;
+        hintText.innerHTML = `Click <strong>Open recipient signing</strong>.`;
+      }
+      if(state === "completed"){
+        flowLabel.textContent = "Completed";
+        flowText.innerHTML =
+          `✅ Completed.<br><br>
+           Download the signed PDF or view Completed screen.`;
+        hintText.innerHTML = `Use <strong>Download</strong>.`;
       }
     }
 
-    // Actions
+    function refreshState(){
+      doc = FSS.loadDocState();
+      const hasSigned = FSS.hasSignedPDF();
+
+      if(doc.status === "completed"){
+        setFlow("completed");
+        senderSignBtn.style.display = "none";
+        sendBtn.style.display = "none";
+        recipientBtn.style.display = "none";
+        downloadBtn.style.display = hasSigned ? "" : "none";
+        return;
+      }
+
+      if(doc.status === "sent"){
+        setFlow("sent");
+        senderSignBtn.style.display = "none";
+        sendBtn.style.display = "none";
+        recipientBtn.style.display = "";
+        downloadBtn.style.display = hasSigned ? "" : "none";
+        return;
+      }
+
+      if(hasSigned){
+        setFlow("ready");
+        senderSignBtn.style.display = "none";
+        sendBtn.style.display = "";
+        recipientBtn.style.display = "none";
+        downloadBtn.style.display = "";
+        return;
+      }
+
+      setFlow("sender");
+      senderSignBtn.style.display = "";
+      sendBtn.style.display = "none";
+      recipientBtn.style.display = "none";
+      downloadBtn.style.display = "none";
+    }
+
+    function revokeBlob(){
+      if(currentBlobUrl){
+        URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = null;
+      }
+    }
+
+    function base64ToUint8(b64){
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for(let i=0; i<bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return bytes;
+    }
+
+    async function getPdfBytesForViewer(){
+      doc = FSS.loadDocState();
+      if(!doc) throw new Error("No document.");
+
+      // priority:
+      // 1) signed pdf
+      if(FSS.hasSignedPDF()){
+        const b64 = FSS.getSignedBase64();
+        currentSourceLabel = "Signed PDF";
+        return base64ToUint8(b64);
+      }
+
+      // 2) custom uploaded
+      if(doc.source === "custom"){
+        const b64 = FSS.getCustomPdfBase64();
+        if(!b64) throw new Error("Custom PDF missing.");
+        currentSourceLabel = "Custom PDF";
+        return base64ToUint8(b64);
+      }
+
+      // 3) template pdf
+      const template = doc.template || "nda.pdf";
+      currentSourceLabel = template;
+
+      const res = await fetch(`pdfs/${encodeURIComponent(template)}`, { cache:"no-store" });
+      if(!res.ok) throw new Error("Template PDF missing in /pdfs");
+      const buf = await res.arrayBuffer();
+      return new Uint8Array(buf);
+    }
+
+    async function loadPdfJsDocument(){
+      viewerStatus.textContent = "Loading PDF…";
+      viewerStatus.className = "status warn";
+
+      const bytes = await getPdfBytesForViewer();
+      pdfName.textContent = currentSourceLabel;
+
+      const loadingTask = pdfjsLib.getDocument({ data: bytes });
+      pdfDoc = await loadingTask.promise;
+
+      pageNumber = 1; // single-page demo rendering
+      await renderPage();
+
+      viewerStatus.textContent = `Showing: ${currentSourceLabel}`;
+      viewerStatus.className = "status good";
+    }
+
+    function getFitScale(viewport){
+      // Fit to width based on container (pdfWrap)
+      const padding = 36; // wrap padding
+      const maxWidth = pdfWrap.clientWidth - padding;
+      return maxWidth / viewport.width;
+    }
+
+    async function renderPage(){
+      if(!pdfDoc) return;
+
+      const page = await pdfDoc.getPage(pageNumber);
+
+      // base viewport at scale=1
+      const baseViewport = page.getViewport({ scale: 1 });
+
+      // Determine scale: fit or zoom
+      let scale = zoom;
+      if(fitMode){
+        scale = getFitScale(baseViewport);
+      }
+
+      const viewport = page.getViewport({ scale });
+
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+
+      // clear
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport
+      };
+
+      await page.render(renderContext).promise;
+
+      // show status
+      const zoomPct = Math.round(scale * 100);
+      viewerStatus.textContent = `Showing: ${currentSourceLabel} • ${fitMode ? "Fit" : "Zoom"} • ${zoomPct}%`;
+      viewerStatus.className = "status good";
+    }
+
+    // ========= TOOLBAR =========
+    document.getElementById("fitBtn").addEventListener("click", async () => {
+      fitMode = true;
+      await renderPage();
+    });
+
+    document.getElementById("zoomInBtn").addEventListener("click", async () => {
+      fitMode = false;
+      zoom = Math.min(2.5, zoom + 0.15);
+      await renderPage();
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", async () => {
+      fitMode = false;
+      zoom = Math.max(0.6, zoom - 0.15);
+      await renderPage();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", async () => {
+      clearStatus();
+      try{
+        await loadPdfJsDocument();
+        refreshState();
+        updateSidebar();
+      }catch(err){
+        console.error(err);
+        viewerStatus.textContent = "Could not refresh PDF. Check console.";
+        viewerStatus.className = "status bad";
+      }
+    });
+
+    document.getElementById("openFullBtn").addEventListener("click", async () => {
+      // Open current PDF in a new tab (as a Blob)
+      try{
+        const bytes = await getPdfBytesForViewer();
+        revokeBlob();
+        const blob = new Blob([bytes], { type:"application/pdf" });
+        currentBlobUrl = URL.createObjectURL(blob);
+        window.open(currentBlobUrl, "_blank");
+      }catch(err){
+        console.error(err);
+        showStatus("bad", "Could not open PDF. Check console.");
+      }
+    });
+
+    // Handle resize: if Fit mode is on, rerender
+    window.addEventListener("resize", async () => {
+      if(fitMode){
+        await renderPage();
+      }
+    });
+
+    // ========= ACTIONS =========
     senderSignBtn.addEventListener("click", async () => {
       clearStatus();
       showStatus("warn", "Generating signed PDF…");
@@ -583,10 +712,10 @@
         return;
       }
 
-      showStatus("good", "✅ Sender signed. Agreement is ready to send.");
       FSS.logAudit("Sender signed the agreement.");
+      showStatus("good", "✅ Sender signed. Agreement is ready to send.");
       refreshState();
-      await loadPdfIntoViewer();
+      await loadPdfJsDocument();
     });
 
     sendBtn.addEventListener("click", async () => {
@@ -605,11 +734,11 @@
       FSS.logAudit(`Agreement sent to ${doc.parties.bEmail || "recipient"}.`);
       showStatus("good", "📨 Sent! Recipient signing enabled.");
       refreshState();
-      await loadPdfIntoViewer();
     });
 
-    recipientBtn.addEventListener("click", async () => {
+    recipientBtn.addEventListener("click", () => {
       clearStatus();
+
       doc = FSS.loadDocState();
       doc.status = "completed";
       doc.completedAt = new Date().toISOString();
@@ -617,65 +746,50 @@
 
       FSS.logAudit("Recipient completed signing.");
       showStatus("good", "✅ Recipient completed. Redirecting…");
-      refreshState();
 
       setTimeout(() => location.href = "success.html", 800);
     });
 
     downloadBtn.addEventListener("click", (e) => {
       e.preventDefault();
+
       const b64 = FSS.getSignedBase64();
       if(!b64){
         showStatus("warn", "No signed PDF available.");
         return;
       }
 
-      const url = FSS.base64ToBlobURL(b64);
+      const bytes = base64ToUint8(b64);
+      const blob = new Blob([bytes], { type:"application/pdf" });
+      const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = `FSS-${(doc.id || "agreement")}-signed.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
+
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     });
 
-    // Tools
-    document.getElementById("zoomInBtn").addEventListener("click", async () => {
-      zoom = Math.min(200, zoom + 10);
-      await loadPdfIntoViewer();
-    });
-
-    document.getElementById("zoomOutBtn").addEventListener("click", async () => {
-      zoom = Math.max(70, zoom - 10);
-      await loadPdfIntoViewer();
-    });
-
-    document.getElementById("refreshBtn").addEventListener("click", async () => {
-      clearStatus();
-      await loadPdfIntoViewer();
-      refreshState();
-    });
-
-    document.getElementById("openFullBtn").addEventListener("click", () => {
-      if(!currentBlobUrl){
-        showStatus("warn", "No PDF loaded yet.");
-        return;
-      }
-      window.open(`${currentBlobUrl}#zoom=${zoom}`, "_blank");
-    });
-
-    // Logout
+    // ========= LOGOUT =========
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
-    // Boot
+    // ========= BOOT =========
     (async function boot(){
       updateSidebar();
       refreshState();
-      await loadPdfIntoViewer();
+      try{
+        await loadPdfJsDocument();
+      }catch(err){
+        console.error(err);
+        viewerStatus.textContent = "Could not load PDF. Check console.";
+        viewerStatus.className = "status bad";
+      }
       clearStatus();
     })();
   </script>
