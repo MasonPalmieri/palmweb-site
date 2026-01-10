@@ -15,7 +15,6 @@
       justify-content:center;
       padding: 18px;
     }
-
     .login-card{
       width: min(520px, 100%);
       border-radius: 22px;
@@ -25,7 +24,6 @@
       padding: 18px;
       backdrop-filter: blur(12px);
     }
-
     .brand{
       display:flex;
       align-items:center;
@@ -56,15 +54,15 @@
       font-size: 13px;
       margin-top: 2px;
     }
-
     .divider{
       height: 1px;
       background: rgba(255,255,255,.08);
       margin: 12px 0 14px;
     }
-
-    .grid{ display:grid; gap: 10px; }
-
+    .grid{
+      display:grid;
+      gap: 10px;
+    }
     label{
       display:flex;
       flex-direction:column;
@@ -73,7 +71,6 @@
       font-size: 13px;
       color: rgba(255,255,255,.86);
     }
-
     input{
       padding: 12px 12px;
       border-radius: 14px;
@@ -88,7 +85,6 @@
       border-color: rgba(67,203,255,.55);
       box-shadow: 0 0 0 4px rgba(67,203,255,.12);
     }
-
     .row{
       display:flex;
       gap: 10px;
@@ -97,7 +93,6 @@
       justify-content:space-between;
       margin-top: 10px;
     }
-
     .btn-wide{
       flex: 1 1 auto;
       justify-content:center;
@@ -106,7 +101,6 @@
       font-size: 14px;
       font-weight: 950;
     }
-
     .note{
       margin-top: 10px;
       font-size: 12px;
@@ -114,7 +108,6 @@
       font-weight: 750;
       line-height: 1.45;
     }
-
     .status{
       margin-top: 12px;
       padding: 10px 12px;
@@ -128,7 +121,6 @@
     }
     .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
     .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-
     .footer-links{
       display:flex;
       gap: 12px;
@@ -220,35 +212,28 @@
       const email = (emailEl.value || "").trim();
       const pw = (passEl.value || "").trim();
 
-      if(!email || !pw){
-        showStatus("Enter email and password.");
-        return;
-      }
-
-      // ✅ Use app.js login() correctly (requires email + password)
       const res = FSS.login(email, pw);
-      if(!res || !res.ok){
-        showStatus(res?.msg || "Login failed.");
+      if(!res.ok){
+        showStatus(res.msg || "Login failed.");
         return;
       }
 
-      // Ensure envelope exists
+      // Ensure doc exists
       if(!FSS.loadDocState()){
         FSS.resetDoc();
         FSS.logAudit("Envelope created.");
       }
 
       showStatus("Success. Redirecting…", "good");
-      setTimeout(() => location.href = "dashboard.html", 350);
+      setTimeout(() => location.href = "dashboard.html", 300);
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      try{
-        localStorage.clear();
-        sessionStorage.clear();
-      }catch(e){}
+      // Hard reset without requiring app.js to have a hardReset() function
+      localStorage.clear();
+      sessionStorage.clear();
       showStatus("Demo reset complete.", "good");
-      setTimeout(() => location.reload(), 500);
+      setTimeout(() => location.reload(), 400);
     });
   </script>
 </body>
