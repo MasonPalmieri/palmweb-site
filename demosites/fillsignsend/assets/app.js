@@ -1,34 +1,20 @@
 /* ============================================================
    FSS Demo App — app.js (Static / GitHub Pages)
    No backend. Uses localStorage for auth + doc state.
-
-   Supports:
-   - Template PDFs in /pdfs
-   - Uploaded PDFs stored as Base64 in localStorage
-   - Scratch-built PDFs (builder) built from text
-   - Overlay field placement + Signed PDF generation
-
-   NOTE:
-   - pdf-lib is loaded dynamically if not already present.
-   - Signature appearance uses a more "script-like" italic font.
    ============================================================ */
 
 window.FSS = (() => {
+
   /* =========================
      CONFIG
      ========================= */
-  const DEMO_PASSWORD = "hallam";
-  const DEMO_EMAIL = "demo@client.com";
-
+  const DEMO_PASSWORD = "hallam"; // required password
   const STORE_KEYS = {
     auth: "fss_auth",
     doc: "fss_doc",
     fields: "fss_fields",
     values: "fss_values",
     audit: "fss_audit",
-
-    // IMPORTANT:
-    // signed + uploaded pdfs are RAW strings (not JSON) to avoid size / parse issues.
     signed: "fss_signed_pdf_b64",
     uploadedB64: "fss_uploaded_pdf_b64",
     uploadedName: "fss_uploaded_pdf_name",
@@ -46,11 +32,7 @@ window.FSS = (() => {
   }
 
   function safeJSONParse(str, fallback) {
-    try {
-      return JSON.parse(str);
-    } catch {
-      return fallback;
-    }
+    try { return JSON.parse(str); } catch { return fallback; }
   }
 
   function getKey(key, fallback) {
@@ -79,18 +61,17 @@ window.FSS = (() => {
     return !!(a && a.email);
   }
 
+  // ✅ Allow ANY email as long as password matches DEMO_PASSWORD
   function login(email, password) {
     const e = (email || "").trim().toLowerCase();
     const p = (password || "").trim();
+
     if (!e || !p) return { ok: false, msg: "Missing email or password." };
+    if (p !== DEMO_PASSWORD) return { ok: false, msg: "Incorrect password." };
 
-    if (e === DEMO_EMAIL && p === DEMO_PASSWORD) {
-      setKey(STORE_KEYS.auth, { email: e, at: nowStamp() });
-      logAudit(`Login successful (${e}).`);
-      return { ok: true };
-    }
-
-    return { ok: false, msg: "Invalid demo credentials." };
+    setKey(STORE_KEYS.auth, { email: e, at: nowStamp() });
+    logAudit(`Login successful (${e}).`);
+    return { ok: true };
   }
 
   function logout() {
@@ -98,13 +79,25 @@ window.FSS = (() => {
     logAudit("Logout.");
   }
 
+  // ✅ Prevent redirect loops
   function guard() {
     if (!isAuthed()) {
       const path = location.pathname.toLowerCase();
-      if (!path.endsWith("index.html")) {
-        location.href = "index.html";
+      if (!path.endsWith("/index.html") && !path.endsWith("index.html")) {
+        location.replace("index.html");
       }
     }
+  }
+
+  function hardReset() {
+    localStorage.removeItem(STORE_KEYS.auth);
+    localStorage.removeItem(STORE_KEYS.doc);
+    localStorage.removeItem(STORE_KEYS.fields);
+    localStorage.removeItem(STORE_KEYS.values);
+    localStorage.removeItem(STORE_KEYS.audit);
+    localStorage.removeItem(STORE_KEYS.signed);
+    localStorage.removeItem(STORE_KEYS.uploadedB64);
+    localStorage.removeItem(STORE_KEYS.uploadedName);
   }
 
   /* =========================
@@ -128,7 +121,7 @@ window.FSS = (() => {
         bTitle: "",
         bAddr: "",
       },
-      builder: null, // {title,text,selectedClauseIds,customClauses}
+      builder: null,
     };
   }
 
@@ -144,28 +137,11 @@ window.FSS = (() => {
   function resetDoc() {
     const d = defaultDoc();
     setKey(STORE_KEYS.doc, d);
-
-    clearSignedPDF();
-    clearUploadedPDF();
-
+    removeKey(STORE_KEYS.signed);
     setKey(STORE_KEYS.fields, []);
     setKey(STORE_KEYS.values, {});
     setKey(STORE_KEYS.audit, []);
     return d;
-  }
-
-  function setStage(stage) {
-    const d = loadDocState() || defaultDoc();
-    d.stage = stage;
-    saveDocState(d);
-    logAudit(`Stage set to ${stage}.`);
-  }
-
-  function setStatus(status) {
-    const d = loadDocState() || defaultDoc();
-    d.status = status;
-    saveDocState(d);
-    logAudit(`Status set to ${status}.`);
   }
 
   /* =========================
@@ -216,22 +192,14 @@ window.FSS = (() => {
   }
 
   /* =========================
-     SIGNED PDF STORAGE (RAW)
+     SIGNED PDF STORAGE
      ========================= */
   function setSignedBase64(b64) {
-    if (!b64) {
-      localStorage.removeItem(STORE_KEYS.signed);
-      return;
-    }
-    localStorage.setItem(STORE_KEYS.signed, b64);
+    setKey(STORE_KEYS.signed, b64 || null);
   }
 
   function getSignedBase64() {
-    return localStorage.getItem(STORE_KEYS.signed);
-  }
-
-  function clearSignedPDF() {
-    localStorage.removeItem(STORE_KEYS.signed);
+    return getKey(STORE_KEYS.signed, null);
   }
 
   function hasSignedPDF() {
@@ -240,7 +208,7 @@ window.FSS = (() => {
   }
 
   /* =========================
-     UPLOAD HELPERS (RAW)
+     UPLOAD HELPERS
      ========================= */
   function hasUploadedPDF() {
     return !!localStorage.getItem(STORE_KEYS.uploadedB64);
@@ -252,17 +220,6 @@ window.FSS = (() => {
 
   function getUploadedPDFName() {
     return localStorage.getItem(STORE_KEYS.uploadedName) || "Uploaded.pdf";
-  }
-
-  function setUploadedPDF(base64, filename) {
-    if (!base64) return;
-    localStorage.setItem(STORE_KEYS.uploadedB64, base64);
-    localStorage.setItem(STORE_KEYS.uploadedName, filename || "Uploaded.pdf");
-  }
-
-  function clearUploadedPDF() {
-    localStorage.removeItem(STORE_KEYS.uploadedB64);
-    localStorage.removeItem(STORE_KEYS.uploadedName);
   }
 
   /* =========================
@@ -280,9 +237,6 @@ window.FSS = (() => {
     });
   }
 
-  /* =========================
-     FILE UTILS
-     ========================= */
   async function fetchAsArrayBuffer(url) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch PDF: ${url} (${res.status})`);
@@ -310,25 +264,18 @@ window.FSS = (() => {
   }
 
   /* =========================
-     BUILDER PDF (SCRATCH)
+     BUILDER PDF GENERATOR
      ========================= */
   async function generateBuilderPDFBytes() {
     const ok = await ensurePdfLib();
-    if (!ok || !window.PDFLib) {
-      console.error("pdf-lib failed to load");
-      return null;
-    }
+    if (!ok || !window.PDFLib) return null;
 
     const docState = loadDocState();
-    if (!docState || !docState.builder || !docState.builder.text) {
-      console.error("No builder text available in doc state.");
-      return null;
-    }
+    if (!docState || !docState.builder || !docState.builder.text) return null;
 
     const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
 
     const pdfDoc = await PDFDocument.create();
-
     const pageW = 612;
     const pageH = 792;
     const margin = 54;
@@ -340,7 +287,6 @@ window.FSS = (() => {
 
     const title = (docState.builder.title || "Agreement").trim();
     const text = (docState.builder.text || "").trim();
-
     const lines = wrapText(text, font, fontSize, pageW - margin * 2);
 
     let page = pdfDoc.addPage([pageW, pageH]);
@@ -370,8 +316,7 @@ window.FSS = (() => {
       y -= lineHeight;
     }
 
-    const bytes = await pdfDoc.save();
-    return new Uint8Array(bytes);
+    return await pdfDoc.save();
   }
 
   function wrapText(text, font, fontSize, maxWidth) {
@@ -391,23 +336,18 @@ window.FSS = (() => {
       for (const w of words) {
         const test = cur ? (cur + " " + w) : w;
         const width = font.widthOfTextAtSize(test, fontSize);
-        if (width <= maxWidth) {
-          cur = test;
-        } else {
+        if (width <= maxWidth) cur = test;
+        else {
           if (cur) out.push(cur);
           cur = w;
         }
       }
-
       if (cur) out.push(cur);
     }
 
     return out;
   }
 
-  /* =========================
-     Resolve Current PDF Source
-     ========================= */
   async function getSourcePDFBytes() {
     const docState = loadDocState();
     if (!docState) throw new Error("No doc state found.");
@@ -430,15 +370,9 @@ window.FSS = (() => {
     return new Uint8Array(buf);
   }
 
-  /* =========================
-     SIGNED PDF GENERATOR
-     ========================= */
   async function generateSignedPDF() {
     const ok = await ensurePdfLib();
-    if (!ok || !window.PDFLib) {
-      console.error("pdf-lib not loaded");
-      return false;
-    }
+    if (!ok || !window.PDFLib) return false;
 
     try {
       const docState = loadDocState();
@@ -454,7 +388,6 @@ window.FSS = (() => {
       if (!values.date) values.date = defaultDate;
 
       const srcBytes = await getSourcePDFBytes();
-
       const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
       const pdfDoc = await PDFDocument.load(srcBytes);
 
@@ -510,7 +443,7 @@ window.FSS = (() => {
       }
 
       const last = pages[pages.length - 1];
-      last.drawText(`Signed via Demo — ${new Date().toLocaleString()}`, {
+      last.drawText(`Signed via FSS Demo — ${new Date().toLocaleString()}`, {
         x: 44,
         y: 18,
         size: 9,
@@ -522,7 +455,6 @@ window.FSS = (() => {
       const signedBytes = await pdfDoc.save();
       const b64 = arrayBufferToBase64(signedBytes);
       setSignedBase64(b64);
-
       return true;
     } catch (err) {
       console.error("generateSignedPDF error:", err);
@@ -534,28 +466,27 @@ window.FSS = (() => {
      EXPORTED API
      ========================= */
   return {
-    // Auth
-    DEMO_EMAIL,
     DEMO_PASSWORD,
+    uid,
+
+    // Auth
     isAuthed,
     login,
     logout,
     guard,
+    hardReset,
 
-    // Doc state
-    uid,
+    // Doc
     defaultDoc,
     loadDocState,
     saveDocState,
     resetDoc,
-    setStage,
-    setStatus,
 
     // Audit
     loadAudit,
     logAudit,
 
-    // Fields & values
+    // Fields
     loadFields,
     saveFields,
     loadValues,
@@ -563,23 +494,20 @@ window.FSS = (() => {
     setFieldValue,
     getFieldValue,
 
-    // Signed PDF storage
+    // Signed
     setSignedBase64,
     getSignedBase64,
-    clearSignedPDF,
     hasSignedPDF,
 
-    // Upload helpers
+    // Upload
     hasUploadedPDF,
     getUploadedPDFBase64,
     getUploadedPDFName,
-    setUploadedPDF,
-    clearUploadedPDF,
 
-    // File utilities
+    // Utils
     base64ToBlobURL,
 
-    // PDF generation
+    // PDF
     ensurePdfLib,
     generateBuilderPDFBytes,
     generateSignedPDF,
