@@ -3,85 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Create • Client Demo</title>
+  <title>Client Demo • Create</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 18px 50px;
-    }
+    .wrap{ max-width: 1180px; margin:0 auto; padding: 22px 18px 70px; }
 
-    .page-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px; margin-bottom: 16px; flex-wrap:wrap;
     }
-
-    .page-head h1{
-      margin:0;
-      font-size: 18px;
+    .brand{
+      display:flex; align-items:center; gap: 12px;
+    }
+    .brand .logo{
+      width:44px; height:44px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
       font-weight: 950;
-      letter-spacing: -0.2px;
     }
-
-    .page-head p{
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      font-size: 13px;
-      max-width: 80ch;
-      line-height: 1.5;
-    }
+    .brand strong{ display:block; font-weight: 950; }
+    .brand span{ display:block; font-size:12px; color: rgba(255,255,255,.70); font-weight: 800; }
 
     .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 0.95fr 1.05fr;
       gap: 14px;
       align-items:start;
-      margin-top: 12px;
     }
 
     .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
       border-radius: 22px;
-      padding: 14px;
-      box-shadow: 0 24px 80px rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 16px;
+      backdrop-filter: blur(12px);
     }
 
     .card h2{
-      margin:0;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.1px;
+      margin:0 0 6px;
+      font-size:16px;
+      font-weight:950;
+      letter-spacing:-.2px;
     }
 
-    .sub{
-      margin: 8px 0 0;
+    .muted{
+      margin:0 0 12px;
       color: rgba(255,255,255,.70);
       font-weight: 750;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
-    .divider{
-      height:1px;
-      background: rgba(255,255,255,.10);
-      margin: 12px 0;
-    }
+    .row{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
+    .row > *{ flex: 1 1 auto; }
 
     label{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      font-weight: 900;
-      font-size: 13px;
+      display:flex; flex-direction:column; gap:6px;
+      font-weight: 900; font-size: 13px;
       color: rgba(255,255,255,.86);
     }
 
@@ -95,538 +77,532 @@
       font-size: 14px;
       font-weight: 850;
     }
-
-    select option{
-      background:#0b1220;
-      color:#fff;
-    }
-
     input:focus, select:focus, textarea:focus{
       border-color: rgba(67,203,255,.55);
       box-shadow: 0 0 0 4px rgba(67,203,255,.12);
     }
 
-    textarea{
-      min-height: 160px;
-      resize: vertical;
-      line-height: 1.55;
-      font-weight: 750;
-    }
+    textarea{ min-height: 130px; resize: vertical; }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .full{ grid-column: 1 / -1; }
-
-    .row{
+    .seg{
       display:flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-start;
-      margin-top: 10px;
+      margin: 10px 0 12px;
+    }
+    .seg button{
+      flex: 1 1 auto;
+      min-width: 120px;
+      border-radius: 999px;
     }
 
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
-      font-weight: 750;
-      line-height: 1.45;
-    }
-
-    .status{
+    .panel{
+      display:none;
       margin-top: 12px;
-      padding: 10px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+    }
+    .panel.show{ display:block; }
+
+    .checks{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 10px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.84);
-      display:none;
+      background: rgba(255,255,255,.04);
     }
-    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
-    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
-
-    /* Scratch builder */
-    .chips{
-      margin-top: 10px;
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-    }
-
-    .chip{
+    .check{
       display:inline-flex;
       align-items:center;
       gap: 8px;
       padding: 8px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
+      background: rgba(0,0,0,.18);
       font-weight: 850;
       font-size: 13px;
-      color: rgba(255,255,255,.90);
-      user-select:none;
       cursor:pointer;
+      user-select:none;
     }
-    .chip input{ accent-color: rgba(67,203,255,.95); }
+    .check input{ accent-color: #43cbff; }
 
-    .small{
+    .preview{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      height: min(72vh, 760px);
+      display:flex;
+      flex-direction:column;
+    }
+
+    .preview-bar{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
       font-size: 12px;
-      color: rgba(255,255,255,.65);
-      font-weight: 750;
+      color: rgba(255,255,255,.85);
+      white-space: nowrap;
     }
 
-    @media (max-width: 1020px){
+    .preview iframe{
+      width:100%; height:100%;
+      border:0; background:#111;
+      display:block;
+      flex: 1 1 auto;
+    }
+
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.60);
+      font-weight: 750;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
+      .preview{ height: 60vh; }
     }
   </style>
 </head>
 
 <body class="app">
-  <header class="app-top">
-    <div class="app-top-inner">
-      <a class="app-brand" href="dashboard.html">
-        <span class="logo-badge">FSS</span>
-        <div class="brand-text">
+  <div class="wrap">
+
+    <div class="top">
+      <div class="brand">
+        <div class="logo">FSS</div>
+        <div>
           <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
+          <span>Create • Select template / upload / build from scratch</span>
         </div>
-      </a>
-
-      <div class="app-nav">
-        <a class="nav-link" href="dashboard.html">Dashboard</a>
-        <a class="nav-link active" href="create.html">Create</a>
-        <a class="nav-link" href="sign.html">Sign</a>
-        <a class="nav-link" href="success.html">Completed</a>
       </div>
 
-      <div class="app-user">
-        <span id="userEmail" class="user-pill">—</span>
+      <div class="row" style="flex: 0 0 auto;">
+        <a class="btn btn-outline" href="dashboard.html">Dashboard</a>
+        <a class="btn btn-outline" href="sign.html">Sign</a>
         <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div class="page-head">
-      <div>
-        <h1>Create Agreement</h1>
-        <p>
-          Start a new agreement from a template, upload your own PDF, or build from scratch (NDA Express-style).
-          This step sets the parties + document content before signing.
-        </p>
-      </div>
-      <div class="row">
-        <a class="btn btn-outline" href="dashboard.html">Back</a>
-        <a class="btn btn-primary" href="sign.html">Continue → Sign</a>
       </div>
     </div>
 
     <div class="grid">
-      <!-- LEFT: Template / Upload -->
-      <section class="card">
-        <h2>Start from Template</h2>
-        <p class="sub">Uses a PDF stored in <code>/demosites/fillsignsend/pdfs/</code>.</p>
+      <!-- LEFT -->
+      <div class="card">
+        <h2>Create an Agreement</h2>
+        <p class="muted">
+          Choose a template, upload a PDF, or build an agreement from scratch using the NDA Express-style prompts.
+        </p>
 
-        <div class="form-grid">
-          <label class="full">
-            Agreement Template (PDF)
-            <select id="templateSel">
-              <option value="nda.pdf">NDA</option>
-              <option value="consulting_agreement.pdf">Consulting Agreement</option>
-              <option value="non-compete-agreement.pdf">Non-Compete</option>
-              <option value="real-estate-agreement.pdf">Real Estate Agreement</option>
-              <option value="Photo-Release.pdf">Photo Release</option>
-              <option value="lease-waiver.pdf">Lease Waiver</option>
-              <option value="event-accident-waiver.pdf">Event Accident Waiver</option>
+        <div class="seg">
+          <button class="btn btn-primary" id="tabTemplate" type="button">Template</button>
+          <button class="btn btn-outline" id="tabUpload" type="button">Upload PDF</button>
+          <button class="btn btn-outline" id="tabScratch" type="button">Build from scratch</button>
+        </div>
+
+        <!-- TEMPLATE -->
+        <div class="panel show" id="panelTemplate">
+          <label>
+            Template PDF
+            <select id="templateSelect">
+              <option value="nda.pdf">nda.pdf</option>
+              <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
+              <option value="release-of-liability.pdf">release-of-liability.pdf</option>
+              <option value="confidentiality-agreement.pdf">confidentiality-agreement.pdf</option>
             </select>
           </label>
+
+          <div class="hint">
+            Templates must be located in <code>/pdfs</code>.
+          </div>
         </div>
 
-        <div class="row">
-          <button class="btn btn-primary" id="useTemplateBtn" type="button">Use Template</button>
-          <button class="btn btn-outline" id="clearUploadBtn" type="button">Clear Upload</button>
+        <!-- UPLOAD -->
+        <div class="panel" id="panelUpload">
+          <label>
+            Upload a PDF
+            <input id="uploadInput" type="file" accept="application/pdf" />
+          </label>
+
+          <div class="hint">
+            Uploaded PDFs are stored locally (Base64 in localStorage). They will be used instead of templates.
+          </div>
         </div>
 
-        <div class="divider"></div>
+        <!-- SCRATCH -->
+        <div class="panel" id="panelScratch">
+          <label>
+            Agreement Title
+            <input id="scratchTitle" type="text" placeholder="Example: Mutual NDA Agreement" />
+          </label>
 
-        <h2 id="upload">Upload Agreement</h2>
-        <p class="sub">Upload any PDF — it will be stored locally and used for signing.</p>
+          <div class="checks" id="scratchChecks">
+            <!-- NDA Express-style rules -->
+            <label class="check"><input type="checkbox" value="mutual"> Mutual NDA</label>
+            <label class="check"><input type="checkbox" value="oneway"> One-way NDA</label>
+            <label class="check"><input type="checkbox" value="term12"> 12-month term</label>
+            <label class="check"><input type="checkbox" value="term24"> 24-month term</label>
+            <label class="check"><input type="checkbox" value="nonSolicit"> Non-solicitation</label>
+            <label class="check"><input type="checkbox" value="returnDestroy"> Return/Destroy info</label>
+            <label class="check"><input type="checkbox" value="injunctive"> Injunctive relief</label>
+            <label class="check"><input type="checkbox" value="governingMA"> Governing law: MA</label>
+            <label class="check"><input type="checkbox" value="governingRI"> Governing law: RI</label>
+          </div>
 
-        <label style="margin-top:10px;">
-          Upload PDF
-          <input id="uploadPdf" type="file" accept="application/pdf" />
-        </label>
+          <label style="margin-top:10px;">
+            Agreement Body (editable)
+            <textarea id="scratchBody" placeholder="Start typing the agreement text..."></textarea>
+          </label>
 
-        <div class="small" id="uploadInfo" style="margin-top:8px;">No upload yet.</div>
-
-        <div class="hint">
-          Upload is stored in <strong>localStorage</strong>. It will work like a template for signing and output.
+          <div class="hint">
+            This will generate a real PDF (using pdf-lib) so signing works exactly like a template.
+          </div>
         </div>
 
-        <div class="status" id="statusLeft"></div>
-      </section>
+        <hr style="border:0; height:1px; background: rgba(255,255,255,.08); margin: 14px 0;" />
 
-      <!-- RIGHT: Parties + Scratch Builder -->
-      <section class="card">
         <h2>Parties</h2>
-        <p class="sub">Sender signs first. Recipient completes after sending.</p>
+        <p class="muted">These values flow into signing and audit trail (demo).</p>
 
-        <div class="form-grid">
-          <label>
-            Sender Name*
-            <input id="aName" type="text" placeholder="Sender full name" />
-          </label>
-          <label>
-            Sender Email*
-            <input id="aEmail" type="email" placeholder="sender@company.com" />
-          </label>
+        <label>Sender Name <input id="aName" type="text" placeholder="Sender full name" /></label>
+        <label>Sender Email <input id="aEmail" type="email" placeholder="sender@email.com" /></label>
 
-          <label>
-            Recipient Name*
-            <input id="bName" type="text" placeholder="Recipient full name" />
-          </label>
-          <label>
-            Recipient Email*
-            <input id="bEmail" type="email" placeholder="recipient@company.com" />
-          </label>
+        <label style="margin-top:10px;">Recipient Name <input id="bName" type="text" placeholder="Recipient full name" /></label>
+        <label>Recipient Email <input id="bEmail" type="email" placeholder="recipient@email.com" /></label>
 
-          <label class="full">
-            Notes (optional)
-            <input id="notes" type="text" placeholder="Internal notes for this envelope (demo-only)" />
-          </label>
-        </div>
-
-        <div class="divider"></div>
-
-        <h2 id="scratch">Build From Scratch</h2>
-        <p class="sub">Pick clauses + generate agreement text (fast demo mode).</p>
-
-        <label style="margin-top:10px;">
-          Agreement Title
-          <input id="scratchTitle" type="text" placeholder="Example: Mutual Non-Disclosure Agreement" />
-        </label>
-
-        <div class="chips" id="clauseChips"></div>
-
-        <label style="margin-top:10px;">
-          Agreement Body (editable)
-          <textarea id="scratchText" placeholder="Choose clauses above, or type your own text..."></textarea>
-        </label>
-
-        <div class="row">
-          <button class="btn btn-outline" id="insertDefaultsBtn" type="button">Insert Defaults</button>
-          <button class="btn btn-primary" id="useScratchBtn" type="button">Use Scratch Agreement</button>
+        <div class="row" style="margin-top:12px;">
+          <button class="btn btn-primary" id="saveBtn" type="button">Save & Continue</button>
+          <button class="btn btn-outline" id="resetBtn" type="button">Reset Envelope</button>
         </div>
 
         <div class="hint">
-          Using scratch mode creates a real PDF in-browser so the signer can place fields + generate signed output.
+          After saving, go to the Sign screen to place Signature / Date / Text fields and generate the signed PDF.
         </div>
+      </div>
 
-        <div class="status" id="statusRight"></div>
-      </section>
+      <!-- RIGHT -->
+      <div class="preview card" style="padding:0;">
+        <div class="preview-bar">
+          <span class="pill" id="previewPill">PDF • Preview</span>
+          <div class="row" style="flex:0 0 auto;">
+            <button class="btn btn-outline" id="openPdfBtn" type="button">Open</button>
+            <button class="btn btn-outline" id="refreshBtn" type="button">Refresh</button>
+          </div>
+        </div>
+        <iframe id="pdfFrame" title="PDF Preview"></iframe>
+      </div>
     </div>
-  </main>
+
+  </div>
 
   <script src="assets/app.js"></script>
   <script>
-    // Auth guard
     FSS.guard();
 
-    // Header user
-    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
+    const doc = FSS.loadDocState() || FSS.resetDoc();
+    FSS.setStage("create");
 
-    // Ensure doc exists
-    let doc = FSS.loadDocState();
-    if(!doc){
-      doc = FSS.resetDoc();
-      FSS.logAudit("Envelope created.");
+    // Tabs
+    const tabTemplate = document.getElementById("tabTemplate");
+    const tabUpload   = document.getElementById("tabUpload");
+    const tabScratch  = document.getElementById("tabScratch");
+
+    const panelTemplate = document.getElementById("panelTemplate");
+    const panelUpload   = document.getElementById("panelUpload");
+    const panelScratch  = document.getElementById("panelScratch");
+
+    function showPanel(which){
+      panelTemplate.classList.remove("show");
+      panelUpload.classList.remove("show");
+      panelScratch.classList.remove("show");
+
+      tabTemplate.classList.remove("btn-primary"); tabTemplate.classList.add("btn-outline");
+      tabUpload.classList.remove("btn-primary");   tabUpload.classList.add("btn-outline");
+      tabScratch.classList.remove("btn-primary");  tabScratch.classList.add("btn-outline");
+
+      if(which === "template"){
+        panelTemplate.classList.add("show");
+        tabTemplate.classList.add("btn-primary"); tabTemplate.classList.remove("btn-outline");
+      }
+      if(which === "upload"){
+        panelUpload.classList.add("show");
+        tabUpload.classList.add("btn-primary"); tabUpload.classList.remove("btn-outline");
+      }
+      if(which === "scratch"){
+        panelScratch.classList.add("show");
+        tabScratch.classList.add("btn-primary"); tabScratch.classList.remove("btn-outline");
+      }
     }
 
-    // Elements
-    const templateSel = document.getElementById("templateSel");
-    const useTemplateBtn = document.getElementById("useTemplateBtn");
-    const clearUploadBtn = document.getElementById("clearUploadBtn");
+    tabTemplate.addEventListener("click", () => showPanel("template"));
+    tabUpload.addEventListener("click", () => showPanel("upload"));
+    tabScratch.addEventListener("click", () => showPanel("scratch"));
 
-    const uploadPdf = document.getElementById("uploadPdf");
-    const uploadInfo = document.getElementById("uploadInfo");
+    // Inputs
+    const templateSelect = document.getElementById("templateSelect");
+    const uploadInput    = document.getElementById("uploadInput");
+
+    const scratchTitle = document.getElementById("scratchTitle");
+    const scratchBody  = document.getElementById("scratchBody");
+    const scratchChecks= document.getElementById("scratchChecks");
 
     const aName = document.getElementById("aName");
-    const aEmail = document.getElementById("aEmail");
+    const aEmail= document.getElementById("aEmail");
     const bName = document.getElementById("bName");
-    const bEmail = document.getElementById("bEmail");
+    const bEmail= document.getElementById("bEmail");
 
-    const statusLeft = document.getElementById("statusLeft");
-    const statusRight = document.getElementById("statusRight");
+    // Load doc values into form
+    templateSelect.value = doc.template || "nda.pdf";
+    aName.value  = doc.parties?.aName || "";
+    aEmail.value = doc.parties?.aEmail || "";
+    bName.value  = doc.parties?.bName || "";
+    bEmail.value = doc.parties?.bEmail || "";
 
-    // Scratch
-    const scratchTitle = document.getElementById("scratchTitle");
-    const scratchText = document.getElementById("scratchText");
-    const clauseChips = document.getElementById("clauseChips");
-    const insertDefaultsBtn = document.getElementById("insertDefaultsBtn");
-    const useScratchBtn = document.getElementById("useScratchBtn");
-
-    // Demo clause rules (NDA Express style)
-    const CLAUSES = [
-      { id:"confidentiality", label:"Confidentiality", text:`1. CONFIDENTIALITY\nEach party agrees to keep confidential information private and not disclose it to third parties without written consent.` },
-      { id:"term", label:"Term", text:`2. TERM\nThis Agreement begins on the Effective Date and remains in effect for two (2) years unless terminated earlier by written notice.` },
-      { id:"noncircumvent", label:"Non-Circumvention", text:`3. NON-CIRCUMVENTION\nRecipient agrees not to circumvent or bypass the disclosing party to directly engage clients, vendors, or partners presented under this Agreement.` },
-      { id:"nonsolicit", label:"Non-Solicitation", text:`4. NON-SOLICITATION\nRecipient agrees not to solicit the employees or contractors of the other party during the term and for one (1) year after termination.` },
-      { id:"governinglaw", label:"Governing Law", text:`5. GOVERNING LAW\nThis Agreement will be governed by the laws of the state in which the disclosing party is primarily located.` },
-      { id:"dispute", label:"Dispute Resolution", text:`6. DISPUTE RESOLUTION\nAny dispute will be resolved first through good-faith negotiation, then mediation, and finally binding arbitration if necessary.` },
-      { id:"signatures", label:"Signature Block", text:`SIGNATURES\nIN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.\n\nSender: ____________________________   Date: __________\nRecipient: __________________________ Date: __________` },
-    ];
-
-    const selectedClauseIds = new Set();
-
-    function showStatus(el, msg, type="warn"){
-      el.style.display = "";
-      el.className = "status " + type;
-      el.textContent = msg;
+    if(doc.builder){
+      scratchTitle.value = doc.builder.title || "";
+      scratchBody.value  = doc.builder.text || "";
     }
 
-    function clearStatus(el){
-      el.style.display = "none";
-      el.textContent = "";
-    }
+    // Template select -> sets template and clears builder/upload
+    templateSelect.addEventListener("change", () => {
+      const d = FSS.loadDocState() || doc;
+      d.template = templateSelect.value;
+      d.builder = null;
 
-    function loadExisting(){
-      doc = FSS.loadDocState() || doc;
-
-      // Parties
-      aName.value = doc.parties?.aName || "";
-      aEmail.value = doc.parties?.aEmail || "";
-      bName.value = doc.parties?.bName || "";
-      bEmail.value = doc.parties?.bEmail || "";
-
-      // Template
-      if(doc.template){
-        templateSel.value = doc.template;
-      }
-
-      // Upload
-      const upName = localStorage.getItem("fss_uploaded_pdf_name");
-      if(upName){
-        uploadInfo.textContent = `Uploaded: ${upName}`;
-      }else{
-        uploadInfo.textContent = "No upload yet.";
-      }
-
-      // Scratch builder
-      if(doc.builder){
-        scratchTitle.value = doc.builder.title || "";
-        scratchText.value = doc.builder.text || "";
-      }
-    }
-
-    function saveParties(){
-      doc = FSS.loadDocState() || doc;
-
-      doc.parties = doc.parties || {};
-      doc.parties.aName = (aName.value || "").trim();
-      doc.parties.aEmail = (aEmail.value || "").trim();
-      doc.parties.bName = (bName.value || "").trim();
-      doc.parties.bEmail = (bEmail.value || "").trim();
-
-      FSS.saveDocState(doc);
-    }
-
-    // Build clause chips
-    function renderClauseChips(){
-      clauseChips.innerHTML = CLAUSES.map(c => `
-        <label class="chip">
-          <input type="checkbox" data-id="${c.id}" />
-          ${c.label}
-        </label>
-      `).join("");
-
-      clauseChips.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-        cb.addEventListener("change", ()=>{
-          const id = cb.getAttribute("data-id");
-          if(cb.checked) selectedClauseIds.add(id);
-          else selectedClauseIds.delete(id);
-
-          // Auto-generate text from selected
-          const blocks = CLAUSES
-            .filter(x => selectedClauseIds.has(x.id))
-            .map(x => x.text);
-
-          if(blocks.length){
-            scratchText.value =
-`EFFECTIVE DATE: ${new Date().toLocaleDateString()}
-
-${blocks.join("\n\n")}
-`;
-          }
-        });
-      });
-    }
-
-    // Use template
-    useTemplateBtn.addEventListener("click", ()=>{
-      saveParties();
-
-      doc = FSS.loadDocState() || doc;
-
-      doc.template = templateSel.value;
-      doc.builder = null; // leaving scratch
-      doc.status = "draft";
-      doc.stage = "create";
-      FSS.saveDocState(doc);
-
-      // Clear signed state + fields
-      localStorage.removeItem("fss_signed_pdf_b64");
-      localStorage.setItem("fss_fields", JSON.stringify([]));
-      localStorage.setItem("fss_values", JSON.stringify({}));
-
-      FSS.logAudit(`Template selected: ${doc.template}`);
-      showStatus(statusLeft, "Template selected. Continue to Sign to place fields.", "good");
-    });
-
-    // Clear upload
-    clearUploadBtn.addEventListener("click", ()=>{
+      // clear upload
       localStorage.removeItem("fss_uploaded_pdf_b64");
       localStorage.removeItem("fss_uploaded_pdf_name");
-      uploadInfo.textContent = "No upload yet.";
-      FSS.logAudit("Uploaded PDF cleared.");
-      showStatus(statusLeft, "Upload cleared.", "good");
+
+      FSS.saveDocState(d);
+      FSS.logAudit(`Template selected: ${d.template}`);
+      refreshPreview();
     });
 
-    // Upload PDF
-    uploadPdf.addEventListener("change", async ()=>{
-      clearStatus(statusLeft);
+    // Upload -> store base64, clear builder/template choice
+    uploadInput.addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
 
-      const file = uploadPdf.files && uploadPdf.files[0];
-      if(!file){
-        showStatus(statusLeft, "No file selected.", "warn");
-        return;
-      }
-
-      if(file.type !== "application/pdf"){
-        showStatus(statusLeft, "Please upload a PDF file.", "bad");
-        return;
-      }
-
-      try{
-        const buf = await file.arrayBuffer();
-        // Convert to base64
+      const buf = await file.arrayBuffer();
+      const b64 = (function arrayBufferToBase64(buffer){
         let binary = "";
-        const bytes = new Uint8Array(buf);
-        for(let i=0; i<bytes.length; i++){
-          binary += String.fromCharCode(bytes[i]);
+        const bytes = new Uint8Array(buffer);
+        for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+        return btoa(binary);
+      })(buf);
+
+      localStorage.setItem("fss_uploaded_pdf_b64", b64);
+      localStorage.setItem("fss_uploaded_pdf_name", file.name);
+
+      const d = FSS.loadDocState() || doc;
+      d.builder = null;
+      // keep template as fallback but upload will take priority in app.js
+      FSS.saveDocState(d);
+
+      FSS.logAudit(`Uploaded PDF: ${file.name}`);
+      showPanel("upload");
+      refreshPreview();
+    });
+
+    // Scratch: generate base text from checkboxes
+    function buildScratchTextFromChecks(){
+      const title = (scratchTitle.value || "Agreement").trim();
+      const checks = Array.from(scratchChecks.querySelectorAll("input[type=checkbox]:checked")).map(i => i.value);
+
+      const mutual = checks.includes("mutual");
+      const oneway = checks.includes("oneway");
+      const term12 = checks.includes("term12");
+      const term24 = checks.includes("term24");
+
+      const governing = checks.includes("governingMA") ? "Massachusetts" :
+                        checks.includes("governingRI") ? "Rhode Island" : "the applicable jurisdiction";
+
+      const term = term24 ? "24 months" : term12 ? "12 months" : "12 months";
+
+      const lines = [];
+      lines.push(`${title}`);
+      lines.push(``);
+      lines.push(`1. Purpose. The parties wish to exchange confidential information in connection with a business relationship.`);
+      lines.push(`2. Confidential Information. "Confidential Information" means any non-public information disclosed by either party.`);
+      lines.push(`3. Obligations.`);
+      lines.push(`   a) Recipient will protect the Confidential Information using reasonable care.`);
+      lines.push(`   b) Recipient will not disclose Confidential Information except to permitted representatives.`);
+      lines.push(`4. Term. This Agreement remains in effect for ${term}.`);
+      if(mutual) lines.push(`5. Mutuality. This is a mutual NDA: each party may be a disclosing party.`);
+      if(oneway) lines.push(`5. One-way. This is a one-way NDA: only one party is the disclosing party.`);
+      if(checks.includes("nonSolicit")) lines.push(`6. Non-solicitation. Recipient agrees not to solicit employees/clients for the duration of this Agreement.`);
+      if(checks.includes("returnDestroy")) lines.push(`7. Return/Destroy. Upon request, Recipient will return or destroy Confidential Information.`);
+      if(checks.includes("injunctive")) lines.push(`8. Injunctive Relief. A breach may cause irreparable harm; injunctive relief may be sought.`);
+      lines.push(`9. Governing Law. This Agreement is governed by the laws of ${governing}.`);
+      lines.push(``);
+      lines.push(`SIGNATURES`);
+      lines.push(`Disclosing Party: _______________________    Date: ____________`);
+      lines.push(`Receiving Party: _______________________    Date: ____________`);
+
+      return lines.join("\n");
+    }
+
+    // If scratch body is empty, auto-seed it
+    if(!scratchBody.value.trim()){
+      scratchBody.value = buildScratchTextFromChecks();
+    }
+
+    scratchChecks.addEventListener("change", () => {
+      // Only auto-update if user hasn't typed custom stuff too heavily
+      // (simple approach: only update if body still contains "Purpose." etc)
+      const current = scratchBody.value || "";
+      if(current.includes("Purpose.") && current.includes("Governing Law.")){
+        scratchBody.value = buildScratchTextFromChecks();
+      }
+    });
+
+    // Preview iframe
+    const frame = document.getElementById("pdfFrame");
+    const previewPill = document.getElementById("previewPill");
+
+    async function refreshPreview(){
+      try{
+        const d = FSS.loadDocState() || doc;
+
+        // If builder exists, generate builder PDF bytes and show
+        if(d.builder && d.builder.text){
+          const bytes = await FSS.generateBuilderPDFBytes();
+          if(!bytes) throw new Error("Builder PDF generation failed.");
+          const b64 = (function arrayBufferToBase64(buffer){
+            let binary = "";
+            const bytes = new Uint8Array(buffer);
+            for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+            return btoa(binary);
+          })(bytes);
+          const url = FSS.base64ToBlobURL(b64);
+          frame.src = url;
+          previewPill.textContent = `PDF • Scratch-built`;
+          return;
         }
-        const b64 = btoa(binary);
 
-        localStorage.setItem("fss_uploaded_pdf_b64", b64);
-        localStorage.setItem("fss_uploaded_pdf_name", file.name);
+        // If upload exists, show upload
+        if(localStorage.getItem("fss_uploaded_pdf_b64")){
+          const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
+          const url = FSS.base64ToBlobURL(b64);
+          frame.src = url;
+          previewPill.textContent = `PDF • Uploaded`;
+          return;
+        }
 
-        // Update doc
-        saveParties();
-        doc = FSS.loadDocState() || doc;
-        doc.template = null;
-        doc.builder = null;
-        doc.status = "draft";
-        doc.stage = "create";
-        FSS.saveDocState(doc);
-
-        // Clear signed + fields
-        localStorage.removeItem("fss_signed_pdf_b64");
-        localStorage.setItem("fss_fields", JSON.stringify([]));
-        localStorage.setItem("fss_values", JSON.stringify({}));
-
-        uploadInfo.textContent = `Uploaded: ${file.name}`;
-        FSS.logAudit(`Uploaded PDF selected: ${file.name}`);
-        showStatus(statusLeft, "Upload saved. Continue to Sign to place fields.", "good");
+        // Template preview
+        const tpl = d.template || "nda.pdf";
+        frame.src = `pdfs/${encodeURIComponent(tpl)}`;
+        previewPill.textContent = `PDF • Template: ${tpl}`;
       }catch(err){
         console.error(err);
-        showStatus(statusLeft, "Upload failed. Check console.", "bad");
+        previewPill.textContent = "PDF • Preview failed (console)";
       }
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", refreshPreview);
+    document.getElementById("openPdfBtn").addEventListener("click", () => {
+      const src = frame.src;
+      if(src) window.open(src, "_blank");
     });
 
-    // Insert defaults
-    insertDefaultsBtn.addEventListener("click", ()=>{
-      scratchTitle.value = scratchTitle.value || "Mutual Non-Disclosure Agreement";
+    // Save / Continue
+    document.getElementById("saveBtn").addEventListener("click", async () => {
+      const d = FSS.loadDocState() || doc;
 
-      scratchText.value =
-`EFFECTIVE DATE: ${new Date().toLocaleDateString()}
+      // Parties
+      d.parties = d.parties || {};
+      d.parties.aName  = aName.value.trim();
+      d.parties.aEmail = aEmail.value.trim();
+      d.parties.bName  = bName.value.trim();
+      d.parties.bEmail = bEmail.value.trim();
 
-1. CONFIDENTIALITY
-Each party agrees to keep confidential information private and not disclose it to any third party without written consent.
-
-2. PURPOSE
-The parties wish to exchange confidential information for evaluation and business discussions.
-
-3. EXCLUSIONS
-Confidential information does not include information that is publicly available, already known, independently developed, or disclosed under legal obligation.
-
-4. TERM
-This Agreement remains in effect for two (2) years unless terminated earlier in writing.
-
-GOVERNING LAW
-This Agreement shall be governed by applicable state laws.
-
-SIGNATURES
-Sender: ____________________________   Date: __________
-Recipient: __________________________ Date: __________
-`;
-      showStatus(statusRight, "Defaults inserted. Click “Use Scratch Agreement”.", "good");
-    });
-
-    // Use scratch agreement
-    useScratchBtn.addEventListener("click", ()=>{
-      saveParties();
-
-      const title = (scratchTitle.value || "").trim() || "Agreement";
-      const text = (scratchText.value || "").trim();
-
-      if(!text){
-        showStatus(statusRight, "Please add agreement text first.", "warn");
-        return;
+      // Which mode is active?
+      if(panelScratch.classList.contains("show")){
+        d.builder = {
+          title: (scratchTitle.value || "Agreement").trim(),
+          text: (scratchBody.value || "").trim(),
+          selectedClauseIds: [],
+          customClauses: []
+        };
+        // Clear upload so builder is used
+        localStorage.removeItem("fss_uploaded_pdf_b64");
+        localStorage.removeItem("fss_uploaded_pdf_name");
+        FSS.logAudit("Builder mode saved.");
       }
 
-      doc = FSS.loadDocState() || doc;
-      doc.builder = {
-        title,
-        text,
-        selectedClauseIds: Array.from(selectedClauseIds),
-        customClauses: []
-      };
-      doc.template = null; // builder takes priority
-      doc.status = "draft";
-      doc.stage = "create";
-      FSS.saveDocState(doc);
+      if(panelTemplate.classList.contains("show")){
+        d.template = templateSelect.value;
+        d.builder = null;
+        // Clear upload
+        localStorage.removeItem("fss_uploaded_pdf_b64");
+        localStorage.removeItem("fss_uploaded_pdf_name");
+        FSS.logAudit(`Template saved: ${d.template}`);
+      }
 
-      // Clear signed + fields
-      localStorage.removeItem("fss_signed_pdf_b64");
-      localStorage.setItem("fss_fields", JSON.stringify([]));
-      localStorage.setItem("fss_values", JSON.stringify({}));
+      // Upload panel: already stored in localStorage (priority in app.js)
+      if(panelUpload.classList.contains("show")){
+        d.builder = null;
+        FSS.logAudit("Upload mode saved.");
+      }
 
-      FSS.logAudit(`Scratch agreement created: ${title}`);
-      showStatus(statusRight, "Scratch agreement saved. Continue to Sign.", "good");
+      FSS.saveDocState(d);
+      FSS.setStage("create");
+      FSS.setStatus("draft");
+
+      // Clear any previous signing state
+      FSS.saveFields([]);
+      FSS.saveValues({});
+      FSS.setSignedBase64(null);
+
+      await refreshPreview();
+      location.href = "sign.html";
     });
 
-    // Save parties on blur
-    [aName,aEmail,bName,bEmail].forEach(el=>{
-      el.addEventListener("blur", saveParties);
+    // Reset envelope
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      FSS.resetDoc();
+      FSS.logAudit("Envelope reset.");
+      location.reload();
     });
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", ()=>{
+    document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
-      location.replace("index.html");
+      location.href = "index.html";
     });
 
-    // Boot
-    renderClauseChips();
-    loadExisting();
+    // Decide default tab based on state
+    (function initTab(){
+      const hasUpload = !!localStorage.getItem("fss_uploaded_pdf_b64");
+      const d = FSS.loadDocState() || doc;
+      if(hasUpload){
+        showPanel("upload");
+      } else if(d.builder && d.builder.text){
+        showPanel("scratch");
+      } else {
+        showPanel("template");
+      }
+    })();
+
+    refreshPreview();
   </script>
 </body>
 </html>
