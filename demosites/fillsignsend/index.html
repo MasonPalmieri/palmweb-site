@@ -3,233 +3,258 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Demo Login • FSS</title>
+  <title>Client Demo • Fill → Sign → Send</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
     .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
+      min-height: calc(100vh - 70px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 18px;
     }
-
+    .grid{
+      width: min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      align-items:stretch;
+    }
     .card{
-      max-width: 520px;
-      margin: 40px auto 0;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.08);
       border-radius: 22px;
-      box-shadow: 0 24px 70px rgba(0,0,0,.35);
       padding: 18px;
-    }
-
-    .title{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .badge{
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      font-size: 14px;
+      box-shadow: 0 26px 60px rgba(0,0,0,.45);
     }
     h1{
-      margin:0;
-      font-size: 16px;
-      font-weight: 950;
+      margin: 0;
+      font-size: 30px;
+      letter-spacing:-.5px;
+      font-weight: 1000;
     }
     p{
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.70);
-      font-size: 13px;
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.75);
       font-weight: 750;
-      line-height: 1.45;
+      line-height: 1.55;
+      max-width: 68ch;
     }
-
-    label{
-      display:block;
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 900;
-      color: rgba(255,255,255,.90);
+    .list{
+      margin-top: 14px;
+      display:grid;
+      gap: 10px;
     }
-
-    input{
-      width: 100%;
-      padding: 12px 12px;
-      margin-top: 6px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      color: rgba(255,255,255,.92);
-      outline:none;
-      font-weight: 750;
-    }
-
-    input:focus{
-      border-color: rgba(96,255,157,.50);
-      box-shadow: 0 0 0 4px rgba(96,255,157,.12);
-    }
-
-    .btn-row{
+    .li{
       display:flex;
       gap: 10px;
-      margin-top: 14px;
-      flex-wrap:wrap;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      font-weight: 850;
+      color: rgba(255,255,255,.82);
     }
-
-    .btn{
-      display:inline-flex;
+    .check{
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      background: rgba(96,255,157,.20);
+      border: 1px solid rgba(96,255,157,.30);
+      display:flex;
       align-items:center;
       justify-content:center;
-      padding: 12px 16px;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .form{
+      display:grid;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    label{
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(255,255,255,.65);
+      display:block;
+      margin-bottom: 6px;
+    }
+    input{
+      width: 100%;
+      padding: 12px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: rgba(255,255,255,.92);
+      font-weight: 850;
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(255,73,128,.55);
+      box-shadow: 0 0 0 4px rgba(255,73,128,.10);
+    }
+    .row{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+    .btn{
+      border-radius: 14px;
       font-weight: 950;
-      font-size: 14px;
-      user-select:none;
-    }
-
-    .btn-primary{
-      border: 0;
-      background: linear-gradient(135deg, rgba(67,203,255,.9), rgba(96,255,157,.9));
-      color: #051016;
-      flex: 1 1 auto;
-    }
-    .btn-primary:hover{
-      filter: brightness(1.03);
-    }
-
-    .btn-outline{
-      background: rgba(255,255,255,.04);
+      padding: 12px 16px;
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.92);
     }
-
-    .status{
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      font-weight: 850;
-      font-size: 13px;
-      color: rgba(255,255,255,.84);
-      display:none;
+    .btn:hover{ background: rgba(255,255,255,.10); }
+    .btn.primary{
+      border: 0;
+      background: linear-gradient(135deg, rgba(255,73,128,.95), rgba(255,126,73,.95));
+      color: #0a0a0a;
     }
-    .status.good{
-      display:block;
-      border-color: rgba(96,255,157,.30);
-      background: rgba(96,255,157,.08);
-    }
-    .status.bad{
-      display:block;
-      border-color: rgba(255,79,99,.30);
-      background: rgba(255,79,99,.08);
-    }
-
-    .tiny{
+    .note{
       margin-top: 12px;
       font-size: 12px;
+      color: rgba(255,255,255,.55);
       font-weight: 750;
-      color: rgba(255,255,255,.60);
       line-height: 1.45;
     }
-    .tiny code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 10px;
-      background: rgba(0,0,0,.25);
-      border: 1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.85);
+    .err{
+      display:none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,79,99,.35);
+      background: rgba(255,79,99,.10);
+      color: rgba(255,255,255,.9);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    @media(max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body class="app">
+  <header class="app-top">
+    <div class="app-top-inner">
+      <a class="app-brand" href="index.html">
+        <span class="logo-badge">FSS</span>
+        <div class="brand-text">
+          <strong>Client Demo</strong>
+          <span>Fill → Sign → Send</span>
+        </div>
+      </a>
+
+      <div class="app-user">
+        <a class="btn btn-outline" href="../index.html" style="text-decoration:none;">Back to PalmWeb</a>
+      </div>
+    </div>
+  </header>
+
   <main class="wrap">
-    <div class="card">
-      <div class="title">
-        <div class="badge">FSS</div>
-        <div>
-          <h1>Client Demo Login</h1>
-          <p>Use demo credentials to enter the Fill → Sign → Send workflow.</p>
+    <div class="grid">
+      <section class="card">
+        <h1>Document workflow demo</h1>
+        <p>
+          This is a product-style demonstration showing how a customer would create an agreement,
+          sign it, and send it to a client — resulting in a completed, downloadable PDF.
+        </p>
+
+        <div class="list">
+          <div class="li"><div class="check">✓</div><div>Create an agreement from a PDF template</div></div>
+          <div class="li"><div class="check">✓</div><div>Sender signs first (Fill → Sign → Send)</div></div>
+          <div class="li"><div class="check">✓</div><div>Send step generates recipient signing simulation</div></div>
+          <div class="li"><div class="check">✓</div><div>Completed document available for download</div></div>
         </div>
-      </div>
 
-      <form id="loginForm" autocomplete="off">
-        <label>Email</label>
-        <input id="email" type="email" value="demo@client.com" required />
-
-        <label>Password</label>
-        <input id="password" type="password" placeholder="Enter password" required />
-
-        <div class="btn-row">
-          <button class="btn btn-primary" id="loginBtn" type="submit">Login</button>
-          <button class="btn btn-outline" id="resetBtn" type="button">Reset demo</button>
+        <div class="note">
+          This demo is fully local and runs in-browser. No server. Data is stored using localStorage.
         </div>
-      </form>
+      </section>
 
-      <div class="status" id="statusBox"></div>
+      <section class="card">
+        <h2 style="margin:0;font-size:14px;font-weight:950;">Sign in</h2>
+        <p style="margin-top:8px;font-size:13px;">
+          Use the demo login to access the portal.
+        </p>
 
-      <div class="tiny">
-        Demo login: <code>demo@client.com</code><br/>
-        Password: <code>hallam</code>
-      </div>
+        <div class="form">
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" value="demo@client.com" autocomplete="username" />
+          </div>
+
+          <div>
+            <label for="pass">Password</label>
+            <input id="pass" type="password" value="" placeholder="demo123" autocomplete="current-password" />
+          </div>
+
+          <div class="row">
+            <button class="btn primary" id="loginBtn" type="button">Login</button>
+            <button class="btn" id="skipBtn" type="button">Skip (already logged in)</button>
+          </div>
+
+          <div class="err" id="errBox"></div>
+
+          <div class="note">
+            Demo credentials are local only. Nothing is sent to a server.
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
   <script src="assets/app.js"></script>
   <script>
-    const statusBox = document.getElementById("statusBox");
+    const errBox = document.getElementById("errBox");
+    const emailEl = document.getElementById("email");
+    const passEl  = document.getElementById("pass");
 
-    function setStatus(type, msg){
-      statusBox.className = "status " + type;
-      statusBox.textContent = msg;
+    function showErr(msg){
+      errBox.style.display = "block";
+      errBox.textContent = msg;
     }
 
-    // IMPORTANT: prevent page reload so click works
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
-      e.preventDefault();
+    function clearErr(){
+      errBox.style.display = "none";
+      errBox.textContent = "";
+    }
 
-      // If app.js did not load, FSS will be undefined
-      if(typeof FSS === "undefined"){
-        setStatus("bad", "app.js did not load. Check that assets/app.js is real JavaScript (not CSS) and not 404.");
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      clearErr();
+      const email = (emailEl.value || "").trim();
+      const pass  = (passEl.value || "").trim();
+
+      const res = FSS.login(email, pass);
+      if(!res || !res.ok){
+        showErr((res && res.error) ? res.error : "Login failed.");
         return;
       }
 
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
-
-      const ok = FSS.login(email, pass);
-
-      if(ok){
-        setStatus("good", "✅ Login successful. Loading dashboard…");
-        setTimeout(() => location.href = "dashboard.html", 500);
-      } else {
-        setStatus("bad", "Incorrect credentials. Try demo@client.com / hallam");
-      }
+      location.href = "dashboard.html";
     });
 
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if(typeof FSS === "undefined"){
-        setStatus("bad", "app.js did not load. Fix assets/app.js first.");
-        return;
+    document.getElementById("skipBtn").addEventListener("click", () => {
+      // If already logged in, go straight in.
+      // If not logged in, we still try to create a session using demo credentials.
+      clearErr();
+
+      if(!FSS.isAuthed()){
+        const res = FSS.login("demo@client.com", "demo123");
+        if(!res.ok){
+          showErr(res.error || "Unable to start demo session.");
+          return;
+        }
       }
-      if(!confirm("Reset demo state? This clears current document + signatures.")) return;
-      FSS.resetDoc();
-      setStatus("good", "✅ Demo reset complete.");
+
+      location.href = "dashboard.html";
     });
   </script>
 </body>
