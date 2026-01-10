@@ -43,7 +43,6 @@
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.12);
       color: rgba(255,255,255,.92);
-      user-select:none;
     }
     .brand strong{
       font-weight: 950;
@@ -64,10 +63,7 @@
       margin: 12px 0 14px;
     }
 
-    .grid{
-      display:grid;
-      gap: 10px;
-    }
+    .grid{ display:grid; gap: 10px; }
 
     label{
       display:flex;
@@ -163,7 +159,7 @@
       <form id="loginForm" class="grid" novalidate>
         <label>
           Email
-          <input id="email" type="email" placeholder="you@company.com" autocomplete="username" required />
+          <input id="email" type="email" placeholder="demo@client.com" autocomplete="username" required />
         </label>
 
         <label>
@@ -193,17 +189,13 @@
 
   <script src="assets/app.js"></script>
   <script>
-    // ========= FIX: SAFE AUTH REDIRECT CHECK =========
+    // If already logged in, go straight to dashboard
     (function(){
       try{
-        const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-        if(auth && auth.email){
-          // already logged in
-          location.replace("dashboard.html");
+        if(window.FSS && FSS.isAuthed && FSS.isAuthed()){
+          location.href = "dashboard.html";
         }
-      }catch(e){
-        // ignore bad localStorage data
-      }
+      }catch(e){}
     })();
 
     const form = document.getElementById("loginForm");
@@ -225,7 +217,7 @@
       e.preventDefault();
       clearStatus();
 
-      const email = (emailEl.value || "").trim().toLowerCase();
+      const email = (emailEl.value || "").trim();
       const pw = (passEl.value || "").trim();
 
       if(!email || !pw){
@@ -233,9 +225,8 @@
         return;
       }
 
-      // ========= FIX: CALL FSS.login(email, password) PROPERLY =========
+      // ✅ Use app.js login() correctly (requires email + password)
       const res = FSS.login(email, pw);
-
       if(!res || !res.ok){
         showStatus(res?.msg || "Login failed.");
         return;
@@ -248,26 +239,16 @@
       }
 
       showStatus("Success. Redirecting…", "good");
-
-      // Use replace() so back button doesn't re-trigger login logic
-      setTimeout(() => location.replace("dashboard.html"), 350);
+      setTimeout(() => location.href = "dashboard.html", 350);
     });
 
-    // ========= FIX: SAFE RESET (NO MISSING FUNCTIONS) =========
     document.getElementById("resetBtn").addEventListener("click", () => {
       try{
-        localStorage.removeItem("fss_auth");
-        localStorage.removeItem("fss_doc");
-        localStorage.removeItem("fss_fields");
-        localStorage.removeItem("fss_values");
-        localStorage.removeItem("fss_audit");
-        localStorage.removeItem("fss_signed_pdf_b64");
-        localStorage.removeItem("fss_uploaded_pdf_b64");
-        localStorage.removeItem("fss_uploaded_pdf_name");
+        localStorage.clear();
+        sessionStorage.clear();
       }catch(e){}
-
       showStatus("Demo reset complete.", "good");
-      setTimeout(() => location.reload(), 450);
+      setTimeout(() => location.reload(), 500);
     });
   </script>
 </body>
