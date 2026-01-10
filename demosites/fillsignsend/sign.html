@@ -4,637 +4,458 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Client Demo • Sign</title>
-
   <link rel="stylesheet" href="assets/app.css" />
-
   <style>
-    .wrap{ max-width: 1280px; margin:0 auto; padding: 22px 18px 70px; }
-
-    .top{
-      display:flex; align-items:center; justify-content:space-between;
-      gap: 12px; flex-wrap:wrap; margin-bottom: 14px;
-    }
-    .brand{ display:flex; align-items:center; gap: 12px; }
-    .brand .logo{
-      width:44px; height:44px; border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 950;
-    }
-    .brand strong{ display:block; font-weight: 950; }
-    .brand span{ display:block; font-size:12px; color: rgba(255,255,255,.70); font-weight: 800; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 420px 1fr;
-      gap: 14px;
-      align-items:start;
-    }
-
+    .page{ padding: 26px 22px 70px; max-width: 1400px; margin: 0 auto; }
+    .layout{ display:grid; grid-template-columns: 380px 1fr; gap: 14px; margin-top: 16px; align-items:start; }
     .card{
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
       padding: 16px;
       backdrop-filter: blur(12px);
     }
+    .muted{ color: rgba(255,255,255,.70); font-weight: 750; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .toolRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .toolBtn{ border-radius: 999px; padding: 10px 12px; font-weight: 950; }
 
-    .card h2{
-      margin:0 0 6px;
-      font-size:16px;
-      font-weight:950;
-      letter-spacing:-.2px;
-    }
-
-    .muted{
-      margin:0 0 12px;
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .kv{
+    .viewerShell{ min-height: 720px; display:flex; flex-direction:column; gap: 10px; }
+    .viewerTop{ display:flex; align-items:center; justify-content:space-between; gap: 10px; flex-wrap:wrap; }
+    .viewer{
+      flex: 1 1 auto;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
-      padding: 10px 12px;
-      margin-top: 10px;
-    }
-    .kv strong{ display:block; font-weight: 950; margin-bottom: 2px; }
-    .kv span{ display:block; color: rgba(255,255,255,.70); font-weight: 750; font-size: 13px; }
-
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-
-    /* Viewer */
-    .viewer{
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
       overflow:hidden;
-      height: min(78vh, 860px);
-      display:flex;
-      flex-direction:column;
-      padding:0;
-    }
-
-    .viewerBar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight: 900;
-      font-size: 12px;
-      color: rgba(255,255,255,.85);
-      white-space: nowrap;
-    }
-
-    .tools{
-      display:flex; gap: 8px; flex-wrap:wrap;
-      align-items:center; justify-content:flex-end;
-    }
-    .tools .btn{ border-radius: 999px; padding: 9px 12px; font-size: 13px; }
-    .tools .btn.active{
-      border-color: rgba(67,203,255,.55);
-      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
-    }
-
-    .stageLine{
-      padding: 10px 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      font-size: 12px;
-    }
-
-    /* PDF canvas area (we use iframe + overlay for fields) */
-    .pdfWrap{
+      min-height: 640px;
       position: relative;
-      flex: 1 1 auto;
-      background: #0b1220;
-      overflow:auto;
     }
 
-    .pdfFrame{
-      width: 100%;
-      height: 100%;
-      min-height: 600px;
-      border: 0;
-      display:block;
-      background:#111;
-      transform-origin: top left;
-    }
-
-    /* Overlay fields */
-    .overlay{
+    /* We use an iframe for the PDF + an overlay layer for draggable fields */
+    #pdfFrame{
       position:absolute;
       inset:0;
-      pointer-events:none; /* fields themselves will re-enable */
+      width:100%;
+      height:100%;
+      border:0;
+      background: transparent;
+      z-index: 1;
     }
-
+    #overlay{
+      position:absolute;
+      inset:0;
+      z-index: 2;
+      pointer-events:none;
+    }
     .field{
       position:absolute;
       min-width: 120px;
-      min-height: 34px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,79,99,.75);
-      background: rgba(255,255,255,.90);
-      box-shadow: 0 18px 44px rgba(0,0,0,.20);
+      min-height: 32px;
       padding: 8px 10px;
-      pointer-events:auto;
-      cursor: grab;
-      user-select:none;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color: #0f172a;
+      border-radius: 12px;
+      border: 2px solid rgba(255,79,141,.55);
+      background: rgba(255,79,141,.10);
+      color: rgba(255,255,255,.95);
       font-weight: 950;
       font-size: 13px;
+      cursor: move;
+      user-select:none;
+      pointer-events:auto;
+      box-shadow: 0 16px 38px rgba(0,0,0,.35);
     }
-    .field:active{ cursor: grabbing; }
-
     .field.signature{
-      border-color: rgba(255,79,99,.75);
-      font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
-      font-size: 18px;
-      font-weight: 700;
+      border-color: rgba(255,79,141,.65);
+      background: rgba(255,79,141,.12);
+      font-style: italic;
+      font-size: 16px;
+      letter-spacing: .4px;
     }
     .field.date{
-      border-color: rgba(96,255,157,.65);
-      font-weight: 950;
+      border-color: rgba(96,255,157,.55);
+      background: rgba(96,255,157,.10);
     }
     .field.text{
-      border-color: rgba(67,203,255,.65);
-      font-weight: 900;
+      border-color: rgba(67,203,255,.55);
+      background: rgba(67,203,255,.10);
     }
 
-    .toast{
+    .status{
       margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.84);
       font-weight: 850;
       font-size: 13px;
+      color: rgba(255,255,255,.84);
       display:none;
     }
-    .toast.show{ display:block; }
-    .toast.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
-    .toast.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
 
     @media (max-width: 1100px){
-      .grid{ grid-template-columns: 1fr; }
-      .viewer{ height: 62vh; }
+      .layout{ grid-template-columns: 1fr; }
+      .viewer{ min-height: 520px; }
     }
   </style>
 </head>
 
 <body class="app">
-  <div class="wrap">
-
-    <div class="top">
-      <div class="brand">
-        <div class="logo">FSS</div>
-        <div>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="dashboard.html">
+        <span class="badge">FSS</span>
+        <div class="brand-text">
           <strong>Client Demo</strong>
-          <span>Sign & Send • Place fields → Generate signed PDF</span>
+          <span>Fill → Sign → Send</span>
         </div>
-      </div>
+      </a>
 
-      <div class="btnRow" style="margin-top:0;">
-        <a class="btn btn-outline" href="dashboard.html">Dashboard</a>
-        <a class="btn btn-outline" href="create.html">Create</a>
-        <a class="btn btn-outline" href="completed.html">Completed</a>
-        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      <nav class="nav">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="create.html" class="nav-link">Create</a>
+        <a href="sign.html" class="nav-link active">Sign</a>
+        <a href="success.html" class="nav-link">Completed</a>
+      </nav>
+
+      <div class="right">
+        <span class="pill" id="who"></span>
+        <button class="btn btn-outline" id="logoutBtn">Logout</button>
       </div>
     </div>
+  </header>
 
-    <div class="grid">
-      <!-- LEFT -->
-      <div class="card">
-        <h2>Workflow</h2>
-        <p class="muted">
-          Click a tool (Signature / Date / Text) then click on the PDF to place it. Drag to reposition.
-          <strong>Double-click</strong> a field to edit its value.
-        </p>
+  <main class="page">
+    <div style="font-size:26px; font-weight:950; letter-spacing:-.4px; margin: 6px 0 6px;">Sign &amp; Send</div>
+    <div class="muted">Drag fields onto the agreement. Double-click a field to edit the value. Generate the signed PDF when ready.</div>
 
-        <div class="kv">
-          <strong>Template / Source</strong>
-          <span id="sourceLabel">—</span>
+    <div class="layout">
+      <!-- Left -->
+      <aside class="card">
+        <div style="font-weight:950; font-size:15px;">Workflow</div>
+        <div class="muted" style="margin-top:4px; font-size:13px;">
+          1) Place fields<br/>
+          2) Edit values<br/>
+          3) Generate signed PDF
         </div>
 
-        <div class="kv">
-          <strong>Sender</strong>
-          <span id="senderLabel">—</span>
+        <div style="margin-top:14px;">
+          <div class="muted" style="font-size:12.5px; font-weight:850;">Agreement</div>
+          <div style="font-weight:950;" id="agreementName">—</div>
         </div>
 
-        <div class="kv">
-          <strong>Recipient</strong>
-          <span id="recipientLabel">—</span>
+        <div style="margin-top:12px;">
+          <div class="muted" style="font-size:12.5px; font-weight:850;">Sender</div>
+          <div style="font-weight:950;" id="senderName">—</div>
         </div>
 
-        <hr style="border:0; height:1px; background: rgba(255,255,255,.08); margin: 14px 0;" />
-
-        <h2>Fields</h2>
-        <p class="muted" style="margin-bottom:10px;">
-          Click a tool, then click the PDF to place it.
-        </p>
-
-        <div class="btnRow" style="margin-top:0;">
-          <button class="btn btn-outline" id="toolSig" type="button">✍️ Signature</button>
-          <button class="btn btn-outline" id="toolDate" type="button">📅 Date</button>
-          <button class="btn btn-outline" id="toolText" type="button">📝 Text</button>
+        <div style="margin-top:12px;">
+          <div class="muted" style="font-size:12.5px; font-weight:850;">Recipient</div>
+          <div style="font-weight:950;" id="recipientName">—</div>
         </div>
 
-        <div class="btnRow">
+        <div style="margin-top:16px; font-weight:950;">Fields</div>
+        <div class="toolRow">
+          <button class="btn btn-outline toolBtn" id="addSigBtn" type="button">✍️ Signature</button>
+          <button class="btn btn-outline toolBtn" id="addDateBtn" type="button">📅 Date</button>
+          <button class="btn btn-outline toolBtn" id="addTextBtn" type="button">📝 Text</button>
+        </div>
+
+        <div class="row" style="margin-top:14px;">
           <button class="btn btn-primary" id="genBtn" type="button">Generate Signed PDF</button>
           <button class="btn btn-outline" id="clearBtn" type="button">Clear fields</button>
         </div>
 
-        <div class="toast" id="toast"></div>
+        <div class="status bad" id="statusBox"></div>
 
-        <div class="muted" style="margin-top:10px; font-size:12px;">
-          Tip: If tools “don’t work”, it’s almost always a redirect loop or missing auth.
-          This page is protected using <code>FSS.guard()</code>.
+        <div class="muted" style="margin-top:12px; font-size:12px;">
+          Tip: Double-click a field to edit it. Drag to reposition.
         </div>
-      </div>
+      </aside>
 
-      <!-- RIGHT -->
-      <div class="viewer">
-        <div class="viewerBar">
-          <span class="pill" id="pdfPill">PDF —</span>
+      <!-- Right -->
+      <section class="card viewerShell">
+        <div class="viewerTop">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge">PDF</span>
+            <div style="font-weight:950;" id="pdfLabel">—</div>
+          </div>
 
-          <div class="tools">
-            <button class="btn btn-outline" id="fitBtn" type="button">Fit</button>
-            <button class="btn btn-outline" id="zoomOutBtn" type="button">−</button>
-            <button class="btn btn-outline" id="zoomInBtn" type="button">+</button>
+          <div class="row">
             <button class="btn btn-outline" id="openBtn" type="button">Open</button>
             <button class="btn btn-outline" id="refreshBtn" type="button">Refresh</button>
           </div>
         </div>
 
-        <div class="pdfWrap" id="pdfWrap">
-          <iframe class="pdfFrame" id="pdfFrame" title="PDF"></iframe>
-          <div class="overlay" id="overlay"></div>
+        <div class="viewer" id="viewer">
+          <iframe id="pdfFrame" title="PDF"></iframe>
+          <div id="overlay"></div>
         </div>
 
-        <div class="stageLine" id="stageLine">Loading PDF…</div>
-      </div>
+        <div class="muted" id="footerHint" style="font-size:12px;">Loading PDF…</div>
+      </section>
     </div>
-  </div>
+  </main>
 
   <script src="assets/app.js"></script>
   <script>
     FSS.guard();
-    FSS.setStage("sign");
 
-    const doc = FSS.loadDocState();
-    if(!doc){
-      location.href = "create.html";
-    }
-
-    // UI refs
-    const sourceLabel = document.getElementById("sourceLabel");
-    const senderLabel = document.getElementById("senderLabel");
-    const recipientLabel = document.getElementById("recipientLabel");
-
-    const pdfPill = document.getElementById("pdfPill");
-    const stageLine = document.getElementById("stageLine");
-
-    const wrap = document.getElementById("pdfWrap");
-    const frame = document.getElementById("pdfFrame");
-    const overlay = document.getElementById("overlay");
-
-    const toast = document.getElementById("toast");
-
-    function showToast(msg, type="good"){
-      toast.className = "toast show " + (type === "bad" ? "bad" : "good");
-      toast.textContent = msg;
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => toast.classList.remove("show"), 2600);
-    }
-
-    // Labels
-    const sender = doc.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail || ""})` : "—";
-    const recip  = doc.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail || ""})` : "—";
-    senderLabel.textContent = sender;
-    recipientLabel.textContent = recip;
-
-    // Determine source
-    function getSourceLabel(){
-      const upName = localStorage.getItem("fss_uploaded_pdf_name");
-      if(upName) return `Uploaded PDF: ${upName}`;
-      if(doc.builder?.title) return `Scratch-built: ${doc.builder.title}`;
-      return `Template: ${doc.template || "nda.pdf"}`;
-    }
-    sourceLabel.textContent = getSourceLabel();
-
-    // Zoom logic: we scale iframe visually + field overlay
-    let zoom = 1;
-    function applyZoom(){
-      frame.style.transform = `scale(${zoom})`;
-      overlay.style.transform = `scale(${zoom})`;
-      overlay.style.transformOrigin = "top left";
-      stageLine.textContent = `Zoom: ${Math.round(zoom*100)}%`;
-    }
-
-    document.getElementById("zoomInBtn").addEventListener("click", () => {
-      zoom = Math.min(2.5, zoom + 0.1);
-      applyZoom();
-    });
-    document.getElementById("zoomOutBtn").addEventListener("click", () => {
-      zoom = Math.max(0.5, zoom - 0.1);
-      applyZoom();
-    });
-
-    document.getElementById("fitBtn").addEventListener("click", () => {
-      // Fit width-ish: estimate based on container width.
-      // For simplicity, set zoom so 800px PDF width fits container.
-      const w = wrap.clientWidth || 1000;
-      zoom = Math.max(0.5, Math.min(2.2, (w - 40) / 820));
-      applyZoom();
-    });
-
-    document.getElementById("openBtn").addEventListener("click", () => {
-      if(frame.src) window.open(frame.src, "_blank");
-    });
-
-    document.getElementById("refreshBtn").addEventListener("click", () => {
-      loadPDF();
-      renderFields();
-    });
-
+    // Topbar
+    const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
+    document.getElementById("who").textContent = auth.email || "demo@client.com";
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
-    // Load PDF into iframe
-    async function loadPDF(){
+    const statusBox = document.getElementById("statusBox");
+    function showStatus(msg, type="bad"){
+      statusBox.style.display = "";
+      statusBox.className = "status " + type;
+      statusBox.textContent = msg;
+    }
+    function clearStatus(){
+      statusBox.style.display = "none";
+      statusBox.textContent = "";
+    }
+
+    const doc = FSS.loadDocState();
+    if(!doc){
+      showStatus("No agreement found. Go to Create.", "bad");
+      document.getElementById("footerHint").textContent = "No agreement selected. Go to Create.";
+    }
+
+    // Populate sidebar info
+    document.getElementById("senderName").textContent = doc?.parties?.aName ? `${doc.parties.aName} (${doc.parties.aEmail||""})` : "—";
+    document.getElementById("recipientName").textContent = doc?.parties?.bName ? `${doc.parties.bName} (${doc.parties.bEmail||""})` : "—";
+
+    const pdfFrame = document.getElementById("pdfFrame");
+    const overlay = document.getElementById("overlay");
+    const viewer = document.getElementById("viewer");
+    const pdfLabel = document.getElementById("pdfLabel");
+    const footerHint = document.getElementById("footerHint");
+
+    // Load the correct PDF (signed if exists, else source)
+    function setPdfSourceToCurrent(){
+      clearStatus();
       try{
-        stageLine.textContent = "Loading PDF…";
-        pdfPill.textContent = "PDF — Loading…";
-
-        // 1) Builder
-        if(doc.builder && doc.builder.text){
-          const bytes = await FSS.generateBuilderPDFBytes();
-          if(!bytes) throw new Error("Builder PDF generation failed.");
-          const b64 = (function arrayBufferToBase64(buffer){
-            let binary = "";
-            const bytes = new Uint8Array(buffer);
-            for (let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
-            return btoa(binary);
-          })(bytes);
-          const url = FSS.base64ToBlobURL(b64);
-          frame.src = url;
-          pdfPill.textContent = "PDF • Scratch-built";
-          stageLine.textContent = "PDF loaded (scratch-built).";
+        const signed = FSS.getSignedBase64();
+        if(signed){
+          pdfFrame.src = FSS.base64ToBlobURL(signed);
+          pdfLabel.textContent = "Signed PDF";
+          footerHint.textContent = "Signed PDF loaded.";
           return;
         }
 
-        // 2) Upload
-        const upB64 = localStorage.getItem("fss_uploaded_pdf_b64");
-        if(upB64){
-          const url = FSS.base64ToBlobURL(upB64);
-          frame.src = url;
-          pdfPill.textContent = "PDF • Uploaded";
-          stageLine.textContent = "PDF loaded (uploaded).";
+        if(localStorage.getItem("fss_uploaded_pdf_b64")){
+          const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
+          pdfFrame.src = FSS.base64ToBlobURL(b64);
+          pdfLabel.textContent = localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded PDF";
+          footerHint.textContent = "Uploaded PDF loaded.";
           return;
         }
 
-        // 3) Template
-        const tpl = doc.template || "nda.pdf";
-        frame.src = `pdfs/${encodeURIComponent(tpl)}`;
-        pdfPill.textContent = `PDF • ${tpl}`;
-        stageLine.textContent = "PDF loaded (template).";
+        if(doc?.builder && doc.builder.text){
+          pdfLabel.textContent = "Builder PDF";
+          footerHint.textContent = "Generating builder PDF…";
+          FSS.generateBuilderPDFBytes().then(bytes => {
+            if(!bytes){
+              showStatus("Builder PDF failed. Open DevTools → Console.", "bad");
+              footerHint.textContent = "Builder PDF failed.";
+              return;
+            }
+            const b64 = btoa(String.fromCharCode(...new Uint8Array(bytes)));
+            pdfFrame.src = FSS.base64ToBlobURL(b64);
+            footerHint.textContent = "Builder PDF loaded.";
+          });
+          return;
+        }
+
+        const tpl = doc?.template || "nda.pdf";
+        pdfFrame.src = `pdfs/${encodeURIComponent(tpl)}`;
+        pdfLabel.textContent = tpl;
+        footerHint.textContent = "Template PDF loaded.";
       }catch(err){
         console.error(err);
-        stageLine.textContent = "PDF failed — check console.";
-        showToast("PDF failed — check console.", "bad");
+        showStatus(err.message || "Failed to load PDF.");
       }
     }
 
-    // ============ Field placement / drag / edit ============
-    let activeTool = null; // "signature" | "date" | "text"
+    setPdfSourceToCurrent();
 
-    const toolSig = document.getElementById("toolSig");
-    const toolDate= document.getElementById("toolDate");
-    const toolText= document.getElementById("toolText");
+    // FIELD OVERLAY
+    let fields = FSS.loadFields() || [];
+    let values = FSS.loadValues() || {};
 
-    function setTool(t){
-      activeTool = t;
-      [toolSig, toolDate, toolText].forEach(b => b.classList.remove("active"));
-      if(t === "signature") toolSig.classList.add("active");
-      if(t === "date") toolDate.classList.add("active");
-      if(t === "text") toolText.classList.add("active");
-    }
-
-    toolSig.addEventListener("click", () => setTool("signature"));
-    toolDate.addEventListener("click", () => setTool("date"));
-    toolText.addEventListener("click", () => setTool("text"));
-
-    // field data is stored in FSS.fields with coords relative to pdfWrap scroll container at zoom=1
-    function getFields(){ return FSS.loadFields() || []; }
-    function setFields(arr){ FSS.saveFields(arr || []); }
-
-    function getValues(){ return FSS.loadValues() || {}; }
-    function setValues(obj){ FSS.saveValues(obj || {}); }
-
-    function defaultValueFor(type){
-      if(type === "signature"){
-        return doc.parties?.aName || "Sender";
-      }
-      if(type === "date"){
-        return new Date().toLocaleDateString();
-      }
-      return "Text";
-    }
-
-    function placeField(type, x, y){
-      const id = FSS.uid();
-      const w = type === "signature" ? 220 : type === "date" ? 170 : 220;
-      const h = 44;
-
-      // store values (used by pdf-lib signing)
-      const values = getValues();
-      values[id] = defaultValueFor(type);
-      setValues(values);
-
-      const fields = getFields();
-      fields.push({
-        id,
-        type,
-        page: 1,
-        x: Math.max(0, Math.round(x)),
-        y: Math.max(0, Math.round(y)),
-        w,
-        h
-      });
-      setFields(fields);
-
-      renderFields();
-    }
-
-    // Click on PDF to place
-    wrap.addEventListener("click", (e) => {
-      if(!activeTool) return;
-
-      // prevent placement when clicking on an existing field
-      const tgt = e.target;
-      if(tgt && tgt.classList && tgt.classList.contains("field")) return;
-
-      const rect = wrap.getBoundingClientRect();
-
-      // x/y at zoom=1 coordinates
-      const rawX = (e.clientX - rect.left + wrap.scrollLeft) / zoom;
-      const rawY = (e.clientY - rect.top + wrap.scrollTop) / zoom;
-
-      placeField(activeTool, rawX - 80, rawY - 20);
-    });
-
-    // Render fields
     function renderFields(){
       overlay.innerHTML = "";
-      const fields = getFields();
-      const values = getValues();
-
       fields.forEach(f => {
         const el = document.createElement("div");
         el.className = `field ${f.type}`;
         el.dataset.id = f.id;
 
-        const val = values[f.id] ?? defaultValueFor(f.type);
-        el.textContent = val;
+        const val = (values[f.id] ?? values[f.type] ?? f.label ?? f.type);
+        el.textContent = val || f.type;
 
-        el.style.left = `${f.x}px`;
-        el.style.top  = `${f.y}px`;
-        el.style.width = `${f.w}px`;
-        el.style.height= `${f.h}px`;
+        el.style.left = (f.x || 40) + "px";
+        el.style.top = (f.y || 40) + "px";
+        el.style.width = (f.w || 160) + "px";
+        el.style.height = (f.h || 34) + "px";
 
-        // Dragging
-        let dragging = false;
-        let startX=0, startY=0, startLeft=0, startTop=0;
-
-        el.addEventListener("mousedown", (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-          dragging = true;
-          el.style.cursor = "grabbing";
-          startX = ev.clientX;
-          startY = ev.clientY;
-          startLeft = f.x;
-          startTop  = f.y;
-
-          const onMove = (mv) => {
-            if(!dragging) return;
-            const dx = (mv.clientX - startX) / zoom;
-            const dy = (mv.clientY - startY) / zoom;
-            f.x = Math.max(0, Math.round(startLeft + dx));
-            f.y = Math.max(0, Math.round(startTop + dy));
-            el.style.left = `${f.x}px`;
-            el.style.top  = `${f.y}px`;
-          };
-
-          const onUp = () => {
-            dragging = false;
-            el.style.cursor = "grab";
-            window.removeEventListener("mousemove", onMove);
-            window.removeEventListener("mouseup", onUp);
-
-            const all = getFields();
-            const idx = all.findIndex(ff => ff.id === f.id);
-            if(idx >= 0){
-              all[idx].x = f.x;
-              all[idx].y = f.y;
-              setFields(all);
-            }
-          };
-
-          window.addEventListener("mousemove", onMove);
-          window.addEventListener("mouseup", onUp);
-        });
-
-        // Double-click to edit value
-        el.addEventListener("dblclick", (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-
-          const current = (getValues()[f.id] ?? "").toString();
-          let promptLabel = "Enter value:";
-          if(f.type === "signature") promptLabel = "Signature text:";
-          if(f.type === "date") promptLabel = "Date:";
-          if(f.type === "text") promptLabel = "Text:";
-
-          const next = window.prompt(promptLabel, current || defaultValueFor(f.type));
-          if(next == null) return;
-
-          const vals = getValues();
-          vals[f.id] = next;
-          setValues(vals);
-
-          el.textContent = next;
-          showToast("Field updated.", "good");
-        });
+        el.addEventListener("mousedown", startDrag);
+        el.addEventListener("dblclick", () => editField(f.id));
 
         overlay.appendChild(el);
       });
     }
 
-    // Clear fields
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      FSS.saveFields([]);
-      FSS.saveValues({});
-      renderFields();
-      showToast("Fields cleared.", "good");
-    });
+    function addField(type){
+      clearStatus();
+      const id = "fld_" + Date.now() + "_" + Math.floor(Math.random()*10000);
+      const rect = viewer.getBoundingClientRect();
 
-    // Generate signed PDF
-    document.getElementById("genBtn").addEventListener("click", async () => {
-      try{
-        showToast("Generating signed PDF…", "good");
+      const f = {
+        id,
+        type,
+        page: 1,
+        x: Math.round(rect.width * 0.55),
+        y: Math.round(rect.height * 0.55),
+        w: type === "text" ? 220 : 160,
+        h: 34
+      };
 
-        // ensure signature/date fallback values exist
-        const values = getValues();
-        if(!values.signature) values.signature = doc.parties?.aName || "Sender";
-        if(!values.date) values.date = new Date().toLocaleDateString();
-        setValues(values);
+      fields.push(f);
 
-        const ok = await FSS.generateSignedPDF();
-        if(!ok){
-          showToast("Signed PDF failed — open console.", "bad");
-          return;
-        }
-
-        FSS.logAudit("Signed PDF generated.");
-        FSS.setStatus("signed");
-
-        location.href = "success.html";
-      }catch(err){
-        console.error(err);
-        showToast("Signed PDF failed — open console.", "bad");
+      // default values
+      if(type === "signature" && !values[id]){
+        values[id] = doc?.parties?.aName || "Signature";
       }
+      if(type === "date" && !values[id]){
+        values[id] = new Date().toLocaleDateString();
+      }
+      if(type === "text" && !values[id]){
+        values[id] = "Text";
+      }
+
+      FSS.saveFields(fields);
+      FSS.saveValues(values);
+      FSS.logAudit("Added " + type + " field.");
+      renderFields();
+    }
+
+    function editField(id){
+      const f = fields.find(x => x.id === id);
+      if(!f) return;
+
+      const current = values[id] ?? values[f.type] ?? "";
+      const label = f.type === "signature" ? "Signature" : (f.type === "date" ? "Date" : "Text");
+      const next = prompt(`Edit ${label}:`, current);
+
+      if(next === null) return; // cancelled
+
+      values[id] = next.trim();
+      FSS.saveValues(values);
+      FSS.logAudit("Edited " + f.type + " value.");
+      renderFields();
+    }
+
+    // Dragging
+    let drag = null;
+
+    function startDrag(e){
+      const id = e.currentTarget.dataset.id;
+      const f = fields.find(x => x.id === id);
+      if(!f) return;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+
+      const origX = f.x || 0;
+      const origY = f.y || 0;
+
+      drag = { id, startX, startY, origX, origY };
+
+      document.addEventListener("mousemove", onDragMove);
+      document.addEventListener("mouseup", stopDrag);
+      e.preventDefault();
+    }
+
+    function onDragMove(e){
+      if(!drag) return;
+      const dx = e.clientX - drag.startX;
+      const dy = e.clientY - drag.startY;
+
+      const f = fields.find(x => x.id === drag.id);
+      if(!f) return;
+
+      f.x = Math.max(0, drag.origX + dx);
+      f.y = Math.max(0, drag.origY + dy);
+
+      // Update live
+      const el = overlay.querySelector(`[data-id="${drag.id}"]`);
+      if(el){
+        el.style.left = f.x + "px";
+        el.style.top = f.y + "px";
+      }
+    }
+
+    function stopDrag(){
+      if(!drag) return;
+
+      FSS.saveFields(fields);
+      FSS.logAudit("Moved field.");
+      drag = null;
+
+      document.removeEventListener("mousemove", onDragMove);
+      document.removeEventListener("mouseup", stopDrag);
+    }
+
+    // Buttons
+    document.getElementById("addSigBtn").addEventListener("click", () => addField("signature"));
+    document.getElementById("addDateBtn").addEventListener("click", () => addField("date"));
+    document.getElementById("addTextBtn").addEventListener("click", () => addField("text"));
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      if(!confirm("Clear all placed fields?")) return;
+      fields = [];
+      values = {};
+      FSS.saveFields(fields);
+      FSS.saveValues(values);
+      FSS.setSignedBase64(null);
+      FSS.logAudit("Cleared fields.");
+      renderFields();
+      showStatus("Fields cleared.", "good");
     });
 
-    // Initial load
-    loadPDF();
+    document.getElementById("genBtn").addEventListener("click", async () => {
+      clearStatus();
+      showStatus("Generating signed PDF…", "good");
+      const ok = await FSS.generateSignedPDF();
+      if(!ok){
+        showStatus("Sign as sender failed. Open DevTools → Console.", "bad");
+        return;
+      }
+      FSS.logAudit("Signed PDF generated.");
+      setPdfSourceToCurrent();
+      showStatus("Signed PDF generated.", "good");
+    });
+
+    document.getElementById("openBtn").addEventListener("click", () => {
+      if(pdfFrame.src) window.open(pdfFrame.src, "_blank");
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", () => {
+      const src = pdfFrame.src;
+      pdfFrame.src = "";
+      setTimeout(()=>pdfFrame.src = src, 40);
+    });
+
+    // Render existing fields
     renderFields();
-    applyZoom();
   </script>
 </body>
 </html>
