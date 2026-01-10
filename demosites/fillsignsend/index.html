@@ -181,11 +181,11 @@
 
   <script src="assets/app.js"></script>
   <script>
-    // If already logged in, go straight to dashboard
+    // If already logged in, go straight to dashboard (no back-button loop)
     (function(){
       try{
         if(window.FSS && FSS.isAuthed && FSS.isAuthed()){
-          location.href = "dashboard.html";
+          location.replace("dashboard.html");
         }
       }catch(e){}
     })();
@@ -225,15 +225,20 @@
       }
 
       showStatus("Success. Redirecting…", "good");
-      setTimeout(() => location.href = "dashboard.html", 300);
+      setTimeout(() => location.replace("dashboard.html"), 250);
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      // Hard reset without requiring app.js to have a hardReset() function
-      localStorage.clear();
-      sessionStorage.clear();
+      try{
+        if (window.FSS && FSS.hardReset) {
+          FSS.hardReset();
+        } else {
+          // fallback
+          localStorage.clear();
+        }
+      }catch(e){}
       showStatus("Demo reset complete.", "good");
-      setTimeout(() => location.reload(), 400);
+      setTimeout(() => location.reload(), 350);
     });
   </script>
 </body>
