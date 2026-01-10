@@ -4,82 +4,287 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Client Demo • Create</title>
+
   <link rel="stylesheet" href="assets/app.css" />
+
   <style>
-    .page{ padding: 26px 22px 70px; max-width: 1300px; margin: 0 auto; }
-    .wrap{ display:grid; grid-template-columns: 420px 1fr; gap: 14px; margin-top: 16px; align-items:start; }
-    .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 22px;
-      box-shadow: 0 26px 80px rgba(0,0,0,.45);
-      padding: 16px;
+    /* ===== Page Shell ===== */
+    .page{
+      min-height: 100vh;
+      padding: 18px 18px 40px;
+    }
+
+    /* ===== Top Bar (stable) ===== */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 0 14px;
+      margin-bottom: 10px;
       backdrop-filter: blur(12px);
     }
-    h1{ margin: 6px 0 4px; font-size: 26px; font-weight: 950; letter-spacing: -.4px; }
-    .muted{ color: rgba(255,255,255,.70); font-weight: 750; }
-    label{
-      display:flex; flex-direction:column; gap:6px;
-      font-size: 12.5px; font-weight: 900; color: rgba(255,255,255,.86);
+    .topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      padding: 10px 12px;
     }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .badge{
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 950;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.92);
+      flex: 0 0 auto;
+    }
+    .brand-title{
+      min-width:0;
+    }
+    .brand-title strong{
+      display:block;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brand-title span{
+      display:block;
+      font-weight: 800;
+      font-size: 12px;
+      color: rgba(255,255,255,.70);
+    }
+
+    .navlinks{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .navlinks a{
+      text-decoration:none;
+      font-weight: 900;
+      color: rgba(255,255,255,.82);
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      transition: background .15s ease, transform .06s ease;
+      user-select:none;
+      white-space: nowrap;
+    }
+    .navlinks a:hover{ background: rgba(255,255,255,.08); }
+    .navlinks a:active{ transform: translateY(1px); }
+    .navlinks a.active{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.16);
+    }
+
+    .userpill{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .userpill .email{
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight: 900;
+      color: rgba(255,255,255,.85);
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ===== Main Layout ===== */
+    .layout{
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 22px 80px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+
+    .card-head{
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .card-head h2{
+      margin:0;
+      font-size: 16px;
+      font-weight: 950;
+    }
+    .card-head p{
+      margin: 4px 0 0;
+      color: rgba(255,255,255,.70);
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+
+    .card-body{
+      padding: 14px;
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .mode-btn{
+      flex: 1 1 auto;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.90);
+      font-weight: 950;
+      cursor:pointer;
+      user-select:none;
+      text-align:center;
+    }
+    .mode-btn.active{
+      background: rgba(67,203,255,.14);
+      border-color: rgba(67,203,255,.28);
+      color: rgba(255,255,255,.95);
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
+      margin-top: 10px;
+    }
+
     input, select, textarea{
-      width:100%;
-      padding: 10px 11px;
+      padding: 11px 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.95);
       outline:none;
+      font-size: 14px;
       font-weight: 850;
-      font-size: 13px;
     }
     input:focus, select:focus, textarea:focus{
       border-color: rgba(67,203,255,.55);
       box-shadow: 0 0 0 4px rgba(67,203,255,.12);
     }
-    textarea{ min-height: 130px; resize: vertical; }
-    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px; border-radius: 999px;
+    textarea{ min-height: 140px; resize: vertical; }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 14px 0;
+    }
+
+    .checks{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .check{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
-      font-weight: 900; font-size: 12.5px;
-      cursor:pointer; user-select:none;
+      font-weight: 850;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
     }
-    .chip input{ accent-color: #43cbff; }
-    .btn-wide{ flex: 1 1 auto; justify-content:center; }
-    .previewShell{
-      min-height: 640px;
-      display:flex; flex-direction:column; gap: 10px;
+    .check input{ accent-color: #43cbff; }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
     }
-    .previewTop{
-      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 11px 13px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      cursor:pointer;
+      font-weight: 950;
+      user-select:none;
+      transition: transform .06s ease, background .15s ease, box-shadow .15s ease;
     }
-    .viewer{
-      flex: 1 1 auto;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      overflow:hidden;
-      min-height: 580px;
-      position: relative;
+    .btn:active{ transform: translateY(1px); }
+
+    .btn-primary{
+      background: linear-gradient(135deg, #ff3d7a, #43cbff);
+      color: #061018;
+      box-shadow: 0 18px 40px rgba(255,61,122,.12);
     }
-    iframe{
-      width:100%; height:100%;
-      border:0;
-      background: transparent;
+    .btn-outline{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.92);
     }
+    .btn-outline:hover{ background: rgba(255,255,255,.09); }
+
     .hint{
+      margin-top: 10px;
       font-size: 12px;
-      color: rgba(255,255,255,.60);
+      color: rgba(255,255,255,.64);
       font-weight: 750;
       line-height: 1.45;
     }
+
     .status{
-      margin-top: 10px;
+      margin-top: 12px;
       padding: 10px 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -88,221 +293,263 @@
       font-size: 13px;
       color: rgba(255,255,255,.84);
       display:none;
+      white-space: pre-wrap;
     }
     .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
     .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-    .tabs{ display:flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-    .tabBtn{ padding: 8px 10px; border-radius: 999px; }
-    .tabBtn.active{ background: rgba(67,203,255,.18); border-color: rgba(67,203,255,.35); }
-    .hide{ display:none !important; }
 
-    @media (max-width: 1100px){
-      .wrap{ grid-template-columns: 1fr; }
-      .viewer{ min-height: 520px; }
+    /* ===== Preview Panel ===== */
+    .preview-toolbar{
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+    }
+    .preview-toolbar .left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .pill{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(255,255,255,.85);
+      white-space: nowrap;
+    }
+    .preview-wrap{
+      padding: 12px;
+      height: min(72vh, 720px);
+      overflow:auto;
+    }
+    .preview-frame{
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: transparent;
     }
   </style>
 </head>
 
 <body class="app">
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="dashboard.html">
-        <span class="badge">FSS</span>
-        <div class="brand-text">
-          <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
+  <div class="page">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="badge">FSS</div>
+          <div class="brand-title">
+            <strong>Client Demo</strong>
+            <span>Fill → Sign → Send</span>
+          </div>
         </div>
-      </a>
 
-      <nav class="nav">
-        <a href="dashboard.html" class="nav-link">Dashboard</a>
-        <a href="create.html" class="nav-link active">Create</a>
-        <a href="sign.html" class="nav-link">Sign</a>
-        <a href="success.html" class="nav-link">Completed</a>
-      </nav>
+        <div class="navlinks">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="create.html" class="active">Create</a>
+          <a href="sign.html">Sign</a>
+          <a href="completed.html">Completed</a>
+        </div>
 
-      <div class="right">
-        <span class="pill" id="who"></span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
+        <div class="userpill">
+          <div class="email" id="userEmail">—</div>
+          <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+        </div>
       </div>
     </div>
-  </header>
 
-  <main class="page">
-    <h1>Create</h1>
-    <div class="muted">Choose a template, upload a PDF, or build from scratch (NDA Express style).</div>
-
-    <div class="wrap">
-      <!-- Left -->
-      <section class="card">
-        <div style="font-weight:950; font-size:15px;">Create Agreement</div>
-        <div class="muted" style="margin-top:4px; font-size:13px;">
-          Pick your source, enter party info + rules, then preview and continue to signing.
-        </div>
-
-        <div class="tabs">
-          <button class="btn btn-outline tabBtn active" id="tabScratch" type="button">Build from scratch</button>
-          <button class="btn btn-outline tabBtn" id="tabTemplate" type="button">Template</button>
-          <button class="btn btn-outline tabBtn" id="tabUpload" type="button">Upload PDF</button>
-        </div>
-
-        <div style="margin-top:12px;">
-          <label>Agreement Title
-            <input id="title" placeholder="Example: Mutual Non-Disclosure Agreement" />
-          </label>
-        </div>
-
-        <div style="margin-top:12px; font-weight:950;">Parties</div>
-        <div class="grid2" style="margin-top:10px;">
-          <label>Party A Name
-            <input id="aName" placeholder="Example: Company A, Inc." />
-          </label>
-          <label>Party A Email
-            <input id="aEmail" placeholder="a@company.com" />
-          </label>
-
-          <label>Party B Name
-            <input id="bName" placeholder="Example: Company B, LLC" />
-          </label>
-          <label>Party B Email
-            <input id="bEmail" placeholder="b@company.com" />
-          </label>
-        </div>
-
-        <!-- NDA Express style options -->
-        <div style="margin-top:14px; font-weight:950;">Rules / Options (NDA Express style)</div>
-        <div class="chips">
-          <label class="chip"><input id="optMutual" type="checkbox" /> Mutual NDA</label>
-          <label class="chip"><input id="optOneWay" type="checkbox" /> One-way NDA</label>
-          <label class="chip"><input id="optNonCompete" type="checkbox" /> Include non-compete</label>
-          <label class="chip"><input id="optNonSolicit" type="checkbox" /> Include non-solicit</label>
-          <label class="chip"><input id="optInjunctive" type="checkbox" /> Injunctive relief</label>
-          <label class="chip"><input id="optReturnDestroy" type="checkbox" /> Return/Destroy confidential info</label>
-        </div>
-
-        <div class="grid2" style="margin-top:12px;">
-          <label>Term (months)
-            <input id="termMonths" type="number" min="1" value="12" />
-          </label>
-          <label>Governing Law (State)
-            <input id="govLaw" placeholder="Massachusetts" value="Massachusetts" />
-          </label>
-        </div>
-
-        <div style="margin-top:10px;">
-          <label>Purpose / Relationship
-            <input id="purpose" placeholder="Example: evaluating a potential business relationship" />
-          </label>
-        </div>
-
-        <!-- Scratch builder -->
-        <div id="scratchBlock" style="margin-top:12px;">
-          <label>Agreement Body (paste clauses / build text)
-            <textarea id="body" placeholder="Write the agreement text here…"></textarea>
-          </label>
-          <div class="hint" style="margin-top:8px;">
-            Tip: Use the options above like NDA Express — we auto-generate a clean PDF for signing.
+    <!-- Main -->
+    <div class="layout">
+      <!-- Left: Create -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>Create</h2>
+            <p>Choose a template, upload a PDF, or build from scratch (NDA Express style).</p>
           </div>
         </div>
 
-        <!-- Template -->
-        <div id="templateBlock" class="hide" style="margin-top:12px;">
-          <label>Template PDF
-            <select id="templateSelect"></select>
+        <div class="card-body">
+          <!-- Mode buttons -->
+          <div class="row">
+            <button class="mode-btn active" id="modeScratch" type="button">Build from scratch</button>
+            <button class="mode-btn" id="modeTemplate" type="button">Template</button>
+            <button class="mode-btn" id="modeUpload" type="button">Upload PDF</button>
+          </div>
+
+          <label>
+            Agreement Title
+            <input id="title" type="text" placeholder="Example: Mutual Non-Disclosure Agreement" />
           </label>
-          <div class="hint" style="margin-top:8px;">Templates are loaded from <code>/pdfs</code>.</div>
-        </div>
 
-        <!-- Upload -->
-        <div id="uploadBlock" class="hide" style="margin-top:12px;">
-          <label>Upload PDF
-            <input id="uploadInput" type="file" accept="application/pdf" />
+          <div class="divider"></div>
+
+          <div class="row">
+            <div style="flex:1 1 180px;">
+              <label style="margin-top:0;">
+                Party A Name
+                <input id="aName" type="text" placeholder="Example: Company A, Inc." />
+              </label>
+            </div>
+            <div style="flex:1 1 180px;">
+              <label style="margin-top:0;">
+                Party A Email
+                <input id="aEmail" type="email" placeholder="a@company.com" />
+              </label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="flex:1 1 180px;">
+              <label>
+                Party B Name
+                <input id="bName" type="text" placeholder="Example: Company B, LLC" />
+              </label>
+            </div>
+            <div style="flex:1 1 180px;">
+              <label>
+                Party B Email
+                <input id="bEmail" type="email" placeholder="b@company.com" />
+              </label>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- NDA Express-style options -->
+          <div style="font-weight:950; font-size:13px; color:rgba(255,255,255,.86); margin-bottom:6px;">
+            Rules / Options (NDA Express style)
+          </div>
+
+          <div class="checks">
+            <label class="check"><input id="optMutual" type="radio" name="ndaType" checked> Mutual NDA</label>
+            <label class="check"><input id="optOneWay" type="radio" name="ndaType"> One-way NDA</label>
+
+            <label class="check"><input id="optNonCompete" type="checkbox"> Include non-compete</label>
+            <label class="check"><input id="optNonSolicit" type="checkbox"> Include non-solicit</label>
+            <label class="check"><input id="optInjunctive" type="checkbox"> Injunctive relief</label>
+            <label class="check"><input id="optReturnDestroy" type="checkbox"> Return/Destroy confidential info</label>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <div style="flex:1 1 160px;">
+              <label style="margin-top:0;">
+                Term (months)
+                <input id="termMonths" type="number" min="1" value="12" />
+              </label>
+            </div>
+            <div style="flex:1 1 160px;">
+              <label style="margin-top:0;">
+                Governing Law (State)
+                <input id="govLaw" type="text" value="Massachusetts" />
+              </label>
+            </div>
+          </div>
+
+          <label>
+            Purpose / Relationship
+            <input id="purpose" type="text" placeholder="Example: evaluating a potential business relationship" />
           </label>
-          <div class="hint" style="margin-top:8px;">
-            Uploads are stored locally in your browser (Base64) for demo purposes.
-          </div>
-        </div>
 
-        <div class="row" style="margin-top:14px;">
-          <button class="btn btn-primary btn-wide" id="previewBtn" type="button">Preview PDF</button>
-          <button class="btn btn-outline btn-wide" id="saveGoBtn" type="button">Save &amp; Go To Sign</button>
-          <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
-        </div>
+          <div class="divider"></div>
 
-        <div class="status bad" id="statusBox"></div>
-      </section>
-
-      <!-- Right -->
-      <section class="card previewShell">
-        <div class="previewTop">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="badge">PDF</span>
-            <div style="font-weight:950;" id="previewName">Preview</div>
+          <!-- Scratch Builder -->
+          <div id="scratchBlock">
+            <label style="margin-top:0;">
+              Agreement Body (from scratch)
+              <textarea id="builderText" placeholder="Write the agreement text here… (or paste clauses)"></textarea>
+            </label>
+            <div class="hint">
+              Tip: Use the Rules/Options above like NDA Express — this demo will generate a clean PDF for signing.
+            </div>
           </div>
 
-          <div class="row" style="margin:0;">
-            <button class="btn btn-outline" id="openBtn" type="button">Open</button>
-            <button class="btn btn-outline" id="refreshBtn" type="button">Refresh</button>
+          <!-- Template Mode -->
+          <div id="templateBlock" style="display:none;">
+            <label style="margin-top:0;">
+              Template PDF
+              <select id="templateSelect">
+                <option value="nda.pdf">nda.pdf</option>
+                <option value="non-compete-agreement.pdf">non-compete-agreement.pdf</option>
+              </select>
+            </label>
+            <div class="hint">Templates are loaded from <strong>/pdfs</strong>.</div>
+          </div>
+
+          <!-- Upload Mode -->
+          <div id="uploadBlock" style="display:none;">
+            <label style="margin-top:0;">
+              Upload PDF
+              <input id="uploadInput" type="file" accept="application/pdf" />
+            </label>
+            <div class="hint">Uploads are stored locally in your browser (Base64).</div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-outline" id="previewBtn" type="button">Preview PDF</button>
+            <button class="btn btn-primary" id="saveGoBtn" type="button">Save &amp; Go To Sign</button>
+            <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
+          </div>
+
+          <div class="status bad" id="statusBox"></div>
+        </div>
+      </div>
+
+      <!-- Right: Preview -->
+      <div class="card">
+        <div class="preview-toolbar">
+          <div class="left">
+            <span class="pill">PDF</span>
+            <span class="pill" id="previewLabel">Preview</span>
+          </div>
+          <div class="row">
+            <button class="btn btn-outline" id="openPreviewBtn" type="button">Open</button>
+            <button class="btn btn-outline" id="refreshPreviewBtn" type="button">Refresh</button>
           </div>
         </div>
-
-        <div class="viewer">
-          <iframe id="pdfFrame" title="PDF preview"></iframe>
+        <div class="preview-wrap">
+          <div class="preview-frame">
+            <iframe id="pdfFrame" title="PDF Preview"></iframe>
+          </div>
         </div>
-
-        <div class="hint" id="previewHint">Click Preview PDF to generate/load a preview.</div>
-      </section>
+      </div>
     </div>
-  </main>
+  </div>
 
   <script src="assets/app.js"></script>
   <script>
+    /* =========================
+       GUARD + USER
+       ========================= */
     FSS.guard();
 
-    // Topbar
     const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("who").textContent = auth.email || "demo@client.com";
+    document.getElementById("userEmail").textContent = auth.email || "demo@client.com";
+
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
-    // Elements
+    /* =========================
+       UI HELPERS
+       ========================= */
     const statusBox = document.getElementById("statusBox");
-    const pdfFrame = document.getElementById("pdfFrame");
-    const previewName = document.getElementById("previewName");
-    const previewHint = document.getElementById("previewHint");
-
-    const tabScratch = document.getElementById("tabScratch");
-    const tabTemplate = document.getElementById("tabTemplate");
-    const tabUpload = document.getElementById("tabUpload");
-
-    const scratchBlock = document.getElementById("scratchBlock");
-    const templateBlock = document.getElementById("templateBlock");
-    const uploadBlock = document.getElementById("uploadBlock");
-
-    const templateSelect = document.getElementById("templateSelect");
-    const uploadInput = document.getElementById("uploadInput");
-
-    // Form fields
-    const title = document.getElementById("title");
-    const aName = document.getElementById("aName");
-    const aEmail = document.getElementById("aEmail");
-    const bName = document.getElementById("bName");
-    const bEmail = document.getElementById("bEmail");
-    const termMonths = document.getElementById("termMonths");
-    const govLaw = document.getElementById("govLaw");
-    const purpose = document.getElementById("purpose");
-    const body = document.getElementById("body");
-
-    const optMutual = document.getElementById("optMutual");
-    const optOneWay = document.getElementById("optOneWay");
-    const optNonCompete = document.getElementById("optNonCompete");
-    const optNonSolicit = document.getElementById("optNonSolicit");
-    const optInjunctive = document.getElementById("optInjunctive");
-    const optReturnDestroy = document.getElementById("optReturnDestroy");
-
     function showStatus(msg, type="bad"){
       statusBox.style.display = "";
       statusBox.className = "status " + type;
@@ -313,284 +560,308 @@
       statusBox.textContent = "";
     }
 
-    // Source mode
-    let mode = "scratch"; // scratch | template | upload
+    function setModeButtons(active){
+      document.getElementById("modeScratch").classList.toggle("active", active==="scratch");
+      document.getElementById("modeTemplate").classList.toggle("active", active==="template");
+      document.getElementById("modeUpload").classList.toggle("active", active==="upload");
+    }
+
+    let mode = "scratch";
+
+    const scratchBlock = document.getElementById("scratchBlock");
+    const templateBlock = document.getElementById("templateBlock");
+    const uploadBlock = document.getElementById("uploadBlock");
 
     function setMode(m){
       mode = m;
-      tabScratch.classList.toggle("active", m==="scratch");
-      tabTemplate.classList.toggle("active", m==="template");
-      tabUpload.classList.toggle("active", m==="upload");
-
-      scratchBlock.classList.toggle("hide", m!=="scratch");
-      templateBlock.classList.toggle("hide", m!=="template");
-      uploadBlock.classList.toggle("hide", m!=="upload");
-
+      setModeButtons(m);
+      scratchBlock.style.display = (m==="scratch") ? "" : "none";
+      templateBlock.style.display = (m==="template") ? "" : "none";
+      uploadBlock.style.display = (m==="upload") ? "" : "none";
       clearStatus();
     }
 
-    tabScratch.addEventListener("click", () => setMode("scratch"));
-    tabTemplate.addEventListener("click", () => setMode("template"));
-    tabUpload.addEventListener("click", () => setMode("upload"));
+    document.getElementById("modeScratch").addEventListener("click", () => setMode("scratch"));
+    document.getElementById("modeTemplate").addEventListener("click", () => setMode("template"));
+    document.getElementById("modeUpload").addEventListener("click", () => setMode("upload"));
 
-    // Load doc state into form
-    function loadIntoForm(){
-      const doc = FSS.loadDocState() || FSS.resetDoc();
-      title.value = doc.builder?.title || "";
-      aName.value = doc.parties?.aName || "";
-      aEmail.value = doc.parties?.aEmail || "";
-      bName.value = doc.parties?.bName || "";
-      bEmail.value = doc.parties?.bEmail || "";
+    /* =========================
+       LOAD EXISTING STATE
+       ========================= */
+    const existing = FSS.loadDocState() || FSS.resetDoc();
 
-      // If builder exists load body text
-      body.value = doc.builder?.text || "";
+    // populate inputs
+    document.getElementById("title").value = existing.builder?.title || existing.title || "";
+    document.getElementById("aName").value = existing.parties?.aName || "";
+    document.getElementById("aEmail").value = existing.parties?.aEmail || "";
+    document.getElementById("bName").value = existing.parties?.bName || "";
+    document.getElementById("bEmail").value = existing.parties?.bEmail || "";
 
-      // Default to template if template is set and builder is null
-      // If uploaded exists, prefer upload mode
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        setMode("upload");
-      }else if(doc.builder && doc.builder.text){
-        setMode("scratch");
-      }else{
-        setMode("template");
+    // template select
+    document.getElementById("templateSelect").value = existing.template || "nda.pdf";
+
+    // builder text
+    document.getElementById("builderText").value = existing.builder?.text || "";
+
+    /* =========================
+       UPLOAD HANDLER
+       ========================= */
+    document.getElementById("uploadInput").addEventListener("change", async (e) => {
+      clearStatus();
+      const file = e.target.files?.[0];
+      if(!file) return;
+
+      if(file.type !== "application/pdf"){
+        showStatus("Please upload a PDF file.");
+        return;
       }
 
-      // Update preview label
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        previewName.textContent = "Uploaded PDF";
-      }else if(doc.builder && doc.builder.text){
-        previewName.textContent = "Builder PDF";
-      }else{
-        previewName.textContent = doc.template || "Template";
+      try{
+        const b64 = await fileToBase64(file);
+        localStorage.setItem("fss_uploaded_pdf_b64", b64);
+        localStorage.setItem("fss_uploaded_pdf_name", file.name);
+        FSS.logAudit("Uploaded PDF stored locally: " + file.name);
+        showStatus("Upload saved. Click Preview PDF.", "good");
+      }catch(err){
+        console.error(err);
+        showStatus("Upload failed. Check console.");
       }
-    }
+    });
 
-    // Populate template dropdown (hard-coded list; you can expand)
-    function loadTemplates(){
-      const templates = ["nda.pdf", "non-compete-agreement.pdf", "release-of-liability.pdf"];
-      templateSelect.innerHTML = templates.map(t => `<option value="${t}">${t}</option>`).join("");
-
-      const doc = FSS.loadDocState();
-      if(doc && doc.template){
-        templateSelect.value = doc.template;
-      }
-    }
-
-    // Persist form → doc
-    function buildDocFromForm(){
-      const doc = FSS.loadDocState() || FSS.resetDoc();
-
-      doc.parties = {
-        ...doc.parties,
-        aName: aName.value.trim(),
-        aEmail: aEmail.value.trim(),
-        bName: bName.value.trim(),
-        bEmail: bEmail.value.trim(),
-      };
-
-      // NDA Express style config (stored under builder meta)
-      const rules = {
-        mutual: !!optMutual.checked,
-        oneWay: !!optOneWay.checked,
-        nonCompete: !!optNonCompete.checked,
-        nonSolicit: !!optNonSolicit.checked,
-        injunctive: !!optInjunctive.checked,
-        returnDestroy: !!optReturnDestroy.checked,
-        termMonths: Number(termMonths.value || 12),
-        govLaw: (govLaw.value || "").trim(),
-        purpose: (purpose.value || "").trim(),
-      };
-
-      if(mode === "scratch"){
-        doc.template = null;
-        doc.builder = {
-          title: title.value.trim() || "Agreement",
-          text: body.value.trim() || defaultNdaText(doc, rules),
-          rules,
+    function fileToBase64(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = String(reader.result || "");
+          const comma = res.indexOf(",");
+          resolve(comma >= 0 ? res.slice(comma + 1) : res);
         };
-      }
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
 
+    /* =========================
+       BUILD DOC FROM FORM
+       ========================= */
+    function buildDocFromForm(){
+      const doc = FSS.loadDocState() || FSS.defaultDoc();
+
+      const title = (document.getElementById("title").value || "").trim();
+      const aName  = (document.getElementById("aName").value || "").trim();
+      const aEmail = (document.getElementById("aEmail").value || "").trim();
+      const bName  = (document.getElementById("bName").value || "").trim();
+      const bEmail = (document.getElementById("bEmail").value || "").trim();
+
+      doc.parties = doc.parties || {};
+      doc.parties.aName = aName;
+      doc.parties.aEmail = aEmail;
+      doc.parties.bName = bName;
+      doc.parties.bEmail = bEmail;
+
+      // store for signing display
+      doc.title = title || doc.title || "Agreement";
+
+      // Mode selection impacts source
       if(mode === "template"){
+        doc.template = document.getElementById("templateSelect").value || "nda.pdf";
         doc.builder = null;
-        doc.template = templateSelect.value || "nda.pdf";
+        // clear upload base64 (optional)
+        // localStorage.removeItem("fss_uploaded_pdf_b64");
       }
 
       if(mode === "upload"){
         doc.template = null;
         doc.builder = null;
-        // upload bytes saved separately in localStorage
       }
 
-      doc.stage = "create";
-      doc.status = "draft";
+      if(mode === "scratch"){
+        const mutual = document.getElementById("optMutual").checked;
+        const oneWay = document.getElementById("optOneWay").checked;
 
-      FSS.saveDocState(doc);
+        const includeNonCompete = document.getElementById("optNonCompete").checked;
+        const includeNonSolicit = document.getElementById("optNonSolicit").checked;
+        const injunctive = document.getElementById("optInjunctive").checked;
+        const returnDestroy = document.getElementById("optReturnDestroy").checked;
+
+        const termMonths = (document.getElementById("termMonths").value || "12").trim();
+        const govLaw = (document.getElementById("govLaw").value || "Massachusetts").trim();
+        const purpose = (document.getElementById("purpose").value || "").trim();
+
+        const body = (document.getElementById("builderText").value || "").trim();
+
+        doc.template = null;
+        doc.builder = {
+          title: title || "Agreement",
+          text: body,
+          rules: {
+            ndaType: mutual ? "mutual" : (oneWay ? "oneway" : "mutual"),
+            includeNonCompete,
+            includeNonSolicit,
+            injunctive,
+            returnDestroy,
+            termMonths,
+            govLaw,
+            purpose
+          }
+        };
+      }
+
       return doc;
     }
 
-    function defaultNdaText(doc, rules){
-      const A = doc.parties?.aName || "Party A";
-      const B = doc.parties?.bName || "Party B";
-      const months = rules.termMonths || 12;
-      const gov = rules.govLaw || "Massachusetts";
-      const purpose = rules.purpose || "evaluating a potential business relationship";
+    /* =========================
+       PREVIEW PDF
+       ========================= */
+    const pdfFrame = document.getElementById("pdfFrame");
+    const previewLabel = document.getElementById("previewLabel");
+    let lastPreviewUrl = "";
 
-      return `
-This NON-DISCLOSURE AGREEMENT ("Agreement") is made between ${A} and ${B} (the "Parties").
-
-1. Purpose.
-The Parties wish to disclose confidential information for the purpose of ${purpose}.
-
-2. Confidential Information.
-"Confidential Information" includes any non-public business, technical, financial, or other information disclosed by either Party.
-
-3. Obligations.
-Receiving Party agrees to protect the Confidential Information with reasonable care and not disclose it except as permitted herein.
-
-4. Exclusions.
-Confidential Information does not include information that is public, already known, independently developed, or lawfully received.
-
-5. Term.
-This Agreement remains in effect for ${months} months from the Effective Date.
-
-6. Governing Law.
-This Agreement shall be governed by the laws of ${gov}.
-
-${rules.returnDestroy ? "7. Return / Destroy. Upon request, Receiving Party will return or destroy Confidential Information.\n" : ""}
-${rules.injunctive ? "8. Injunctive Relief. Parties agree injunctive relief may be appropriate for breach.\n" : ""}
-${rules.nonSolicit ? "9. Non-Solicitation. Receiving Party agrees not to solicit employees/clients for a reasonable period.\n" : ""}
-${rules.nonCompete ? "10. Non-Compete. Receiving Party agrees not to compete in a defined scope for a reasonable period.\n" : ""}
-
-IN WITNESS WHEREOF, the Parties have executed this Agreement.
-
-Party A: ${A}
-Party B: ${B}
-      `.trim();
-    }
-
-    // Preview logic
     async function previewPDF(){
       clearStatus();
+
       try{
         const doc = buildDocFromForm();
+        FSS.saveDocState(doc);
 
-        // If upload mode, verify it exists
-        if(mode === "upload"){
-          const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
-          if(!b64) throw new Error("No uploaded PDF found. Choose a file first.");
-          const url = FSS.base64ToBlobURL(b64);
-          pdfFrame.src = url;
-          previewName.textContent = localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded PDF";
-          previewHint.textContent = "Uploaded PDF preview.";
-          return;
-        }
+        previewLabel.textContent = "Generating preview…";
 
-        // If scratch builder
-        if(doc.builder && doc.builder.text){
-          const bytes = await FSS.generateBuilderPDFBytes();
-          if(!bytes) throw new Error("Builder PDF failed. Open DevTools → Console for details.");
-          const b64 = btoa(String.fromCharCode(...new Uint8Array(bytes)));
-          const url = FSS.base64ToBlobURL(b64);
-          pdfFrame.src = url;
-          previewName.textContent = "Builder PDF";
-          previewHint.textContent = "Generated from scratch. Ready to sign.";
-          return;
-        }
+        // Determine source:
+        // - upload: use stored base64
+        // - template: load /pdfs/<template>
+        // - scratch: generate builder PDF bytes (pdf-lib)
+        let url = "";
 
-        // Template
-        const tpl = doc.template || "nda.pdf";
-        pdfFrame.src = `pdfs/${encodeURIComponent(tpl)}`;
-        previewName.textContent = tpl;
-        previewHint.textContent = "Template preview.";
-      }catch(err){
-        console.error(err);
-        showStatus(err.message || "Preview failed.");
-      }
-    }
-
-    // Save & Go
-    async function saveAndGo(){
-      clearStatus();
-      try{
-        const doc = buildDocFromForm();
-
-        // Ensure we have a usable PDF source before going
         if(mode === "upload"){
           const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
           if(!b64) throw new Error("Upload a PDF first.");
-        }else if(doc.builder && doc.builder.text){
-          const bytes = await FSS.generateBuilderPDFBytes();
-          if(!bytes) throw new Error("Builder PDF failed. Open DevTools → Console.");
-        }else if(doc.template){
-          // template ok
-        }else{
-          throw new Error("Select a template or build from scratch first.");
+          url = FSS.base64ToBlobURL(b64);
         }
 
-        FSS.setStage("sign");
-        FSS.logAudit("Saved agreement and moved to Sign.");
-        location.href = "sign.html";
+        if(mode === "template"){
+          const t = doc.template || "nda.pdf";
+          url = "pdfs/" + encodeURIComponent(t);
+        }
+
+        if(mode === "scratch"){
+          if(!doc.builder?.text || !doc.builder.text.trim()){
+            throw new Error("Builder text is empty. Paste agreement body first.");
+          }
+
+          const bytes = await FSS.generateBuilderPDFBytes();
+          if(!bytes) throw new Error("Builder PDF failed. Open DevTools → Console.");
+
+          const b64 = (function(){
+            // convert Uint8Array -> base64
+            let bin = "";
+            for(let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+            return btoa(bin);
+          })();
+
+          url = FSS.base64ToBlobURL(b64);
+        }
+
+        lastPreviewUrl = url;
+        pdfFrame.src = url;
+        previewLabel.textContent = "Preview ready";
+        showStatus("Preview loaded.", "good");
+
       }catch(err){
-        console.error(err);
-        showStatus(err.message || "Save & Go failed.");
+        console.error("[Preview] FAILED:", err);
+        previewLabel.textContent = "Preview";
+        showStatus(err.message || "Preview failed.");
+        alert("Preview failed:\n\n" + (err.message || err));
       }
     }
 
-    // Upload handling
-    uploadInput.addEventListener("change", async (e) => {
-      clearStatus();
-      const file = e.target.files && e.target.files[0];
-      if(!file) return;
-      if(file.type !== "application/pdf"){
-        showStatus("Please upload a PDF file.");
+    document.getElementById("previewBtn").addEventListener("click", previewPDF);
+
+    document.getElementById("openPreviewBtn").addEventListener("click", () => {
+      if(!lastPreviewUrl){
+        showStatus("Preview a PDF first.");
         return;
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Convert ArrayBuffer → base64
-        const bytes = new Uint8Array(reader.result);
-        let bin = "";
-        for(let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
-        const b64 = btoa(bin);
-
-        localStorage.setItem("fss_uploaded_pdf_b64", b64);
-        localStorage.setItem("fss_uploaded_pdf_name", file.name);
-
-        showStatus("Upload saved locally. Click Preview PDF.", "good");
-        previewName.textContent = file.name;
-      };
-      reader.readAsArrayBuffer(file);
+      window.open(lastPreviewUrl, "_blank");
     });
 
-    // Buttons
-    document.getElementById("previewBtn").addEventListener("click", previewPDF);
+    document.getElementById("refreshPreviewBtn").addEventListener("click", () => {
+      if(!pdfFrame.src){
+        showStatus("Nothing to refresh. Preview first.");
+        return;
+      }
+      pdfFrame.src = pdfFrame.src;
+      showStatus("Preview refreshed.", "good");
+    });
+
+    /* =========================
+       SAVE & GO TO SIGN (HARD FIX)
+       ========================= */
+    async function saveAndGo(){
+      clearStatus();
+
+      try{
+        const doc = buildDocFromForm();
+
+        // Validation (no PDF generation)
+        if(mode === "upload"){
+          const b64 = localStorage.getItem("fss_uploaded_pdf_b64");
+          if(!b64) throw new Error("Upload a PDF first.");
+        }else if(mode === "scratch"){
+          if(!doc.builder?.text || !doc.builder.text.trim()){
+            throw new Error("Builder text is empty. Paste the agreement body first.");
+          }
+        }else if(mode === "template"){
+          if(!doc.template) throw new Error("Pick a template first.");
+        }
+
+        doc.stage = "sign";
+        FSS.saveDocState(doc);
+        FSS.logAudit("Saved agreement and moved to Sign.");
+
+        console.log("[Save&Go] Doc saved:", doc);
+        showStatus("Saved. Redirecting to Sign…", "good");
+
+        setTimeout(() => location.href = "sign.html", 150);
+        setTimeout(() => {
+          if(!location.pathname.toLowerCase().includes("sign.html")){
+            location.href = "sign.html";
+          }
+        }, 800);
+
+      }catch(err){
+        console.error("[Save&Go] FAILED:", err);
+        showStatus(err.message || "Save & Go failed.");
+        alert("Save & Go failed:\n\n" + (err.message || err));
+      }
+    }
+
     document.getElementById("saveGoBtn").addEventListener("click", saveAndGo);
 
+    /* =========================
+       RESET
+       ========================= */
     document.getElementById("resetBtn").addEventListener("click", () => {
-      if(confirm("Reset agreement and clear preview?")){
-        FSS.resetDoc();
-        localStorage.removeItem("fss_uploaded_pdf_b64");
-        localStorage.removeItem("fss_uploaded_pdf_name");
-        pdfFrame.removeAttribute("src");
-        loadIntoForm();
-        showStatus("Reset complete.", "good");
+      if(!confirm("Reset this demo agreement?")) return;
+      FSS.resetDoc();
+      localStorage.removeItem("fss_uploaded_pdf_b64");
+      localStorage.removeItem("fss_uploaded_pdf_name");
+      showStatus("Demo reset complete. Reloading…", "good");
+      setTimeout(() => location.reload(), 400);
+    });
+
+    // Default to template mode if doc has template and no builder text
+    (function(){
+      const d = FSS.loadDocState();
+      if(localStorage.getItem("fss_uploaded_pdf_b64")){
+        setMode("upload");
+      }else if(d?.builder?.text){
+        setMode("scratch");
+      }else if(d?.template){
+        setMode("template");
+      }else{
+        setMode("scratch");
       }
-    });
-
-    document.getElementById("openBtn").addEventListener("click", () => {
-      if(pdfFrame.src) window.open(pdfFrame.src, "_blank");
-    });
-
-    document.getElementById("refreshBtn").addEventListener("click", () => {
-      if(!pdfFrame.src) return;
-      const src = pdfFrame.src;
-      pdfFrame.src = "";
-      setTimeout(() => pdfFrame.src = src, 40);
-    });
-
-    // Init
-    loadTemplates();
-    loadIntoForm();
+    })();
   </script>
 </body>
 </html>
