@@ -3,247 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard • Client Demo</title>
+  <title>Client Demo • Secure Access</title>
 
   <link rel="stylesheet" href="assets/app.css" />
 
   <style>
-    .wrap{
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 18px 18px 46px;
-    }
-
-    .hero{
+    .shell{
+      min-height: 100vh;
       display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 14px;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-
-    .hero h1{
-      margin: 0;
-      font-size: 20px;
-      font-weight: 950;
-      letter-spacing: -0.25px;
-    }
-
-    .hero p{
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 750;
-      max-width: 90ch;
-      line-height: 1.5;
-    }
-
-    .pill{
-      display:inline-flex;
       align-items:center;
-      gap: 8px;
-      padding: 9px 10px;
-      border-radius: 999px;
+      justify-content:center;
+      padding: 18px;
+    }
+
+    .login-card{
+      width: min(520px, 100%);
+      border-radius: 22px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.92);
-      white-space: nowrap;
-    }
-    .pill .dot{ width: 9px; height: 9px; border-radius: 999px; background: rgba(255,255,255,.25); }
-    .pill[data-state="draft"] .dot{ background: rgba(67,203,255,.95); }
-    .pill[data-state="ready"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      align-items:start;
-      margin-top: 12px;
+      box-shadow: 0 26px 80px rgba(0,0,0,.55);
+      padding: 18px;
+      backdrop-filter: blur(12px);
     }
 
-    .card{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 20px;
-      padding: 14px;
-      overflow:hidden;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 6px 4px 10px;
     }
-
-    .card h2{
-      margin:0;
-      font-size: 14px;
+    .brand .logo-badge{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-weight: 950;
-      letter-spacing: -0.1px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.92);
+      flex: 0 0 auto;
     }
-
-    .sub{
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 750;
+    .brand strong{
+      font-weight: 950;
+      letter-spacing: -0.2px;
+      display:block;
+    }
+    .brand span{
+      display:block;
+      color: rgba(255,255,255,.70);
+      font-weight: 800;
       font-size: 13px;
-      line-height: 1.5;
+      margin-top: 2px;
     }
 
     .divider{
       height: 1px;
       background: rgba(255,255,255,.08);
-      margin: 12px 0;
+      margin: 12px 0 14px;
     }
 
-    .docRow{
+    .grid{
       display:grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      align-items:center;
+      gap: 10px;
     }
 
-    .docMeta{
-      display:grid;
+    label{
+      display:flex;
+      flex-direction:column;
       gap: 6px;
-      min-width: 0;
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(255,255,255,.86);
     }
 
-    .docMeta strong{
-      font-weight: 950;
-      font-size: 14px;
-      color: rgba(255,255,255,.92);
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .docMeta span{
-      font-size: 12px;
-      font-weight: 800;
-      color: rgba(255,255,255,.65);
-      line-height: 1.4;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .docActions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .btn-lg{
-      padding: 12px 14px;
+    input{
+      padding: 12px 12px;
       border-radius: 14px;
-      font-weight: 950;
-      font-size: 14px;
-    }
-
-    .btn-muted{
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
+      color: rgba(255,255,255,.95);
+      outline:none;
+      font-size: 14px;
+      font-weight: 850;
     }
-    .btn-muted:hover{ background: rgba(255,255,255,.09); }
-
-    .createGrid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 10px;
+    input:focus{
+      border-color: rgba(67,203,255,.55);
+      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
     }
 
-    .createTile{
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      cursor:pointer;
-      user-select:none;
-      transition: transform .06s ease, background .2s ease;
-    }
-    .createTile:hover{ background: rgba(255,255,255,.08); }
-    .createTile:active{ transform: translateY(1px); }
-
-    .tileTop{
+    .row{
       display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
       align-items:center;
       justify-content:space-between;
-      gap: 10px;
-    }
-    .tileTop strong{
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      font-size: 14px;
-    }
-    .tag{
-      font-size: 12px;
-      font-weight: 900;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.80);
-      white-space: nowrap;
-    }
-    .tileDesc{
-      margin-top: 8px;
-      font-size: 13px;
-      font-weight: 750;
-      color: rgba(255,255,255,.70);
-      line-height: 1.45;
-    }
-
-    .timeline{
-      display:grid;
-      gap: 10px;
       margin-top: 10px;
     }
 
-    .event{
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-    }
-
-    .event .bubble{
-      width: 34px;
-      height: 34px;
-      border-radius: 14px;
-      display:flex;
-      align-items:center;
+    .btn-wide{
+      flex: 1 1 auto;
       justify-content:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
-      flex: 0 0 auto;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
       font-weight: 950;
-      color: rgba(255,255,255,.92);
     }
 
-    .event strong{
-      display:block;
-      font-weight: 950;
-      color: rgba(255,255,255,.92);
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .event span{
-      display:block;
+    .note{
+      margin-top: 12px;
       font-size: 12px;
-      font-weight: 800;
-      color: rgba(255,255,255,.65);
-      line-height: 1.4;
+      color: rgba(255,255,255,.60);
+      font-weight: 750;
+      line-height: 1.45;
     }
 
     .status{
@@ -259,139 +132,90 @@
     }
     .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
     .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-    .status.warn{ border-color: rgba(255,196,82,.35); background: rgba(255,196,82,.10); }
 
-    @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
+    .mini{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      margin-top: 6px;
+      color: rgba(255,255,255,.65);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .mini a{
+      color: rgba(255,255,255,.90);
+      text-decoration:none;
+      font-weight: 900;
+    }
+    .mini a:hover{
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
   </style>
 </head>
 
 <body class="app">
-  <header class="app-top">
-    <div class="app-top-inner">
-      <a class="app-brand" href="dashboard.html">
-        <span class="logo-badge">FSS</span>
-        <div class="brand-text">
+  <div class="shell">
+    <div class="login-card">
+      <div class="brand">
+        <div class="logo-badge">FSS</div>
+        <div>
           <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
+          <span>Secure Access</span>
         </div>
-      </a>
-
-      <div class="app-nav">
-        <a class="nav-link active" href="dashboard.html">Dashboard</a>
-        <a class="nav-link" href="create.html">Create</a>
-        <a class="nav-link" href="sign.html">Sign</a>
-        <a class="nav-link" href="success.html">Completed</a>
       </div>
 
-      <div class="app-user">
-        <span id="userEmail" class="user-pill">—</span>
-        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
-      </div>
+      <div class="divider"></div>
+
+      <form id="loginForm" class="grid" novalidate>
+        <label>
+          Email
+          <input id="email" type="email" placeholder="you@company.com" autocomplete="username" required />
+        </label>
+
+        <label>
+          Access Password
+          <input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required />
+        </label>
+
+        <div class="row">
+          <button class="btn btn-primary btn-wide" id="loginBtn" type="submit">Login</button>
+          <button class="btn btn-outline btn-wide" id="resetBtn" type="button">Reset Demo</button>
+        </div>
+
+        <div class="status bad" id="statusBox"></div>
+
+        <div class="note">
+          This is a <strong>demo experience</strong>. Nothing is sent externally — actions are simulated and stored locally in your browser.
+        </div>
+
+        <div class="mini">
+          <span>Having trouble?</span>
+          <a href="#" id="clearBtn">Clear browser data</a>
+        </div>
+      </form>
     </div>
-  </header>
-
-  <main class="wrap">
-    <div class="hero">
-      <div>
-        <h1>Dashboard</h1>
-        <p>
-          Welcome back. This home screen shows your active agreement, next actions,
-          and a quick way to create new documents.
-        </p>
-      </div>
-
-      <div class="pill" id="statePill" data-state="draft">
-        <span class="dot"></span>
-        <span id="stateLabel">Draft</span>
-      </div>
-    </div>
-
-    <div class="grid">
-      <!-- LEFT: Active Docs -->
-      <section class="card">
-        <h2>Active Document</h2>
-        <p class="sub" id="docSubtitle">—</p>
-
-        <div class="divider"></div>
-
-        <div class="docRow">
-          <div class="docMeta">
-            <strong id="docTitle">—</strong>
-            <span id="docPeople">—</span>
-            <span id="docMode">—</span>
-          </div>
-
-          <div class="docActions">
-            <a class="btn btn-primary btn-lg" id="primaryAction" href="create.html">Open</a>
-            <button class="btn btn-muted btn-lg" id="resetBtn" type="button">Reset</button>
-          </div>
-        </div>
-
-        <div class="status warn" id="statusBox"></div>
-
-        <div class="divider"></div>
-
-        <div class="row" style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-outline" href="create.html">Edit / Create</a>
-          <a class="btn btn-outline" href="sign.html">Go to Sign</a>
-          <a class="btn btn-outline" href="success.html">View Completed</a>
-        </div>
-      </section>
-
-      <!-- RIGHT: Create New + Timeline -->
-      <aside class="card">
-        <h2>Create New</h2>
-        <p class="sub">Start a new agreement using one of the options below.</p>
-
-        <div class="createGrid">
-          <div class="createTile" id="tileTemplate">
-            <div class="tileTop">
-              <strong>Use a template</strong>
-              <span class="tag">Fast</span>
-            </div>
-            <div class="tileDesc">Choose from NDA, Consulting, Non-Compete, Real Estate, and more.</div>
-          </div>
-
-          <div class="createTile" id="tileUpload">
-            <div class="tileTop">
-              <strong>Upload your own PDF</strong>
-              <span class="tag">Flexible</span>
-            </div>
-            <div class="tileDesc">Upload a custom agreement and use the same Fill → Sign → Send flow.</div>
-          </div>
-
-          <div class="createTile" id="tileBuilder">
-            <div class="tileTop">
-              <strong>Build from scratch</strong>
-              <span class="tag">Custom</span>
-            </div>
-            <div class="tileDesc">Write the agreement using prompts and rules (NDAExpress style).</div>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <h2 style="margin-top:0;">Recent Activity</h2>
-        <p class="sub">Latest steps performed in this demo environment.</p>
-
-        <div class="timeline" id="timeline">
-          <!-- events injected -->
-        </div>
-      </aside>
-    </div>
-  </main>
+  </div>
 
   <script src="assets/app.js"></script>
   <script>
-    FSS.guard();
+    // If already logged in, go straight to dashboard
+    (function(){
+      try{
+        if(FSS && FSS.isAuthed && FSS.isAuthed()){
+          location.replace("dashboard.html");
+        }
+      }catch(e){}
+    })();
 
-    const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("userEmail").textContent = user.email || "demo@client.com";
-
+    const form = document.getElementById("loginForm");
+    const emailEl = document.getElementById("email");
+    const passEl = document.getElementById("password");
     const statusBox = document.getElementById("statusBox");
-    function showStatus(msg, type="warn"){
+
+    function showStatus(msg, type="bad"){
       statusBox.style.display = "";
       statusBox.className = "status " + type;
       statusBox.textContent = msg;
@@ -401,187 +225,49 @@
       statusBox.textContent = "";
     }
 
-    const pill = document.getElementById("statePill");
-    const label = document.getElementById("stateLabel");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      clearStatus();
 
-    function setState(state){
-      pill.setAttribute("data-state", state);
-      const map = {
-        draft: "Draft",
-        ready: "Ready to Send",
-        sent: "Sent to Recipient",
-        completed: "Completed"
-      };
-      label.textContent = map[state] || "Draft";
-    }
+      const email = (emailEl.value || "").trim();
+      const pw = (passEl.value || "").trim();
 
-    function getDocSummary(d){
-      // Determine mode
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        return "Mode: Uploaded PDF";
-      }
-      if(d && d.builder && d.builder.text){
-        return "Mode: Built from scratch";
-      }
-      return "Mode: Template PDF";
-    }
-
-    function templateName(d){
-      return d?.template || "Template";
-    }
-
-    function docTitle(d){
-      if(d?.builder?.title) return d.builder.title;
-      if(localStorage.getItem("fss_uploaded_pdf_b64")){
-        return localStorage.getItem("fss_uploaded_pdf_name") || "Uploaded Agreement";
-      }
-      return templateName(d);
-    }
-
-    function render(){
-      const d = FSS.loadDocState() || FSS.resetDoc();
-
-      // Determine state
-      const hasSigned = FSS.hasSignedPDF();
-      let state = "draft";
-      if(d.status === "completed") state = "completed";
-      else if(d.status === "sent") state = "sent";
-      else if(hasSigned) state = "ready";
-      else state = "draft";
-
-      setState(state);
-
-      // Main doc card
-      document.getElementById("docTitle").textContent = docTitle(d);
-
-      const a = d?.parties?.aName ? `${d.parties.aName}${d.parties.aEmail ? " ("+d.parties.aEmail+")" : ""}` : "Sender not set";
-      const b = d?.parties?.bName ? `${d.parties.bName}${d.parties.bEmail ? " ("+d.parties.bEmail+")" : ""}` : "Recipient not set";
-      document.getElementById("docPeople").textContent = `Sender: ${a} • Recipient: ${b}`;
-
-      document.getElementById("docMode").textContent = getDocSummary(d);
-
-      const subtitle = document.getElementById("docSubtitle");
-      const primary = document.getElementById("primaryAction");
-
-      if(state === "draft"){
-        subtitle.textContent = "Complete setup, preview, and then sign as sender.";
-        primary.textContent = "Continue Setup";
-        primary.href = "create.html";
-        if(!d?.parties?.aName || !d?.parties?.bName){
-          showStatus("Start by entering sender + recipient details in Create.", "warn");
-        } else {
-          clearStatus();
-        }
-      }
-
-      if(state === "ready"){
-        subtitle.textContent = "Sender signed. Next step: send to recipient.";
-        primary.textContent = "Go to Sign";
-        primary.href = "sign.html";
-        clearStatus();
-      }
-
-      if(state === "sent"){
-        subtitle.textContent = "Agreement sent. Next step: recipient completes signing.";
-        primary.textContent = "Open Sign";
-        primary.href = "sign.html";
-        clearStatus();
-      }
-
-      if(state === "completed"){
-        subtitle.textContent = "Agreement completed. You can download the final signed PDF.";
-        primary.textContent = "View Completed";
-        primary.href = "success.html";
-        clearStatus();
-      }
-
-      renderTimeline();
-    }
-
-    function renderTimeline(){
-      const timeline = document.getElementById("timeline");
-      timeline.innerHTML = "";
-
-      const audit = FSS.loadAudit() || [];
-      const list = audit.slice(-6).reverse(); // show last 6
-
-      if(list.length === 0){
-        timeline.innerHTML = `
-          <div class="event">
-            <div class="bubble">—</div>
-            <div>
-              <strong>No activity yet</strong>
-              <span>Create an agreement to begin the demo workflow.</span>
-            </div>
-          </div>
-        `;
+      if(!email || !pw){
+        showStatus("Enter email and password.");
         return;
       }
 
-      for(const a of list){
-        const time = new Date(a.ts).toLocaleString();
-        timeline.insertAdjacentHTML("beforeend", `
-          <div class="event">
-            <div class="bubble">✓</div>
-            <div>
-              <strong>${escapeHtml(a.msg)}</strong>
-              <span>${time}</span>
-            </div>
-          </div>
-        `);
+      // IMPORTANT: Use the real login function (stores auth)
+      const result = FSS.login(email, pw);
+
+      if(!result || !result.ok){
+        showStatus(result?.msg || "Login failed.");
+        return;
       }
-    }
 
-    function escapeHtml(str){
-      return (str || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    // Create tiles set mode flags then route to create
-    document.getElementById("tileTemplate").addEventListener("click", () => {
-      localStorage.removeItem("fss_uploaded_pdf_b64");
-      localStorage.removeItem("fss_uploaded_pdf_name");
-      location.href = "create.html";
-    });
-
-    document.getElementById("tileUpload").addEventListener("click", () => {
-      // create.html will detect uploaded base64; we just route there
-      location.href = "create.html";
-      setTimeout(() => {
-        // optional: focus upload input if page stays fast
-      }, 10);
-    });
-
-    document.getElementById("tileBuilder").addEventListener("click", () => {
-      const d = FSS.loadDocState() || FSS.resetDoc();
-      if(!d.builder){
-        d.builder = { title: "Custom Agreement", text: "", rules: [] };
-        FSS.saveDocState(d);
+      // Ensure envelope exists
+      if(!FSS.loadDocState()){
+        FSS.resetDoc();
+        FSS.logAudit("Envelope created.");
       }
-      localStorage.removeItem("fss_uploaded_pdf_b64");
-      localStorage.removeItem("fss_uploaded_pdf_name");
-      location.href = "create.html";
+
+      showStatus("Success. Redirecting…", "good");
+      setTimeout(() => location.replace("dashboard.html"), 350);
     });
 
-    // Reset demo
     document.getElementById("resetBtn").addEventListener("click", () => {
-      if(!confirm("Reset demo? This clears agreement + signatures in this browser.")) return;
-      FSS.hardReset();
-      location.reload();
+      // Full reset (safe + consistent)
+      localStorage.clear();
+      showStatus("Demo reset complete. Reloading…", "good");
+      setTimeout(() => location.reload(), 450);
     });
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      FSS.logout();
-      location.href = "index.html";
+    document.getElementById("clearBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.clear();
+      showStatus("Browser data cleared. Reloading…", "good");
+      setTimeout(() => location.reload(), 450);
     });
-
-    // Boot
-    render();
   </script>
 </body>
 </html>
