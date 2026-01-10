@@ -404,7 +404,7 @@
       kvSender.textContent = parties.aName ? `${parties.aName} (${parties.aEmail || ""})` : "—";
       kvRecipient.textContent = parties.bName ? `${parties.bName} (${parties.bEmail || ""})` : "—";
 
-      if (localStorage.getItem("fss_uploaded_pdf_b64")) kvSource.textContent = "Upload";
+      if (FSS.hasUploadedPDF()) kvSource.textContent = "Upload";
       else if (d.builder?.text) kvSource.textContent = "Builder";
       else kvSource.textContent = "Template";
     }
@@ -413,8 +413,8 @@
       const d = FSS.loadDocState();
       if(!d) throw new Error("No document state found. Go to Create first.");
 
-      // signed pdf overrides
-      const signedB64 = localStorage.getItem("fss_signed_pdf_b64");
+      // ✅ Signed PDF overrides (RAW storage)
+      const signedB64 = FSS.getSignedBase64();
       if (signedB64) {
         return { kind:"data", data: base64ToBytes(signedB64), name: "Signed PDF" };
       }
@@ -484,10 +484,8 @@
       canvas.width = Math.floor(viewport.width);
       canvas.height = Math.floor(viewport.height);
 
-      // stage width follows canvas width
       stage.style.width = `${canvas.width + 24}px`;
 
-      // overlay matches canvas size
       overlay.style.width = `${canvas.width}px`;
       overlay.style.height = `${canvas.height}px`;
 
@@ -549,16 +547,13 @@
           <div class="x" title="Remove">×</div>
         `;
 
-        // Remove
         el.querySelector(".x").addEventListener("click", (e) => {
           e.stopPropagation();
           fields = fields.filter(ff => ff.id !== f.id);
           renderFields();
         });
 
-        // Tap to edit
-        el.addEventListener("click", (e) => {
-          // don't trigger on drag end weirdness
+        el.addEventListener("click", () => {
           if (el.dataset.dragging === "1") return;
           const next = prompt(`Edit ${f.label}`, f.value);
           if (next !== null){
@@ -598,7 +593,6 @@
         let newLeft = origLeft + dx;
         let newTop = origTop + dy;
 
-        // clamp
         newLeft = Math.max(0, Math.min(canvas.width - 40, newLeft));
         newTop = Math.max(0, Math.min(canvas.height - 40, newTop));
 
@@ -658,7 +652,6 @@
           const blob = new Blob([src.data], { type:"application/pdf" });
           return window.open(URL.createObjectURL(blob), "_blank");
         }
-        // builder
         const ok = await FSS.ensurePdfLib();
         if(!ok) throw new Error("pdf-lib failed to load.");
         const bytes = await FSS.generateBuilderPDFBytes();
@@ -670,6 +663,7 @@
       }
     });
 
+    // ✅ FIXED signing: uses FSS.generateSignedPDFBytes() + RAW signed storage
     signBtn.addEventListener("click", async () => {
       try{
         setLeftStatus("Generating signed PDF…");
@@ -690,13 +684,11 @@
         const ok = await FSS.ensurePdfLib();
         if(!ok) throw new Error("pdf-lib failed to load.");
 
-        // Generate signed PDF bytes (must exist in your assets/app.js)
         const bytes = await FSS.generateSignedPDFBytes();
         if(!bytes) throw new Error("Signed PDF generation failed. Open DevTools console.");
 
-        // Store signed PDF for this session
         const b64 = bytesToBase64(bytes);
-        localStorage.setItem("fss_signed_pdf_b64", b64);
+        FSS.setSignedBase64(b64);
 
         setLeftStatus("Signed PDF generated. Reloading preview…");
         await loadPdf();
@@ -719,7 +711,7 @@
       try{
         setRightStatus("Loading…");
         await loadPdf();
-        // Add defaults if none
+
         if(fields.length === 0){
           createField("signature");
           createField("date");
