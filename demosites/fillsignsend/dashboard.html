@@ -4,141 +4,46 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Client Demo • Dashboard</title>
-
   <link rel="stylesheet" href="assets/app.css" />
-
   <style>
-    .wrap{ max-width: 1180px; margin: 0 auto; padding: 22px 18px 70px; }
-
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .brand .logo{
-      width: 44px; height: 44px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 950;
-    }
-    .brand strong{ display:block; font-weight: 950; }
-    .brand span{ display:block; font-size: 12px; color: rgba(255,255,255,.70); font-weight: 800; }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(255,255,255,.85);
-      white-space: nowrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 14px;
-      align-items:start;
-      margin-top: 14px;
-    }
-
+    .page{ padding: 26px 22px 70px; max-width: 1200px; margin: 0 auto; }
+    .grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-top: 16px; }
     .card{
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
       padding: 16px;
       backdrop-filter: blur(12px);
     }
-
-    .card h2{
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 950;
-      letter-spacing: -.2px;
-    }
-
-    .muted{
-      color: rgba(255,255,255,.68);
-      font-weight: 750;
-      font-size: 13px;
-      line-height: 1.45;
-      margin: 0 0 12px;
-    }
-
-    .list{
-      display:grid;
-      gap: 10px;
-    }
-
-    .doc{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      padding: 12px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-    }
-
-    .doc strong{
-      display:block;
-      font-weight: 950;
-      letter-spacing: -.2px;
-      margin-bottom: 2px;
-    }
-    .doc small{
-      display:block;
-      color: rgba(255,255,255,.70);
-      font-weight: 750;
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .actions{ display:flex; gap: 10px; flex-wrap:wrap; margin-top: 10px; }
-
+    .h1{ font-size: 26px; font-weight: 950; letter-spacing: -.4px; margin: 6px 0 6px; }
+    .muted{ color: rgba(255,255,255,.70); font-weight: 750; }
+    .row{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; align-items:center; }
     .audit{
-      max-height: 320px;
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      max-height: 420px;
       overflow:auto;
+      padding-right: 4px;
+    }
+    .audit-item{
+      padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      padding: 10px;
-    }
-
-    .audit-item{
-      padding: 10px 8px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .audit-item:last-child{ border-bottom: 0; }
-    .audit-item div{
-      font-weight: 850;
-      color: rgba(255,255,255,.86);
+      background: rgba(255,255,255,.05);
+      font-weight: 800;
       font-size: 13px;
+      color: rgba(255,255,255,.88);
     }
-    .audit-item small{
+    .audit-item span{
       display:block;
       margin-top: 3px;
-      color: rgba(255,255,255,.60);
-      font-weight: 750;
       font-size: 12px;
+      font-weight: 750;
+      color: rgba(255,255,255,.60);
     }
-
     @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
     }
@@ -146,139 +51,100 @@
 </head>
 
 <body class="app">
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="logo">FSS</div>
-        <div>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="dashboard.html">
+        <span class="badge">FSS</span>
+        <div class="brand-text">
           <strong>Client Demo</strong>
-          <span>Dashboard • Fill → Sign → Send</span>
+          <span>Fill → Sign → Send</span>
         </div>
-      </div>
+      </a>
 
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <span class="pill" id="whoPill">—</span>
-        <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+      <nav class="nav">
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="create.html" class="nav-link">Create</a>
+        <a href="sign.html" class="nav-link">Sign</a>
+        <a href="success.html" class="nav-link">Completed</a>
+      </nav>
+
+      <div class="right">
+        <span class="pill" id="who"></span>
+        <button class="btn btn-outline" id="logoutBtn">Logout</button>
       </div>
     </div>
+  </header>
+
+  <main class="page">
+    <div class="h1">Dashboard</div>
+    <div class="muted">Quick actions and demo state (stored locally in your browser).</div>
 
     <div class="grid">
-      <!-- Active / Current -->
-      <div class="card">
-        <h2>Active Agreement</h2>
-        <p class="muted">
-          Continue your current envelope, or start a brand new agreement.
-        </p>
+      <section class="card">
+        <div style="font-weight:950; font-size:15px;">Current Envelope</div>
+        <div class="muted" id="envMeta" style="margin-top:6px;"></div>
 
-        <div class="list">
-          <div class="doc" id="activeDocBox">
-            <div>
-              <strong id="docTitle">No active agreement</strong>
-              <small id="docMeta">Create a new agreement to begin.</small>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-              <a class="btn btn-primary" id="resumeBtn" href="create.html">Create / Edit</a>
-              <a class="btn btn-outline" id="signBtn" href="sign.html">Sign</a>
-              <a class="btn btn-outline" id="completedBtn" href="completed.html">Completed</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-outline" id="newBtn" type="button">Start New Agreement</button>
-          <a class="btn btn-outline" href="create.html">Go to Create</a>
+        <div class="row">
+          <a class="btn btn-primary" href="create.html">Create / Edit</a>
           <a class="btn btn-outline" href="sign.html">Go to Sign</a>
-          <a class="btn btn-outline" href="completed.html">Go to Completed</a>
+          <button class="btn btn-outline" id="resetBtn">Reset Envelope</button>
         </div>
 
-        <div style="margin-top:12px; color: rgba(255,255,255,.65); font-weight: 750; font-size: 12px;">
-          Tip: If the PDF tools stop working, it’s almost always because auth was cleared or index.html redirected you back.
-        </div>
-      </div>
-
-      <!-- Audit -->
-      <div class="card">
-        <h2>Recent Activity</h2>
-        <p class="muted">Local-only log of actions taken in this browser.</p>
-
-        <div class="audit" id="auditBox">
-          <div class="audit-item">
-            <div>No activity yet.</div>
-            <small>Start by creating an agreement.</small>
+        <div class="row" style="margin-top:14px;">
+          <div class="muted" style="font-size:13px;">
+            Tip: Create → Save & Go → Place fields → Generate signed PDF → Completed.
           </div>
         </div>
+      </section>
 
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn btn-outline" id="resetBtn" type="button">Reset Demo</button>
-        </div>
-      </div>
+      <aside class="card">
+        <div style="font-weight:950; font-size:15px;">Activity Log</div>
+        <div class="audit" id="audit"></div>
+      </aside>
     </div>
-  </div>
+  </main>
 
   <script src="assets/app.js"></script>
   <script>
-    // ✅ Protect the dashboard
     FSS.guard();
 
-    const whoPill = document.getElementById("whoPill");
     const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    whoPill.textContent = auth?.email ? auth.email : "Not signed in";
+    document.getElementById("who").textContent = auth.email || "demo@client.com";
 
-    // Populate active doc card
-    const d = FSS.loadDocState();
-    const titleEl = document.getElementById("docTitle");
-    const metaEl  = document.getElementById("docMeta");
+    const doc = FSS.loadDocState();
+    const meta = document.getElementById("envMeta");
 
-    if(d){
-      const src =
-        (localStorage.getItem("fss_uploaded_pdf_name") ? "Uploaded PDF" :
-        (d.builder?.title ? "Built from scratch" : `Template: ${d.template || "nda.pdf"}`));
-
-      const status = d.status || "draft";
-      const stage  = d.stage || "create";
-      titleEl.textContent = d.builder?.title ? d.builder.title : "Agreement Envelope";
-      metaEl.textContent = `${src} • Stage: ${stage} • Status: ${status}`;
+    if(!doc){
+      meta.textContent = "No envelope yet. Click Create to begin.";
     }else{
-      titleEl.textContent = "No active agreement";
-      metaEl.textContent  = "Create a new agreement to begin.";
+      meta.innerHTML =
+        `ID: <strong>${doc.id}</strong><br>` +
+        `Stage: <strong>${doc.stage || "—"}</strong> • Status: <strong>${doc.status || "—"}</strong><br>` +
+        `Updated: <strong>${(doc.updatedAt || "").replace("T"," ").slice(0,19)}</strong>`;
     }
 
-    // Audit list
-    const audit = FSS.loadAudit();
-    const auditBox = document.getElementById("auditBox");
-    if(audit && audit.length){
-      auditBox.innerHTML = audit.slice(0, 25).map(a => `
-        <div class="audit-item">
-          <div>${escapeHtml(a.msg)}</div>
-          <small>${escapeHtml(a.at)}</small>
-        </div>
-      `).join("");
+    // Audit
+    const auditEl = document.getElementById("audit");
+    const logs = FSS.loadAudit() || [];
+    if(!logs.length){
+      auditEl.innerHTML = `<div class="audit-item">No activity yet.<span>Start by creating an agreement.</span></div>`;
+    }else{
+      auditEl.innerHTML = logs.slice(0,40).map(x => (
+        `<div class="audit-item">${(x.msg || "")}<span>${(x.at || "").replace("T"," ").slice(0,19)}</span></div>`
+      )).join("");
     }
 
-    function escapeHtml(s){
-      return (s || "").replace(/[&<>"']/g, m => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[m]));
-    }
-
-    // Start new
-    document.getElementById("newBtn").addEventListener("click", () => {
-      FSS.resetDoc();
-      FSS.logAudit("New envelope started.");
-      location.href = "create.html";
-    });
-
-    // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
-    // Reset demo
     document.getElementById("resetBtn").addEventListener("click", () => {
-      localStorage.clear();
-      sessionStorage.clear();
-      location.href = "index.html";
+      if(confirm("Reset the envelope and clear all fields?")){
+        FSS.resetDoc();
+        location.href = "create.html";
+      }
     });
   </script>
 </body>
