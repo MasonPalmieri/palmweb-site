@@ -5,11 +5,266 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Client Demo • Create</title>
 
-  <!-- Keep your theme -->
+  <!-- Your global theme -->
   <link rel="stylesheet" href="assets/app.css" />
+
+  <!-- ✅ REQUIRED: Layout + tabs + builder styles (self-contained so nothing breaks) -->
+  <style>
+    /* --- page layout --- */
+    .fss-wrap{
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px 18px 70px;
+    }
+
+    .fss-grid{
+      display:grid;
+      grid-template-columns: 460px 1fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    @media (max-width: 1050px){
+      .fss-grid{ grid-template-columns: 1fr; }
+    }
+
+    .glass{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+
+    .panel-head{
+      padding: 16px 16px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .panel-head h1{
+      margin:0;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.3px;
+      color: rgba(255,255,255,.92);
+    }
+    .panel-head p{
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.70);
+      font-weight: 750;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .panel-body{ padding: 14px 16px 16px; }
+
+    /* --- segmented tabs --- */
+    .segmented{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+    .seg-btn{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+      font-weight: 950;
+      font-size: 13px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .seg-btn:active{ transform: translateY(1px); }
+    .seg-btn.active{
+      background: linear-gradient(135deg, rgba(67,203,255,.26), rgba(96,255,157,.20));
+      border-color: rgba(67,203,255,.35);
+      color: rgba(255,255,255,.95);
+    }
+
+    .seg-panel{ display:none; }
+    .seg-panel.show{ display:block; }
+
+    /* --- form controls --- */
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .full{ grid-column: 1 / -1; }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      color: rgba(255,255,255,.86);
+      font-weight: 900;
+      font-size: 12.5px;
+    }
+    .field input,
+    .field select,
+    .field textarea{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.95);
+      padding: 10px 12px;
+      font-weight: 850;
+      outline:none;
+      font-size: 13px;
+    }
+    .field textarea{ resize: vertical; min-height: 140px; }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color: rgba(67,203,255,.55);
+      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
+    }
+
+    .divider{
+      height: 1px;
+      background: rgba(255,255,255,.08);
+      margin: 12px 0;
+    }
+
+    .section-title{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .checks{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      margin-bottom: 10px;
+    }
+    .check{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      font-weight: 900;
+      font-size: 12px;
+      user-select:none;
+      cursor:pointer;
+    }
+    .check input{ accent-color: #43cbff; }
+
+    .hint{
+      margin-top: 10px;
+      color: rgba(255,255,255,.62);
+      font-weight: 750;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    /* --- status box --- */
+    .status{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(255,255,255,.84);
+      display:none;
+    }
+    .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.12); }
+    .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.12); }
+
+    /* --- PDF preview panel --- */
+    .pdf-toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .pdf-title{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width:0;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(255,255,255,.90);
+      flex:0 0 auto;
+    }
+    .pdf-title strong{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 520px;
+    }
+
+    .pdf-tools{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pdf-view{
+      height: 74vh;
+      min-height: 620px;
+      background: rgba(0,0,0,.25);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .pdf-view iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display:block;
+      background: #111;
+    }
+
+    .pdf-foot{
+      padding: 10px 14px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.70);
+      font-weight: 750;
+      font-size: 12px;
+    }
+  </style>
 </head>
 
 <body class="app">
+  <!-- Keep your existing topbar from app.css -->
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -34,25 +289,23 @@
     </div>
   </header>
 
-  <main class="page">
-    <div class="page-inner two-col">
-      <!-- LEFT: NDA Express style builder -->
-      <section class="panel left">
+  <main class="fss-wrap">
+    <div class="fss-grid">
+      <!-- LEFT -->
+      <section class="glass">
         <div class="panel-head">
           <h1>Create</h1>
-          <p class="sub">
-            Choose a template, upload a PDF, or build from scratch (NDA Express style).
-          </p>
+          <p>Choose a template, upload a PDF, or build from scratch (NDA Express style).</p>
         </div>
 
-        <div class="card">
+        <div class="panel-body">
           <div class="segmented">
             <button class="seg-btn active" id="tabScratch" type="button">Build from scratch</button>
             <button class="seg-btn" id="tabTemplate" type="button">Template</button>
             <button class="seg-btn" id="tabUpload" type="button">Upload PDF</button>
           </div>
 
-          <!-- SCRATCH (default) -->
+          <!-- Scratch -->
           <div class="seg-panel show" id="panelScratch">
             <div class="form-grid">
               <label class="field full">
@@ -60,9 +313,9 @@
                 <input id="scratchTitle" type="text" placeholder="Example: Mutual Non-Disclosure Agreement" />
               </label>
 
-              <div class="divider"></div>
+              <div class="divider full"></div>
 
-              <div class="section-title">Parties</div>
+              <div class="section-title full">Parties</div>
 
               <label class="field">
                 Party A Name
@@ -82,11 +335,11 @@
                 <input id="bEmail" type="email" placeholder="b@company.com" />
               </label>
 
-              <div class="divider"></div>
+              <div class="divider full"></div>
 
-              <div class="section-title">Rules / Options (NDA Express style)</div>
+              <div class="section-title full">Rules / Options (NDA Express style)</div>
 
-              <div class="checks">
+              <div class="checks full">
                 <label class="check"><input id="optMutual" type="checkbox" /> Mutual NDA</label>
                 <label class="check"><input id="optOneWay" type="checkbox" /> One-way NDA</label>
                 <label class="check"><input id="optNoCompete" type="checkbox" /> Include non-compete</label>
@@ -95,39 +348,37 @@
                 <label class="check"><input id="optReturnDestroy" type="checkbox" /> Return/Destroy confidential info</label>
               </div>
 
-              <div class="form-grid">
-                <label class="field">
-                  Term (months)
-                  <input id="optTerm" type="number" min="1" step="1" placeholder="12" />
-                </label>
+              <label class="field">
+                Term (months)
+                <input id="optTerm" type="number" min="1" step="1" placeholder="12" />
+              </label>
 
-                <label class="field">
-                  Governing Law (State)
-                  <input id="optLaw" type="text" placeholder="Massachusetts" />
-                </label>
+              <label class="field">
+                Governing Law (State)
+                <input id="optLaw" type="text" placeholder="Massachusetts" />
+              </label>
 
-                <label class="field full">
-                  Purpose / Relationship
-                  <input id="optPurpose" type="text" placeholder="Example: evaluating a potential partnership" />
-                </label>
-              </div>
+              <label class="field full">
+                Purpose / Relationship
+                <input id="optPurpose" type="text" placeholder="Example: evaluating a potential partnership" />
+              </label>
 
-              <div class="divider"></div>
+              <div class="divider full"></div>
 
-              <div class="section-title">Agreement Body</div>
+              <div class="section-title full">Agreement Body</div>
 
               <label class="field full">
                 Clauses / Text
-                <textarea id="scratchBody" rows="10" placeholder="Write the agreement text here… (or paste clauses)"></textarea>
+                <textarea id="scratchBody" placeholder="Write the agreement text here… (or paste clauses)"></textarea>
               </label>
 
-              <div class="hint">
+              <div class="hint full">
                 Tip: Use the Rules / Options above like NDA Express — then we auto-generate a clean PDF for signing.
               </div>
             </div>
           </div>
 
-          <!-- TEMPLATE -->
+          <!-- Template -->
           <div class="seg-panel" id="panelTemplate">
             <label class="field full">
               Template PDF
@@ -138,11 +389,10 @@
                 <option value="release-of-liability.pdf">release-of-liability.pdf</option>
               </select>
             </label>
-
             <div class="hint">Templates are loaded from <code>/pdfs</code>.</div>
           </div>
 
-          <!-- UPLOAD -->
+          <!-- Upload -->
           <div class="seg-panel" id="panelUpload">
             <label class="field full">
               Upload PDF
@@ -159,82 +409,76 @@
             <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
           </div>
 
-          <div class="status" id="statusBox" style="display:none;"></div>
+          <div class="status bad" id="statusBox"></div>
         </div>
       </section>
 
-      <!-- RIGHT: PDF Preview -->
-      <section class="panel right">
-        <div class="pdf-shell">
-          <div class="pdf-toolbar">
-            <div class="pdf-title">
-              <span class="pill">PDF</span>
-              <strong id="pdfLabel">Preview</strong>
-            </div>
-
-            <div class="pdf-tools">
-              <button class="btn btn-outline btn-small" id="openBtn" type="button">Open</button>
-              <button class="btn btn-outline btn-small" id="refreshBtn" type="button">Refresh</button>
-            </div>
+      <!-- RIGHT -->
+      <section class="glass">
+        <div class="pdf-toolbar">
+          <div class="pdf-title">
+            <span class="pill">PDF</span>
+            <strong id="pdfLabel">Preview</strong>
           </div>
 
-          <div class="pdf-view">
-            <iframe id="pdfFrame" title="PDF Preview"></iframe>
+          <div class="pdf-tools">
+            <button class="btn btn-outline btn-small" id="openBtn" type="button">Open</button>
+            <button class="btn btn-outline btn-small" id="refreshBtn" type="button">Refresh</button>
           </div>
-
-          <div class="pdf-foot" id="pdfFoot">No PDF selected. Choose Template, Upload, or Scratch.</div>
         </div>
+
+        <div class="pdf-view">
+          <iframe id="pdfFrame" title="PDF Preview"></iframe>
+        </div>
+
+        <div class="pdf-foot" id="pdfFoot">No PDF selected. Choose Template, Upload, or Scratch.</div>
       </section>
     </div>
   </main>
 
   <script src="assets/app.js"></script>
   <script>
-    // ============ Helpers ============
+    // ============ HARD FAIL if FSS isn't available ============
+    if(!window.FSS){
+      alert("FSS app.js failed to load. Check /assets/app.js path.");
+      throw new Error("FSS missing");
+    }
+
+    // ✅ Auth guard
+    FSS.guard();
+
+    // ============ UI helpers ============
     const $ = (id) => document.getElementById(id);
 
     function showStatus(msg, good=false){
       const box = $("statusBox");
       box.style.display = "";
-      box.className = "status " + (good ? "good" : "bad");
+      box.classList.toggle("good", good);
+      box.classList.toggle("bad", !good);
       box.textContent = msg;
     }
     function clearStatus(){
       const box = $("statusBox");
       box.style.display = "none";
       box.textContent = "";
+      box.classList.remove("good","bad");
     }
 
     function setActiveTab(which){
-      const tabs = {
-        scratch: $("tabScratch"),
-        template: $("tabTemplate"),
-        upload: $("tabUpload")
-      };
-      const panels = {
-        scratch: $("panelScratch"),
-        template: $("panelTemplate"),
-        upload: $("panelUpload")
-      };
+      const tabs = { scratch:$("tabScratch"), template:$("tabTemplate"), upload:$("tabUpload") };
+      const panels = { scratch:$("panelScratch"), template:$("panelTemplate"), upload:$("panelUpload") };
 
       Object.keys(tabs).forEach(k=>{
-        tabs[k].classList.toggle("active", k === which);
-        panels[k].classList.toggle("show", k === which);
+        tabs[k].classList.toggle("active", k===which);
+        panels[k].classList.toggle("show", k===which);
       });
     }
 
-    // ============ Guard ============
-    if(!window.FSS){
-      alert("FSS app.js failed to load. Check /assets/app.js path.");
-      throw new Error("FSS missing");
-    }
-    FSS.guard();
-
-    // Show user pill
+    // ============ Header user pill ============
     const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     $("userPill").textContent = auth.email || "demo@client.com";
 
-    // Ensure doc exists
+    // ============ Ensure doc exists ============
     let doc = FSS.loadDocState();
     if(!doc) doc = FSS.resetDoc();
     FSS.setStage("create");
@@ -247,7 +491,7 @@
     const templateSelect = $("templateSelect");
     const uploadInput = $("uploadInput");
 
-    // Load stored values
+    // Restore stored parties + builder
     templateSelect.value = doc.template || "nda.pdf";
     $("aName").value  = doc.parties?.aName || "";
     $("aEmail").value = doc.parties?.aEmail || "";
@@ -257,7 +501,6 @@
     if(doc.builder){
       $("scratchTitle").value = doc.builder.title || "";
       $("scratchBody").value  = doc.builder.text || "";
-      // Try to restore options if present
       const o = doc.builder.options || {};
       $("optMutual").checked = !!o.mutual;
       $("optOneWay").checked = !!o.oneway;
@@ -270,63 +513,8 @@
       $("optPurpose").value = o.purpose || "";
     }
 
-    // Default to scratch (NDA Express style)
+    // Default tab: scratch
     setActiveTab("scratch");
-
-    // ============ Preview logic ============
-    async function refreshPreview(){
-      clearStatus();
-
-      try{
-        const d = FSS.loadDocState() || doc;
-
-        // Uploaded?
-        const upB64 = localStorage.getItem("fss_uploaded_pdf_b64");
-        if(upB64 && $("panelUpload").classList.contains("show")){
-          frame.src = FSS.base64ToBlobURL(upB64);
-          pdfLabel.textContent = "Uploaded PDF";
-          pdfFoot.textContent = "Showing uploaded PDF.";
-          return;
-        }
-
-        // Scratch?
-        if($("panelScratch").classList.contains("show")){
-          // Create a builder object on the fly for preview
-          const tmp = structuredClone(d);
-          tmp.builder = {
-            title: ($("scratchTitle").value || "Agreement").trim(),
-            text: buildScratchText(),
-            options: getOptionsSnapshot()
-          };
-          FSS.saveDocState(tmp);
-
-          const bytes = await FSS.generateBuilderPDFBytes();
-          if(!bytes) throw new Error("Builder PDF generation failed (pdf-lib).");
-
-          // Convert bytes to base64 so we can blob it
-          const b64 = (function arrayBufferToBase64(buffer){
-            let binary = "";
-            const bytes = new Uint8Array(buffer);
-            for(let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
-            return btoa(binary);
-          })(bytes);
-
-          frame.src = FSS.base64ToBlobURL(b64);
-          pdfLabel.textContent = "Scratch Agreement";
-          pdfFoot.textContent = "Showing scratch-built PDF (NDA Express style).";
-          return;
-        }
-
-        // Template
-        const tpl = templateSelect.value || "nda.pdf";
-        frame.src = `pdfs/${encodeURIComponent(tpl)}`;
-        pdfLabel.textContent = tpl;
-        pdfFoot.textContent = "Showing template PDF.";
-      }catch(err){
-        console.error(err);
-        showStatus("Preview failed. Open DevTools → Console for the exact error.");
-      }
-    }
 
     function getOptionsSnapshot(){
       return {
@@ -342,7 +530,6 @@
       };
     }
 
-    // Builds NDA Express style preamble based on checkboxes
     function buildScratchText(){
       const title = ($("scratchTitle").value || "Agreement").trim();
       const a = ($("aName").value || "Party A").trim();
@@ -381,11 +568,63 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
       `.trim();
     }
 
-    // ============ Tab handlers ============
+    // ============ Preview ============
+    async function refreshPreview(){
+      clearStatus();
+
+      try{
+        const d = FSS.loadDocState() || doc;
+
+        // Upload tab
+        const upB64 = localStorage.getItem("fss_uploaded_pdf_b64");
+        if(upB64 && $("panelUpload").classList.contains("show")){
+          frame.src = FSS.base64ToBlobURL(upB64);
+          pdfLabel.textContent = "Uploaded PDF";
+          pdfFoot.textContent = "Showing uploaded PDF.";
+          return;
+        }
+
+        // Scratch tab -> builder pdf
+        if($("panelScratch").classList.contains("show")){
+          const tmp = JSON.parse(JSON.stringify(d));
+          tmp.builder = {
+            title: ($("scratchTitle").value || "Agreement").trim(),
+            text: buildScratchText(),
+            options: getOptionsSnapshot()
+          };
+          FSS.saveDocState(tmp);
+
+          const bytes = await FSS.generateBuilderPDFBytes();
+          if(!bytes) throw new Error("Builder PDF generation failed.");
+
+          // bytes is Uint8Array -> base64
+          let binary = "";
+          const u8 = new Uint8Array(bytes);
+          for(let i=0;i<u8.length;i++) binary += String.fromCharCode(u8[i]);
+          const b64 = btoa(binary);
+
+          frame.src = FSS.base64ToBlobURL(b64);
+          pdfLabel.textContent = "Scratch Agreement";
+          pdfFoot.textContent = "Showing scratch-built PDF (NDA Express style).";
+          return;
+        }
+
+        // Template tab
+        const tpl = templateSelect.value || "nda.pdf";
+        frame.src = `pdfs/${encodeURIComponent(tpl)}`;
+        pdfLabel.textContent = tpl;
+        pdfFoot.textContent = "Showing template PDF.";
+      }catch(err){
+        console.error(err);
+        showStatus("Preview failed. Open DevTools → Console for the exact error.");
+      }
+    }
+
+    // ============ Tab actions ============
     $("tabScratch").addEventListener("click", () => { setActiveTab("scratch"); refreshPreview(); });
+
     $("tabTemplate").addEventListener("click", () => {
       setActiveTab("template");
-      // clear upload + builder when choosing template
       localStorage.removeItem("fss_uploaded_pdf_b64");
       localStorage.removeItem("fss_uploaded_pdf_name");
       const d = FSS.loadDocState() || doc;
@@ -394,6 +633,7 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
       FSS.saveDocState(d);
       refreshPreview();
     });
+
     $("tabUpload").addEventListener("click", () => { setActiveTab("upload"); refreshPreview(); });
 
     templateSelect.addEventListener("change", () => {
@@ -410,17 +650,17 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
 
       try{
         const buf = await file.arrayBuffer();
-        let binary = "";
         const bytes = new Uint8Array(buf);
+        let binary = "";
         for(let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
         const b64 = btoa(binary);
 
         localStorage.setItem("fss_uploaded_pdf_b64", b64);
         localStorage.setItem("fss_uploaded_pdf_name", file.name);
 
-        // Upload overrides builder
         const d = FSS.loadDocState() || doc;
         d.builder = null;
+        d.template = null;
         FSS.saveDocState(d);
 
         setActiveTab("upload");
@@ -431,7 +671,7 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
       }
     });
 
-    // ============ Actions ============
+    // ============ Buttons ============
     $("previewBtn").addEventListener("click", refreshPreview);
     $("refreshBtn").addEventListener("click", refreshPreview);
 
@@ -441,14 +681,12 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
 
     $("saveBtn").addEventListener("click", async () => {
       clearStatus();
-
       const d = FSS.loadDocState() || doc;
 
-      // Save parties
       d.parties = d.parties || {};
-      d.parties.aName = $("aName").value.trim();
+      d.parties.aName  = $("aName").value.trim();
       d.parties.aEmail = $("aEmail").value.trim();
-      d.parties.bName = $("bName").value.trim();
+      d.parties.bName  = $("bName").value.trim();
       d.parties.bEmail = $("bEmail").value.trim();
 
       if($("panelScratch").classList.contains("show")){
@@ -459,7 +697,6 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
           selectedClauseIds: [],
           customClauses: []
         };
-        // Scratch overrides template/upload
         d.template = null;
         localStorage.removeItem("fss_uploaded_pdf_b64");
         localStorage.removeItem("fss_uploaded_pdf_name");
@@ -471,13 +708,13 @@ ${body || "1. Confidential Information. The parties agree to protect confidentia
       }
 
       if($("panelUpload").classList.contains("show")){
-        // d.builder already null; upload stored separately
         d.template = null;
+        d.builder = null;
       }
 
       FSS.saveDocState(d);
 
-      // Reset sign artifacts
+      // reset sign artifacts
       FSS.saveFields([]);
       FSS.saveValues({});
       FSS.setSignedBase64(null);
