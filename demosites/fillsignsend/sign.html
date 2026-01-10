@@ -35,7 +35,7 @@
       font-size: 13px;
       color: var(--muted);
       font-weight: 750;
-      max-width: 78ch;
+      max-width: 80ch;
       line-height: 1.5;
     }
 
@@ -57,7 +57,6 @@
     .pill[data-state="sender"] .dot{ background: rgba(67,203,255,.95); }
     .pill[data-state="ready"] .dot{ background: rgba(96,255,157,.95); }
     .pill[data-state="sent"] .dot{ background: rgba(255,196,82,.95); }
-    .pill[data-state="recipient"] .dot{ background: rgba(255,196,82,.95); }
     .pill[data-state="completed"] .dot{ background: rgba(96,255,157,.95); }
 
     .layout{
@@ -221,13 +220,16 @@
       white-space: nowrap;
     }
     .tool:hover{ background: rgba(255,255,255,.09); }
+    .tool.active{
+      background: rgba(29,121,198,.22);
+      border-color: rgba(29,121,198,.35);
+    }
 
     .viewer-body{
       padding: 14px;
       background: radial-gradient(900px 450px at 50% 0%, rgba(255,255,255,.08), transparent 65%);
     }
 
-    /* PDF.js canvas container */
     .pdf-shell{
       border-radius: 18px;
       overflow:hidden;
@@ -242,15 +244,96 @@
       max-height: min(82vh, 980px);
       background: #0b1220;
       padding: 18px;
+      position: relative;
+    }
+
+    .canvas-stage{
+      position: relative;
+      width: fit-content;
+      margin: 0 auto;
     }
 
     canvas{
       display:block;
       background:#fff;
       border-radius: 10px;
-      margin: 0 auto;
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
+
+    /* Overlay for draggable fields */
+    .overlay{
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .field{
+      position: absolute;
+      pointer-events: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(29,121,198,.55);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      padding: 8px 10px;
+      min-width: 120px;
+      user-select: none;
+      cursor: grab;
+    }
+
+    .field:active{ cursor: grabbing; }
+
+    .field .label{
+      font-size: 10px;
+      font-weight: 950;
+      color: rgba(71,85,105,.95);
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .field .value{
+      font-size: 13px;
+      font-weight: 900;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .field.sig{
+      border-color: rgba(44,171,75,.65);
+      background: rgba(236,253,245,.98);
+    }
+
+    .field.date{
+      border-color: rgba(255,196,82,.65);
+      background: rgba(255,251,235,.98);
+    }
+
+    .field.text{
+      border-color: rgba(99,102,241,.65);
+      background: rgba(238,242,255,.98);
+    }
+
+    .field .xbtn{
+      position:absolute;
+      right: 8px;
+      top: 7px;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.95);
+      font-weight: 950;
+      font-size: 12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .field .xbtn:hover{ background:#f8fafc; }
 
     .status{
       margin-top: 12px;
@@ -303,8 +386,8 @@
       <div>
         <h1>Sign & Send</h1>
         <p>
-          This is the main workflow: <strong>sender signs</strong> → <strong>send</strong> → <strong>recipient completes</strong>.
-          You’re now viewing the PDF using <strong>PDF.js</strong> for a real product feel (fit-to-width, smooth zoom, stable tools).
+          Click a tool (Signature / Date / Text) then click on the PDF to place it.
+          Drag to reposition. Double-click a field to edit the value.
         </p>
       </div>
       <div class="pill" id="flowPill" data-state="sender">
@@ -345,10 +428,11 @@
           <button class="btn btn-primary btn-lg" id="sendBtn" type="button" style="display:none;">Send to recipient</button>
           <button class="btn btn-primary btn-lg" id="recipientBtn" type="button" style="display:none;">Open recipient signing</button>
           <a class="btn btn-muted btn-lg" id="downloadBtn" href="#" style="display:none;">Download signed PDF</a>
+          <button class="btn btn-outline btn-lg" id="clearFieldsBtn" type="button">Clear fields</button>
         </div>
 
         <div class="hint" id="hintText">
-          Tip: This viewer supports <strong>Fit to width</strong>. Zoom is smooth and consistent now.
+          Tip: Place a sender signature + date, then sign, then send.
         </div>
 
         <div class="status warn" id="statusBox" style="display:none;"></div>
@@ -363,6 +447,12 @@
           </div>
 
           <div class="viewer-tools">
+            <button class="tool" id="toolSig" type="button">✍️ Signature</button>
+            <button class="tool" id="toolDate" type="button">📅 Date</button>
+            <button class="tool" id="toolText" type="button">📝 Text</button>
+
+            <span style="width:10px; display:inline-block;"></span>
+
             <button class="tool" id="fitBtn" type="button">Fit</button>
             <button class="tool" id="zoomOutBtn" type="button">−</button>
             <button class="tool" id="zoomInBtn" type="button">+</button>
@@ -374,7 +464,10 @@
         <div class="viewer-body">
           <div class="pdf-shell">
             <div class="pdf-canvas-wrap" id="pdfWrap">
-              <canvas id="pdfCanvas"></canvas>
+              <div class="canvas-stage" id="stage">
+                <canvas id="pdfCanvas"></canvas>
+                <div class="overlay" id="overlay"></div>
+              </div>
             </div>
           </div>
 
@@ -386,19 +479,13 @@
     </div>
   </main>
 
-  <!-- App -->
   <script src="assets/app.js"></script>
-
-  <!-- pdf-lib for signing -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
-  <!-- PDF.js (viewer rendering) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
 
   <script>
-    // ========= AUTH GUARD =========
+    // ========= AUTH =========
     FSS.guard();
-
     const user = JSON.parse(localStorage.getItem("fss_auth") || "{}");
     document.getElementById("userEmail").textContent = user.email || "demo@client.com";
 
@@ -408,7 +495,7 @@
       doc = FSS.loadDocState();
     }
 
-    // ========= UI REFS =========
+    // ========= UI =========
     const templateVal = document.getElementById("templateVal");
     const senderVal = document.getElementById("senderVal");
     const recipientVal = document.getElementById("recipientVal");
@@ -425,23 +512,29 @@
     const sendBtn = document.getElementById("sendBtn");
     const recipientBtn = document.getElementById("recipientBtn");
     const downloadBtn = document.getElementById("downloadBtn");
+    const clearFieldsBtn = document.getElementById("clearFieldsBtn");
 
-    // PDF.js elements
+    // Tools
+    const toolSig = document.getElementById("toolSig");
+    const toolDate = document.getElementById("toolDate");
+    const toolText = document.getElementById("toolText");
+
+    // PDF.js
     const pdfWrap = document.getElementById("pdfWrap");
+    const stage = document.getElementById("stage");
     const canvas = document.getElementById("pdfCanvas");
+    const overlay = document.getElementById("overlay");
     const ctx = canvas.getContext("2d");
 
-    // ========= PDF.js CONFIG =========
-    // Use CDN worker
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
 
     let pdfDoc = null;
-    let pageNumber = 1;
     let zoom = 1.15;
     let fitMode = true;
     let currentSourceLabel = "—";
-    let currentBlobUrl = null;
+
+    let activeTool = null; // "signature" | "date" | "text"
 
     function showStatus(type, msg){
       statusBox.style.display = "";
@@ -453,16 +546,35 @@
       statusBox.textContent = "";
     }
 
+    function setTool(tool){
+      activeTool = tool;
+
+      toolSig.classList.toggle("active", tool === "signature");
+      toolDate.classList.toggle("active", tool === "date");
+      toolText.classList.toggle("active", tool === "text");
+
+      if(tool){
+        viewerStatus.textContent = `Tool: ${tool.toUpperCase()} • click on PDF to place`;
+        viewerStatus.className = "status good";
+      }else{
+        viewerStatus.textContent = `Ready`;
+        viewerStatus.className = "status good";
+      }
+    }
+
+    toolSig.addEventListener("click", () => setTool(activeTool === "signature" ? null : "signature"));
+    toolDate.addEventListener("click", () => setTool(activeTool === "date" ? null : "date"));
+    toolText.addEventListener("click", () => setTool(activeTool === "text" ? null : "text"));
+
     function updateSidebar(){
       doc = FSS.loadDocState();
       if(!doc) return;
 
-      const source = doc.source || "template";
-      let srcLabel = doc.template || "—";
-      if(source === "custom") srcLabel = "Custom PDF";
-      if(source === "builder") srcLabel = "Scratch-built PDF";
-
-      templateVal.textContent = srcLabel;
+      templateVal.textContent = (doc.source === "custom")
+        ? "Custom PDF"
+        : (doc.source === "builder")
+          ? "Scratch-built PDF"
+          : (doc.template || "—");
 
       senderVal.textContent = doc.parties.aName
         ? `${doc.parties.aName} (${doc.parties.aEmail || "—"})`
@@ -479,31 +591,28 @@
       if(state === "sender"){
         flowLabel.textContent = "Sender signing";
         flowText.innerHTML =
-          `Step 1: sender signs the document.<br><br>
-           This generates a <strong>real signed PDF</strong>.`;
+          `Step 1: place fields + sender signs.<br><br>
+           Use Signature + Date tools to place fields.`;
         hintText.innerHTML =
-          `Use <strong>Fit</strong> for a great viewing experience.`;
+          `Double-click a field to edit. Drag to reposition.`;
       }
       if(state === "ready"){
         flowLabel.textContent = "Ready to send";
         flowText.innerHTML =
-          `Step 2: send the agreement to recipient.<br><br>
-           (Simulated delivery)`;
+          `Step 2: send to recipient (simulated).<br><br>
+           Document is now signed by sender.`;
         hintText.innerHTML = `Click <strong>Send to recipient</strong>.`;
       }
       if(state === "sent"){
         flowLabel.textContent = "Recipient signing";
         flowText.innerHTML =
-          `Step 3: recipient completes signing.<br><br>
-           This demo simulates the recipient flow.`;
+          `Step 3: recipient completes signing (simulated).`;
         hintText.innerHTML = `Click <strong>Open recipient signing</strong>.`;
       }
       if(state === "completed"){
         flowLabel.textContent = "Completed";
-        flowText.innerHTML =
-          `✅ Completed.<br><br>
-           Download the signed PDF or view Completed screen.`;
-        hintText.innerHTML = `Use <strong>Download</strong>.`;
+        flowText.innerHTML = `✅ Completed. Download the signed PDF.`;
+        hintText.innerHTML = `Use <strong>Download signed PDF</strong>.`;
       }
     }
 
@@ -545,13 +654,7 @@
       downloadBtn.style.display = "none";
     }
 
-    function revokeBlob(){
-      if(currentBlobUrl){
-        URL.revokeObjectURL(currentBlobUrl);
-        currentBlobUrl = null;
-      }
-    }
-
+    // ========= PDF LOAD =========
     function base64ToUint8(b64){
       const bin = atob(b64);
       const bytes = new Uint8Array(bin.length);
@@ -560,33 +663,8 @@
     }
 
     async function getPdfBytesForViewer(){
-      doc = FSS.loadDocState();
-      if(!doc) throw new Error("No document.");
-
-      // priority:
-      // 1) signed pdf
-      if(FSS.hasSignedPDF()){
-        const b64 = FSS.getSignedBase64();
-        currentSourceLabel = "Signed PDF";
-        return base64ToUint8(b64);
-      }
-
-      // 2) custom uploaded
-      if(doc.source === "custom"){
-        const b64 = FSS.getCustomPdfBase64();
-        if(!b64) throw new Error("Custom PDF missing.");
-        currentSourceLabel = "Custom PDF";
-        return base64ToUint8(b64);
-      }
-
-      // 3) template pdf
-      const template = doc.template || "nda.pdf";
-      currentSourceLabel = template;
-
-      const res = await fetch(`pdfs/${encodeURIComponent(template)}`, { cache:"no-store" });
-      if(!res.ok) throw new Error("Template PDF missing in /pdfs");
-      const buf = await res.arrayBuffer();
-      return new Uint8Array(buf);
+      const bytes = await FSS.getPdfBytesForViewer();
+      return bytes;
     }
 
     async function loadPdfJsDocument(){
@@ -594,21 +672,21 @@
       viewerStatus.className = "status warn";
 
       const bytes = await getPdfBytesForViewer();
+      currentSourceLabel = FSS.getViewerLabel();
       pdfName.textContent = currentSourceLabel;
 
       const loadingTask = pdfjsLib.getDocument({ data: bytes });
       pdfDoc = await loadingTask.promise;
 
-      pageNumber = 1; // single-page demo rendering
       await renderPage();
-
       viewerStatus.textContent = `Showing: ${currentSourceLabel}`;
       viewerStatus.className = "status good";
+
+      renderOverlay();
     }
 
     function getFitScale(viewport){
-      // Fit to width based on container (pdfWrap)
-      const padding = 36; // wrap padding
+      const padding = 36;
       const maxWidth = pdfWrap.clientWidth - padding;
       return maxWidth / viewport.width;
     }
@@ -616,88 +694,237 @@
     async function renderPage(){
       if(!pdfDoc) return;
 
-      const page = await pdfDoc.getPage(pageNumber);
-
-      // base viewport at scale=1
+      const page = await pdfDoc.getPage(1);
       const baseViewport = page.getViewport({ scale: 1 });
 
-      // Determine scale: fit or zoom
       let scale = zoom;
       if(fitMode){
         scale = getFitScale(baseViewport);
       }
 
       const viewport = page.getViewport({ scale });
-
       canvas.width = Math.floor(viewport.width);
       canvas.height = Math.floor(viewport.height);
 
-      // clear
+      stage.style.width = canvas.width + "px";
+      stage.style.height = canvas.height + "px";
+      overlay.style.width = canvas.width + "px";
+      overlay.style.height = canvas.height + "px";
+
       ctx.setTransform(1,0,0,1,0,0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const renderContext = {
-        canvasContext: ctx,
-        viewport
-      };
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-      await page.render(renderContext).promise;
-
-      // show status
-      const zoomPct = Math.round(scale * 100);
-      viewerStatus.textContent = `Showing: ${currentSourceLabel} • ${fitMode ? "Fit" : "Zoom"} • ${zoomPct}%`;
+      const pct = Math.round(scale * 100);
+      viewerStatus.textContent = `Showing: ${currentSourceLabel} • ${fitMode ? "Fit" : "Zoom"} • ${pct}%`;
       viewerStatus.className = "status good";
     }
+
+    // ========= OVERLAY FIELDS =========
+    function fields(){
+      return FSS.loadFields() || [];
+    }
+
+    function clamp(v, a, b){
+      return Math.max(a, Math.min(b, v));
+    }
+
+    function fieldToPx(f){
+      return {
+        x: f.nx * canvas.width,
+        y: f.ny * canvas.height,
+        w: f.nw * canvas.width,
+        h: f.nh * canvas.height
+      };
+    }
+
+    function pxToNorm(x, y, w, h){
+      return {
+        nx: x / canvas.width,
+        ny: y / canvas.height,
+        nw: w / canvas.width,
+        nh: h / canvas.height
+      };
+    }
+
+    function renderOverlay(){
+      overlay.innerHTML = "";
+
+      const list = fields();
+
+      for(const f of list){
+        const { x, y, w, h } = fieldToPx(f);
+
+        const el = document.createElement("div");
+        el.className = "field " + (f.type === "signature" ? "sig" : (f.type === "date" ? "date" : "text"));
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.width = `${w}px`;
+        el.style.height = `${h}px`;
+
+        el.dataset.id = f.id;
+
+        const label = document.createElement("div");
+        label.className = "label";
+        label.textContent = f.type;
+
+        const value = document.createElement("div");
+        value.className = "value";
+        value.textContent = f.value || (f.type === "signature" ? "Signature" : (f.type === "date" ? "Date" : "Text"));
+
+        const xbtn = document.createElement("div");
+        xbtn.className = "xbtn";
+        xbtn.textContent = "✕";
+        xbtn.title = "Delete";
+
+        xbtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          FSS.removeField(f.id);
+          renderOverlay();
+        });
+
+        el.appendChild(label);
+        el.appendChild(value);
+        el.appendChild(xbtn);
+
+        // DOUBLE CLICK EDIT
+        el.addEventListener("dblclick", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const current = f.value || "";
+          const next = prompt(`Edit ${f.type} value:`, current);
+          if(next === null) return;
+
+          FSS.updateField(f.id, { value: next });
+          renderOverlay();
+        });
+
+        // DRAG
+        let startX = 0, startY = 0;
+        let origX = 0, origY = 0;
+        let dragging = false;
+
+        el.addEventListener("pointerdown", (e) => {
+          dragging = true;
+          el.setPointerCapture(e.pointerId);
+          startX = e.clientX;
+          startY = e.clientY;
+          origX = x;
+          origY = y;
+        });
+
+        el.addEventListener("pointermove", (e) => {
+          if(!dragging) return;
+
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+
+          const nextX = clamp(origX + dx, 0, canvas.width - w);
+          const nextY = clamp(origY + dy, 0, canvas.height - h);
+
+          el.style.left = `${nextX}px`;
+          el.style.top = `${nextY}px`;
+        });
+
+        el.addEventListener("pointerup", (e) => {
+          if(!dragging) return;
+          dragging = false;
+
+          const left = parseFloat(el.style.left);
+          const top = parseFloat(el.style.top);
+
+          const norm = pxToNorm(left, top, w, h);
+          FSS.updateField(f.id, norm);
+        });
+
+        overlay.appendChild(el);
+      }
+    }
+
+    // CLICK TO PLACE
+    stage.addEventListener("click", (e) => {
+      if(!activeTool) return;
+      if(e.target.closest(".field")) return;
+
+      const rect = stage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // default sizes
+      let w = 190, h = 52;
+      if(activeTool === "date"){ w = 160; h = 44; }
+      if(activeTool === "text"){ w = 220; h = 54; }
+
+      const cx = clamp(x - w/2, 0, canvas.width - w);
+      const cy = clamp(y - h/2, 0, canvas.height - h);
+
+      const base = pxToNorm(cx, cy, w, h);
+
+      const docState = FSS.loadDocState() || {};
+      let value = "";
+      if(activeTool === "signature") value = (docState.parties?.aName || "");
+      if(activeTool === "date") value = (new Date().toLocaleDateString());
+      if(activeTool === "text") value = "Enter text";
+
+      FSS.addField({
+        id: FSS.uid(),
+        type: activeTool,
+        role: "sender",
+        page: 1,
+        ...base,
+        value
+      });
+
+      renderOverlay();
+    });
 
     // ========= TOOLBAR =========
     document.getElementById("fitBtn").addEventListener("click", async () => {
       fitMode = true;
       await renderPage();
+      renderOverlay();
     });
 
     document.getElementById("zoomInBtn").addEventListener("click", async () => {
       fitMode = false;
-      zoom = Math.min(2.5, zoom + 0.15);
+      zoom = Math.min(2.6, zoom + 0.15);
       await renderPage();
+      renderOverlay();
     });
 
     document.getElementById("zoomOutBtn").addEventListener("click", async () => {
       fitMode = false;
       zoom = Math.max(0.6, zoom - 0.15);
       await renderPage();
+      renderOverlay();
     });
 
     document.getElementById("refreshBtn").addEventListener("click", async () => {
       clearStatus();
-      try{
-        await loadPdfJsDocument();
-        refreshState();
-        updateSidebar();
-      }catch(err){
-        console.error(err);
-        viewerStatus.textContent = "Could not refresh PDF. Check console.";
-        viewerStatus.className = "status bad";
-      }
+      await loadPdfJsDocument();
+      refreshState();
+      updateSidebar();
     });
 
     document.getElementById("openFullBtn").addEventListener("click", async () => {
-      // Open current PDF in a new tab (as a Blob)
       try{
-        const bytes = await getPdfBytesForViewer();
-        revokeBlob();
+        const bytes = await FSS.getPdfBytesForViewer();
         const blob = new Blob([bytes], { type:"application/pdf" });
-        currentBlobUrl = URL.createObjectURL(blob);
-        window.open(currentBlobUrl, "_blank");
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
       }catch(err){
         console.error(err);
         showStatus("bad", "Could not open PDF. Check console.");
       }
     });
 
-    // Handle resize: if Fit mode is on, rerender
     window.addEventListener("resize", async () => {
       if(fitMode){
         await renderPage();
+        renderOverlay();
       }
     });
 
@@ -712,13 +939,14 @@
         return;
       }
 
-      FSS.logAudit("Sender signed the agreement.");
       showStatus("good", "✅ Sender signed. Agreement is ready to send.");
+      FSS.logAudit("Sender signed the agreement.");
+
       refreshState();
       await loadPdfJsDocument();
     });
 
-    sendBtn.addEventListener("click", async () => {
+    sendBtn.addEventListener("click", () => {
       clearStatus();
 
       if(!FSS.hasSignedPDF()){
@@ -773,7 +1001,13 @@
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     });
 
-    // ========= LOGOUT =========
+    clearFieldsBtn.addEventListener("click", () => {
+      if(!confirm("Clear all placed fields?")) return;
+      FSS.saveFields([]);
+      renderOverlay();
+      showStatus("good", "Fields cleared.");
+    });
+
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
@@ -783,6 +1017,8 @@
     (async function boot(){
       updateSidebar();
       refreshState();
+      setTool(null);
+
       try{
         await loadPdfJsDocument();
       }catch(err){
@@ -790,6 +1026,7 @@
         viewerStatus.textContent = "Could not load PDF. Check console.";
         viewerStatus.className = "status bad";
       }
+
       clearStatus();
     })();
   </script>
