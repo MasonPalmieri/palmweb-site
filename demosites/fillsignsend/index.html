@@ -132,27 +132,6 @@
     }
     .status.bad{ border-color: rgba(255,79,99,.35); background: rgba(255,79,99,.10); }
     .status.good{ border-color: rgba(96,255,157,.35); background: rgba(96,255,157,.10); }
-
-    .mini{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 10px;
-      margin-top: 6px;
-      color: rgba(255,255,255,.65);
-      font-size: 12px;
-      font-weight: 750;
-    }
-
-    .mini a{
-      color: rgba(255,255,255,.90);
-      text-decoration:none;
-      font-weight: 900;
-    }
-    .mini a:hover{
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
   </style>
 </head>
 
@@ -181,7 +160,7 @@
         </label>
 
         <div class="row">
-          <button class="btn btn-primary btn-wide" id="loginBtn" type="submit">Login</button>
+          <button class="btn btn-primary btn-wide" type="submit">Login</button>
           <button class="btn btn-outline btn-wide" id="resetBtn" type="button">Reset Demo</button>
         </div>
 
@@ -189,11 +168,6 @@
 
         <div class="note">
           This is a <strong>demo experience</strong>. Nothing is sent externally — actions are simulated and stored locally in your browser.
-        </div>
-
-        <div class="mini">
-          <span>Having trouble?</span>
-          <a href="#" id="clearBtn">Clear browser data</a>
         </div>
       </form>
     </div>
@@ -204,7 +178,7 @@
     // If already logged in, go straight to dashboard
     (function(){
       try{
-        if(FSS && FSS.isAuthed && FSS.isAuthed()){
+        if(FSS.isAuthed()){
           location.replace("dashboard.html");
         }
       }catch(e){}
@@ -232,16 +206,10 @@
       const email = (emailEl.value || "").trim();
       const pw = (passEl.value || "").trim();
 
-      if(!email || !pw){
-        showStatus("Enter email and password.");
-        return;
-      }
+      const res = FSS.login(email, pw);
 
-      // IMPORTANT: Use the real login function (stores auth)
-      const result = FSS.login(email, pw);
-
-      if(!result || !result.ok){
-        showStatus(result?.msg || "Login failed.");
+      if(!res || !res.ok){
+        showStatus(res?.msg || "Login failed.");
         return;
       }
 
@@ -252,21 +220,13 @@
       }
 
       showStatus("Success. Redirecting…", "good");
-      setTimeout(() => location.replace("dashboard.html"), 350);
+      setTimeout(() => location.replace("dashboard.html"), 250);
     });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      // Full reset (safe + consistent)
-      localStorage.clear();
+      FSS.hardReset();
       showStatus("Demo reset complete. Reloading…", "good");
-      setTimeout(() => location.reload(), 450);
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", (e) => {
-      e.preventDefault();
-      localStorage.clear();
-      showStatus("Browser data cleared. Reloading…", "good");
-      setTimeout(() => location.reload(), 450);
+      setTimeout(() => location.reload(), 350);
     });
   </script>
 </body>
