@@ -1,10 +1,11 @@
 /* ============================================================
    FSS Demo App — app.js (Static / GitHub Pages)
    No backend. Uses localStorage for auth + doc state.
+
    Supports:
    - Template PDFs in /pdfs
    - Uploaded PDFs stored as Base64 in localStorage
-   - Scratch-built PDFs (NDA Express style) built from text
+   - Scratch-built PDFs (builder) built from text
    - Overlay field placement + Signed PDF generation
 
    NOTE:
@@ -16,7 +17,7 @@ window.FSS = (() => {
   /* =========================
      CONFIG
      ========================= */
-  const DEMO_PASSWORD = "hallam"; // You can change this — only used for local demo login
+  const DEMO_PASSWORD = "hallam";
   const DEMO_EMAIL = "demo@client.com";
 
   const STORE_KEYS = {
@@ -25,6 +26,9 @@ window.FSS = (() => {
     fields: "fss_fields",
     values: "fss_values",
     audit: "fss_audit",
+
+    // IMPORTANT:
+    // signed + uploaded pdfs are RAW strings (not JSON) to avoid size / parse issues.
     signed: "fss_signed_pdf_b64",
     uploadedB64: "fss_uploaded_pdf_b64",
     uploadedName: "fss_uploaded_pdf_name",
@@ -63,12 +67,6 @@ window.FSS = (() => {
     localStorage.removeItem(key);
   }
 
-  function escapeHtml(s) {
-    return (s || "").replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[m]));
-  }
-
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
@@ -92,11 +90,6 @@ window.FSS = (() => {
       return { ok: true };
     }
 
-    // allow "anything" for demo if you want:
-    // setKey(STORE_KEYS.auth, { email: e, at: nowStamp() });
-    // logAudit(`Login successful (${e}).`);
-    // return { ok: true };
-
     return { ok: false, msg: "Invalid demo credentials." };
   }
 
@@ -107,7 +100,6 @@ window.FSS = (() => {
 
   function guard() {
     if (!isAuthed()) {
-      // Don’t infinite loop if already on index.html
       const path = location.pathname.toLowerCase();
       if (!path.endsWith("index.html")) {
         location.href = "index.html";
@@ -125,7 +117,7 @@ window.FSS = (() => {
       updatedAt: nowStamp(),
       stage: "create",
       status: "draft",
-      template: "nda.pdf", // template file name OR null
+      template: "nda.pdf",
       parties: {
         aName: "",
         aEmail: "",
@@ -152,7 +144,10 @@ window.FSS = (() => {
   function resetDoc() {
     const d = defaultDoc();
     setKey(STORE_KEYS.doc, d);
-    removeKey(STORE_KEYS.signed);
+
+    clearSignedPDF();
+    clearUploadedPDF();
+
     setKey(STORE_KEYS.fields, []);
     setKey(STORE_KEYS.values, {});
     setKey(STORE_KEYS.audit, []);
@@ -210,7 +205,6 @@ window.FSS = (() => {
   }
 
   function setFieldValue(fieldIdOrType, value) {
-    // accept either fieldId or a type "signature"/"date"
     const values = loadValues();
     values[fieldIdOrType] = value;
     saveValues(values);
@@ -222,14 +216,22 @@ window.FSS = (() => {
   }
 
   /* =========================
-     SIGNED PDF STORAGE
+     SIGNED PDF STORAGE (RAW)
      ========================= */
   function setSignedBase64(b64) {
-    setKey(STORE_KEYS.signed, b64 || null);
+    if (!b64) {
+      localStorage.removeItem(STORE_KEYS.signed);
+      return;
+    }
+    localStorage.setItem(STORE_KEYS.signed, b64);
   }
 
   function getSignedBase64() {
-    return getKey(STORE_KEYS.signed, null);
+    return localStorage.getItem(STORE_KEYS.signed);
+  }
+
+  function clearSignedPDF() {
+    localStorage.removeItem(STORE_KEYS.signed);
   }
 
   function hasSignedPDF() {
@@ -238,7 +240,7 @@ window.FSS = (() => {
   }
 
   /* =========================
-     UPLOAD HELPERS
+     UPLOAD HELPERS (RAW)
      ========================= */
   function hasUploadedPDF() {
     return !!localStorage.getItem(STORE_KEYS.uploadedB64);
@@ -252,13 +254,23 @@ window.FSS = (() => {
     return localStorage.getItem(STORE_KEYS.uploadedName) || "Uploaded.pdf";
   }
 
+  function setUploadedPDF(base64, filename) {
+    if (!base64) return;
+    localStorage.setItem(STORE_KEYS.uploadedB64, base64);
+    localStorage.setItem(STORE_KEYS.uploadedName, filename || "Uploaded.pdf");
+  }
+
+  function clearUploadedPDF() {
+    localStorage.removeItem(STORE_KEYS.uploadedB64);
+    localStorage.removeItem(STORE_KEYS.uploadedName);
+  }
+
   /* =========================
      PDF LIB LOADER
      ========================= */
   async function ensurePdfLib() {
     if (window.PDFLib) return true;
 
-    // load from CDN
     return new Promise((resolve) => {
       const s = document.createElement("script");
       s.src = "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js";
@@ -299,7 +311,6 @@ window.FSS = (() => {
 
   /* =========================
      BUILDER PDF (SCRATCH)
-     Creates a "real" PDF from doc.builder.text so viewer/signing works.
      ========================= */
   async function generateBuilderPDFBytes() {
     const ok = await ensurePdfLib();
@@ -318,7 +329,6 @@ window.FSS = (() => {
 
     const pdfDoc = await PDFDocument.create();
 
-    // US Letter-ish page
     const pageW = 612;
     const pageH = 792;
     const margin = 54;
@@ -331,24 +341,20 @@ window.FSS = (() => {
     const title = (docState.builder.title || "Agreement").trim();
     const text = (docState.builder.text || "").trim();
 
-    // Split into paragraphs
     const lines = wrapText(text, font, fontSize, pageW - margin * 2);
 
-    // Create pages as needed
     let page = pdfDoc.addPage([pageW, pageH]);
     let y = pageH - margin;
 
-    // Title
     page.drawText(title.toUpperCase(), {
       x: margin,
       y,
       size: 16,
       font: fontBold,
-      color: rgb(0, 0, 0), // BLACK text (fix invisible)
+      color: rgb(0, 0, 0),
     });
     y -= 26;
 
-    // Body
     for (const ln of lines) {
       if (y < margin + 40) {
         page = pdfDoc.addPage([pageW, pageH]);
@@ -359,24 +365,23 @@ window.FSS = (() => {
         y,
         size: fontSize,
         font,
-        color: rgb(0, 0, 0), // BLACK text (fix invisible)
+        color: rgb(0, 0, 0),
       });
       y -= lineHeight;
     }
 
-    return await pdfDoc.save();
+    const bytes = await pdfDoc.save();
+    return new Uint8Array(bytes);
   }
 
   function wrapText(text, font, fontSize, maxWidth) {
-    // preserves line breaks from the builder text,
-    // but wraps long lines to fit page width.
     const paragraphs = String(text || "").split(/\n/);
     const out = [];
 
     for (const p of paragraphs) {
       const line = p.replace(/\t/g, "    ");
       if (!line.trim()) {
-        out.push(""); // blank line
+        out.push("");
         continue;
       }
 
@@ -402,27 +407,23 @@ window.FSS = (() => {
 
   /* =========================
      Resolve Current PDF Source
-     (Template / Upload / Builder)
      ========================= */
   async function getSourcePDFBytes() {
     const docState = loadDocState();
     if (!docState) throw new Error("No doc state found.");
 
-    // Uploaded PDF has priority if present and template is null
     if (hasUploadedPDF()) {
       const b64 = getUploadedPDFBase64();
       if (!b64) throw new Error("Uploaded PDF is missing.");
       return base64ToBytes(b64);
     }
 
-    // Builder mode (scratch)
     if (docState.builder && docState.builder.text) {
       const bytes = await generateBuilderPDFBytes();
       if (!bytes) throw new Error("Builder PDF generation failed.");
       return bytes;
     }
 
-    // Template
     const template = docState.template || "nda.pdf";
     const url = `pdfs/${encodeURIComponent(template)}`;
     const buf = await fetchAsArrayBuffer(url);
@@ -431,7 +432,6 @@ window.FSS = (() => {
 
   /* =========================
      SIGNED PDF GENERATOR
-     Embeds fields into PDF bytes and stores as base64.
      ========================= */
   async function generateSignedPDF() {
     const ok = await ensurePdfLib();
@@ -447,32 +447,21 @@ window.FSS = (() => {
       const fields = loadFields() || [];
       const values = loadValues() || {};
 
-      // Ensure required signature/date values exist (fallback)
       const senderName = docState.parties?.aName || "Sender";
       const defaultDate = new Date().toLocaleDateString();
 
-      // If any "signature" type fields exist but no value, set it
-      // If any "date" type fields exist but no value, set it
       if (!values.signature) values.signature = senderName;
       if (!values.date) values.date = defaultDate;
 
-      // Load source PDF bytes
       const srcBytes = await getSourcePDFBytes();
 
       const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
       const pdfDoc = await PDFDocument.load(srcBytes);
 
-      // Fonts:
-      // - Normal text
-      // - Signature script-like (as much as pdf-lib built-in fonts allow)
       const fontText = await pdfDoc.embedFont(StandardFonts.Helvetica);
       const fontTextBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-      // Best we can do without custom font:
-      // TimesItalic reads more like a signature than Helvetica
       const fontSig = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
 
-      // Iterate fields and draw text
       const pages = pdfDoc.getPages();
 
       for (const f of fields) {
@@ -484,53 +473,29 @@ window.FSS = (() => {
         const w = Number(f.w || 140);
         const h = Number(f.h || 34);
 
-        // Convert "top-left y" (DOM style) to PDF "bottom-left"
-        // Our stored y was typically top-left style. We use:
-        // pdfY = pageHeight - yTop - h
         const pageH = page.getHeight();
         const pdfY = pageH - yTop - h;
 
         let value = "";
-
-        // Field value resolution:
-        // - If f.id exists, prefer values[f.id]
-        // - else use values[f.type]
         if (f.id && values[f.id] != null) value = String(values[f.id]);
         else if (values[f.type] != null) value = String(values[f.type]);
 
-        // Default values if still empty
         if (!value && f.type === "signature") value = senderName;
         if (!value && f.type === "date") value = defaultDate;
 
-        // Normalize for checkbox
         if (f.type === "checkbox") {
           const checked = String(value).toLowerCase() === "true" || value === "1" || value === "yes";
           value = checked ? "✔" : "";
         }
 
-        // Choose font + size
         let font = fontText;
         let size = 12;
 
-        if (f.type === "signature") {
-          font = fontSig;
-          size = 18; // bigger for signature look
-        } else if (f.type === "date") {
-          font = fontTextBold;
-          size = 11;
-        } else if (f.type === "text") {
-          font = fontText;
-          size = 12;
-        } else if (f.type === "initials") {
-          font = fontTextBold;
-          size = 12;
-        } else if (f.type === "checkbox") {
-          font = fontTextBold;
-          size = 14;
-        }
+        if (f.type === "signature") { font = fontSig; size = 18; }
+        else if (f.type === "date") { font = fontTextBold; size = 11; }
+        else if (f.type === "initials") { font = fontTextBold; size = 12; }
+        else if (f.type === "checkbox") { font = fontTextBold; size = 14; }
 
-        // Draw the value in BLACK so it is never invisible.
-        // Keep padding small so it looks like it’s on the line.
         const padX = 6;
         const padY = 9;
 
@@ -539,23 +504,13 @@ window.FSS = (() => {
           y: pdfY + padY,
           size,
           font,
-          color: rgb(0, 0, 0), // BLACK
+          color: rgb(0, 0, 0),
           opacity: 1,
         });
-
-        // Optional: draw a subtle bounding box when debugging
-        // page.drawRectangle({
-        //   x, y: pdfY, width: w, height: h,
-        //   borderColor: rgb(0.9, 0.2, 0.4),
-        //   borderWidth: 0.5,
-        //   opacity: 0.3,
-        // });
       }
 
-      // Footer stamp (optional)
       const last = pages[pages.length - 1];
-      const stampText = `Signed via FSS Demo — ${new Date().toLocaleString()}`;
-      last.drawText(stampText, {
+      last.drawText(`Signed via Demo — ${new Date().toLocaleString()}`, {
         x: 44,
         y: 18,
         size: 9,
@@ -566,7 +521,6 @@ window.FSS = (() => {
 
       const signedBytes = await pdfDoc.save();
       const b64 = arrayBufferToBase64(signedBytes);
-
       setSignedBase64(b64);
 
       return true;
@@ -612,12 +566,15 @@ window.FSS = (() => {
     // Signed PDF storage
     setSignedBase64,
     getSignedBase64,
+    clearSignedPDF,
     hasSignedPDF,
 
     // Upload helpers
     hasUploadedPDF,
     getUploadedPDFBase64,
     getUploadedPDFName,
+    setUploadedPDF,
+    clearUploadedPDF,
 
     // File utilities
     base64ToBlobURL,
