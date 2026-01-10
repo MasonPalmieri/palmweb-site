@@ -4,46 +4,154 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Client Demo • Dashboard</title>
+
   <link rel="stylesheet" href="assets/app.css" />
+
   <style>
-    .page{ padding: 26px 22px 70px; max-width: 1200px; margin: 0 auto; }
-    .grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-top: 16px; }
-    .card{
-      background: rgba(255,255,255,.06);
+    .page { padding: 18px 18px 34px; max-width: 1400px; margin: 0 auto; }
+
+    /* Top bar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding: 14px 16px;
       border: 1px solid rgba(255,255,255,.10);
-      border-radius: 22px;
-      box-shadow: 0 26px 80px rgba(0,0,0,.45);
-      padding: 16px;
-      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 14px;
     }
-    .h1{ font-size: 26px; font-weight: 950; letter-spacing: -.4px; margin: 6px 0 6px; }
-    .muted{ color: rgba(255,255,255,.70); font-weight: 750; }
-    .row{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; align-items:center; }
-    .audit{
-      margin-top: 10px;
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-      max-height: 420px;
-      overflow:auto;
-      padding-right: 4px;
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width:0;
+      color: rgba(255,255,255,.92);
+      font-weight: 950;
     }
-    .audit-item{
-      padding: 10px 12px;
-      border-radius: 16px;
+    .brand .badge{
+      width: 36px; height: 36px; border-radius: 12px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: 12px;
+    }
+    .brand .meta{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+    .brand .meta small{ color: rgba(255,255,255,.70); font-weight: 850; }
+
+    .navlinks{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .navlinks a{
+      text-decoration:none; color: rgba(255,255,255,.80);
+      font-weight: 900; padding: 8px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.05);
+    }
+    .navlinks a.active{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.16);
+      color: rgba(255,255,255,.95);
+    }
+
+    .rightmeta{ display:flex; align-items:center; gap:10px; }
+    .pill{
+      padding: 8px 10px; border-radius: 999px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
-      font-weight: 800;
+      color: rgba(255,255,255,.85);
+      font-weight: 900; font-size: 13px;
+    }
+    .toolbtn{
+      padding: 8px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      font-weight: 950; cursor:pointer; user-select:none;
+    }
+
+    /* Layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    .card{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 26px 80px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0; padding: 14px 14px 10px;
+      font-size: 16px; font-weight: 950;
+      color: rgba(255,255,255,.92);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .card .body{ padding: 12px 14px 14px; color: rgba(255,255,255,.88); }
+
+    .kv{
+      margin-top:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      font-weight: 900;
+      color: rgba(255,255,255,.90);
       font-size: 13px;
-      color: rgba(255,255,255,.88);
     }
-    .audit-item span{
+    .kv small{
       display:block;
-      margin-top: 3px;
-      font-size: 12px;
-      font-weight: 750;
-      color: rgba(255,255,255,.60);
+      color: rgba(255,255,255,.65);
+      font-weight: 850;
+      margin-bottom:6px;
     }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 12px; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 11px 14px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      font-weight: 950; cursor:pointer;
+      text-decoration:none;
+    }
+    .btn.primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, rgba(67,203,255,.95), rgba(96,255,157,.85));
+      color: rgba(5,12,18,.95);
+    }
+    .btn.danger{
+      background: rgba(255,79,99,.12);
+      border-color: rgba(255,79,99,.30);
+    }
+
+    .muted{ color: rgba(255,255,255,.70); font-weight: 850; font-size: 13px; line-height: 1.5; }
+
+    .audit{
+      margin-top: 10px;
+      max-height: 320px;
+      overflow:auto;
+      padding-right: 6px;
+    }
+    .auditItem{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.10);
+      margin-bottom: 10px;
+    }
+    .auditItem .at{
+      font-size: 11px;
+      color: rgba(255,255,255,.60);
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+    .auditItem .msg{
+      font-size: 13px;
+      color: rgba(255,255,255,.90);
+      font-weight: 900;
+    }
+
     @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
     }
@@ -51,101 +159,188 @@
 </head>
 
 <body class="app">
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="dashboard.html">
-        <span class="badge">FSS</span>
-        <div class="brand-text">
-          <strong>Client Demo</strong>
-          <span>Fill → Sign → Send</span>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">
+        <div class="badge">FSS</div>
+        <div class="meta">
+          <div>Client Demo</div>
+          <small>Fill → Sign → Send</small>
         </div>
-      </a>
+      </div>
 
-      <nav class="nav">
-        <a href="dashboard.html" class="nav-link active">Dashboard</a>
-        <a href="create.html" class="nav-link">Create</a>
-        <a href="sign.html" class="nav-link">Sign</a>
-        <a href="success.html" class="nav-link">Completed</a>
-      </nav>
+      <div class="navlinks">
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="create.html">Create</a>
+        <a href="sign.html">Sign</a>
+        <a href="success.html">Completed</a>
+      </div>
 
-      <div class="right">
-        <span class="pill" id="who"></span>
-        <button class="btn btn-outline" id="logoutBtn">Logout</button>
+      <div class="rightmeta">
+        <div class="pill" id="userPill">demo@client.com</div>
+        <button class="toolbtn" id="logoutBtn" type="button">Logout</button>
       </div>
     </div>
-  </header>
-
-  <main class="page">
-    <div class="h1">Dashboard</div>
-    <div class="muted">Quick actions and demo state (stored locally in your browser).</div>
 
     <div class="grid">
-      <section class="card">
-        <div style="font-weight:950; font-size:15px;">Current Envelope</div>
-        <div class="muted" id="envMeta" style="margin-top:6px;"></div>
+      <!-- LEFT: Overview -->
+      <div class="card">
+        <h2>Overview</h2>
+        <div class="body">
+          <div class="muted">
+            This demo is static (GitHub Pages). All data is stored locally in your browser.
+          </div>
 
-        <div class="row">
-          <a class="btn btn-primary" href="create.html">Create / Edit</a>
-          <a class="btn btn-outline" href="sign.html">Go to Sign</a>
-          <button class="btn btn-outline" id="resetBtn">Reset Envelope</button>
-        </div>
+          <div class="kv">
+            <small>Agreement</small>
+            <div id="kvAgreement">—</div>
+          </div>
 
-        <div class="row" style="margin-top:14px;">
-          <div class="muted" style="font-size:13px;">
-            Tip: Create → Save & Go → Place fields → Generate signed PDF → Completed.
+          <div class="kv">
+            <small>Sender</small>
+            <div id="kvSender">—</div>
+          </div>
+
+          <div class="kv">
+            <small>Recipient</small>
+            <div id="kvRecipient">—</div>
+          </div>
+
+          <div class="kv">
+            <small>Source</small>
+            <div id="kvSource">—</div>
+          </div>
+
+          <div class="kv">
+            <small>Status</small>
+            <div id="kvStatus">—</div>
+          </div>
+
+          <div class="row">
+            <a class="btn primary" href="create.html">Create / Edit Agreement</a>
+            <a class="btn" href="sign.html">Go To Sign</a>
+            <a class="btn" href="success.html">View Completed</a>
+          </div>
+
+          <div class="row">
+            <button class="btn danger" id="resetBtn" type="button">Hard Reset</button>
+          </div>
+
+          <div class="muted" style="margin-top:10px;">
+            Hard Reset clears: auth, document state, fields, values, signed PDF, and uploads.
           </div>
         </div>
-      </section>
+      </div>
 
-      <aside class="card">
-        <div style="font-weight:950; font-size:15px;">Activity Log</div>
-        <div class="audit" id="audit"></div>
-      </aside>
+      <!-- RIGHT: Audit -->
+      <div class="card">
+        <h2>Audit Trail</h2>
+        <div class="body">
+          <div class="muted">
+            Recent actions taken in this browser session.
+          </div>
+
+          <div class="audit" id="auditList"></div>
+
+          <div class="row">
+            <button class="btn" id="clearAuditBtn" type="button">Clear Audit</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </main>
+  </div>
 
   <script src="assets/app.js"></script>
+
   <script>
     FSS.guard();
 
     const auth = JSON.parse(localStorage.getItem("fss_auth") || "{}");
-    document.getElementById("who").textContent = auth.email || "demo@client.com";
-
-    const doc = FSS.loadDocState();
-    const meta = document.getElementById("envMeta");
-
-    if(!doc){
-      meta.textContent = "No envelope yet. Click Create to begin.";
-    }else{
-      meta.innerHTML =
-        `ID: <strong>${doc.id}</strong><br>` +
-        `Stage: <strong>${doc.stage || "—"}</strong> • Status: <strong>${doc.status || "—"}</strong><br>` +
-        `Updated: <strong>${(doc.updatedAt || "").replace("T"," ").slice(0,19)}</strong>`;
-    }
-
-    // Audit
-    const auditEl = document.getElementById("audit");
-    const logs = FSS.loadAudit() || [];
-    if(!logs.length){
-      auditEl.innerHTML = `<div class="audit-item">No activity yet.<span>Start by creating an agreement.</span></div>`;
-    }else{
-      auditEl.innerHTML = logs.slice(0,40).map(x => (
-        `<div class="audit-item">${(x.msg || "")}<span>${(x.at || "").replace("T"," ").slice(0,19)}</span></div>`
-      )).join("");
-    }
+    document.getElementById("userPill").textContent = auth.email || "demo@client.com";
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       FSS.logout();
       location.href = "index.html";
     });
 
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if(confirm("Reset the envelope and clear all fields?")){
-        FSS.resetDoc();
-        location.href = "create.html";
+    const kvAgreement = document.getElementById("kvAgreement");
+    const kvSender = document.getElementById("kvSender");
+    const kvRecipient = document.getElementById("kvRecipient");
+    const kvSource = document.getElementById("kvSource");
+    const kvStatus = document.getElementById("kvStatus");
+
+    function refreshOverview(){
+      const d = FSS.loadDocState();
+      if (!d){
+        kvAgreement.textContent = "—";
+        kvSender.textContent = "—";
+        kvRecipient.textContent = "—";
+        kvSource.textContent = "—";
+        kvStatus.textContent = "No active agreement. Click Create.";
+        return;
       }
+
+      const parties = d.parties || {};
+      const agreement = d.template || d.builder?.title || "Agreement";
+
+      kvAgreement.textContent = agreement;
+      kvSender.textContent = parties.aName ? `${parties.aName} (${parties.aEmail || ""})` : "—";
+      kvRecipient.textContent = parties.bName ? `${parties.bName} (${parties.bEmail || ""})` : "—";
+
+      const source =
+        localStorage.getItem("fss_uploaded_pdf_b64") ? "Upload" :
+        (d.builder && d.builder.text) ? "Builder" :
+        "Template";
+
+      kvSource.textContent = source;
+
+      if (FSS.hasSignedPDF()){
+        kvStatus.textContent = "Signed PDF generated ✅";
+      } else {
+        kvStatus.textContent = "Draft — ready to sign";
+      }
+    }
+
+    function renderAudit(){
+      const list = document.getElementById("auditList");
+      const audit = FSS.loadAudit() || [];
+
+      if (!audit.length){
+        list.innerHTML = `<div class="muted" style="margin-top:12px;">No audit events yet.</div>`;
+        return;
+      }
+
+      list.innerHTML = audit.slice(0, 30).map(a => `
+        <div class="auditItem">
+          <div class="at">${escapeHtml(a.at || "")}</div>
+          <div class="msg">${escapeHtml(a.msg || "")}</div>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("Hard Reset will clear ALL demo data in this browser. Continue?")) return;
+      FSS.hardReset();
+      location.href = "index.html";
     });
+
+    document.getElementById("clearAuditBtn").addEventListener("click", () => {
+      if (!confirm("Clear audit trail?")) return;
+      localStorage.removeItem("fss_audit");
+      renderAudit();
+    });
+
+    refreshOverview();
+    renderAudit();
   </script>
 </body>
 </html>
