@@ -330,6 +330,19 @@
     const DEMO_PASSWORD = "hallam";
     const DEMO_URL = "demosites/fillsignsend/index.html";
 
+    // Remember unlock for 2 hours
+    const GATE_KEY = "palmweb_demo_gate_until";
+    const UNLOCK_MS = 2 * 60 * 60 * 1000;
+
+    function isUnlocked(){
+      const until = Number(localStorage.getItem(GATE_KEY) || "0");
+      return until && Date.now() < until;
+    }
+
+    function setUnlocked(){
+      localStorage.setItem(GATE_KEY, String(Date.now() + UNLOCK_MS));
+    }
+
     const openDemoBtn = document.getElementById("openDemoBtn");
     const modal = document.getElementById("pwModal");
     const pwInput = document.getElementById("pwInput");
@@ -352,24 +365,41 @@
 
     function enter(){
       const v = (pwInput.value || "").trim();
+
       if(v !== DEMO_PASSWORD){
         pwError.classList.add("show");
         pwInput.focus();
         return;
       }
-      // Store unlock (optional)
-      localStorage.setItem("palmweb_demo_gate", "unlocked");
+
+      setUnlocked();
       location.href = DEMO_URL;
     }
 
-    openDemoBtn.addEventListener("click", openModal);
+    // Open demo
+    openDemoBtn.addEventListener("click", () => {
+      if(isUnlocked()){
+        location.href = DEMO_URL;
+        return;
+      }
+      openModal();
+    });
+
     cancelBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
 
     enterBtn.addEventListener("click", enter);
+
+    // Only bind Enter on the input (prevents global double-trigger “spaz”)
     pwInput.addEventListener("keydown", (e) => {
-      if(e.key === "Enter") enter();
-      if(e.key === "Escape") closeModal();
+      if(e.key === "Enter"){
+        e.preventDefault();
+        enter();
+      }
+      if(e.key === "Escape"){
+        e.preventDefault();
+        closeModal();
+      }
     });
   </script>
 </body>
