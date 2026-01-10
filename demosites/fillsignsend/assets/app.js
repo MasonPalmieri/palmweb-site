@@ -15,6 +15,8 @@ window.FSS = (() => {
     fields: "fss_fields",
     values: "fss_values",
     audit: "fss_audit",
+
+    // IMPORTANT: signed + uploaded are stored as RAW strings (NOT JSON)
     signed: "fss_signed_pdf_b64",
     uploadedB64: "fss_uploaded_pdf_b64",
     uploadedName: "fss_uploaded_pdf_name",
@@ -51,6 +53,26 @@ window.FSS = (() => {
 
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
+  }
+
+  function arrayBufferToBase64(buffer) {
+    let binary = "";
+    const bytes = new Uint8Array(buffer);
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+
+  function base64ToBytes(b64) {
+    const byteChars = atob(b64);
+    const bytes = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
+    return bytes;
+  }
+
+  function base64ToBlobURL(b64, mime = "application/pdf") {
+    const bytes = base64ToBytes(b64);
+    const blob = new Blob([bytes], { type: mime });
+    return URL.createObjectURL(blob);
   }
 
   /* =========================
@@ -95,6 +117,7 @@ window.FSS = (() => {
     localStorage.removeItem(STORE_KEYS.fields);
     localStorage.removeItem(STORE_KEYS.values);
     localStorage.removeItem(STORE_KEYS.audit);
+
     localStorage.removeItem(STORE_KEYS.signed);
     localStorage.removeItem(STORE_KEYS.uploadedB64);
     localStorage.removeItem(STORE_KEYS.uploadedName);
@@ -122,6 +145,9 @@ window.FSS = (() => {
         bAddr: "",
       },
       builder: null,
+
+      // Optional: used by new sign page
+      fields: [],
     };
   }
 
@@ -137,7 +163,10 @@ window.FSS = (() => {
   function resetDoc() {
     const d = defaultDoc();
     setKey(STORE_KEYS.doc, d);
-    removeKey(STORE_KEYS.signed);
+
+    // IMPORTANT: raw storage
+    localStorage.removeItem(STORE_KEYS.signed);
+
     setKey(STORE_KEYS.fields, []);
     setKey(STORE_KEYS.values, {});
     setKey(STORE_KEYS.audit, []);
@@ -192,14 +221,18 @@ window.FSS = (() => {
   }
 
   /* =========================
-     SIGNED PDF STORAGE
+     SIGNED PDF STORAGE (RAW)
      ========================= */
   function setSignedBase64(b64) {
-    setKey(STORE_KEYS.signed, b64 || null);
+    if (!b64) {
+      localStorage.removeItem(STORE_KEYS.signed);
+      return;
+    }
+    localStorage.setItem(STORE_KEYS.signed, b64);
   }
 
   function getSignedBase64() {
-    return getKey(STORE_KEYS.signed, null);
+    return localStorage.getItem(STORE_KEYS.signed);
   }
 
   function hasSignedPDF() {
@@ -208,7 +241,7 @@ window.FSS = (() => {
   }
 
   /* =========================
-     UPLOAD HELPERS
+     UPLOAD HELPERS (RAW)
      ========================= */
   function hasUploadedPDF() {
     return !!localStorage.getItem(STORE_KEYS.uploadedB64);
@@ -241,26 +274,6 @@ window.FSS = (() => {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Failed to fetch PDF: ${url} (${res.status})`);
     return await res.arrayBuffer();
-  }
-
-  function arrayBufferToBase64(buffer) {
-    let binary = "";
-    const bytes = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-    return btoa(binary);
-  }
-
-  function base64ToBytes(b64) {
-    const byteChars = atob(b64);
-    const bytes = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) bytes[i] = byteChars.charCodeAt(i);
-    return bytes;
-  }
-
-  function base64ToBlobURL(b64, mime = "application/pdf") {
-    const bytes = base64ToBytes(b64);
-    const blob = new Blob([bytes], { type: mime });
-    return URL.createObjectURL(blob);
   }
 
   /* =========================
@@ -348,6 +361,9 @@ window.FSS = (() => {
     return out;
   }
 
+  /* =========================
+     SOURCE PDF BYTES
+     ========================= */
   async function getSourcePDFBytes() {
     const docState = loadDocState();
     if (!docState) throw new Error("No doc state found.");
@@ -370,6 +386,11 @@ window.FSS = (() => {
     return new Uint8Array(buf);
   }
 
+  /* =========================
+     SIGNED PDF GENERATION (EXISTING)
+     - Uses fss_fields (legacy)
+     - Uses fss_values
+     ========================= */
   async function generateSignedPDF() {
     const ok = await ensurePdfLib();
     if (!ok || !window.PDFLib) return false;
@@ -454,12 +475,99 @@ window.FSS = (() => {
 
       const signedBytes = await pdfDoc.save();
       const b64 = arrayBufferToBase64(signedBytes);
-      setSignedBase64(b64);
+      setSignedBase64(b64); // RAW
       return true;
     } catch (err) {
       console.error("generateSignedPDF error:", err);
       return false;
     }
+  }
+
+  /* =========================
+     NEW: generateSignedPDFBytes()
+     - This is what your new sign.html expects.
+     - It reads docState.fields (percent based from canvas)
+     ========================= */
+  async function generateSignedPDFBytes() {
+    const ok = await ensurePdfLib();
+    if (!ok || !window.PDFLib) return null;
+
+    const docState = loadDocState();
+    if (!docState) throw new Error("Missing doc state.");
+
+    const senderName = docState.parties?.aName || "Sender";
+    const defaultDate = new Date().toLocaleDateString();
+
+    // docState.fields in the new sign.html format
+    const pctFields = Array.isArray(docState.fields) ? docState.fields : [];
+
+    const srcBytes = await getSourcePDFBytes();
+    const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+    const pdfDoc = await PDFDocument.load(srcBytes);
+
+    const fontText = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontTextBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const fontSig = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
+
+    const pages = pdfDoc.getPages();
+    const page = pages[0]; // demo signs first page
+
+    const pageW = page.getWidth();
+    const pageH = page.getHeight();
+
+    // Convert percent coords to PDF coords
+    for (const f of pctFields) {
+      const type = f.type || "text";
+      const label = f.label || type.toUpperCase();
+      let value = String(f.value ?? "");
+
+      if (!value && type === "signature") value = senderName;
+      if (!value && type === "date") value = defaultDate;
+
+      // default size based on type
+      let font = fontText;
+      let size = 12;
+
+      if (type === "signature") { font = fontSig; size = 18; }
+      else if (type === "date") { font = fontTextBold; size = 11; }
+      else if (type === "text") { font = fontText; size = 12; }
+
+      // xPct/yPct are relative to rendered canvas.
+      // We map them to the PDF page:
+      const xPct = Number(f.xPct ?? 0.15);
+      const yPct = Number(f.yPct ?? 0.15);
+
+      // Our on-screen fields are positioned from top-left.
+      // PDF-lib uses bottom-left.
+      // We'll place text at y = pageH - (yPct * pageH) - offset.
+      const x = clamp(xPct, 0, 0.98) * pageW;
+      const yTop = clamp(yPct, 0, 0.98) * pageH;
+
+      const y = pageH - yTop - 24; // 24 ≈ field height/offset
+      const padX = 6;
+      const padY = 6;
+
+      page.drawText(value, {
+        x: x + padX,
+        y: y + padY,
+        size,
+        font,
+        color: rgb(0, 0, 0),
+        opacity: 1,
+      });
+    }
+
+    // stamp
+    page.drawText(`Signed via FSS Demo — ${new Date().toLocaleString()}`, {
+      x: 44,
+      y: 18,
+      size: 9,
+      font: fontText,
+      color: rgb(0.15, 0.15, 0.15),
+      opacity: 0.85,
+    });
+
+    return await pdfDoc.save();
   }
 
   /* =========================
@@ -510,6 +618,7 @@ window.FSS = (() => {
     // PDF
     ensurePdfLib,
     generateBuilderPDFBytes,
-    generateSignedPDF,
+    generateSignedPDF,        // legacy
+    generateSignedPDFBytes,   // NEW for your new sign.html
   };
 })();
