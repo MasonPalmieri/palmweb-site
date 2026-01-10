@@ -527,13 +527,13 @@
       const d = FSS.loadDocState();
       if(!d) return;
 
-      title.value = d.builder?.title || d.template || "";
+      title.value = d.builder?.title || "";
       aName.value = d.parties?.aName || "";
       aEmail.value = d.parties?.aEmail || "";
       bName.value = d.parties?.bName || "";
       bEmail.value = d.parties?.bEmail || "";
 
-      if (localStorage.getItem("fss_uploaded_pdf_b64")) {
+      if (FSS.hasUploadedPDF()) {
         setMode("upload");
       } else if (d.builder && d.builder.text) {
         setMode("scratch");
@@ -543,7 +543,7 @@
       }
     }
 
-    // ---- Upload -> store Base64 ----
+    // ---- Upload -> store Base64 (RAW storage) ----
     uploadInput?.addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0];
       if(!f) return;
@@ -623,10 +623,7 @@
       d.parties.bName = (bName.value || "").trim();
       d.parties.bEmail = (bEmail.value || "").trim();
 
-      // title usage:
       const t = (title.value || "").trim();
-
-      // Clear builder unless scratch
       d.builder = null;
 
       if (mode === "upload") {
@@ -652,7 +649,6 @@
 
         FSS.saveDocState(d);
 
-        // Use pdf-lib builder from app.js (ensures same output as Sign page)
         const ok = await FSS.ensurePdfLib();
         if (!ok) throw new Error("pdf-lib failed to load (needed for builder).");
         const bytes = await FSS.generateBuilderPDFBytes();
@@ -663,9 +659,6 @@
       // template mode
       d.template = templateSelect.value || "nda.pdf";
       d.builder = null;
-      if (t) {
-        // keep title stored in builder if you want; for template we just store template
-      }
       FSS.saveDocState(d);
       return { kind: "url", url: `pdfs/${encodeURIComponent(d.template)}`, name: d.template };
     }
@@ -700,12 +693,10 @@
 
       const page = await pdfDoc.getPage(pageNum);
 
-      // Fit calculation: based on viewerFrame width
       const unscaledViewport = page.getViewport({ scale: 1.0 });
-      const maxW = viewerFrame.clientWidth - 24; // padding
+      const maxW = viewerFrame.clientWidth - 24;
       const fitScale = Math.max(0.2, Math.min(3.0, maxW / unscaledViewport.width));
 
-      // If we haven’t set scale yet, default to fit
       if (!scale || scale === 1.0) scale = fitScale;
 
       const viewport = page.getViewport({ scale });
@@ -721,7 +712,6 @@
 
     function fit(){
       if(!pdfDoc) return;
-      // force recalculation by setting scale=1 then renderPage (which will set fitScale)
       scale = 1.0;
       renderPage();
     }
@@ -752,7 +742,6 @@
 
     openBtn.addEventListener("click", () => {
       if(!lastRenderSource) return;
-      // Open in a new tab
       if (lastRenderSource.kind === "url") {
         window.open(lastRenderSource.url, "_blank");
       } else {
@@ -774,11 +763,10 @@
       }
     });
 
+    // ✅ FIXED: removed FSS.setStage (does not exist)
     saveGoBtn.addEventListener("click", async () => {
       try{
-        // Ensure doc state is saved using same resolver
-        await getPreviewSource();
-        FSS.setStage("sign");
+        await getPreviewSource(); // ensure doc state saved
         location.href = "sign.html";
       } catch(e){
         console.error(e);
@@ -787,7 +775,6 @@
     });
 
     resetBtn.addEventListener("click", () => {
-      // wipe doc + uploaded + fields
       FSS.resetDoc();
       localStorage.removeItem("fss_uploaded_pdf_b64");
       localStorage.removeItem("fss_uploaded_pdf_name");
