@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WCV Premier LLC — Privacy (Demo)</title>
-  <meta name="description" content="Privacy policy demo page." />
+  <title>WCV Premier LLC — Privacy Policy (Demo)</title>
+  <meta name="description" content="WCV Premier LLC privacy policy demo page." />
   <meta name="theme-color" content="#fbfaf6" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
@@ -12,66 +12,55 @@
 <body>
   <header>
     <div class="container nav">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <img src="assets/wcv-logo.png" alt="WCV Premier LLC logo" />
         <div class="brand-title">
           <strong>WCV Premier LLC</strong>
-          <span>Demo redesign • Privacy</span>
+          <span>Privacy • Demo redesign</span>
         </div>
-      </div>
+      </a>
 
       <nav aria-label="Main">
         <a href="index.html" data-page="index.html">Home</a>
+        <a href="automation.html" data-page="automation.html">Automation</a>
         <a href="faq-s.html" data-page="faq-s.html">FAQ</a>
         <a href="contact.html" data-page="contact.html">Contact</a>
         <a href="terms-and-conditions.html" data-page="terms-and-conditions.html">Terms</a>
         <a href="privacy-policy.html" data-page="privacy-policy.html">Privacy</a>
       </nav>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="nav-actions">
         <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
-        <a class="btn btn-primary" href="contact.html">Request Offer</a>
+        <a class="btn btn-primary" href="automation.html">Start Intake</a>
       </div>
     </div>
   </header>
 
   <main class="container hero">
-    <div class="kicker"><span class="dot"></span> Respectful data use • Clear expectations</div>
-    <h1>Privacy policy</h1>
-    <p class="lead">Demo placeholder content. Replace with the client’s official privacy language.</p>
+    <div class="kicker"><span class="dot"></span> Privacy</div>
+    <h1 class="page-title">Privacy Policy (Demo)</h1>
+    <p class="lead">
+      This is demo copy. In production, tailor the policy to match the client’s actual data collection and tools.
+    </p>
+
+    <div class="card-soft prose">
+      <h2>What we collect</h2>
+      <p>Contact details, property information, and notes you provide.</p>
+
+      <h2>How we use it</h2>
+      <p>To evaluate the property, communicate next steps, and coordinate closing.</p>
+
+      <h2>Automation note</h2>
+      <p>
+        If automation is enabled (CRM routing, SMS, scheduling), disclosures should list vendors and retention periods.
+      </p>
+    </div>
   </main>
 
-  <section class="container">
-    <div class="two-col">
-      <div class="box">
-        <h3>Privacy (demo)</h3>
-        <ul class="list">
-          <li>We only collect information you submit through forms.</li>
-          <li>Submitted information is used to respond to your request.</li>
-          <li>We do not sell personal information.</li>
-          <li>Contact methods and retention policies should be defined before launch.</li>
-        </ul>
-        <div class="note">When live: include cookie/analytics language if using tracking tools.</div>
-      </div>
-
-      <div class="box">
-        <h3>Suggested improvements</h3>
-        <ul class="list">
-          <li>Explain what’s collected and why</li>
-          <li>List third-party processors (FormSubmit/HubSpot/CRM)</li>
-          <li>Include contact for privacy requests</li>
-        </ul>
-        <hr class="hr" />
-        <a class="btn btn-outline" href="terms-and-conditions.html">View Terms</a>
-      </div>
-    </div>
-  </section>
-
   <footer>
-    <div class="container">© <span id="year"></span> WCV Premier LLC • Demo redesign.</div>
+    <div class="container">© <span id="year"></span> WCV Premier LLC • Demo redesign for PalmWeb.</div>
   </footer>
 
   <script src="assets/site.js"></script>
 </body>
 </html>
-
