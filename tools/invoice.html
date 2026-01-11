@@ -566,7 +566,7 @@
     <h1>Invoice Builder</h1>
     <p class="lead">
       A demo plugin-style tool: services dropdown, line items, totals, payment terms, due date automation, and a print-ready invoice.
-      No backend required — perfect for GitHub Pages.
+      No backend required.
     </p>
   </div>
 
@@ -795,15 +795,16 @@
     }
 
     // ---------- Service catalog ----------
-const SERVICES = [
-  { name:"Website Design (Landing Page)", rate: 850, desc:"Single-page site with sections + contact CTA" },
-  { name:"Website Build (5 pages)", rate: 2200, desc:"Multi-page responsive site build" },
-  { name:"Tool / Plugin Prototype", rate: 1200, desc:"Interactive workflow tool (front-end demo)" },
-  { name:"SEO Setup + Analytics", rate: 450, desc:"Basic SEO + tracking setup" },
-  { name:"Content Refresh", rate: 300, desc:"Copy polish + layout improvements" },
-  { name:"Maintenance (Monthly)", rate: 150, desc:"Updates, small fixes, and checks" },
-  { name:"Custom (enter manually)", rate: null, desc:"" }
-];
+    // Removed the circled description text by blanking the `desc` for those services.
+    const SERVICES = [
+      { name:"Website Design (Landing Page)", rate: 850, desc:"" },
+      { name:"Website Build (5 pages)", rate: 2200, desc:"Multi-page responsive site build" },
+      { name:"Tool / Plugin Prototype", rate: 1200, desc:"" },
+      { name:"SEO Setup + Analytics", rate: 450, desc:"Basic SEO + tracking setup" },
+      { name:"Content Refresh", rate: 300, desc:"Copy polish + layout improvements" },
+      { name:"Maintenance (Monthly)", rate: 150, desc:"Updates, small fixes, and checks" },
+      { name:"Custom (enter manually)", rate: null, desc:"" }
+    ];
 
     // ---------- State ----------
     let items = [];
@@ -872,11 +873,11 @@ const SERVICES = [
                   <span class="mini-label">Custom description</span>
                   <input data-field="customDesc" placeholder="Short description" value="${escapeHtml(descVal)}" />
                 </div>
-              ` : `
+              ` : (service.desc ? `
                 <div class="muted" style="margin-top:8px;">
                   ${escapeHtml(service.desc || "")}
                 </div>
-              `}
+              ` : ``)}
             </div>
 
             <div class="cell">
