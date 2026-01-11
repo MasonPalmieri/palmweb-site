@@ -3,27 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb — Payment Portal (Demo)</title>
-  <meta name="description" content="Demo payment portal: validate invoice number, select card/ACH, and generate a printable receipt." />
+  <title>PalmWeb — Websites & Automation for Local Businesses</title>
+  <meta name="description" content="PalmWeb builds modern websites and practical automation for locally owned businesses." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      --bg:#f6fbff;
-      --card:#ffffff;
+      --bg:#ffffff;
       --text:#0b1220;
       --muted:#556173;
       --hair: rgba(15,23,42,.10);
+      --panel:#ffffff;
 
       --blue:#1d79c6;
       --green:#2cab4b;
-      --ink:#0b1220;
 
       --shadow: 0 18px 55px rgba(15,23,42,.10);
       --shadow2: 0 10px 28px rgba(15,23,42,.08);
 
-      --radius: 22px;
-      --max: 1100px;
+      --radius: 18px;
+      --max: 1160px;
     }
 
     *{ box-sizing:border-box; }
@@ -31,48 +30,104 @@
       margin:0;
       padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: var(--bg);
       color: var(--text);
       line-height: 1.55;
-      background:
-        radial-gradient(1100px 560px at 20% -10%, rgba(29,121,198,.14), transparent 60%),
-        radial-gradient(1100px 560px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
-        var(--bg);
     }
     a{ color:inherit; }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
+    img{ max-width:100%; display:block; }
 
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== Header / Banner (as-is, but cleaner centering) ===== */
     header{
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(246,251,255,.86);
-      backdrop-filter: blur(12px);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--hair);
     }
+
     .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
       padding: 12px 0;
     }
-    .brand{
-      display:flex; align-items:center; gap: 12px;
-      text-decoration:none;
-      white-space: nowrap;
+
+    .nav-grid{
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
+      gap: 14px;
     }
-    .logo{
-      width: 40px; height: 40px;
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      text-decoration:none;
+      min-width:0;
+      justify-self: start;
+    }
+    .brand img{
+      width: 38px;
+      height: 38px;
       border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.80);
+      border: 1px solid var(--hair);
+      background: rgba(15,23,42,.02);
+      padding: 6px;
+      object-fit: contain;
+    }
+    .brand-title{
+      display:flex;
+      flex-direction:column;
+      gap: 1px;
+      min-width:0;
+    }
+    .brand-title strong{
       font-weight: 950;
       letter-spacing: .2px;
+      font-size: 13.5px;
     }
-    .brand strong{ font-weight: 950; font-size: 13.5px; }
-    .brand span{ display:block; font-size: 12px; font-weight: 800; color: rgba(11,18,32,.62); }
+    .brand-title span{
+      font-weight: 750;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 520px;
+    }
 
+    nav{
+      justify-self: center;
+      display:flex;
+      align-items:center;
+      gap: 18px;
+      white-space: nowrap;
+    }
+    nav a{
+      text-decoration:none;
+      font-weight: 850;
+      font-size: 13.5px;
+      color: rgba(11,18,32,.72);
+      white-space: nowrap;
+    }
+    nav a:hover{ color: var(--text); }
+
+    .nav-actions{
+      justify-self: end;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -85,94 +140,341 @@
       font-weight: 950;
       cursor:pointer;
       user-select:none;
-      white-space: nowrap;
+      white-space: nowrap; /* keep one line */
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
+
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
       box-shadow: 0 16px 36px rgba(29,121,198,.18);
     }
+    .btn-primary:hover{ box-shadow: 0 20px 52px rgba(29,121,198,.22); }
+
     .btn-outline{
-      background: rgba(255,255,255,.82);
+      background:#fff;
       border-color: var(--hair);
       color: rgba(11,18,32,.92);
     }
-    .btn-outline:hover{ background:#fff; border-color: rgba(15,23,42,.14); }
-    .btn-ink{
-      background: var(--ink);
-      color: #fff;
-      box-shadow: 0 16px 36px rgba(11,18,32,.18);
+    .btn-outline:hover{
+      background: rgba(15,23,42,.02);
+      border-color: rgba(15,23,42,.14);
     }
 
-    main{ padding: 22px 0 46px; }
+    /* ===== Slim Hero ===== */
+    .hero{
+      padding: 34px 0 18px;
+      border-bottom: 1px solid var(--hair);
+      background:
+        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.10), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.08), transparent 60%),
+        linear-gradient(180deg, rgba(15,23,42,.02), transparent 60%);
+    }
 
-    .shell{
-      background: rgba(255,255,255,.72);
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px; /* thinner */
+      border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      background: rgba(255,255,255,.72);
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(11,18,32,.86);
+      width: fit-content;
     }
-    .head{
-      padding: 18px 18px 0;
-    }
-    h1{
-      margin: 0 0 8px;
-      font-size: clamp(28px, 3.6vw, 42px);
-      line-height: 1.05;
-      letter-spacing: -0.9px;
-    }
-    .lead{
-      margin: 0 0 14px;
-      color: rgba(11,18,32,.70);
-      font-weight: 750;
-      max-width: 90ch;
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
     }
 
-    .grid{
+    .hero-grid{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 12px;
-      padding: 18px;
-      align-items:start;
+      grid-template-columns: 1fr; /* no big right card */
+      gap: 14px;
     }
 
-    .card{
-      background: #fff;
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+      font-weight: 950;
+      max-width: 100%;
+    }
+
+    .lead{
+      margin: 0;
+      color: rgba(11,18,32,.70);
+      font-size: 15.5px;
+      max-width: 88ch;
+      font-weight: 750;
+    }
+
+    /* Button row under tagline */
+    .action-row{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+
+    .small-note{
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: rgba(11,18,32,.55);
+      font-weight: 750;
+    }
+
+    /* ===== Content accordion layout ===== */
+    .content{
+      padding: 22px 0 58px;
+    }
+
+    .pair-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    /* Accordion cards */
+    details.card{
+      background: var(--panel);
       border: 1px solid rgba(15,23,42,.10);
       border-radius: 22px;
       box-shadow: var(--shadow2);
-      padding: 16px;
-      position: relative;
       overflow:hidden;
     }
-    .card:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(320px 180px at 15% 20%, rgba(29,121,198,.10), transparent 70%),
-        radial-gradient(320px 180px at 90% 0%, rgba(44,171,75,.08), transparent 70%);
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
 
-    .card h2{
-      margin:0 0 10px;
-      font-size: 14px;
+    summary.card-head{
+      cursor:pointer;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 16px 16px;
       font-weight: 950;
       letter-spacing: -0.2px;
-      color: rgba(11,18,32,.92);
+      user-select:none;
+    }
+    summary.card-head::-webkit-details-marker{ display:none; }
+
+    .card-left{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width:0;
     }
 
-    .row{
+    .icon{
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .card-title{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width:0;
+    }
+
+    .card-title strong{
+      font-size: 15px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .card-title span{
+      font-size: 12.5px;
+      font-weight: 800;
+      color: rgba(11,18,32,.62);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chev{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: rgba(11,18,32,.62);
+      flex: 0 0 auto;
+    }
+    details[open] .chev{
+      transform: rotate(180deg);
+    }
+
+    .card-body{
+      padding: 0 16px 16px;
+      border-top: 1px solid rgba(15,23,42,.08);
+    }
+
+    .body-pad{ padding-top: 14px; }
+
+    .subgrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .tile{
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,.9);
+    }
+    .tile h4{
+      margin:0 0 6px;
+      font-size: 13.5px;
+      font-weight: 950;
+    }
+    .tile p{
+      margin:0;
+      color: rgba(11,18,32,.70);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .list{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
+    }
+    .list li{ margin: 6px 0; }
+
+    .btn-row{
+      margin-top: 12px;
       display:flex;
       gap: 10px;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
       align-items:center;
     }
+
+    /* Footer */
+    footer{
+      border-top: 1px solid var(--hair);
+      background:#fff;
+      padding: 18px 0;
+      color: rgba(11,18,32,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    /* Modal */
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+      z-index: 200;
+    }
+    .modal.show{ display:flex; }
+
+    .modal-card{
+      width: min(720px, 100%);
+      max-height: 88vh;
+      background:#fff;
+      border: 1px solid rgba(15,23,42,.12);
+      border-radius: 24px;
+      box-shadow: 0 24px 90px rgba(15,23,42,.35);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(15,23,42,.10);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .modal-title{
+      margin:0;
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .modal-sub{
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: rgba(11,18,32,.66);
+      font-weight: 750;
+    }
+    .close-btn{
+      border: 1px solid rgba(15,23,42,.12);
+      background:#fff;
+      color: rgba(11,18,32,.92);
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor:pointer;
+      font-weight: 950;
+      line-height: 1;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .close-btn:hover{ background: rgba(15,23,42,.02); }
+
+    .modal-body{
+      padding: 14px 16px 16px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .progress{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      margin-bottom: 12px;
+    }
+    .pdot{
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.14);
+      background: rgba(15,23,42,.05);
+    }
+    .pdot.active{
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      border-color: transparent;
+    }
+    .progress span{
+      font-size: 12px;
+      color: rgba(11,18,32,.55);
+      font-weight: 850;
+      margin-left: 6px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .full{ grid-column: 1 / -1; }
 
     label{
       display:flex;
@@ -181,139 +483,85 @@
       font-weight: 900;
       font-size: 13px;
       color: rgba(11,18,32,.92);
-      margin-top: 10px;
     }
-    input, select{
+    input, select, textarea{
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(15,23,42,.12);
       background:#fff;
+      color: rgba(11,18,32,.92);
+      outline:none;
       font-size: 14px;
       font-weight: 750;
-      outline:none;
     }
-    input:focus, select:focus{
+    input:focus, select:focus, textarea:focus{
       border-color: rgba(29,121,198,.55);
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
+    textarea{ resize: vertical; min-height: 110px; }
 
-    .pill{
+    .checks{
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(15,23,42,.03);
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+    }
+    .check{
       display:inline-flex;
       align-items:center;
       gap: 8px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(15,23,42,.03);
       padding: 8px 10px;
       border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
-      color: rgba(11,18,32,.70);
-      white-space: nowrap;
-    }
-    .mini{
-      font-size: 12px;
-      color: rgba(11,18,32,.55);
-      font-weight: 800;
-    }
-    .warn{
-      border: 1px solid rgba(255, 153, 0, .35);
-      background: rgba(255, 153, 0, .10);
-      color: rgba(120, 70, 0, .95);
-      padding: 10px 12px;
-      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: #fff;
       font-weight: 850;
       font-size: 13px;
-      margin-top: 12px;
-    }
-    .ok{
-      border: 1px solid rgba(44,171,75,.28);
-      background: rgba(44,171,75,.10);
-      color: rgba(10, 80, 25, .95);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 850;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-
-    .summary{
-      border-top: 1px solid rgba(15,23,42,.10);
-      margin-top: 12px;
-      padding-top: 12px;
-      display:grid;
-      gap: 8px;
-    }
-    .kv{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      border-radius: 14px;
-      font-size: 13.5px;
-      font-weight: 800;
-    }
-    .kv span:first-child{ color: rgba(11,18,32,.60); font-weight: 850; }
-    .kv strong{ font-weight: 950; color: rgba(11,18,32,.92); }
-
-    .method-tabs{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
-    .tab{
-      flex: 1 1 160px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      border-radius: 16px;
-      padding: 12px;
       cursor:pointer;
       user-select:none;
-      font-weight: 950;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
       white-space: nowrap;
     }
-    .tab small{
-      font-weight: 850;
-      color: rgba(11,18,32,.58);
-    }
-    .tab.active{
-      border-color: rgba(29,121,198,.35);
-      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
-    }
+    .check input{ accent-color: var(--blue); }
 
-    .two{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
+    .modal-actions{
+      margin-top: 14px;
+      display:flex;
       gap: 10px;
-      margin-top: 10px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
-    .receipt{
-      display:none;
+    .hint{
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(11,18,32,.55);
+      font-weight: 750;
     }
 
-    /* Print */
-    @media print{
-      header, .no-print{ display:none !important; }
-      body{ background:#fff; }
-      main{ padding:0; }
-      .shell{ box-shadow:none; border:none; background:#fff; }
-      .grid{ grid-template-columns: 1fr; padding: 0; }
-      .card{ box-shadow:none; border: 1px solid #e5e7eb; }
-      .receipt{ display:block !important; }
-      .receipt .card{ page-break-inside: avoid; }
-    }
-
+    /* Responsive */
     @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-      .two{ grid-template-columns: 1fr; }
+      .nav-grid{
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "brand actions"
+          "nav nav";
+      }
+      .brand{ grid-area: brand; }
+      .nav-actions{ grid-area: actions; }
+      nav{
+        grid-area: nav;
+        justify-self: start;
+        overflow:auto;
+        padding-top: 8px;
+      }
+
+      .pair-grid{ grid-template-columns: 1fr; }
+      .subgrid{ grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -321,410 +569,557 @@
 <body>
   <header>
     <div class="container nav">
-      <a class="brand" href="../index.html">
-        <div class="logo">PW</div>
-        <div>
-          <strong>PalmWeb</strong>
-          <span>Payment Portal (Demo)</span>
-        </div>
-      </a>
+      <div class="nav-grid">
+        <a class="brand" href="#top">
+          <img src="assets/logo.png" alt="PalmWeb logo" />
+          <div class="brand-title">
+            <strong>PalmWeb</strong>
+            <span>Websites • Automation • Consulting</span>
+          </div>
+        </a>
 
-      <div class="row">
-        <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
-        <button class="btn btn-primary no-print" id="printBtn" type="button">Print Receipt</button>
+        <nav aria-label="Main">
+          <a href="#services">Services</a>
+          <a href="#work">Recent Work</a>
+          <a href="#samples">Public Samples</a>
+          <a href="#tools">Tools</a>
+          <a href="#faq">FAQ</a>
+          <a href="#about">About</a>
+          <a class="btn btn-outline" href="demos.html">Client Access</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+        </div>
       </div>
     </div>
   </header>
 
-  <main>
-    <div class="container">
-      <div class="shell">
-        <div class="head">
-          <div class="row" style="justify-content:space-between;">
-            <div>
-              <h1>Payment Portal</h1>
-              <p class="lead">Validate an invoice number, choose Credit Card or ACH, and generate a printable receipt. Demo only (no real payment processing).</p>
-            </div>
-            <div class="row no-print" style="justify-content:flex-end;">
-              <span class="pill">Demo Tool</span>
-              <span class="pill">Front-end Only</span>
-            </div>
-          </div>
+  <!-- Hero -->
+  <main id="top" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="kicker"><span class="dot"></span> Modern sites + practical automation for local businesses</div>
+
+        <h1>Build a web presence that feels premium — and works.</h1>
+
+        <p class="lead">
+          PalmWeb designs clean, modern websites and automation workflows that turn requests into action.
+          Clear messaging, fast load times, and simple next steps.
+        </p>
+
+        <!-- Buttons row under tagline (email is now just a button, like everything else) -->
+        <div class="action-row">
+          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+          <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+          <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
+          <a class="btn btn-outline" href="#samples">View Samples</a>
+          <a class="btn btn-outline" href="#tools">View Tools</a>
+          <a class="btn btn-outline" href="demos.html">Client Access</a>
         </div>
 
-        <div class="grid">
-          <!-- Left: Payment Form -->
-          <section class="card">
-            <h2>Invoice Validation</h2>
-
-            <div class="two">
-              <label>
-                Invoice #
-                <input id="invoiceNo" placeholder="INV-1001" autocomplete="off" />
-              </label>
-
-              <label>
-                Email (optional)
-                <input id="payerEmail" type="email" placeholder="you@company.com" />
-              </label>
-            </div>
-
-            <div class="row" style="margin-top:12px;">
-              <button class="btn btn-primary" id="validateBtn" type="button">Validate Invoice</button>
-              <button class="btn btn-outline" id="fillDemoBtn" type="button">Use Demo Invoice</button>
-              <span class="mini">Try: INV-1001, INV-1002, INV-2044</span>
-            </div>
-
-            <div id="status" class="warn" style="display:none;"></div>
-
-            <div id="invoiceSummary" class="summary" style="display:none;">
-              <div class="kv"><span>Client</span><strong id="clientName">—</strong></div>
-              <div class="kv"><span>Invoice</span><strong id="invDisplay">—</strong></div>
-              <div class="kv"><span>Amount Due</span><strong id="amountDue">$0.00</strong></div>
-              <div class="kv"><span>Due Date</span><strong id="dueDate">—</strong></div>
-            </div>
-
-            <div id="paymentBlock" style="display:none; margin-top:14px;">
-              <h2 style="margin-top:14px;">Payment Method</h2>
-
-              <div class="method-tabs">
-                <div class="tab active" id="tabCard" role="button" tabindex="0">
-                  <div>Credit Card<br><small>Instant confirmation</small></div>
-                  <div>💳</div>
-                </div>
-                <div class="tab" id="tabAch" role="button" tabindex="0">
-                  <div>ACH Transfer<br><small>1–3 business days</small></div>
-                  <div>🏦</div>
-                </div>
-              </div>
-
-              <!-- Card fields -->
-              <div id="cardFields" style="margin-top:10px;">
-                <div class="two">
-                  <label>
-                    Cardholder name
-                    <input id="cardName" placeholder="Name on card" autocomplete="off" />
-                  </label>
-                  <label>
-                    Card number
-                    <input id="cardNumber" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="off" />
-                  </label>
-                </div>
-
-                <div class="two">
-                  <label>
-                    Expiration
-                    <input id="cardExp" placeholder="MM/YY" autocomplete="off" />
-                  </label>
-                  <label>
-                    CVC
-                    <input id="cardCvc" inputmode="numeric" placeholder="123" autocomplete="off" />
-                  </label>
-                </div>
-              </div>
-
-              <!-- ACH fields -->
-              <div id="achFields" style="display:none; margin-top:10px;">
-                <div class="two">
-                  <label>
-                    Account holder name
-                    <input id="achName" placeholder="Name on bank account" autocomplete="off" />
-                  </label>
-                  <label>
-                    Bank name
-                    <input id="achBank" placeholder="Example: Citizens Bank" autocomplete="off" />
-                  </label>
-                </div>
-
-                <div class="two">
-                  <label>
-                    Routing number
-                    <input id="achRouting" inputmode="numeric" placeholder="9-digit routing" autocomplete="off" />
-                  </label>
-                  <label>
-                    Account number
-                    <input id="achAccount" inputmode="numeric" placeholder="Account number" autocomplete="off" />
-                  </label>
-                </div>
-              </div>
-
-              <label style="margin-top:12px;">
-                Amount to pay
-                <input id="payAmount" inputmode="decimal" placeholder="$0.00" />
-              </label>
-
-              <div class="row" style="margin-top:12px;">
-                <button class="btn btn-ink" id="payBtn" type="button">Process Payment (Demo)</button>
-                <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
-                <span class="mini">Demo only — no charge is made.</span>
-              </div>
-
-              <div id="payStatus" class="ok" style="display:none;"></div>
-            </div>
-          </section>
-
-          <!-- Right: Receipt Preview -->
-          <aside class="card">
-            <h2>Receipt Preview</h2>
-            <p class="mini" style="margin-top:-4px;">After a successful demo payment, this becomes printable.</p>
-
-            <div class="summary" style="margin-top:10px;">
-              <div class="kv"><span>Status</span><strong id="previewStatus">Awaiting validation</strong></div>
-              <div class="kv"><span>Method</span><strong id="previewMethod">—</strong></div>
-              <div class="kv"><span>Confirmation</span><strong id="previewConf">—</strong></div>
-            </div>
-
-            <div class="summary">
-              <div class="kv"><span>Invoice</span><strong id="previewInv">—</strong></div>
-              <div class="kv"><span>Client</span><strong id="previewClient">—</strong></div>
-              <div class="kv"><span>Paid</span><strong id="previewPaid">$0.00</strong></div>
-              <div class="kv"><span>Date</span><strong id="previewDate">—</strong></div>
-            </div>
-
-            <div class="warn no-print" style="margin-top:12px;">
-              Demo note: In production, this would connect to Stripe/Authorize.Net + QuickBooks,
-              validate invoice status, and record the payment automatically.
-            </div>
-
-            <!-- Print-only receipt block -->
-            <div class="receipt" aria-hidden="true">
-              <div style="margin-top:14px;">
-                <h2 style="font-size:16px;margin:0 0 8px;">Payment Receipt</h2>
-                <div class="mini">PalmWeb — Demo Payment Portal</div>
-              </div>
-            </div>
-          </aside>
-        </div>
+        <div class="small-note">Based in New England • Serving local businesses</div>
       </div>
     </div>
   </main>
 
+  <!-- Content (3 rows, side-by-side accordions) -->
+  <div class="content">
+    <div class="container">
+
+      <!-- Row 1: Services + Recent Work -->
+      <div class="pair-grid">
+        <details class="card" id="services">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">🧭</div>
+              <div class="card-title">
+                <strong>Services</strong>
+                <span>What we build and support</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <div class="subgrid">
+                <div class="tile">
+                  <h4>Website Building</h4>
+                  <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
+                </div>
+                <div class="tile">
+                  <h4>Maintenance</h4>
+                  <p>Updates, fixes, and improvements to keep your site current and fast.</p>
+                </div>
+                <div class="tile">
+                  <h4>Integration & Automation</h4>
+                  <p>Connect forms, email, documents, and spreadsheets to reduce admin work.</p>
+                </div>
+                <div class="tile">
+                  <h4>Domain Migration</h4>
+                  <p>Move domains/email safely without downtime or lost access.</p>
+                </div>
+                <div class="tile">
+                  <h4>Power Suite Development</h4>
+                  <p>Power Apps + Power Automate solutions that improve accuracy and speed.</p>
+                </div>
+                <div class="tile">
+                  <h4>Consulting</h4>
+                  <p>Practical guidance on the best next step, based on your goals.</p>
+                </div>
+              </div>
+
+              <div class="btn-row">
+                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="card" id="work">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">🧩</div>
+              <div class="card-title">
+                <strong>Recent Work</strong>
+                <span>Live sites + private demos</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <ul class="list">
+                <li><strong>Bill Noble Fine Art</strong> — gallery-style site + inquiry flow.</li>
+                <li><strong>Missy Wagner Real Estate</strong> — fast, clean, mobile-friendly layout.</li>
+                <li><strong>Agreement Workflow Demo</strong> — create → send → complete → PDF output.</li>
+              </ul>
+
+              <div class="btn-row">
+                <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Bill Noble Fine Art</a>
+                <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Missy Wagner RE</a>
+                <a class="btn btn-outline" href="demos.html">Open Demos</a>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Row 2: Public Samples + Custom Tools -->
+      <div class="pair-grid" style="margin-top:14px;">
+        <details class="card" id="samples">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">🧪</div>
+              <div class="card-title">
+                <strong>Public Samples</strong>
+                <span>Clickable sample sites</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <ul class="list">
+                <li><strong>Plumbing</strong> — fast lead flow + trust cues.</li>
+                <li><strong>Restaurant</strong> — menu highlights + inquiry form.</li>
+                <li><strong>PT / Wellness</strong> — treatments + testimonials + appointment request.</li>
+                <li><strong>Law Firm</strong> — practice areas + consult request intake.</li>
+              </ul>
+
+              <div class="btn-row">
+                <a class="btn btn-outline" href="samples/plumbing.html">Plumbing</a>
+                <a class="btn btn-outline" href="samples/restaurant.html">Restaurant</a>
+                <a class="btn btn-outline" href="samples/wellness.html">Wellness</a>
+                <a class="btn btn-outline" href="samples/law.html">Law Firm</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="card" id="tools">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">🧰</div>
+              <div class="card-title">
+                <strong>Custom Tools</strong>
+                <span>Interactive “mini software” demos</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <div class="subgrid">
+                <div class="tile">
+                  <h4>Invoice Builder</h4>
+                  <p>Line items, totals, payment terms, due date, and a clean print view.</p>
+                  <div class="btn-row">
+                    <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
+                  </div>
+                </div>
+
+                <div class="tile">
+                  <h4>Lead Intake Tool</h4>
+                  <p>Smart intake form, validation, summary view, and print-ready output.</p>
+                  <div class="btn-row">
+                    <a class="btn btn-outline" href="tools/intake.html">Open Intake Tool</a>
+                  </div>
+                </div>
+
+                <div class="tile">
+                  <h4>Payment Portal</h4>
+                  <p>Validate invoice #, choose card/ACH, and generate a printable receipt (demo).</p>
+                  <div class="btn-row">
+                    <a class="btn btn-outline" href="tools/payment.html">Open Payment Portal</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="small-note" style="margin-top:12px;">
+                These tools can stay front-end (GitHub Pages) or connect to Stripe/QuickBooks/Airtable/HubSpot/custom backends.
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Row 3: FAQ + About -->
+      <div class="pair-grid" style="margin-top:14px;">
+        <details class="card" id="faq">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">❓</div>
+              <div class="card-title">
+                <strong>FAQ</strong>
+                <span>Common questions</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <ul class="list">
+                <li><strong>Cost?</strong> I quote based on scope after a short call.</li>
+                <li><strong>Timeline?</strong> Most small sites take 1–3 weeks.</li>
+                <li><strong>Maintenance?</strong> Yes—monthly or as-needed.</li>
+                <li><strong>Automation?</strong> Yes—Power Apps/Automate + integrations.</li>
+              </ul>
+
+              <div class="btn-row">
+                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="card" id="about">
+          <summary class="card-head">
+            <div class="card-left">
+              <div class="icon">👋</div>
+              <div class="card-title">
+                <strong>About</strong>
+                <span>Local, practical, clean execution</span>
+              </div>
+            </div>
+            <div class="chev">⌄</div>
+          </summary>
+
+          <div class="card-body">
+            <div class="body-pad">
+              <p style="margin:0; color: rgba(11,18,32,.70); font-size: 13.5px; font-weight: 750; max-width: 90ch;">
+                I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
+                Clear layout, fast load times, and workflows that make requests easier to manage.
+              </p>
+
+              <div class="btn-row">
+                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+                <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
+                <a class="btn btn-outline" href="demos.html">Client Access</a>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      © <span id="year"></span> PalmWeb. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ======= REQUEST A QUOTE MODAL (3-Step + FormSubmit) ======= -->
+  <div class="modal" id="quoteModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
+      <div class="modal-head">
+        <div>
+          <h3 class="modal-title" id="quoteTitle">Request a Quote</h3>
+          <p class="modal-sub">Submit this form and I’ll receive the info instantly by email.</p>
+        </div>
+        <button class="close-btn" id="closeModalBtn" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="progress" aria-label="Progress">
+          <div class="pdot active" id="dot1"></div>
+          <div class="pdot" id="dot2"></div>
+          <div class="pdot" id="dot3"></div>
+          <span id="stepLabel">Step 1 of 3</span>
+        </div>
+
+        <form
+          id="quoteForm"
+          action="https://formsubmit.co/mason@palmweb.net"
+          method="POST"
+          novalidate
+        >
+          <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+
+          <!-- STEP 1 -->
+          <div id="step1">
+            <div style="font-weight:950; margin-bottom:6px;">Contact info</div>
+
+            <div class="form-grid">
+              <label class="full">
+                Business name*
+                <input name="Business Name" id="bizName" type="text" placeholder="Example: Smith & Sons Plumbing" required />
+              </label>
+
+              <label>
+                Your name*
+                <input name="Your Name" id="yourName" type="text" placeholder="Your full name" required />
+              </label>
+
+              <label>
+                Phone*
+                <input name="Phone" id="phone" type="tel" placeholder="(401) 555-1234" required />
+              </label>
+
+              <label class="full">
+                Email*
+                <input name="Email" id="email" type="email" placeholder="you@yourdomain.com" required />
+              </label>
+
+              <label class="full">
+                Location (city/state)
+                <input name="Location" id="location" type="text" placeholder="Example: Warwick, RI" />
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step2" style="display:none;">
+            <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
+
+            <div class="checks">
+              <label class="check"><input type="checkbox" name="Needs" value="New website"> New website</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Website redesign"> Website redesign</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Maintenance/updates"> Maintenance/updates</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Domain + email setup/migration"> Domain + email setup</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Automation (Power Apps/Automate)"> Automation</label>
+              <label class="check"><input type="checkbox" name="Needs" value="Consulting"> Consulting</label>
+            </div>
+
+            <div class="form-grid">
+              <label class="full">
+                Current website (if any)
+                <input name="Current Website" id="currentSite" type="url" placeholder="https://yourwebsite.com" />
+              </label>
+
+              <label class="full">
+                Primary goal
+                <select name="Primary Goal" id="goal">
+                  <option value="">Select…</option>
+                  <option>More calls / leads</option>
+                  <option>Bookings / appointments</option>
+                  <option>Professional credibility</option>
+                  <option>Show services + pricing</option>
+                  <option>Sell products online</option>
+                  <option>Other</option>
+                </select>
+              </label>
+
+              <label>
+                Timeline
+                <select name="Timeline" id="timeline">
+                  <option value="">Select…</option>
+                  <option>As soon as possible</option>
+                  <option>This month</option>
+                  <option>Next 1–2 months</option>
+                  <option>Flexible</option>
+                </select>
+              </label>
+
+              <label>
+                Budget range
+                <select name="Budget Range" id="budget">
+                  <option value="">Select…</option>
+                  <option>Under $1,000</option>
+                  <option>$1,000 – $2,000</option>
+                  <option>$2,000 – $4,000</option>
+                  <option>$4,000+</option>
+                  <option>Not sure yet</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step3" style="display:none;">
+            <div style="font-weight:950; margin-bottom:6px;">Details</div>
+
+            <div class="form-grid">
+              <label class="full">
+                Details (pages needed, examples you like, notes, anything helpful)
+                <textarea name="Details" id="details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like..."></textarea>
+              </label>
+
+              <label class="full">
+                Best way to reach you
+                <select name="Best Contact Method" id="bestReach">
+                  <option value="">Select…</option>
+                  <option>Email</option>
+                  <option>Phone</option>
+                  <option>Text</option>
+                </select>
+              </label>
+            </div>
+
+            <p class="hint">When you hit “Send”, the form submits directly to PalmWeb (no email app needed).</p>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
+            <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
+            <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const invoices = [
-      { no: "INV-1001", client: "Acme Home Services", amount: 1250.00, due: "2026-01-26" },
-      { no: "INV-1002", client: "Renee K. Wellness Studio", amount: 650.00, due: "2026-02-05" },
-      { no: "INV-2044", client: "Smith & Sons Plumbing", amount: 2400.00, due: "2026-02-12" },
-    ];
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    const $ = (id) => document.getElementById(id);
+    const modal = document.getElementById("quoteModal");
+    const closeBtn = document.getElementById("closeModalBtn");
+    const openBtns = document.querySelectorAll("[data-open-quote]");
 
-    const invoiceNo = $("invoiceNo");
-    const payerEmail = $("payerEmail");
-    const validateBtn = $("validateBtn");
-    const fillDemoBtn = $("fillDemoBtn");
-    const status = $("status");
-    const invoiceSummary = $("invoiceSummary");
-    const paymentBlock = $("paymentBlock");
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const step3 = document.getElementById("step3");
 
-    const clientName = $("clientName");
-    const invDisplay = $("invDisplay");
-    const amountDue = $("amountDue");
-    const dueDate = $("dueDate");
+    const dot1 = document.getElementById("dot1");
+    const dot2 = document.getElementById("dot2");
+    const dot3 = document.getElementById("dot3");
+    const stepLabel = document.getElementById("stepLabel");
 
-    const tabCard = $("tabCard");
-    const tabAch = $("tabAch");
-    const cardFields = $("cardFields");
-    const achFields = $("achFields");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const sendBtn = document.getElementById("sendBtn");
 
-    const payAmount = $("payAmount");
-    const payBtn = $("payBtn");
-    const resetBtn = $("resetBtn");
-    const payStatus = $("payStatus");
+    let currentStep = 1;
 
-    const previewStatus = $("previewStatus");
-    const previewMethod = $("previewMethod");
-    const previewConf = $("previewConf");
-    const previewInv = $("previewInv");
-    const previewClient = $("previewClient");
-    const previewPaid = $("previewPaid");
-    const previewDate = $("previewDate");
-
-    const printBtn = $("printBtn");
-
-    let selectedInvoice = null;
-    let method = "card";
-
-    function money(n){
-      return n.toLocaleString(undefined, { style:"currency", currency:"USD" });
+    function openModal(){
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      resetToStep1();
     }
 
-    function fmtDate(iso){
-      try{
-        const d = new Date(iso + "T00:00:00");
-        return d.toLocaleDateString(undefined, { year:"numeric", month:"2-digit", day:"2-digit" });
-      } catch {
-        return iso;
-      }
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
 
-    function setStatus(msg, ok=false){
-      status.style.display = "";
-      status.className = ok ? "ok" : "warn";
-      status.textContent = msg;
+    function resetToStep1(){
+      currentStep = 1;
+      step1.style.display = "";
+      step2.style.display = "none";
+      step3.style.display = "none";
+
+      dot1.classList.add("active");
+      dot2.classList.remove("active");
+      dot3.classList.remove("active");
+      stepLabel.textContent = "Step 1 of 3";
+
+      backBtn.style.display = "none";
+      nextBtn.style.display = "";
+      sendBtn.style.display = "none";
     }
 
-    function clearStatus(){
-      status.style.display = "none";
-      status.textContent = "";
+    function goToStep(step){
+      currentStep = step;
+
+      step1.style.display = step === 1 ? "" : "none";
+      step2.style.display = step === 2 ? "" : "none";
+      step3.style.display = step === 3 ? "" : "none";
+
+      dot1.classList.toggle("active", step >= 1);
+      dot2.classList.toggle("active", step >= 2);
+      dot3.classList.toggle("active", step >= 3);
+
+      stepLabel.textContent = `Step ${step} of 3`;
+
+      backBtn.style.display = step === 1 ? "none" : "";
+      nextBtn.style.display = step === 3 ? "none" : "";
+      sendBtn.style.display = step === 3 ? "" : "none";
+
+      modal.querySelector(".modal-body").scrollTop = 0;
     }
 
-    function setMethod(m){
-      method = m;
-      tabCard.classList.toggle("active", m === "card");
-      tabAch.classList.toggle("active", m === "ach");
-      cardFields.style.display = m === "card" ? "" : "none";
-      achFields.style.display = m === "ach" ? "" : "none";
-      previewMethod.textContent = m === "card" ? "Credit Card" : "ACH Transfer";
-    }
-
-    function validateInvoice(){
-      clearStatus();
-      payStatus.style.display = "none";
-
-      const inv = invoiceNo.value.trim().toUpperCase();
-      if(!inv){
-        setStatus("Enter an invoice number to continue.");
-        return;
-      }
-
-      const found = invoices.find(x => x.no === inv);
-      if(!found){
-        selectedInvoice = null;
-        invoiceSummary.style.display = "none";
-        paymentBlock.style.display = "none";
-
-        previewStatus.textContent = "Invoice not found";
-        previewInv.textContent = inv || "—";
-        previewClient.textContent = "—";
-        previewPaid.textContent = money(0);
-        previewConf.textContent = "—";
-        previewDate.textContent = "—";
-        previewMethod.textContent = "—";
-
-        setStatus("Invoice number not found. Try INV-1001, INV-1002, or INV-2044.");
-        return;
-      }
-
-      selectedInvoice = found;
-
-      invoiceSummary.style.display = "";
-      paymentBlock.style.display = "";
-
-      clientName.textContent = found.client;
-      invDisplay.textContent = found.no;
-      amountDue.textContent = money(found.amount);
-      dueDate.textContent = fmtDate(found.due);
-
-      payAmount.value = found.amount.toFixed(2);
-
-      previewStatus.textContent = "Validated — ready to pay";
-      previewInv.textContent = found.no;
-      previewClient.textContent = found.client;
-      previewPaid.textContent = money(0);
-      previewConf.textContent = "—";
-      previewDate.textContent = "—";
-
-      setMethod(method);
-
-      setStatus("Invoice validated. Select a payment method and submit payment (demo).", true);
-    }
-
-    function processPayment(){
-      if(!selectedInvoice){
-        setStatus("Validate an invoice before paying.");
-        return;
-      }
-
-      const amt = Number(String(payAmount.value).replace(/[^0-9.]/g,""));
-      if(!amt || amt <= 0){
-        setStatus("Enter a valid payment amount.");
-        payAmount.focus();
-        return;
-      }
-
-      if(amt > selectedInvoice.amount){
-        setStatus("Payment amount cannot exceed amount due.");
-        payAmount.focus();
-        return;
-      }
-
-      // Minimal demo validation per method
-      if(method === "card"){
-        const cn = $("cardName").value.trim();
-        const num = $("cardNumber").value.replace(/\s+/g,"").trim();
-        const exp = $("cardExp").value.trim();
-        const cvc = $("cardCvc").value.trim();
-        if(!cn || num.length < 12 || !exp || cvc.length < 3){
-          setStatus("Complete the credit card fields (demo validation).");
-          return;
-        }
-      } else {
-        const an = $("achName").value.trim();
-        const bank = $("achBank").value.trim();
-        const r = $("achRouting").value.trim();
-        const a = $("achAccount").value.trim();
-        if(!an || !bank || r.length < 9 || a.length < 4){
-          setStatus("Complete the ACH fields (demo validation).");
-          return;
+    function validateStep1(){
+      const requiredIds = ["bizName","yourName","phone","email"];
+      for(const id of requiredIds){
+        const el = document.getElementById(id);
+        if(!el.value.trim()){
+          el.focus();
+          return false;
         }
       }
-
-      // Demo “success”
-      const conf = "PMT-" + Math.random().toString(16).slice(2,10).toUpperCase();
-      const now = new Date();
-
-      payStatus.style.display = "";
-      payStatus.textContent = `Payment accepted (demo). Confirmation: ${conf}`;
-
-      previewStatus.textContent = "Paid (demo)";
-      previewConf.textContent = conf;
-      previewPaid.textContent = money(amt);
-      previewDate.textContent = now.toLocaleString();
-
-      // keep status green
-      setStatus("Payment processed successfully (demo). You can print a receipt.", true);
+      return true;
     }
 
-    function resetAll(){
-      selectedInvoice = null;
-      invoiceNo.value = "";
-      payAmount.value = "";
-      payerEmail.value = "";
-
-      invoiceSummary.style.display = "none";
-      paymentBlock.style.display = "none";
-      payStatus.style.display = "none";
-
-      previewStatus.textContent = "Awaiting validation";
-      previewMethod.textContent = "—";
-      previewConf.textContent = "—";
-      previewInv.textContent = "—";
-      previewClient.textContent = "—";
-      previewPaid.textContent = money(0);
-      previewDate.textContent = "—";
-
-      clearStatus();
-      setMethod("card");
-    }
-
-    validateBtn.addEventListener("click", validateInvoice);
-    fillDemoBtn.addEventListener("click", () => {
-      invoiceNo.value = "INV-1001";
-      validateInvoice();
+    openBtns.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openModal();
+      });
     });
 
-    tabCard.addEventListener("click", () => setMethod("card"));
-    tabAch.addEventListener("click", () => setMethod("ach"));
-    tabCard.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") setMethod("card"); });
-    tabAch.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") setMethod("ach"); });
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+    document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modal.classList.contains("show")) closeModal(); });
 
-    payBtn.addEventListener("click", processPayment);
-    resetBtn.addEventListener("click", resetAll);
+    nextBtn.addEventListener("click", () => {
+      if(currentStep === 1){
+        if(!validateStep1()) return;
+        goToStep(2);
+        return;
+      }
+      if(currentStep === 2){
+        goToStep(3);
+        return;
+      }
+    });
 
-    printBtn.addEventListener("click", () => window.print());
-
-    // Initialize
-    setMethod("card");
+    backBtn.addEventListener("click", () => {
+      if(currentStep === 2) goToStep(1);
+      if(currentStep === 3) goToStep(2);
+    });
   </script>
 </body>
 </html>
