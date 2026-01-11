@@ -3,28 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb — Websites & Automation for Local Businesses</title>
-  <meta name="description" content="PalmWeb builds modern websites and practical automation for locally owned businesses." />
+  <title>PalmWeb — Payment Portal (Demo)</title>
+  <meta name="description" content="Demo payment portal: validate invoice number, select card/ACH, and generate a printable receipt." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      --bg:#ffffff;
+      --bg:#f6fbff;
+      --card:#ffffff;
       --text:#0b1220;
       --muted:#556173;
-      --border: rgba(15,23,42,.12);
-      --panel:#ffffff;
-
-      --shadow: 0 18px 55px rgba(15,23,42,.10);
-      --shadow2: 0 10px 30px rgba(15,23,42,.08);
-
-      --radius: 18px;
-      --max: 1160px;
+      --hair: rgba(15,23,42,.10);
 
       --blue:#1d79c6;
       --green:#2cab4b;
+      --ink:#0b1220;
 
-      --hair: rgba(15,23,42,.08);
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
+      --shadow2: 0 10px 28px rgba(15,23,42,.08);
+
+      --radius: 22px;
+      --max: 1100px;
     }
 
     *{ box-sizing:border-box; }
@@ -32,95 +31,47 @@
       margin:0;
       padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
       color: var(--text);
       line-height: 1.55;
+      background:
+        radial-gradient(1100px 560px at 20% -10%, rgba(29,121,198,.14), transparent 60%),
+        radial-gradient(1100px 560px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
+        var(--bg);
     }
     a{ color:inherit; }
-    img{ max-width:100%; display:block; }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
 
-    .container{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* ===== Header ===== */
     header{
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(255,255,255,.86);
-      backdrop-filter: blur(14px);
+      background: rgba(246,251,255,.86);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--hair);
     }
-
     .nav{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 16px;
-      padding: 14px 0;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
       gap: 12px;
+      padding: 12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 12px;
       text-decoration:none;
-      min-width:0;
       white-space: nowrap;
     }
-
-    .brand img{
-      width: 38px;
-      height: 38px;
+    .logo{
+      width: 40px; height: 40px;
       border-radius: 14px;
-      border: 1px solid var(--hair);
-      background: rgba(15,23,42,.02);
-      padding: 6px;
-      object-fit: contain;
-      flex: 0 0 auto;
-    }
-
-    .brand-title{
-      display:flex;
-      flex-direction:column;
-      gap: 1px;
-      min-width:0;
-    }
-    .brand-title strong{
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.80);
       font-weight: 950;
       letter-spacing: .2px;
-      font-size: 13.5px;
-      white-space: nowrap;
     }
-    .brand-title span{
-      font-weight: 750;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      max-width: 520px;
-    }
-
-    nav{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap: 18px;
-      margin-left:auto;
-      flex-wrap: nowrap;
-    }
-    nav a{
-      text-decoration:none;
-      font-weight: 850;
-      font-size: 13.5px;
-      color: rgba(11,18,32,.72);
-      white-space: nowrap;
-    }
-    nav a:hover{ color: var(--text); }
+    .brand strong{ font-weight: 950; font-size: 13.5px; }
+    .brand span{ display:block; font-size: 12px; font-weight: 800; color: rgba(11,18,32,.62); }
 
     .btn{
       display:inline-flex;
@@ -138,222 +89,62 @@
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
-
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 18px 44px rgba(29,121,198,.20);
+      box-shadow: 0 16px 36px rgba(29,121,198,.18);
     }
-    .btn-primary:hover{
-      box-shadow: 0 22px 60px rgba(29,121,198,.24);
-    }
-
     .btn-outline{
-      background:#fff;
+      background: rgba(255,255,255,.82);
       border-color: var(--hair);
       color: rgba(11,18,32,.92);
     }
-    .btn-outline:hover{
-      background: rgba(15,23,42,.02);
-      border-color: rgba(15,23,42,.14);
+    .btn-outline:hover{ background:#fff; border-color: rgba(15,23,42,.14); }
+    .btn-ink{
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(11,18,32,.18);
     }
 
-    /* ===== Hero ===== */
-    .hero{
-      position: relative;
-      padding: 54px 0 24px;
-      border-bottom: 1px solid var(--hair);
-      background:
-        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.16), transparent 60%),
-        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
-        linear-gradient(180deg, rgba(15,23,42,.03), transparent 55%);
-    }
+    main{ padding: 22px 0 46px; }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 18px;
-      align-items:start;
-    }
-
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
+    .shell{
+      background: rgba(255,255,255,.72);
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.65);
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(11,18,32,.86);
-      width: fit-content;
-      white-space: nowrap;
-    }
-    .dot{
-      width: 8px; height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      flex: 0 0 auto;
-    }
-
-    h1{
-      margin: 14px 0 12px;
-      font-size: clamp(34px, 4.2vw, 58px);
-      line-height: 1.02;
-      letter-spacing: -1px;
-      font-weight: 950;
-    }
-
-    .lead{
-      margin: 0 0 18px;
-      color: rgba(11,18,32,.70);
-      font-size: 16px;
-      max-width: 65ch;
-      font-weight: 750;
-    }
-
-    .hero-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .hero-card{
-      background: rgba(255,255,255,.76);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
+      border-radius: 28px;
       box-shadow: var(--shadow);
-      padding: 18px;
       overflow:hidden;
-      position: relative;
     }
-    .hero-card:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(400px 220px at 10% 10%, rgba(29,121,198,.12), transparent 70%),
-        radial-gradient(400px 220px at 90% 0%, rgba(44,171,75,.10), transparent 70%);
-      pointer-events:none;
+    .head{
+      padding: 18px 18px 0;
     }
-    .hero-card > *{ position: relative; }
-
-    .hero-card h3{
-      margin: 0 0 6px;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 3.6vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.9px;
     }
-    .hero-card p{
-      margin: 0 0 12px;
+    .lead{
+      margin: 0 0 14px;
       color: rgba(11,18,32,.70);
       font-weight: 750;
-      font-size: 13px;
-    }
-
-    .quick-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 14px;
-      background: rgba(255,255,255,.85);
-      margin-top: 10px;
-      font-size: 13.5px;
-      white-space: nowrap;
-    }
-    .quick-row span:first-child{
-      color: rgba(11,18,32,.55);
-      font-weight: 850;
-    }
-    .quick-row a{
-      font-weight: 950;
-      text-decoration:none;
-      white-space: nowrap;
-    }
-    .quick-row a:hover{ text-decoration: underline; text-underline-offset: 4px; }
-
-    .hero-logo{
-      margin-top: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(15,23,42,.10);
-    }
-    .hero-logo img{
-      width: 54px; height: 54px;
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.9);
-      padding: 8px;
-      object-fit: contain;
-      flex: 0 0 auto;
-    }
-    .hero-logo .meta{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width:0;
-    }
-    .hero-logo .meta strong{
-      font-weight: 950;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .hero-logo .meta span{
-      color: rgba(11,18,32,.62);
-      font-weight: 750;
-      font-size: 12px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ===== Sections ===== */
-    section{ padding: 54px 0; }
-
-    .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 14px;
-      margin-bottom: 18px;
-      flex-wrap:wrap;
-    }
-    .section-head h2{
-      margin:0;
-      font-size: 24px;
-      letter-spacing: -0.4px;
-      font-weight: 950;
-    }
-    .section-head p{
-      margin:0;
-      color: rgba(11,18,32,.68);
-      max-width: 78ch;
-      font-weight: 750;
-      font-size: 14px;
+      max-width: 90ch;
     }
 
     .grid{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 14px;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      padding: 18px;
+      align-items:start;
     }
 
     .card{
-      background: var(--panel);
+      background: #fff;
       border: 1px solid rgba(15,23,42,.10);
       border-radius: 22px;
       box-shadow: var(--shadow2);
-      padding: 18px;
-      min-height: 170px;
+      padding: 16px;
       position: relative;
       overflow:hidden;
     }
@@ -368,330 +159,20 @@
     }
     .card > *{ position: relative; }
 
-    .icon{
-      width: 44px; height: 44px;
-      border-radius: 16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.75);
-      font-size: 18px;
-      flex: 0 0 auto;
-    }
-    .card h3{
-      margin: 12px 0 6px;
-      font-size: 15px;
+    .card h2{
+      margin:0 0 10px;
+      font-size: 14px;
       font-weight: 950;
       letter-spacing: -0.2px;
-    }
-    .card p{
-      margin: 0;
-      color: rgba(11,18,32,.70);
-      font-size: 13.5px;
-      font-weight: 750;
-      max-width: 62ch;
-    }
-
-    .work-wrap{
-      background: rgba(15,23,42,.03);
-      border-top: 1px solid var(--hair);
-      border-bottom: 1px solid var(--hair);
-    }
-
-    .portfolio{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .work{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 18px;
-      position: relative;
-      overflow:hidden;
-    }
-    .work:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(340px 200px at 18% 15%, rgba(29,121,198,.10), transparent 70%),
-        radial-gradient(340px 200px at 92% 0%, rgba(44,171,75,.08), transparent 70%);
-      pointer-events:none;
-    }
-    .work > *{ position: relative; }
-
-    .tag{
-      display:inline-flex;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 950;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
-      width: fit-content;
-      color: rgba(11,18,32,.86);
-      margin-bottom: 10px;
-      white-space: nowrap;
-    }
-
-    .work-title{
-      font-weight: 950;
-      font-size: 15px;
-      margin: 0 0 8px;
-      letter-spacing: -0.2px;
-    }
-
-    .work-desc{
-      margin: 0 0 12px;
-      color: rgba(11,18,32,.70);
-      font-size: 13.5px;
-      font-weight: 750;
-    }
-
-    .work-bullets{
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(11,18,32,.68);
-      font-size: 13px;
-      font-weight: 750;
-    }
-    .work-bullets li{ margin: 6px 0; }
-
-    .work-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .mini{
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 850;
-      color: rgba(11,18,32,.55);
-      white-space: nowrap;
-    }
-
-    /* Tools section helper */
-    .section-kicker{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(11,18,32,.86);
-      width: fit-content;
-      margin-bottom: 10px;
-      white-space: nowrap;
-    }
-    .card-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    /* FAQ */
-    details{
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      background:#fff;
-      box-shadow: var(--shadow2);
-      padding: 14px 16px;
-    }
-    details + details{ margin-top: 12px; }
-
-    summary{
-      cursor:pointer;
-      font-weight: 950;
       color: rgba(11,18,32,.92);
-      list-style: none;
-    }
-    summary::-webkit-details-marker{ display:none; }
-    summary:after{
-      content:"+";
-      float:right;
-      font-weight: 950;
-      color: rgba(11,18,32,.55);
-    }
-    details[open] summary:after{ content:"–"; }
-    details p{
-      margin: 10px 0 0;
-      color: rgba(11,18,32,.70);
-      font-size: 13.5px;
-      font-weight: 750;
-      max-width: 90ch;
     }
 
-    /* About + Contact */
-    .two-col{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 14px;
-      margin-top: 14px;
-    }
-    .box{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 18px;
-    }
-    .box h3{
-      margin: 0 0 10px;
-      font-size: 15px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .line{
-      margin-top: 10px;
+    .row{
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
-      color: rgba(11,18,32,.70);
-      font-weight: 750;
-      font-size: 13.5px;
-    }
-    .line a{
-      font-weight: 950;
-      text-decoration:none;
-      white-space: nowrap;
-    }
-    .line a:hover{ text-decoration: underline; text-underline-offset: 4px; }
-
-    /* Footer */
-    footer{
-      border-top: 1px solid var(--hair);
-      background:#fff;
-      padding: 18px 0;
-      color: rgba(11,18,32,.55);
-      font-size: 12px;
-      text-align:center;
-    }
-    .footer-inner{
-      display:flex;
       align-items:center;
-      justify-content:center;
-      gap: 10px;
-      flex-wrap:wrap;
     }
-    .footer-logo{
-      width: 18px; height: 18px;
-      object-fit: contain;
-      border-radius: 6px;
-      opacity:.9;
-      border: 1px solid rgba(15,23,42,.10);
-      padding: 2px;
-      background: rgba(15,23,42,.02);
-      flex: 0 0 auto;
-    }
-
-    /* ===== Modal (Quote) ===== */
-    .modal{
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-      z-index: 200;
-    }
-    .modal.show{ display:flex; }
-
-    .modal-card{
-      width: min(720px, 100%);
-      max-height: 88vh;
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 24px;
-      box-shadow: 0 24px 90px rgba(15,23,42,.35);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-    .modal-head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(15,23,42,.10);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-    }
-    .modal-title{
-      margin:0;
-      font-size: 15px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .modal-sub{
-      margin: 4px 0 0;
-      font-size: 13px;
-      color: rgba(11,18,32,.66);
-      font-weight: 750;
-    }
-    .close-btn{
-      border: 1px solid rgba(15,23,42,.12);
-      background:#fff;
-      color: rgba(11,18,32,.92);
-      border-radius: 999px;
-      padding: 8px 10px;
-      cursor:pointer;
-      font-weight: 950;
-      line-height: 1;
-      flex: 0 0 auto;
-      white-space: nowrap;
-    }
-    .close-btn:hover{ background: rgba(15,23,42,.02); }
-
-    .modal-body{
-      padding: 14px 16px 16px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .progress{
-      display:flex;
-      gap: 8px;
-      align-items:center;
-      margin-bottom: 12px;
-    }
-    .pdot{
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.14);
-      background: rgba(15,23,42,.05);
-      flex: 0 0 auto;
-    }
-    .pdot.active{
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      border-color: transparent;
-    }
-    .progress span{
-      font-size: 12px;
-      color: rgba(11,18,32,.55);
-      font-weight: 850;
-      margin-left: 6px;
-      white-space: nowrap;
-    }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .full{ grid-column: 1 / -1; }
 
     label{
       display:flex;
@@ -700,72 +181,139 @@
       font-weight: 900;
       font-size: 13px;
       color: rgba(11,18,32,.92);
+      margin-top: 10px;
     }
-    input, select, textarea{
+    input, select{
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(15,23,42,.12);
       background:#fff;
-      color: rgba(11,18,32,.92);
-      outline:none;
       font-size: 14px;
       font-weight: 750;
+      outline:none;
     }
-    input:focus, select:focus, textarea:focus{
+    input:focus, select:focus{
       border-color: rgba(29,121,198,.55);
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
-    textarea{ resize: vertical; min-height: 110px; }
 
-    .checks{
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(15,23,42,.03);
-      display:flex;
-      flex-wrap:wrap;
-      gap: 10px;
-    }
-    .check{
+    .pill{
       display:inline-flex;
       align-items:center;
       gap: 8px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(15,23,42,.03);
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: #fff;
-      font-weight: 850;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(11,18,32,.70);
       white-space: nowrap;
     }
-    .check input{ accent-color: var(--blue); }
-
-    .modal-actions{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-
-    .hint{
-      margin-top: 12px;
+    .mini{
       font-size: 12px;
       color: rgba(11,18,32,.55);
-      font-weight: 750;
+      font-weight: 800;
+    }
+    .warn{
+      border: 1px solid rgba(255, 153, 0, .35);
+      background: rgba(255, 153, 0, .10);
+      color: rgba(120, 70, 0, .95);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 850;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .ok{
+      border: 1px solid rgba(44,171,75,.28);
+      background: rgba(44,171,75,.10);
+      color: rgba(10, 80, 25, .95);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 850;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .summary{
+      border-top: 1px solid rgba(15,23,42,.10);
+      margin-top: 12px;
+      padding-top: 12px;
+      display:grid;
+      gap: 8px;
+    }
+    .kv{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 800;
+    }
+    .kv span:first-child{ color: rgba(11,18,32,.60); font-weight: 850; }
+    .kv strong{ font-weight: 950; color: rgba(11,18,32,.92); }
+
+    .method-tabs{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .tab{
+      flex: 1 1 160px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      border-radius: 16px;
+      padding: 12px;
+      cursor:pointer;
+      user-select:none;
+      font-weight: 950;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .tab small{
+      font-weight: 850;
+      color: rgba(11,18,32,.58);
+    }
+    .tab.active{
+      border-color: rgba(29,121,198,.35);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
+    }
+
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .receipt{
+      display:none;
+    }
+
+    /* Print */
+    @media print{
+      header, .no-print{ display:none !important; }
+      body{ background:#fff; }
+      main{ padding:0; }
+      .shell{ box-shadow:none; border:none; background:#fff; }
+      .grid{ grid-template-columns: 1fr; padding: 0; }
+      .card{ box-shadow:none; border: 1px solid #e5e7eb; }
+      .receipt{ display:block !important; }
+      .receipt .card{ page-break-inside: avoid; }
     }
 
     @media (max-width: 980px){
-      nav{ display:none; }
-      .hero-grid{ grid-template-columns: 1fr; }
       .grid{ grid-template-columns: 1fr; }
-      .portfolio{ grid-template-columns: 1fr; }
-      .two-col{ grid-template-columns: 1fr; }
-      .form-grid{ grid-template-columns: 1fr; }
-      .mini{ white-space: normal; }
+      .two{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -773,729 +321,410 @@
 <body>
   <header>
     <div class="container nav">
-      <a class="brand" href="#top">
-        <img src="assets/logo.png" alt="PalmWeb logo" />
-        <div class="brand-title">
+      <a class="brand" href="../index.html">
+        <div class="logo">PW</div>
+        <div>
           <strong>PalmWeb</strong>
-          <span>Websites • Automation • Consulting</span>
+          <span>Payment Portal (Demo)</span>
         </div>
       </a>
 
-      <nav aria-label="Main">
-        <a href="#services">Services</a>
-        <a href="#samples">Samples</a>
-        <a href="#tools">Tools</a>
-        <a href="#faq">FAQ</a>
-        <a href="#about">About</a>
-        <a class="btn btn-outline" href="demos.html">Client Access</a>
-        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-      </nav>
+      <div class="row">
+        <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
+        <button class="btn btn-primary no-print" id="printBtn" type="button">Print Receipt</button>
+      </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <main id="top" class="hero">
-    <div class="container hero-grid">
-      <section>
-        <div class="kicker"><span class="dot"></span> Modern sites + practical automation for local businesses</div>
-        <h1>Build a web presence that feels premium — and works.</h1>
-        <p class="lead">
-          PalmWeb designs clean, modern websites and automation workflows that turn requests into action.
-          Clear messaging, fast load times, and simple next steps.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-          <a class="btn btn-outline" href="#samples">View Samples</a>
-          <a class="btn btn-outline" href="#tools">View Tools</a>
-          <a class="btn btn-outline" href="demos.html">Client Access</a>
-        </div>
-
-        <p style="margin-top:16px; font-size:12.5px; color: rgba(11,18,32,.55); font-weight: 750;">
-          Based in New England • Serving local businesses
-        </p>
-      </section>
-
-      <aside class="hero-card">
-        <h3>Quick Contact</h3>
-        <p>Send a quick email and I’ll reply with simple next steps.</p>
-
-        <div class="quick-row">
-          <span>Email</span>
-          <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
-        </div>
-
-        <div class="quick-row">
-          <span>Facebook</span>
-          <a href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">
-            Message me
-          </a>
-        </div>
-
-        <div class="quick-row">
-          <span>Samples</span>
-          <a href="#samples">View samples</a>
-        </div>
-
-        <div class="quick-row">
-          <span>Client Access</span>
-          <a href="demos.html">Enter demos</a>
-        </div>
-
-        <div class="hero-logo">
-          <img src="assets/logo.png" alt="PalmWeb" />
-          <div class="meta">
-            <strong>Clear + practical</strong>
-            <span>Design • Speed • Lead flow</span>
+  <main>
+    <div class="container">
+      <div class="shell">
+        <div class="head">
+          <div class="row" style="justify-content:space-between;">
+            <div>
+              <h1>Payment Portal</h1>
+              <p class="lead">Validate an invoice number, choose Credit Card or ACH, and generate a printable receipt. Demo only (no real payment processing).</p>
+            </div>
+            <div class="row no-print" style="justify-content:flex-end;">
+              <span class="pill">Demo Tool</span>
+              <span class="pill">Front-end Only</span>
+            </div>
           </div>
         </div>
-      </aside>
+
+        <div class="grid">
+          <!-- Left: Payment Form -->
+          <section class="card">
+            <h2>Invoice Validation</h2>
+
+            <div class="two">
+              <label>
+                Invoice #
+                <input id="invoiceNo" placeholder="INV-1001" autocomplete="off" />
+              </label>
+
+              <label>
+                Email (optional)
+                <input id="payerEmail" type="email" placeholder="you@company.com" />
+              </label>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn btn-primary" id="validateBtn" type="button">Validate Invoice</button>
+              <button class="btn btn-outline" id="fillDemoBtn" type="button">Use Demo Invoice</button>
+              <span class="mini">Try: INV-1001, INV-1002, INV-2044</span>
+            </div>
+
+            <div id="status" class="warn" style="display:none;"></div>
+
+            <div id="invoiceSummary" class="summary" style="display:none;">
+              <div class="kv"><span>Client</span><strong id="clientName">—</strong></div>
+              <div class="kv"><span>Invoice</span><strong id="invDisplay">—</strong></div>
+              <div class="kv"><span>Amount Due</span><strong id="amountDue">$0.00</strong></div>
+              <div class="kv"><span>Due Date</span><strong id="dueDate">—</strong></div>
+            </div>
+
+            <div id="paymentBlock" style="display:none; margin-top:14px;">
+              <h2 style="margin-top:14px;">Payment Method</h2>
+
+              <div class="method-tabs">
+                <div class="tab active" id="tabCard" role="button" tabindex="0">
+                  <div>Credit Card<br><small>Instant confirmation</small></div>
+                  <div>💳</div>
+                </div>
+                <div class="tab" id="tabAch" role="button" tabindex="0">
+                  <div>ACH Transfer<br><small>1–3 business days</small></div>
+                  <div>🏦</div>
+                </div>
+              </div>
+
+              <!-- Card fields -->
+              <div id="cardFields" style="margin-top:10px;">
+                <div class="two">
+                  <label>
+                    Cardholder name
+                    <input id="cardName" placeholder="Name on card" autocomplete="off" />
+                  </label>
+                  <label>
+                    Card number
+                    <input id="cardNumber" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="off" />
+                  </label>
+                </div>
+
+                <div class="two">
+                  <label>
+                    Expiration
+                    <input id="cardExp" placeholder="MM/YY" autocomplete="off" />
+                  </label>
+                  <label>
+                    CVC
+                    <input id="cardCvc" inputmode="numeric" placeholder="123" autocomplete="off" />
+                  </label>
+                </div>
+              </div>
+
+              <!-- ACH fields -->
+              <div id="achFields" style="display:none; margin-top:10px;">
+                <div class="two">
+                  <label>
+                    Account holder name
+                    <input id="achName" placeholder="Name on bank account" autocomplete="off" />
+                  </label>
+                  <label>
+                    Bank name
+                    <input id="achBank" placeholder="Example: Citizens Bank" autocomplete="off" />
+                  </label>
+                </div>
+
+                <div class="two">
+                  <label>
+                    Routing number
+                    <input id="achRouting" inputmode="numeric" placeholder="9-digit routing" autocomplete="off" />
+                  </label>
+                  <label>
+                    Account number
+                    <input id="achAccount" inputmode="numeric" placeholder="Account number" autocomplete="off" />
+                  </label>
+                </div>
+              </div>
+
+              <label style="margin-top:12px;">
+                Amount to pay
+                <input id="payAmount" inputmode="decimal" placeholder="$0.00" />
+              </label>
+
+              <div class="row" style="margin-top:12px;">
+                <button class="btn btn-ink" id="payBtn" type="button">Process Payment (Demo)</button>
+                <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
+                <span class="mini">Demo only — no charge is made.</span>
+              </div>
+
+              <div id="payStatus" class="ok" style="display:none;"></div>
+            </div>
+          </section>
+
+          <!-- Right: Receipt Preview -->
+          <aside class="card">
+            <h2>Receipt Preview</h2>
+            <p class="mini" style="margin-top:-4px;">After a successful demo payment, this becomes printable.</p>
+
+            <div class="summary" style="margin-top:10px;">
+              <div class="kv"><span>Status</span><strong id="previewStatus">Awaiting validation</strong></div>
+              <div class="kv"><span>Method</span><strong id="previewMethod">—</strong></div>
+              <div class="kv"><span>Confirmation</span><strong id="previewConf">—</strong></div>
+            </div>
+
+            <div class="summary">
+              <div class="kv"><span>Invoice</span><strong id="previewInv">—</strong></div>
+              <div class="kv"><span>Client</span><strong id="previewClient">—</strong></div>
+              <div class="kv"><span>Paid</span><strong id="previewPaid">$0.00</strong></div>
+              <div class="kv"><span>Date</span><strong id="previewDate">—</strong></div>
+            </div>
+
+            <div class="warn no-print" style="margin-top:12px;">
+              Demo note: In production, this would connect to Stripe/Authorize.Net + QuickBooks,
+              validate invoice status, and record the payment automatically.
+            </div>
+
+            <!-- Print-only receipt block -->
+            <div class="receipt" aria-hidden="true">
+              <div style="margin-top:14px;">
+                <h2 style="font-size:16px;margin:0 0 8px;">Payment Receipt</h2>
+                <div class="mini">PalmWeb — Demo Payment Portal</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Services -->
-  <section id="services">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Services</h2>
-          <p>Simple, high-value offerings that make your business easier to find — and easier to run.</p>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <div class="icon">🖥️</div>
-          <h3>Website Building</h3>
-          <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">🧰</div>
-          <h3>Website Maintenance</h3>
-          <p>Updates, fixes, content edits, and improvements to keep your website current.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">🌐</div>
-          <h3>Domain Migration</h3>
-          <p>Move domains, email, or websites safely—without downtime or losing access.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">📧</div>
-          <h3>Outlook Power Suite Development</h3>
-          <p>Power Apps + Power Automate solutions that reduce admin work and improve accuracy.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">🔁</div>
-          <h3>Integration & Automation</h3>
-          <p>Connect forms, email, documents, and spreadsheets so requests turn into action automatically.</p>
-        </div>
-
-        <div class="card">
-          <div class="icon">💬</div>
-          <h3>Consulting</h3>
-          <p>Practical guidance—what matters, what doesn’t, and the best next step.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Samples -->
-  <section id="samples" class="work-wrap">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Public Samples</h2>
-          <p>Functional sample websites you can click through (public). Each one includes working CTAs and a lead form.</p>
-        </div>
-      </div>
-
-      <div class="portfolio">
-        <div class="work">
-          <div class="tag">Home Services</div>
-          <div class="work-title">Plumbing Website (Sample)</div>
-          <div class="work-desc">Conversion-focused layout with “call now” actions and a fast lead form.</div>
-
-          <ul class="work-bullets">
-            <li>Mobile-first service layout</li>
-            <li>Trust cues + reviews section</li>
-            <li>Working lead capture (FormSubmit)</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="samples/plumbing.html">Open sample</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-
-          <div class="mini">File: /samples/plumbing.html</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Restaurant</div>
-          <div class="work-title">Restaurant Landing Page (Sample)</div>
-          <div class="work-desc">Menu highlights, hours, and a reservation/event inquiry form.</div>
-
-          <ul class="work-bullets">
-            <li>Menu blocks designed for scanning</li>
-            <li>Hours + location prominence</li>
-            <li>Working inquiry form (FormSubmit)</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="samples/restaurant.html">Open sample</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-
-          <div class="mini">File: /samples/restaurant.html</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Wellness</div>
-          <div class="work-title">PT / Wellness Website (Sample)</div>
-          <div class="work-desc">Clear treatment categories, trust-building testimonials, and appointment request flow.</div>
-
-          <ul class="work-bullets">
-            <li>Service categories + FAQs</li>
-            <li>Testimonials section</li>
-            <li>Working appointment request form</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="samples/wellness.html">Open sample</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-
-          <div class="mini">File: /samples/wellness.html</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Legal</div>
-          <div class="work-title">Law Firm Website (Sample)</div>
-          <div class="work-desc">Practice areas, attorney bios, and an intake-style consultation request form.</div>
-
-          <ul class="work-bullets">
-            <li>Credibility-first layout</li>
-            <li>Practice areas + bios</li>
-            <li>Working consult request form</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="samples/law.html">Open sample</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-
-          <div class="mini">File: /samples/law.html</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tools -->
-  <section id="tools">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker"><span class="dot"></span> Tools & Plugins (Interactive)</div>
-          <h2>Custom Tools We Can Build</h2>
-          <p>
-            Interactive tools that feel like mini software products — branded cleanly and ready to deploy on the web.
-          </p>
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <a class="btn btn-outline" href="tools/pay.html">Open Payment Portal</a>
-          <a class="btn btn-outline" href="tools/intake.html">Open Intake Tool</a>
-          <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <div class="icon">🧾</div>
-          <h3>Invoice Builder</h3>
-          <p>Quote → Invoice → Print PDF. Services dropdown, quantities, totals, payment terms, and branded print output.</p>
-          <div class="card-actions">
-            <a class="btn btn-primary" href="tools/invoice.html">Launch tool</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-          <div class="mini">File: /tools/invoice.html</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">🧠</div>
-          <h3>Lead Intake Tool</h3>
-          <p>Smart intake form patterns: validation, conditional fields, clean summary output, and routing-ready data.</p>
-          <div class="card-actions">
-            <a class="btn btn-primary" href="tools/intake.html">Launch tool</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-          <div class="mini">File: /tools/intake.html</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">💳</div>
-          <h3>Payment Portal</h3>
-          <p>Validate invoice # → choose Credit Card or ACH → submit payment → print a clean receipt (demo-ready).</p>
-          <div class="card-actions">
-            <a class="btn btn-primary" href="tools/pay.html">Launch tool</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-          <div class="mini">File: /tools/pay.html</div>
-        </div>
-      </div>
-
-      <p style="margin-top:14px; color: rgba(11,18,32,.55); font-size:12.5px; font-weight:750;">
-        These tools can run front-end only (GitHub Pages) or connect to Stripe, QuickBooks, Airtable, HubSpot, and custom backends.
-      </p>
-    </div>
-  </section>
-
-  <!-- Work -->
-  <section id="work" class="work-wrap">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Recent Work</h2>
-          <p>Live client sites plus private workflow demos that showcase automation and portal-style UX.</p>
-        </div>
-      </div>
-
-      <div class="portfolio">
-        <div class="work">
-          <div class="tag">Fine Art</div>
-          <div class="work-title">Bill Noble Fine Art</div>
-          <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact flow.</div>
-
-          <ul class="work-bullets">
-            <li>Design + build (mobile-first)</li>
-            <li>Gallery layout + inquiry flow</li>
-            <li>Performance + basic on-page SEO</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Visit site</a>
-            <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
-          </div>
-
-          <div class="mini">Stack: HTML/CSS • Lead capture</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Real Estate</div>
-          <div class="work-title">Missy Wagner Real Estate</div>
-          <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
-
-          <ul class="work-bullets">
-            <li>Conversion-focused layout</li>
-            <li>Fast contact access on mobile</li>
-            <li>SEO-ready page structure</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Visit site</a>
-            <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
-          </div>
-
-          <div class="mini">Stack: HTML/CSS • Copy + layout</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Automation</div>
-          <div class="work-title">Agreement Workflow Demo</div>
-          <div class="work-desc">Create → sign → send → recipient completes → signed PDF output (portal-style workflow).</div>
-
-          <ul class="work-bullets">
-            <li>Client portal UX pattern</li>
-            <li>Guided flow (create → send → complete)</li>
-            <li>Document output step (PDF)</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="demos.html">Open demo portal</a>
-            <a class="btn btn-outline" href="#services">Automation services</a>
-          </div>
-
-          <div class="mini">Access controlled via Client Access</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Portfolio</div>
-          <div class="work-title">All Samples</div>
-          <div class="work-desc">A quick hub to explore the public samples and private demos.</div>
-
-          <ul class="work-bullets">
-            <li>Public sample sites (no password)</li>
-            <li>Private demo portal (password)</li>
-            <li>Consistent UX + clean layouts</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-primary" href="#samples">View samples</a>
-            <a class="btn btn-outline" href="demos.html">View demos</a>
-          </div>
-
-          <div class="mini">Swap in client links as projects ship</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>FAQ</h2>
-          <p>Common questions from business owners. We can customize anything based on your needs.</p>
-        </div>
-      </div>
-
-      <details>
-        <summary>How much does a website cost?</summary>
-        <p>After a short consultation, I provide a clear quote and scope based on your needs.</p>
-      </details>
-
-      <details>
-        <summary>How long does it take?</summary>
-        <p>Most small-business sites take 1–3 weeks depending on content readiness and review rounds.</p>
-      </details>
-
-      <details>
-        <summary>Do you offer maintenance?</summary>
-        <p>Yes — monthly plans or as-needed changes depending on what you prefer.</p>
-      </details>
-
-      <details>
-        <summary>Can you help with automation?</summary>
-        <p>Yes — Power Apps/Automate systems that reduce admin work and improve accuracy.</p>
-      </details>
-    </div>
-  </section>
-
-  <!-- About + Contact -->
-  <section id="about" class="work-wrap">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>About</h2>
-          <p>A quick intro — simple, professional, and local.</p>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="box">
-          <h3>Mason Palmieri</h3>
-          <p style="margin:0; color: rgba(11,18,32,.70); font-size:13.5px; font-weight:750;">
-            I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
-            I earned my MBA from Bryant University and played Division I baseball there for five years.
-          </p>
-
-          <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="#samples">View samples</a>
-            <a class="btn btn-outline" href="demos.html">Client Access</a>
-          </div>
-        </div>
-
-        <div class="box" id="contact">
-          <h3>Contact</h3>
-          <div class="line">Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a></div>
-          <div class="line">Website: <a href="https://palmweb.net" target="_blank" rel="noreferrer">palmweb.net</a></div>
-          <div class="line">
-            Facebook:
-            <a href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">
-              Message on Facebook
-            </a>
-          </div>
-          <div class="line">Location: <span style="font-weight:950; color: rgba(11,18,32,.92);">New England</span></div>
-
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
-            <a class="btn btn-outline" href="demos.html">Client Access</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container footer-inner">
-      <img class="footer-logo" src="assets/logo.png" alt="PalmWeb" />
-      <div>© <span id="year"></span> PalmWeb. All rights reserved.</div>
-    </div>
-  </footer>
-
-  <!-- ======= REQUEST A QUOTE MODAL (3-Step + FormSubmit) ======= -->
-  <div class="modal" id="quoteModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
-      <div class="modal-head">
-        <div>
-          <h3 class="modal-title" id="quoteTitle">Request a Quote</h3>
-          <p class="modal-sub">Submit this form and I’ll receive the info instantly by email.</p>
-        </div>
-        <button class="close-btn" id="closeModalBtn" aria-label="Close">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="progress" aria-label="Progress">
-          <div class="pdot active" id="dot1"></div>
-          <div class="pdot" id="dot2"></div>
-          <div class="pdot" id="dot3"></div>
-          <span id="stepLabel">Step 1 of 3</span>
-        </div>
-
-        <form
-          id="quoteForm"
-          action="https://formsubmit.co/mason@palmweb.net"
-          method="POST"
-          novalidate
-        >
-          <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-
-          <div id="step1">
-            <div style="font-weight:950; margin-bottom:6px;">Contact info</div>
-
-            <div class="form-grid">
-              <label class="full">
-                Business name*
-                <input name="Business Name" id="bizName" type="text" placeholder="Example: Smith & Sons Plumbing" required />
-              </label>
-
-              <label>
-                Your name*
-                <input name="Your Name" id="yourName" type="text" placeholder="Your full name" required />
-              </label>
-
-              <label>
-                Phone*
-                <input name="Phone" id="phone" type="tel" placeholder="(401) 555-1234" required />
-              </label>
-
-              <label class="full">
-                Email*
-                <input name="Email" id="email" type="email" placeholder="you@yourdomain.com" required />
-              </label>
-
-              <label class="full">
-                Location (city/state)
-                <input name="Location" id="location" type="text" placeholder="Example: Warwick, RI" />
-              </label>
-            </div>
-          </div>
-
-          <div id="step2" style="display:none;">
-            <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
-
-            <div class="checks">
-              <label class="check"><input type="checkbox" name="Needs" value="New website"> New website</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Website redesign"> Website redesign</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Maintenance/updates"> Maintenance/updates</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Domain + email setup/migration"> Domain + email setup</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Automation (Power Apps/Automate)"> Automation</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Consulting"> Consulting</label>
-            </div>
-
-            <div class="form-grid">
-              <label class="full">
-                Current website (if any)
-                <input name="Current Website" id="currentSite" type="url" placeholder="https://yourwebsite.com" />
-              </label>
-
-              <label class="full">
-                Primary goal
-                <select name="Primary Goal" id="goal">
-                  <option value="">Select…</option>
-                  <option>More calls / leads</option>
-                  <option>Bookings / appointments</option>
-                  <option>Professional credibility</option>
-                  <option>Show services + pricing</option>
-                  <option>Sell products online</option>
-                  <option>Other</option>
-                </select>
-              </label>
-
-              <label>
-                Timeline
-                <select name="Timeline" id="timeline">
-                  <option value="">Select…</option>
-                  <option>As soon as possible</option>
-                  <option>This month</option>
-                  <option>Next 1–2 months</option>
-                  <option>Flexible</option>
-                </select>
-              </label>
-
-              <label>
-                Budget range
-                <select name="Budget Range" id="budget">
-                  <option value="">Select…</option>
-                  <option>Under $1,000</option>
-                  <option>$1,000 – $2,000</option>
-                  <option>$2,000 – $4,000</option>
-                  <option>$4,000+</option>
-                  <option>Not sure yet</option>
-                </select>
-              </label>
-            </div>
-          </div>
-
-          <div id="step3" style="display:none;">
-            <div style="font-weight:950; margin-bottom:6px;">Details</div>
-
-            <div class="form-grid">
-              <label class="full">
-                Details (pages needed, examples you like, notes, anything helpful)
-                <textarea name="Details" id="details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like..."></textarea>
-              </label>
-
-              <label class="full">
-                Best way to reach you
-                <select name="Best Contact Method" id="bestReach">
-                  <option value="">Select…</option>
-                  <option>Email</option>
-                  <option>Phone</option>
-                  <option>Text</option>
-                </select>
-              </label>
-            </div>
-
-            <p class="hint">
-              When you hit “Send”, the form submits directly to PalmWeb (no email app needed).
-            </p>
-          </div>
-
-          <div class="modal-actions">
-            <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
-            <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
-            <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const invoices = [
+      { no: "INV-1001", client: "Acme Home Services", amount: 1250.00, due: "2026-01-26" },
+      { no: "INV-1002", client: "Renee K. Wellness Studio", amount: 650.00, due: "2026-02-05" },
+      { no: "INV-2044", client: "Smith & Sons Plumbing", amount: 2400.00, due: "2026-02-12" },
+    ];
 
-    const modal = document.getElementById("quoteModal");
-    const closeBtn = document.getElementById("closeModalBtn");
-    const openBtns = document.querySelectorAll("[data-open-quote]");
+    const $ = (id) => document.getElementById(id);
 
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const step3 = document.getElementById("step3");
+    const invoiceNo = $("invoiceNo");
+    const payerEmail = $("payerEmail");
+    const validateBtn = $("validateBtn");
+    const fillDemoBtn = $("fillDemoBtn");
+    const status = $("status");
+    const invoiceSummary = $("invoiceSummary");
+    const paymentBlock = $("paymentBlock");
 
-    const dot1 = document.getElementById("dot1");
-    const dot2 = document.getElementById("dot2");
-    const dot3 = document.getElementById("dot3");
-    const stepLabel = document.getElementById("stepLabel");
+    const clientName = $("clientName");
+    const invDisplay = $("invDisplay");
+    const amountDue = $("amountDue");
+    const dueDate = $("dueDate");
 
-    const backBtn = document.getElementById("backBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const sendBtn = document.getElementById("sendBtn");
+    const tabCard = $("tabCard");
+    const tabAch = $("tabAch");
+    const cardFields = $("cardFields");
+    const achFields = $("achFields");
 
-    let currentStep = 1;
+    const payAmount = $("payAmount");
+    const payBtn = $("payBtn");
+    const resetBtn = $("resetBtn");
+    const payStatus = $("payStatus");
 
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-      resetToStep1();
+    const previewStatus = $("previewStatus");
+    const previewMethod = $("previewMethod");
+    const previewConf = $("previewConf");
+    const previewInv = $("previewInv");
+    const previewClient = $("previewClient");
+    const previewPaid = $("previewPaid");
+    const previewDate = $("previewDate");
+
+    const printBtn = $("printBtn");
+
+    let selectedInvoice = null;
+    let method = "card";
+
+    function money(n){
+      return n.toLocaleString(undefined, { style:"currency", currency:"USD" });
     }
 
-    function closeModal(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+    function fmtDate(iso){
+      try{
+        const d = new Date(iso + "T00:00:00");
+        return d.toLocaleDateString(undefined, { year:"numeric", month:"2-digit", day:"2-digit" });
+      } catch {
+        return iso;
+      }
     }
 
-    function resetToStep1(){
-      currentStep = 1;
-      step1.style.display = "";
-      step2.style.display = "none";
-      step3.style.display = "none";
-
-      dot1.classList.add("active");
-      dot2.classList.remove("active");
-      dot3.classList.remove("active");
-      stepLabel.textContent = "Step 1 of 3";
-
-      backBtn.style.display = "none";
-      nextBtn.style.display = "";
-      sendBtn.style.display = "none";
+    function setStatus(msg, ok=false){
+      status.style.display = "";
+      status.className = ok ? "ok" : "warn";
+      status.textContent = msg;
     }
 
-    function goToStep(step){
-      currentStep = step;
-
-      step1.style.display = step === 1 ? "" : "none";
-      step2.style.display = step === 2 ? "" : "none";
-      step3.style.display = step === 3 ? "" : "none";
-
-      dot1.classList.toggle("active", step >= 1);
-      dot2.classList.toggle("active", step >= 2);
-      dot3.classList.toggle("active", step >= 3);
-
-      stepLabel.textContent = `Step ${step} of 3`;
-
-      backBtn.style.display = step === 1 ? "none" : "";
-      nextBtn.style.display = step === 3 ? "none" : "";
-      sendBtn.style.display = step === 3 ? "" : "none";
-
-      modal.querySelector(".modal-body").scrollTop = 0;
+    function clearStatus(){
+      status.style.display = "none";
+      status.textContent = "";
     }
 
-    function validateStep1(){
-      const requiredIds = ["bizName","yourName","phone","email"];
-      for(const id of requiredIds){
-        const el = document.getElementById(id);
-        if(!el.value.trim()){
-          el.focus();
-          return false;
+    function setMethod(m){
+      method = m;
+      tabCard.classList.toggle("active", m === "card");
+      tabAch.classList.toggle("active", m === "ach");
+      cardFields.style.display = m === "card" ? "" : "none";
+      achFields.style.display = m === "ach" ? "" : "none";
+      previewMethod.textContent = m === "card" ? "Credit Card" : "ACH Transfer";
+    }
+
+    function validateInvoice(){
+      clearStatus();
+      payStatus.style.display = "none";
+
+      const inv = invoiceNo.value.trim().toUpperCase();
+      if(!inv){
+        setStatus("Enter an invoice number to continue.");
+        return;
+      }
+
+      const found = invoices.find(x => x.no === inv);
+      if(!found){
+        selectedInvoice = null;
+        invoiceSummary.style.display = "none";
+        paymentBlock.style.display = "none";
+
+        previewStatus.textContent = "Invoice not found";
+        previewInv.textContent = inv || "—";
+        previewClient.textContent = "—";
+        previewPaid.textContent = money(0);
+        previewConf.textContent = "—";
+        previewDate.textContent = "—";
+        previewMethod.textContent = "—";
+
+        setStatus("Invoice number not found. Try INV-1001, INV-1002, or INV-2044.");
+        return;
+      }
+
+      selectedInvoice = found;
+
+      invoiceSummary.style.display = "";
+      paymentBlock.style.display = "";
+
+      clientName.textContent = found.client;
+      invDisplay.textContent = found.no;
+      amountDue.textContent = money(found.amount);
+      dueDate.textContent = fmtDate(found.due);
+
+      payAmount.value = found.amount.toFixed(2);
+
+      previewStatus.textContent = "Validated — ready to pay";
+      previewInv.textContent = found.no;
+      previewClient.textContent = found.client;
+      previewPaid.textContent = money(0);
+      previewConf.textContent = "—";
+      previewDate.textContent = "—";
+
+      setMethod(method);
+
+      setStatus("Invoice validated. Select a payment method and submit payment (demo).", true);
+    }
+
+    function processPayment(){
+      if(!selectedInvoice){
+        setStatus("Validate an invoice before paying.");
+        return;
+      }
+
+      const amt = Number(String(payAmount.value).replace(/[^0-9.]/g,""));
+      if(!amt || amt <= 0){
+        setStatus("Enter a valid payment amount.");
+        payAmount.focus();
+        return;
+      }
+
+      if(amt > selectedInvoice.amount){
+        setStatus("Payment amount cannot exceed amount due.");
+        payAmount.focus();
+        return;
+      }
+
+      // Minimal demo validation per method
+      if(method === "card"){
+        const cn = $("cardName").value.trim();
+        const num = $("cardNumber").value.replace(/\s+/g,"").trim();
+        const exp = $("cardExp").value.trim();
+        const cvc = $("cardCvc").value.trim();
+        if(!cn || num.length < 12 || !exp || cvc.length < 3){
+          setStatus("Complete the credit card fields (demo validation).");
+          return;
+        }
+      } else {
+        const an = $("achName").value.trim();
+        const bank = $("achBank").value.trim();
+        const r = $("achRouting").value.trim();
+        const a = $("achAccount").value.trim();
+        if(!an || !bank || r.length < 9 || a.length < 4){
+          setStatus("Complete the ACH fields (demo validation).");
+          return;
         }
       }
-      return true;
+
+      // Demo “success”
+      const conf = "PMT-" + Math.random().toString(16).slice(2,10).toUpperCase();
+      const now = new Date();
+
+      payStatus.style.display = "";
+      payStatus.textContent = `Payment accepted (demo). Confirmation: ${conf}`;
+
+      previewStatus.textContent = "Paid (demo)";
+      previewConf.textContent = conf;
+      previewPaid.textContent = money(amt);
+      previewDate.textContent = now.toLocaleString();
+
+      // keep status green
+      setStatus("Payment processed successfully (demo). You can print a receipt.", true);
     }
 
-    openBtns.forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        openModal();
-      });
+    function resetAll(){
+      selectedInvoice = null;
+      invoiceNo.value = "";
+      payAmount.value = "";
+      payerEmail.value = "";
+
+      invoiceSummary.style.display = "none";
+      paymentBlock.style.display = "none";
+      payStatus.style.display = "none";
+
+      previewStatus.textContent = "Awaiting validation";
+      previewMethod.textContent = "—";
+      previewConf.textContent = "—";
+      previewInv.textContent = "—";
+      previewClient.textContent = "—";
+      previewPaid.textContent = money(0);
+      previewDate.textContent = "—";
+
+      clearStatus();
+      setMethod("card");
+    }
+
+    validateBtn.addEventListener("click", validateInvoice);
+    fillDemoBtn.addEventListener("click", () => {
+      invoiceNo.value = "INV-1001";
+      validateInvoice();
     });
 
-    closeBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => {
-      if(e.target === modal) closeModal();
-    });
+    tabCard.addEventListener("click", () => setMethod("card"));
+    tabAch.addEventListener("click", () => setMethod("ach"));
+    tabCard.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") setMethod("card"); });
+    tabAch.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") setMethod("ach"); });
 
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
-    });
+    payBtn.addEventListener("click", processPayment);
+    resetBtn.addEventListener("click", resetAll);
 
-    nextBtn.addEventListener("click", () => {
-      if(currentStep === 1){
-        if(!validateStep1()) return;
-        goToStep(2);
-        return;
-      }
-      if(currentStep === 2){
-        goToStep(3);
-        return;
-      }
-    });
+    printBtn.addEventListener("click", () => window.print());
 
-    backBtn.addEventListener("click", () => {
-      if(currentStep === 2) goToStep(1);
-      if(currentStep === 3) goToStep(2);
-    });
+    // Initialize
+    setMethod("card");
   </script>
 </body>
 </html>
