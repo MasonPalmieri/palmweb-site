@@ -41,10 +41,7 @@
       backdrop-filter: blur(12px);
       border-bottom:1px solid var(--border);
     }
-    .nav{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:14px;padding:14px 0;
-    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
     .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
     .brand strong{font-weight:950}
     .tag{
@@ -67,16 +64,8 @@
     .btn-outline{background:#fff;border:1px solid var(--border);color:var(--text)}
     .btn-outline:hover{background: rgba(255,255,255,.70)}
 
-    .hero{
-      padding: 34px 0 18px;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      align-items: stretch;
-    }
+    .hero{padding: 24px 0 18px}
+    .hero-grid{display:grid;grid-template-columns: 1.05fr .95fr;gap: 14px;align-items: stretch}
 
     .hero-card{
       background: rgba(255,255,255,.85);
@@ -96,6 +85,33 @@
       pointer-events:none;
     }
     .hero-card > *{position:relative}
+
+    .hero-photo{
+      border-radius: 22px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow: var(--shadow2);
+      min-height: 320px;
+      overflow:hidden;
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.10)),
+        url("https://source.unsplash.com/1600x1000/?plumber,tools") center/cover no-repeat;
+    }
+    .hero-photo::after{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(600px 360px at 20% 20%, rgba(255,255,255,.18), transparent 60%);
+      pointer-events:none;
+    }
+    .hero-photo .cap{
+      position:absolute; left: 14px; bottom: 14px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(15,23,42,.12);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 950;
+      font-size: 12px;
+    }
 
     h1{
       margin:0 0 10px;
@@ -139,22 +155,6 @@
     }
     .emergency small{display:block;color: rgba(11,18,32,.70);font-weight:800;margin-top:2px}
 
-    .coupon-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .coupon{
-      background:#fff;
-      border:1px dashed rgba(15,23,42,.24);
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: var(--shadow2);
-    }
-    .coupon .big{font-size: 28px; font-weight: 950; letter-spacing: -0.6px; margin-top: 4px}
-    .mini{font-size:12px;color: rgba(11,18,32,.55);font-weight:850}
-
     .section{padding: 42px 0}
     .section h2{margin:0;font-size:26px;letter-spacing:-.2px}
     .section p.sub{margin:8px 0 0; color: rgba(11,18,32,.65); font-weight:750}
@@ -174,6 +174,24 @@
     }
     .card h3{margin:0 0 6px;font-size:16px;font-weight:950}
     .card p{margin:0;color: rgba(11,18,32,.68);font-weight:750}
+
+    .review{
+      display:flex;gap:12px;align-items:flex-start;
+      padding: 14px;
+      border-radius: 22px;
+      border:1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow2);
+    }
+    .avatar{
+      width: 44px;height: 44px;border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.12);
+      background-size: cover;
+      background-position: center;
+      flex: 0 0 auto;
+    }
+    .stars{font-weight:950;color:#0b1220}
+    .mini{font-size:12px;color: rgba(11,18,32,.55);font-weight:850}
 
     .split{
       display:grid;
@@ -217,34 +235,11 @@
       background: rgba(255,255,255,.55);
     }
 
-    /* Sticky CTA on mobile */
-    .mobile-cta{
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 999;
-      display:none;
-      gap: 10px;
-    }
-    .mobile-cta a{
-      flex: 1 1 auto;
-      text-align:center;
-      padding: 12px 14px;
-      border-radius: 999px;
-      font-weight: 950;
-      text-decoration:none;
-      box-shadow: 0 16px 40px rgba(15,23,42,.18);
-    }
     @media (max-width: 980px){
       .hero-grid{grid-template-columns: 1fr}
       .cards{grid-template-columns: 1fr}
       .split{grid-template-columns: 1fr}
-    }
-    @media (max-width: 720px){
-      .coupon-grid{grid-template-columns: 1fr}
-      .mobile-cta{display:flex}
-      body{padding-bottom: 78px;}
+      .hero-photo{min-height: 260px}
     }
   </style>
 </head>
@@ -267,9 +262,7 @@
     <div class="container hero-grid">
       <section class="hero-card">
         <h1>Fast plumbing help — without the runaround.</h1>
-        <p>
-          Clear estimates, clean work, and quick communication. Serving Warwick + nearby towns.
-        </p>
+        <p>Clear estimates, clean work, and quick communication. Serving Warwick + nearby towns.</p>
 
         <div class="row">
           <a class="btn btn-hot" href="tel:+14015551234">Call Now</a>
@@ -292,31 +285,8 @@
         </div>
       </section>
 
-      <aside class="hero-card">
-        <div style="font-weight:950; font-size:16px;">Today’s offers</div>
-        <p style="margin-top:6px;">Quick incentives that improve conversions for trades businesses.</p>
-
-        <div class="coupon-grid">
-          <div class="coupon">
-            <div class="mini">New customer special</div>
-            <div class="big">$49 Service Call</div>
-            <div class="mini" style="margin-top:6px;">Mention this offer when booking.</div>
-          </div>
-          <div class="coupon">
-            <div class="mini">Water heater tune-up</div>
-            <div class="big">$89</div>
-            <div class="mini" style="margin-top:6px;">Improve efficiency + lifespan.</div>
-          </div>
-        </div>
-
-        <div class="panel" style="margin-top:12px;">
-          <div class="mini">Service area</div>
-          <div style="font-weight:900; margin-top:6px;">Warwick • Cranston • Providence • East Greenwich</div>
-          <div class="mini" style="margin-top:10px;">Hours</div>
-          <div style="font-weight:900; margin-top:6px;">Mon–Sat 7am–6pm</div>
-          <div class="mini" style="margin-top:10px;">After-hours</div>
-          <div style="font-weight:900; margin-top:6px;">Emergency only</div>
-        </div>
+      <aside class="hero-photo" aria-label="Plumber tools photo">
+        <div class="cap">Licensed • Insured • Same-week openings</div>
       </aside>
     </div>
   </main>
@@ -324,21 +294,12 @@
   <section class="section" id="services">
     <div class="container">
       <h2>Services</h2>
-      <p class="sub">A more “trade site” layout: bold cards + clear outcomes.</p>
+      <p class="sub">Bold cards + clear outcomes.</p>
 
       <div class="cards">
-        <div class="card">
-          <h3>Emergency Repairs</h3>
-          <p>Leaks, backups, broken lines — quick diagnosis and repair.</p>
-        </div>
-        <div class="card">
-          <h3>Water Heaters</h3>
-          <p>Tank + tankless installs, repairs, and maintenance.</p>
-        </div>
-        <div class="card">
-          <h3>Fixtures + Installs</h3>
-          <p>Toilets, faucets, disposals, new lines, and upgrades.</p>
-        </div>
+        <div class="card"><h3>Emergency Repairs</h3><p>Leaks, backups, broken lines — quick diagnosis and repair.</p></div>
+        <div class="card"><h3>Water Heaters</h3><p>Tank + tankless installs, repairs, and maintenance.</p></div>
+        <div class="card"><h3>Fixtures + Installs</h3><p>Toilets, faucets, disposals, new lines, and upgrades.</p></div>
       </div>
     </div>
   </section>
@@ -346,12 +307,36 @@
   <section class="section" id="reviews" style="background: rgba(255,255,255,.60); border-top:1px solid rgba(15,23,42,.10); border-bottom:1px solid rgba(15,23,42,.10);">
     <div class="container">
       <h2>Recent Reviews</h2>
-      <p class="sub">Short, believable testimonials that fit the industry.</p>
+      <p class="sub">Now with real avatars (still purely demo).</p>
 
-      <div class="cards">
-        <div class="card"><h3>“Showed up same day.”</h3><p>Fixed a leak under the sink and cleaned everything up. Great communication.</p><div class="mini" style="margin-top:8px;">— Jamie R.</div></div>
-        <div class="card"><h3>“Honest and straightforward.”</h3><p>Explained the options clearly and didn’t upsell. Price was fair.</p><div class="mini" style="margin-top:8px;">— Mike T.</div></div>
-        <div class="card"><h3>“Professional work.”</h3><p>Installed a new water heater quickly and the area was spotless after.</p><div class="mini" style="margin-top:8px;">— Sarah L.</div></div>
+      <div class="cards" style="grid-template-columns: 1fr; max-width: 860px;">
+        <div class="review">
+          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,woman');"></div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <div style="font-weight:950;margin-top:4px;">“Showed up same day.”</div>
+            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Fixed a leak under the sink and cleaned everything up. Great communication.</div>
+            <div class="mini" style="margin-top:8px;">— Jamie R.</div>
+          </div>
+        </div>
+        <div class="review">
+          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,man');"></div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <div style="font-weight:950;margin-top:4px;">“Honest and straightforward.”</div>
+            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Explained the options clearly and didn’t upsell. Price was fair.</div>
+            <div class="mini" style="margin-top:8px;">— Mike T.</div>
+          </div>
+        </div>
+        <div class="review">
+          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,smile');"></div>
+          <div>
+            <div class="stars">★★★★★</div>
+            <div style="font-weight:950;margin-top:4px;">“Professional work.”</div>
+            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Installed a new water heater quickly and the area was spotless after.</div>
+            <div class="mini" style="margin-top:8px;">— Sarah L.</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -359,7 +344,7 @@
   <section class="section" id="request">
     <div class="container">
       <h2>Request Service</h2>
-      <p class="sub">Still uses FormSubmit exactly like your other demos.</p>
+      <p class="sub">Still uses FormSubmit like your other demos.</p>
 
       <div class="split">
         <div class="panel">
@@ -396,11 +381,6 @@
       </div>
     </div>
   </section>
-
-  <div class="mobile-cta">
-    <a class="btn-hot" href="tel:+14015551234">Call Now</a>
-    <a class="btn-primary" href="#request">Request</a>
-  </div>
 
   <footer>
     <div class="container">© <span id="year"></span> Smith & Sons Plumbing (Demo). Built by PalmWeb.</div>
