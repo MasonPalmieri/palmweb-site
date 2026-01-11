@@ -4,27 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PalmWeb — Websites & Automation for Local Businesses</title>
-  <meta name="description" content="PalmWeb builds websites and automation solutions for locally owned businesses." />
+  <meta name="description" content="PalmWeb builds modern websites and practical automation for locally owned businesses." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
+      /* Modern, minimal, “enterprise clean” */
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#556173;
+      --border: rgba(15,23,42,.12);
+      --panel:#ffffff;
+
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
+      --shadow2: 0 10px 30px rgba(15,23,42,.08);
+
+      --radius: 18px;
+      --max: 1160px;
+
+      /* Brand accents */
       --blue:#1d79c6;
       --green:#2cab4b;
-      --blueSoft:#eaf5ff;
-      --greenSoft:#eafaf0;
 
-      --bg:#ffffff;
-      --panel:#ffffff;
-      --panel2:#f7fbff;
-      --border:#e5e7eb;
-
-      --text:#0f172a;
-      --muted:#475569;
-
-      --shadow: 0 14px 34px rgba(15,23,42,.10);
-      --radius: 18px;
-      --max: 1120px;
+      /* Hairline */
+      --hair: rgba(15,23,42,.08);
     }
 
     *{ box-sizing:border-box; }
@@ -36,31 +39,30 @@
       color: var(--text);
       line-height: 1.55;
     }
-
-    a{ color: inherit; }
+    a{ color:inherit; }
     img{ max-width:100%; display:block; }
 
     .container{
       max-width: var(--max);
       margin: 0 auto;
-      padding: 0 18px;
+      padding: 0 20px;
     }
 
-    /* HEADER */
+    /* ===== Header ===== */
     header{
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--hair);
     }
 
     .nav{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 18px;
+      gap: 16px;
       padding: 14px 0;
     }
 
@@ -69,36 +71,36 @@
       align-items:center;
       gap: 12px;
       text-decoration:none;
-      min-width: 0;
+      min-width:0;
     }
 
     .brand img{
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      border: 1px solid var(--hair);
+      background: rgba(15,23,42,.02);
+      padding: 6px;
       object-fit: contain;
-      border-radius: 12px;
-      flex: 0 0 auto;
     }
 
     .brand-title{
       display:flex;
       flex-direction:column;
-      gap: 2px;
+      gap: 1px;
       min-width:0;
     }
-
     .brand-title strong{
-      font-size: 14px;
-      letter-spacing: .2px;
       font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 13.5px;
     }
-
     .brand-title span{
+      font-weight: 750;
       font-size: 12px;
       color: var(--muted);
-      font-weight: 750;
       white-space: nowrap;
-      overflow: hidden;
+      overflow:hidden;
       text-overflow: ellipsis;
       max-width: 520px;
     }
@@ -110,9 +112,9 @@
     }
     nav a{
       text-decoration:none;
-      color: var(--muted);
       font-weight: 850;
-      font-size: 14px;
+      font-size: 13.5px;
+      color: rgba(11,18,32,.72);
     }
     nav a:hover{ color: var(--text); }
 
@@ -120,89 +122,129 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid transparent;
       text-decoration:none;
       font-weight: 950;
       cursor:pointer;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
       user-select:none;
       white-space: nowrap;
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
 
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 12px 26px rgba(29,121,198,.22);
+      box-shadow: 0 18px 44px rgba(29,121,198,.20);
     }
     .btn-primary:hover{
-      box-shadow: 0 16px 34px rgba(29,121,198,.28);
+      box-shadow: 0 22px 60px rgba(29,121,198,.24);
     }
 
     .btn-outline{
-      background: #fff;
-      border: 1px solid var(--border);
-      color: var(--text);
+      background:#fff;
+      border-color: var(--hair);
+      color: rgba(11,18,32,.92);
     }
-    .btn-outline:hover{ background: #f8fafc; }
+    .btn-outline:hover{
+      background: rgba(15,23,42,.02);
+      border-color: rgba(15,23,42,.14);
+    }
 
-    /* HERO */
+    /* ===== Hero ===== */
     .hero{
-      padding: 52px 0 28px;
+      position: relative;
+      padding: 54px 0 24px;
+      border-bottom: 1px solid var(--hair);
       background:
-        radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.20), transparent 60%),
-        radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.16), transparent 60%),
-        linear-gradient(180deg, var(--panel2), #fff 60%);
-      border-bottom: 1px solid var(--border);
+        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.16), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
+        linear-gradient(180deg, rgba(15,23,42,.03), transparent 55%);
     }
 
     .hero-grid{
       display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 16px;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
       align-items:start;
     }
 
-    .hero h1{
-      margin: 0 0 12px;
-      font-size: clamp(30px, 4vw, 46px);
-      line-height: 1.05;
-      letter-spacing: -0.8px;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.65);
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(11,18,32,.86);
+      width: fit-content;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
     }
 
-    .hero p{
+    h1{
+      margin: 14px 0 12px;
+      font-size: clamp(34px, 4.2vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -1px;
+      font-weight: 950;
+    }
+
+    .lead{
       margin: 0 0 18px;
-      color: var(--muted);
+      color: rgba(11,18,32,.70);
       font-size: 16px;
-      max-width: 62ch;
+      max-width: 65ch;
+      font-weight: 750;
     }
 
     .hero-actions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     .hero-card{
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(229,231,235,.85);
-      border-radius: var(--radius);
+      background: rgba(255,255,255,.76);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
       box-shadow: var(--shadow);
       padding: 18px;
+      overflow:hidden;
+      position: relative;
     }
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(400px 220px at 10% 10%, rgba(29,121,198,.12), transparent 70%),
+        radial-gradient(400px 220px at 90% 0%, rgba(44,171,75,.10), transparent 70%);
+      pointer-events:none;
+    }
+    .hero-card > *{ position: relative; }
 
-    .quick h3{
+    .hero-card h3{
       margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 950;
-    }
-    .quick p{
-      margin: 0 0 12px;
-      color: var(--muted);
       font-size: 14px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .hero-card p{
+      margin: 0 0 12px;
+      color: rgba(11,18,32,.70);
+      font-weight: 750;
+      font-size: 13px;
     }
 
     .quick-row{
@@ -211,73 +253,79 @@
       justify-content:space-between;
       gap: 10px;
       padding: 10px 12px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15,23,42,.10);
       border-radius: 14px;
-      background: #fff;
+      background: rgba(255,255,255,.85);
       margin-top: 10px;
-      font-size: 14px;
+      font-size: 13.5px;
     }
     .quick-row span:first-child{
-      color: #64748b;
+      color: rgba(11,18,32,.55);
       font-weight: 850;
     }
     .quick-row a{
       font-weight: 950;
       text-decoration:none;
-      color: var(--text);
     }
-    .quick-row a:hover{
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
-
-    /* Quick Contact + Big Logo layout */
-    .quick-wrap{
-      display:flex;
-      align-items:flex-start;
-      justify-content:flex-end;
-      gap: 18px;
-    }
+    .quick-row a:hover{ text-decoration: underline; text-underline-offset: 4px; }
 
     .hero-logo{
-      width: 170px;
-      height: 170px;
+      margin-top: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(15,23,42,.10);
+    }
+    .hero-logo img{
+      width: 54px; height: 54px;
+      border-radius: 18px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.9);
+      padding: 8px;
       object-fit: contain;
-      border-radius: 28px;
-      background: rgba(255,255,255,.75);
-      border: 1px solid rgba(229,231,235,.9);
-      box-shadow: 0 18px 50px rgba(15,23,42,.10);
-      padding: 14px;
-      margin-top: 6px;
-      flex: 0 0 auto;
+    }
+    .hero-logo .meta{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+    }
+    .hero-logo .meta strong{
+      font-weight: 950;
+      font-size: 13px;
+    }
+    .hero-logo .meta span{
+      color: rgba(11,18,32,.62);
+      font-weight: 750;
+      font-size: 12px;
     }
 
-    /* SECTION */
-    section{
-      padding: 44px 0;
-    }
+    /* ===== Sections ===== */
+    section{ padding: 54px 0; }
 
     .section-head{
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 14px;
+      margin-bottom: 18px;
     }
-
     .section-head h2{
       margin:0;
-      font-size: 26px;
-      letter-spacing: -0.2px;
+      font-size: 24px;
+      letter-spacing: -0.4px;
+      font-weight: 950;
     }
-
     .section-head p{
       margin:0;
-      color: var(--muted);
-      max-width: 70ch;
+      color: rgba(11,18,32,.68);
+      max-width: 78ch;
+      font-weight: 750;
+      font-size: 14px;
     }
 
-    /* CARDS */
+    /* Services */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -286,56 +334,57 @@
     }
 
     .card{
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: var(--panel);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
       padding: 18px;
       min-height: 170px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
       position: relative;
       overflow:hidden;
     }
-
-    .card::before{
+    .card:before{
       content:"";
       position:absolute;
       inset:-2px;
       background:
-        radial-gradient(280px 140px at 15% 20%, rgba(29,121,198,.14), transparent 70%),
-        radial-gradient(260px 140px at 80% 10%, rgba(44,171,75,.14), transparent 70%);
+        radial-gradient(320px 180px at 15% 20%, rgba(29,121,198,.10), transparent 70%),
+        radial-gradient(320px 180px at 90% 0%, rgba(44,171,75,.08), transparent 70%);
       pointer-events:none;
     }
-
     .card > *{ position: relative; }
 
     .icon{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 44px; height: 44px;
+      border-radius: 16px;
       display:flex;
       align-items:center;
       justify-content:center;
-      background: linear-gradient(135deg, rgba(29,121,198,.14), rgba(44,171,75,.14));
-      border: 1px solid rgba(29,121,198,.18);
-      font-size: 20px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.75);
+      font-size: 18px;
     }
-
     .card h3{
-      margin: 0;
-      font-size: 16px;
+      margin: 12px 0 6px;
+      font-size: 15px;
       font-weight: 950;
+      letter-spacing: -0.2px;
     }
-
     .card p{
       margin: 0;
-      color: var(--muted);
-      font-size: 14px;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
+      max-width: 62ch;
     }
 
-    /* PORTFOLIO */
+    /* Work */
+    .work-wrap{
+      background: rgba(15,23,42,.03);
+      border-top: 1px solid var(--hair);
+      border-bottom: 1px solid var(--hair);
+    }
+
     .portfolio{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
@@ -345,11 +394,23 @@
 
     .work{
       background:#fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
       padding: 18px;
+      position: relative;
+      overflow:hidden;
     }
+    .work:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(340px 200px at 18% 15%, rgba(29,121,198,.10), transparent 70%),
+        radial-gradient(340px 200px at 92% 0%, rgba(44,171,75,.08), transparent 70%);
+      pointer-events:none;
+    }
+    .work > *{ position: relative; }
 
     .tag{
       display:inline-flex;
@@ -357,139 +418,126 @@
       border-radius: 999px;
       font-size: 12px;
       font-weight: 950;
-      border: 1px solid rgba(29,121,198,.20);
-      background: rgba(29,121,198,.08);
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
       width: fit-content;
-      color:#0b3a5f;
+      color: rgba(11,18,32,.86);
       margin-bottom: 10px;
     }
 
     .work-title{
       font-weight: 950;
-      font-size: 16px;
+      font-size: 15px;
       margin: 0 0 8px;
+      letter-spacing: -0.2px;
     }
 
     .work-desc{
       margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* Portfolio enhancements */
-    .work-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
     }
 
     .work-bullets{
       margin: 0;
       padding-left: 18px;
-      color: var(--muted);
-      font-size: 13.5px;
+      color: rgba(11,18,32,.68);
+      font-size: 13px;
+      font-weight: 750;
     }
-
     .work-bullets li{ margin: 6px 0; }
 
+    .work-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
     .mini{
+      margin-top: 10px;
       font-size: 12px;
       font-weight: 850;
-      color: #64748b;
-      margin-top: 10px;
+      color: rgba(11,18,32,.55);
     }
 
     /* FAQ */
     details{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
       background:#fff;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow2);
       padding: 14px 16px;
     }
-
-    details + details{
-      margin-top: 12px;
-    }
+    details + details{ margin-top: 12px; }
 
     summary{
       cursor:pointer;
       font-weight: 950;
-      color: var(--text);
+      color: rgba(11,18,32,.92);
       list-style: none;
     }
-
     summary::-webkit-details-marker{ display:none; }
-
     summary:after{
       content:"+";
       float:right;
       font-weight: 950;
-      color:#64748b;
+      color: rgba(11,18,32,.55);
     }
-
     details[open] summary:after{ content:"–"; }
-
     details p{
       margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 14px;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
       max-width: 90ch;
     }
 
-    /* ABOUT + CONTACT */
+    /* About + Contact */
     .two-col{
       display:grid;
       grid-template-columns: 1.05fr .95fr;
       gap: 14px;
       margin-top: 14px;
     }
-
     .box{
       background:#fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
       padding: 18px;
     }
-
     .box h3{
       margin: 0 0 10px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 950;
+      letter-spacing: -0.2px;
     }
-
     .line{
       margin-top: 10px;
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
-      color: var(--muted);
+      color: rgba(11,18,32,.70);
       font-weight: 750;
+      font-size: 13.5px;
     }
-
     .line a{
-      color: var(--text);
       font-weight: 950;
       text-decoration:none;
     }
+    .line a:hover{ text-decoration: underline; text-underline-offset: 4px; }
 
-    .line a:hover{
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
-
-    /* FOOTER */
+    /* Footer */
     footer{
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--hair);
       background:#fff;
       padding: 18px 0;
-      color:#64748b;
+      color: rgba(11,18,32,.55);
       font-size: 12px;
       text-align:center;
     }
-
     .footer-inner{
       display:flex;
       align-items:center;
@@ -497,16 +545,17 @@
       gap: 10px;
       flex-wrap:wrap;
     }
-
     .footer-logo{
-      width: 18px;
-      height: 18px;
+      width: 18px; height: 18px;
       object-fit: contain;
       border-radius: 6px;
       opacity:.9;
+      border: 1px solid rgba(15,23,42,.10);
+      padding: 2px;
+      background: rgba(15,23,42,.02);
     }
 
-    /* ======= QUOTE MODAL ======= */
+    /* ===== Modal (Quote) ===== */
     .modal{
       position: fixed;
       inset: 0;
@@ -520,43 +569,40 @@
     .modal.show{ display:flex; }
 
     .modal-card{
-      width: min(680px, 100%);
-      max-height: 86vh;
+      width: min(720px, 100%);
+      max-height: 88vh;
       background:#fff;
-      border: 1px solid rgba(229,231,235,.95);
-      border-radius: 22px;
-      box-shadow: 0 22px 70px rgba(15,23,42,.35);
+      border: 1px solid rgba(15,23,42,.12);
+      border-radius: 24px;
+      box-shadow: 0 24px 90px rgba(15,23,42,.35);
       overflow:hidden;
       display:flex;
       flex-direction:column;
     }
-
     .modal-head{
       padding: 16px 16px 12px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(15,23,42,.10);
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap: 12px;
     }
-
     .modal-title{
       margin:0;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 950;
+      letter-spacing: -0.2px;
     }
-
     .modal-sub{
       margin: 4px 0 0;
       font-size: 13px;
-      color: var(--muted);
+      color: rgba(11,18,32,.66);
       font-weight: 750;
     }
-
     .close-btn{
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15,23,42,.12);
       background:#fff;
-      color: var(--text);
+      color: rgba(11,18,32,.92);
       border-radius: 999px;
       padding: 8px 10px;
       cursor:pointer;
@@ -564,7 +610,7 @@
       line-height: 1;
       flex: 0 0 auto;
     }
-    .close-btn:hover{ background:#f8fafc; }
+    .close-btn:hover{ background: rgba(15,23,42,.02); }
 
     .modal-body{
       padding: 14px 16px 16px;
@@ -578,21 +624,20 @@
       align-items:center;
       margin-bottom: 12px;
     }
-    .dot{
-      width: 10px;
-      height: 10px;
+    .pdot{
+      width: 10px; height: 10px;
       border-radius: 999px;
-      border: 1px solid rgba(29,121,198,.30);
-      background: rgba(29,121,198,.12);
+      border: 1px solid rgba(15,23,42,.14);
+      background: rgba(15,23,42,.05);
     }
-    .dot.active{
+    .pdot.active{
       background: linear-gradient(135deg, var(--blue), var(--green));
       border-color: transparent;
     }
     .progress span{
       font-size: 12px;
-      color: #64748b;
-      font-weight: 800;
+      color: rgba(11,18,32,.55);
+      font-weight: 850;
       margin-left: 6px;
     }
 
@@ -610,32 +655,30 @@
       gap: 6px;
       font-weight: 900;
       font-size: 13px;
-      color: var(--text);
+      color: rgba(11,18,32,.92);
     }
-
     input, select, textarea{
       padding: 12px 12px;
       border-radius: 14px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15,23,42,.12);
       background:#fff;
-      color: var(--text);
+      color: rgba(11,18,32,.92);
       outline:none;
       font-size: 14px;
+      font-weight: 750;
     }
-
     input:focus, select:focus, textarea:focus{
       border-color: rgba(29,121,198,.55);
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
-
     textarea{ resize: vertical; min-height: 110px; }
 
     .checks{
       margin-top: 10px;
       padding: 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--panel2);
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(15,23,42,.03);
       display:flex;
       flex-wrap:wrap;
       gap: 10px;
@@ -646,7 +689,7 @@
       gap: 8px;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(29,121,198,.18);
+      border: 1px solid rgba(15,23,42,.10);
       background: #fff;
       font-weight: 850;
       font-size: 13px;
@@ -666,85 +709,18 @@
     .hint{
       margin-top: 12px;
       font-size: 12px;
-      color:#64748b;
-      font-weight: 700;
-    }
-
-    /* ======= CLIENT ACCESS MODAL ======= */
-    .access-modal .modal-card{
-      width: min(520px, 100%);
-    }
-
-    .access-form{
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .access-error{
-      color:#dc2626;
-      font-weight: 850;
-      font-size: 13px;
-      display:none;
-    }
-
-    .access-hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color:#64748b;
+      color: rgba(11,18,32,.55);
       font-weight: 750;
     }
 
     /* Responsive */
     @media (max-width: 980px){
+      nav{ display:none; }
       .hero-grid{ grid-template-columns: 1fr; }
       .grid{ grid-template-columns: 1fr; }
       .portfolio{ grid-template-columns: 1fr; }
       .two-col{ grid-template-columns: 1fr; }
-      nav{ display:none; }
-
-      .quick-wrap{ justify-content:flex-start; }
-    }
-
-    /* On mobile, show logo above card and centered */
-    @media (max-width: 520px){
-      .quick-wrap{
-        flex-direction:column;
-        align-items:center;
-      }
-      .hero-logo{
-        width: 140px;
-        height: 140px;
-        margin-top: 0;
-      }
-
-      .modal{
-        align-items:flex-end;
-        padding: 10px;
-      }
-      .modal-card{
-        width: 100%;
-        max-height: 90vh;
-        border-radius: 20px 20px 16px 16px;
-      }
-      .modal-head{ padding: 14px 14px; }
-      .modal-body{ padding: 12px 14px 14px; }
       .form-grid{ grid-template-columns: 1fr; }
-      input, select, textarea{
-        padding: 11px 11px;
-        border-radius: 12px;
-      }
-      .checks{ padding: 10px; gap: 8px; }
-      .check{
-        font-size: 12.5px;
-        padding: 7px 10px;
-      }
-      .modal-actions{ justify-content: stretch; }
-      .modal-actions .btn{
-        flex: 1 1 auto;
-        justify-content:center;
-      }
     }
   </style>
 </head>
@@ -765,10 +741,7 @@
         <a href="#work">Work</a>
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
-
-        <!-- Demos Access (password protected) -->
         <a class="btn btn-outline" href="demos.html">Client Access</a>
-
         <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </nav>
     </div>
@@ -778,55 +751,59 @@
   <main id="top" class="hero">
     <div class="container hero-grid">
       <section>
-        <h1>Professional websites that are easy to manage.</h1>
-        <p>
-          PalmWeb helps locally owned businesses build a clean web presence and
-          simplify admin work through practical automation.
+        <div class="kicker"><span class="dot"></span> Modern sites + practical automation for local businesses</div>
+        <h1>Build a web presence that feels premium — and works.</h1>
+        <p class="lead">
+          PalmWeb designs clean, modern websites and automation workflows that turn requests into action.
+          Clear messaging, fast load times, and simple next steps.
         </p>
 
         <div class="hero-actions">
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-          <a class="btn btn-outline" href="#services">See Services</a>
           <a class="btn btn-outline" href="#work">View Work</a>
-          <a class="btn btn-outline" href="demos.html">Client Access</a>
+          <a class="btn btn-outline" href="#services">Services</a>
+          <a class="btn btn-outline" href="demos.html">Demos</a>
         </div>
 
-        <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
+        <p style="margin-top:16px; font-size:12.5px; color: rgba(11,18,32,.55); font-weight: 750;">
           Based in New England • Serving local businesses
         </p>
       </section>
 
-      <!-- RIGHT SIDE: Quick Contact + Big Logo -->
-      <div class="quick-wrap">
-        <aside class="hero-card quick">
-          <h3>Quick Contact</h3>
-          <p>Send a quick email and I’ll reply with simple next steps.</p>
+      <aside class="hero-card">
+        <h3>Quick Contact</h3>
+        <p>Send a quick email and I’ll reply with simple next steps.</p>
 
-          <div class="quick-row">
-            <span>Email</span>
-            <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
+        <div class="quick-row">
+          <span>Email</span>
+          <a href="mailto:mason@palmweb.net">mason@palmweb.net</a>
+        </div>
+
+        <div class="quick-row">
+          <span>Facebook</span>
+          <a href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">
+            Message me
+          </a>
+        </div>
+
+        <div class="quick-row">
+          <span>Samples</span>
+          <a href="#samples">View samples</a>
+        </div>
+
+        <div class="quick-row">
+          <span>Client Access</span>
+          <a href="demos.html">Enter demos</a>
+        </div>
+
+        <div class="hero-logo">
+          <img src="assets/logo.png" alt="PalmWeb" />
+          <div class="meta">
+            <strong>Clear + practical</strong>
+            <span>Design • Speed • Lead flow</span>
           </div>
-
-          <div class="quick-row">
-            <span>Facebook</span>
-            <a href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">
-              Message me on Facebook
-            </a>
-          </div>
-
-          <div class="quick-row">
-            <span>Approach</span>
-            <span style="font-weight:950;">Clear + practical</span>
-          </div>
-
-          <div class="quick-row">
-            <span>Client Access</span>
-            <a href="demos.html">Enter demos</a>
-          </div>
-        </aside>
-
-        <img class="hero-logo" src="assets/logo.png" alt="PalmWeb logo" />
-      </div>
+        </div>
+      </aside>
     </div>
   </main>
 
@@ -844,19 +821,19 @@
         <div class="card">
           <div class="icon">🖥️</div>
           <h3>Website Building</h3>
-          <p>Clean, mobile-friendly websites designed for trust, clarity, and ease of use.</p>
+          <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
         </div>
 
         <div class="card">
           <div class="icon">🧰</div>
           <h3>Website Maintenance</h3>
-          <p>Updates, fixes, content edits, and improvements to keep your website healthy and current.</p>
+          <p>Updates, fixes, content edits, and improvements to keep your website current.</p>
         </div>
 
         <div class="card">
           <div class="icon">🌐</div>
           <h3>Domain Migration</h3>
-          <p>Move your domain, email, or website safely—without downtime or losing access.</p>
+          <p>Move domains, email, or websites safely—without downtime or losing access.</p>
         </div>
 
         <div class="card">
@@ -874,19 +851,109 @@
         <div class="card">
           <div class="icon">💬</div>
           <h3>Consulting</h3>
-          <p>Practical guidance—what matters, what doesn’t, and the best next step for your business.</p>
+          <p>Practical guidance—what matters, what doesn’t, and the best next step.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Work -->
-  <section id="work" style="background: var(--panel2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <!-- Samples (Public) -->
+  <section id="samples" class="work-wrap">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Public Samples</h2>
+          <p>Functional sample websites you can click through (public). Each one includes working CTAs and a lead form.</p>
+        </div>
+      </div>
+
+      <div class="portfolio">
+        <div class="work">
+          <div class="tag">Home Services</div>
+          <div class="work-title">Plumbing Website (Sample)</div>
+          <div class="work-desc">Conversion-focused layout with “call now” actions and a fast lead form.</div>
+
+          <ul class="work-bullets">
+            <li>Mobile-first service layout</li>
+            <li>Trust cues + reviews section</li>
+            <li>Working lead capture (FormSubmit)</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-primary" href="samples/plumbing.html">Open sample</a>
+            <a class="btn btn-outline" href="#contact">Request similar</a>
+          </div>
+
+          <div class="mini">File: /samples/plumbing.html</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Restaurant</div>
+          <div class="work-title">Restaurant Landing Page (Sample)</div>
+          <div class="work-desc">Menu highlights, hours, and a reservation/event inquiry form.</div>
+
+          <ul class="work-bullets">
+            <li>Menu blocks designed for scanning</li>
+            <li>Hours + location prominence</li>
+            <li>Working inquiry form (FormSubmit)</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-primary" href="samples/restaurant.html">Open sample</a>
+            <a class="btn btn-outline" href="#contact">Request similar</a>
+          </div>
+
+          <div class="mini">File: /samples/restaurant.html</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Wellness</div>
+          <div class="work-title">PT / Wellness Website (Sample)</div>
+          <div class="work-desc">Clear treatment categories, trust-building testimonials, and appointment request flow.</div>
+
+          <ul class="work-bullets">
+            <li>Service categories + FAQs</li>
+            <li>Testimonials section</li>
+            <li>Working appointment request form</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-primary" href="samples/wellness.html">Open sample</a>
+            <a class="btn btn-outline" href="#contact">Request similar</a>
+          </div>
+
+          <div class="mini">File: /samples/wellness.html</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Legal</div>
+          <div class="work-title">Law Firm Website (Sample)</div>
+          <div class="work-desc">Practice areas, attorney bios, and an intake-style consultation request form.</div>
+
+          <ul class="work-bullets">
+            <li>Credibility-first layout</li>
+            <li>Practice areas + bios</li>
+            <li>Working consult request form</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-primary" href="samples/law.html">Open sample</a>
+            <a class="btn btn-outline" href="#contact">Request similar</a>
+          </div>
+
+          <div class="mini">File: /samples/law.html</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work (Client + Private Demo) -->
+  <section id="work">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Recent Work</h2>
-          <p>Real sites plus demo builds across multiple industries — designed for speed, clarity, and lead generation.</p>
+          <p>Live client sites plus private workflow demos that showcase automation and portal-style UX.</p>
         </div>
       </div>
 
@@ -894,7 +961,7 @@
         <div class="work">
           <div class="tag">Fine Art</div>
           <div class="work-title">Bill Noble Fine Art</div>
-          <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact info.</div>
+          <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact flow.</div>
 
           <ul class="work-bullets">
             <li>Design + build (mobile-first)</li>
@@ -903,7 +970,8 @@
           </ul>
 
           <div class="work-actions">
-            <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Visit Site</a>
+            <a class="btn btn-primary" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Visit site</a>
+            <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
           </div>
 
           <div class="mini">Stack: HTML/CSS • Lead capture</div>
@@ -915,73 +983,17 @@
           <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
 
           <ul class="work-bullets">
-            <li>Navigation + conversion-focused layout</li>
+            <li>Conversion-focused layout</li>
             <li>Fast contact access on mobile</li>
             <li>SEO-ready page structure</li>
           </ul>
 
           <div class="work-actions">
-            <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Visit Site</a>
+            <a class="btn btn-primary" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Visit site</a>
+            <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
           </div>
 
           <div class="mini">Stack: HTML/CSS • Copy + layout</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Home Services</div>
-          <div class="work-title">Local Plumbing Website (Demo)</div>
-          <div class="work-desc">Built for speed, trust, and quick calls — ideal for service businesses.</div>
-
-          <ul class="work-bullets">
-            <li>Service sections + trust cues</li>
-            <li>Call/quote CTAs placed for mobile</li>
-            <li>Lead capture flow (email)</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
-            <a class="btn btn-outline" href="#contact">Request Similar</a>
-          </div>
-
-          <div class="mini">Focus: conversions • mobile calls</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Restaurant</div>
-          <div class="work-title">Restaurant Landing Page (Demo)</div>
-          <div class="work-desc">A clean menu + reservations flow that looks great on phones.</div>
-
-          <ul class="work-bullets">
-            <li>Menu sections designed for scanning</li>
-            <li>Reservation/call-to-action placement</li>
-            <li>Hours + location clarity</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
-            <a class="btn btn-outline" href="#contact">Request Similar</a>
-          </div>
-
-          <div class="mini">Focus: clarity • quick actions</div>
-        </div>
-
-        <div class="work">
-          <div class="tag">Wellness</div>
-          <div class="work-title">Chiropractic / PT Site (Demo)</div>
-          <div class="work-desc">Designed to explain services clearly and convert visitors into appointments.</div>
-
-          <ul class="work-bullets">
-            <li>Service layout + insurance-friendly copy</li>
-            <li>Appointment request flow</li>
-            <li>FAQ + credibility structure</li>
-          </ul>
-
-          <div class="work-actions">
-            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
-            <a class="btn btn-outline" href="#contact">Request Similar</a>
-          </div>
-
-          <div class="mini">Focus: trust • appointments</div>
         </div>
 
         <div class="work">
@@ -992,26 +1004,45 @@
           <ul class="work-bullets">
             <li>Client portal UX pattern</li>
             <li>Guided flow (create → send → complete)</li>
-            <li>Document output (PDF) step</li>
+            <li>Document output step (PDF)</li>
           </ul>
 
           <div class="work-actions">
-            <a class="btn btn-outline" href="demos.html">Open Demo</a>
-            <a class="btn btn-outline" href="#services">See Automation</a>
+            <a class="btn btn-primary" href="demos.html">Open demo portal</a>
+            <a class="btn btn-outline" href="#services">Automation services</a>
           </div>
 
-          <div class="mini">Focus: workflows • admin time savings</div>
+          <div class="mini">Private demo access controlled via password</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Portfolio</div>
+          <div class="work-title">All Samples</div>
+          <div class="work-desc">A quick hub to explore the public samples and private demos.</div>
+
+          <ul class="work-bullets">
+            <li>Public sample sites (no password)</li>
+            <li>Private demo portal (password)</li>
+            <li>Consistent UX + clean layouts</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-primary" href="#samples">View samples</a>
+            <a class="btn btn-outline" href="demos.html">View demos</a>
+          </div>
+
+          <div class="mini">Tip: swap in client links as you complete projects</div>
         </div>
       </div>
 
-      <p style="margin-top:14px; color:#64748b; font-size:12.5px; font-weight:750;">
-        Note: Demo builds showcase layout, UX patterns, and automation workflows. Live client links are shown when available.
+      <p style="margin-top:14px; color: rgba(11,18,32,.55); font-size:12.5px; font-weight:750;">
+        Note: Sample sites are public and demonstrate layout + lead flow. Private demos are restricted for client confidentiality.
       </p>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section id="faq">
+  <section id="faq" class="work-wrap">
     <div class="container">
       <div class="section-head">
         <div>
@@ -1037,13 +1068,13 @@
 
       <details>
         <summary>Can you help with automation?</summary>
-        <p>Yes — I build lightweight Power Apps/Automate systems that reduce admin work and prevent errors.</p>
+        <p>Yes — Power Apps/Automate systems that reduce admin work and improve accuracy.</p>
       </details>
     </div>
   </section>
 
   <!-- About + Contact -->
-  <section id="about" style="background: var(--panel2); border-top:1px solid var(--border);">
+  <section id="about">
     <div class="container">
       <div class="section-head">
         <div>
@@ -1055,14 +1086,14 @@
       <div class="two-col">
         <div class="box">
           <h3>Mason Palmieri</h3>
-          <p style="margin:0; color:var(--muted); font-size:14px;">
+          <p style="margin:0; color: rgba(11,18,32,.70); font-size:13.5px; font-weight:750;">
             I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
             I earned my MBA from Bryant University and played Division I baseball there for five years.
           </p>
 
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-            <a class="btn btn-outline" href="#work">View Work</a>
+            <a class="btn btn-outline" href="#samples">View samples</a>
             <a class="btn btn-outline" href="demos.html">Client Access</a>
           </div>
         </div>
@@ -1077,7 +1108,7 @@
               facebook.com/profile.php?id=61585833374096
             </a>
           </div>
-          <div class="line">Location: <span style="font-weight:950; color:var(--text);">New England</span></div>
+          <div class="line">Location: <span style="font-weight:950; color: rgba(11,18,32,.92);">New England</span></div>
 
           <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
@@ -1110,9 +1141,9 @@
 
       <div class="modal-body">
         <div class="progress" aria-label="Progress">
-          <div class="dot active" id="dot1"></div>
-          <div class="dot" id="dot2"></div>
-          <div class="dot" id="dot3"></div>
+          <div class="pdot active" id="dot1"></div>
+          <div class="pdot" id="dot2"></div>
+          <div class="pdot" id="dot3"></div>
           <span id="stepLabel">Step 1 of 3</span>
         </div>
 
