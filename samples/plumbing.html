@@ -6,6 +6,8 @@
   <title>Smith & Sons Plumbing — Emergency + Residential Service</title>
   <meta name="description" content="Fast, reliable plumbing service. Emergency calls, repairs, installs, and maintenance." />
   <meta name="theme-color" content="#ffffff" />
+  <meta name="referrer" content="no-referrer" />
+
   <style>
     :root{
       --bg:#f7fafc;
@@ -86,6 +88,7 @@
     }
     .hero-card > *{position:relative}
 
+    /* ✅ FIXED: use images.unsplash.com (stable) instead of source.unsplash.com */
     .hero-photo{
       border-radius: 22px;
       border:1px solid rgba(15,23,42,.10);
@@ -95,7 +98,7 @@
       position:relative;
       background:
         linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.10)),
-        url("https://source.unsplash.com/1600x1000/?plumber,tools") center/cover no-repeat;
+        url("https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
     }
     .hero-photo::after{
       content:"";
@@ -311,7 +314,8 @@
 
       <div class="cards" style="grid-template-columns: 1fr; max-width: 860px;">
         <div class="review">
-          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,woman');"></div>
+          <!-- ✅ FIXED: stable image URL -->
+          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80');"></div>
           <div>
             <div class="stars">★★★★★</div>
             <div style="font-weight:950;margin-top:4px;">“Showed up same day.”</div>
@@ -320,7 +324,8 @@
           </div>
         </div>
         <div class="review">
-          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,man');"></div>
+          <!-- ✅ FIXED: stable image URL -->
+          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80');"></div>
           <div>
             <div class="stars">★★★★★</div>
             <div style="font-weight:950;margin-top:4px;">“Honest and straightforward.”</div>
@@ -329,7 +334,8 @@
           </div>
         </div>
         <div class="review">
-          <div class="avatar" style="background-image:url('https://source.unsplash.com/200x200/?portrait,smile');"></div>
+          <!-- ✅ FIXED: stable image URL -->
+          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&h=200&q=80');"></div>
           <div>
             <div class="stars">★★★★★</div>
             <div style="font-weight:950;margin-top:4px;">“Professional work.”</div>
