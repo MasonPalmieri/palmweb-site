@@ -7,135 +7,380 @@
   <meta name="description" content="A modern neighborhood restaurant with seasonal plates, cocktails, and weekend brunch." />
   <meta name="theme-color" content="#ffffff" />
   <style>
-    :root{ --blue:#1d79c6; --green:#2cab4b; --bg:#fff; --panel:#fff; --panel2:#f7fbff; --border:#e5e7eb; --text:#0f172a; --muted:#475569; --shadow:0 14px 34px rgba(15,23,42,.10); --radius:18px; --max:1120px; }
-    *{box-sizing:border-box} html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.55}
-    a{color:inherit} .container{max-width:var(--max);margin:0 auto;padding:0 18px}
-    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
+    :root{
+      --bg:#fbfaf7;
+      --text:#1b1b1b;
+      --muted:#57534e;
+      --brand:#111827;
+      --accent:#b45309;
+      --card:#ffffff;
+      --border: rgba(0,0,0,.10);
+      --shadow: 0 18px 55px rgba(0,0,0,.12);
+      --shadow2: 0 10px 28px rgba(0,0,0,.10);
+      --radius: 22px;
+      --max: 1140px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1100px 640px at 15% -10%, rgba(180,83,9,.10), transparent 60%),
+        radial-gradient(1100px 640px at 90% 0%, rgba(17,24,39,.08), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    h1,h2,.serif{ font-family: ui-serif, Georgia, "Times New Roman", serif; letter-spacing:-.7px; }
+    a{color:inherit}
+    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+    header{
+      position:sticky;top:0;z-index:50;
+      background: rgba(251,250,247,.86);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding: 14px 0;
+    }
     .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .badge{font-weight:950;font-size:12px;color:#0b3a5f;background:rgba(29,121,198,.10);border:1px solid rgba(29,121,198,.22);padding:6px 10px;border-radius:999px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid transparent;text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap}
-    .btn-primary{color:#fff;background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 12px 26px rgba(29,121,198,.22)}
-    .btn-outline{background:#fff;border:1px solid var(--border)}
-    .hero{padding:46px 0 24px;background:
-      radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.18), transparent 60%),
-      radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
-      linear-gradient(180deg,var(--panel2),#fff 70%);
-      border-bottom:1px solid var(--border)}
-    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:start}
-    h1{margin:0 0 10px;font-size:clamp(30px,4vw,46px);line-height:1.05;letter-spacing:-.8px}
-    p{margin:0 0 14px;color:var(--muted)}
-    .panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .card h3{margin:0 0 6px;font-size:16px;font-weight:950}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .mini{font-size:12px;color:#64748b;font-weight:800}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .brand strong{font-weight:950}
+    .badge{
+      font-weight:950;font-size:12px;color:#3f2d1e;
+      background: rgba(180,83,9,.10);
+      border:1px solid rgba(180,83,9,.20);
+      padding:6px 10px;border-radius:999px;
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;border:1px solid transparent;
+      text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap;
+      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{background: var(--brand); color:#fff; box-shadow: 0 18px 44px rgba(17,24,39,.18)}
+    .btn-accent{background: var(--accent); color:#fff; box-shadow: 0 18px 44px rgba(180,83,9,.18)}
+    .btn-outline{background: rgba(255,255,255,.78); border:1px solid var(--border)}
+    .btn-outline:hover{background:#fff}
+
+    .hero{
+      padding: 28px 0 24px;
+    }
+
+    .hero-wrap{
+      border-radius: 28px;
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(180,83,9,.10), transparent 60%),
+        linear-gradient(90deg, rgba(17,24,39,.06), rgba(255,255,255,.15));
+      position:relative;
+    }
+    .hero-inner{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      padding: 22px;
+    }
+    .hero-photo{
+      border-radius: 22px;
+      border:1px solid rgba(0,0,0,.10);
+      background:
+        linear-gradient(135deg, rgba(17,24,39,.08), rgba(180,83,9,.10)),
+        radial-gradient(700px 320px at 30% 20%, rgba(255,255,255,.40), transparent 60%);
+      min-height: 280px;
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-photo::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(360px 220px at 30% 20%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(420px 260px at 80% 0%, rgba(180,83,9,.18), transparent 65%);
+      opacity:.85;
+    }
+    .hero-photo .label{
+      position:absolute; left: 16px; bottom: 16px; z-index:2;
+      background: rgba(255,255,255,.86);
+      border:1px solid rgba(0,0,0,.10);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 950;
+      font-size: 12px;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size: clamp(30px, 3.6vw, 46px);
+      line-height: 1.05;
+    }
+    p{margin:0 0 14px;color: rgba(27,27,27,.72); font-weight: 750}
+
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.72);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(27,27,27,.82);
+    }
+
+    .section{padding: 44px 0}
+    .section h2{margin:0;font-size: 28px}
+    .section p.sub{margin:8px 0 0; color: rgba(27,27,27,.68); font-weight: 750}
+
+    .menu-tabs{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px;
+    }
+    .tab{
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.70);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight: 950;
+      cursor:pointer;
+    }
+    .tab.active{
+      background: var(--brand);
+      color:#fff;
+      border-color: transparent;
+    }
+
+    .menu-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .menu-card{
+      background:#fff;
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+    .menu-card h3{margin:0 0 8px;font-size: 16px;font-weight: 950}
+    .item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+    .item:first-of-type{border-top:0;padding-top:0}
+    .item strong{font-weight:950}
+    .item span{color: rgba(27,27,27,.70); font-weight: 750}
+    .price{font-weight: 950}
+
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .panel{
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(0,0,0,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+
     label{display:flex;flex-direction:column;gap:6px;font-weight:900;font-size:13px}
-    input,textarea,select{padding:12px;border-radius:14px;border:1px solid var(--border);font-size:14px;background:#fff}
-    textarea{min-height:110px;resize:vertical}
-    footer{border-top:1px solid var(--border);padding:18px 0;color:#64748b;font-size:12px;text-align:center}
-    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);padding:8px 10px;border-radius:999px;background:#fff;font-weight:900;font-size:13px;color:#334155}
-    @media(max-width:980px){.hero-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+    input,textarea,select{
+      padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,.12);
+      font-size:14px;background:#fff; outline:none;
+    }
+    input:focus,textarea:focus,select:focus{
+      border-color: rgba(180,83,9,.45);
+      box-shadow: 0 0 0 4px rgba(180,83,9,.10);
+    }
+    textarea{min-height: 110px; resize: vertical}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top: 12px}
+    .mini{font-size:12px;color: rgba(27,27,27,.55); font-weight: 850}
+
+    footer{
+      border-top: 1px solid rgba(0,0,0,.10);
+      padding: 18px 0;
+      color: rgba(27,27,27,.55);
+      font-size: 12px;
+      text-align:center;
+      background: rgba(255,255,255,.55);
+    }
+
+    /* Reservation modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none; align-items:center; justify-content:center;
+      padding: 14px;
+      background: rgba(0,0,0,.55);
+      z-index: 999;
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      width: min(680px, 100%);
+      max-height: 86vh;
+      overflow:auto;
+      background:#fff;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 24px;
+      box-shadow: 0 26px 90px rgba(0,0,0,.38);
+      padding: 16px;
+    }
+    .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom: 10px}
+    .close{
+      border:1px solid rgba(0,0,0,.12);
+      background:#fff;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight: 950;
+      cursor:pointer;
+    }
+    .close:hover{background: rgba(0,0,0,.03)}
+
+    @media (max-width: 980px){
+      .hero-inner{grid-template-columns: 1fr}
+      .menu-grid{grid-template-columns: 1fr}
+      .split{grid-template-columns: 1fr}
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="container nav">
       <a class="brand" href="#">
-        <div style="font-weight:950;">Harbor Street Kitchen</div>
+        <strong class="serif">Harbor Street Kitchen</strong>
         <span class="badge">Demo Site</span>
       </a>
       <div class="row" style="margin:0;">
         <a class="btn btn-outline" href="../index.html">PalmWeb</a>
         <a class="btn btn-outline" href="tel:+14015557890">Call (401) 555-7890</a>
-        <a class="btn btn-primary" href="#reserve">Reservations</a>
+        <button class="btn btn-accent" type="button" data-open-reserve>Reserve</button>
       </div>
     </div>
   </header>
 
   <main class="hero">
-    <div class="container hero-grid">
-      <section>
-        <h1>Seasonal plates, cocktails, and a great neighborhood vibe.</h1>
-        <p>Modern American food, locally sourced ingredients, and weekend brunch. Walk-ins welcome.</p>
+    <div class="container">
+      <div class="hero-wrap">
+        <div class="hero-inner">
+          <section>
+            <h1>Seasonal plates, craft cocktails, and a warm neighborhood room.</h1>
+            <p>
+              A modern American kitchen focused on locally sourced ingredients, weekend brunch,
+              and private dining for special nights.
+            </p>
 
-        <div class="row">
-          <a class="btn btn-primary" href="#menu">View Menu</a>
-          <a class="btn btn-outline" href="#reserve">Reserve a Table</a>
-          <a class="btn btn-outline" href="#hours">Hours & Location</a>
+            <div class="row">
+              <a class="btn btn-primary" href="#menu">Explore Menu</a>
+              <button class="btn btn-accent" type="button" data-open-reserve>Reserve a Table</button>
+              <a class="btn btn-outline" href="#visit">Visit</a>
+            </div>
+
+            <div class="chips">
+              <span class="chip">Brunch Sat–Sun</span>
+              <span class="chip">Seasonal specials</span>
+              <span class="chip">Private events</span>
+            </div>
+
+            <p class="mini" style="margin-top:12px;">Demo note: Sample restaurant site built by PalmWeb.</p>
+          </section>
+
+          <aside class="hero-photo" aria-label="Restaurant photo placeholder">
+            <div class="label">Tonight’s mood: warm + modern</div>
+          </aside>
         </div>
-
-        <div class="row" style="margin-top:14px;">
-          <span class="pill">Brunch Sat–Sun</span>
-          <span class="pill">Gluten-free options</span>
-          <span class="pill">Private events</span>
-        </div>
-
-        <p class="mini" style="margin-top:12px;">Demo note: This is a sample restaurant site built by PalmWeb.</p>
-      </section>
-
-      <aside class="panel" id="hours">
-        <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Hours</h3>
-        <p style="margin:0 0 10px;">
-          Mon–Thu: 4pm–10pm<br/>
-          Fri: 4pm–11pm<br/>
-          Sat: 11am–11pm<br/>
-          Sun: 11am–9pm
-        </p>
-
-        <div class="mini">Location</div>
-        <p style="margin:4px 0 0;">123 Harbor St, Providence, RI</p>
-
-        <div class="row">
-          <a class="btn btn-outline" href="mailto:hello@harborstreetkitchen.com">Email</a>
-          <a class="btn btn-outline" href="tel:+14015557890">Call</a>
-        </div>
-      </aside>
+      </div>
     </div>
   </main>
 
-  <section id="menu" style="padding:44px 0;">
+  <section class="section" id="menu">
     <div class="container">
-      <h2 style="margin:0;font-size:26px;letter-spacing:-.2px;">Menu Highlights</h2>
-      <p>Simple menu layout designed for scanning on mobile.</p>
+      <h2>Menu</h2>
+      <p class="sub">This layout feels totally different: editorial typography + “tabs” + item pricing.</p>
 
-      <div class="grid">
-        <div class="card">
-          <h3>Starters</h3>
-          <p>Charred shishitos • Burrata • Crispy calamari • Seasonal soup</p>
-          <div class="mini">Most popular: Burrata + tomatoes</div>
+      <div class="menu-tabs" role="tablist" aria-label="Menu categories">
+        <button class="tab active" type="button" data-tab="starters">Starters</button>
+        <button class="tab" type="button" data-tab="mains">Mains</button>
+        <button class="tab" type="button" data-tab="cocktails">Cocktails</button>
+        <button class="tab" type="button" data-tab="dessert">Dessert</button>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-card" data-panel="starters">
+          <h3 class="serif">Starters</h3>
+          <div class="item"><div><strong>Burrata + tomatoes</strong><br><span>Basil oil, sea salt</span></div><div class="price">$14</div></div>
+          <div class="item"><div><strong>Charred shishitos</strong><br><span>Lemon, flaky salt</span></div><div class="price">$11</div></div>
+          <div class="item"><div><strong>Crispy calamari</strong><br><span>Chili-lime aioli</span></div><div class="price">$15</div></div>
         </div>
-        <div class="card">
-          <h3>Mains</h3>
-          <p>Steak frites • Pan-seared salmon • Chicken parmesan • Veggie bowl</p>
-          <div class="mini">Most popular: Steak frites</div>
+
+        <div class="menu-card" data-panel="mains" style="display:none;">
+          <h3 class="serif">Mains</h3>
+          <div class="item"><div><strong>Steak frites</strong><br><span>Herb butter, fries</span></div><div class="price">$32</div></div>
+          <div class="item"><div><strong>Pan-seared salmon</strong><br><span>Seasonal veg, lemon</span></div><div class="price">$28</div></div>
+          <div class="item"><div><strong>Veggie bowl</strong><br><span>Grains, greens, tahini</span></div><div class="price">$19</div></div>
         </div>
-        <div class="card">
-          <h3>Cocktails</h3>
-          <p>Espresso martini • Paloma • Old fashioned • Seasonal spritz</p>
-          <div class="mini">Ask about seasonal specials</div>
+
+        <div class="menu-card" data-panel="cocktails" style="display:none;">
+          <h3 class="serif">Cocktails</h3>
+          <div class="item"><div><strong>Espresso martini</strong><br><span>Vanilla, cold brew</span></div><div class="price">$15</div></div>
+          <div class="item"><div><strong>Paloma</strong><br><span>Grapefruit, lime</span></div><div class="price">$14</div></div>
+          <div class="item"><div><strong>Seasonal spritz</strong><br><span>Rotating feature</span></div><div class="price">$14</div></div>
+        </div>
+
+        <div class="menu-card" data-panel="dessert" style="display:none;">
+          <h3 class="serif">Dessert</h3>
+          <div class="item"><div><strong>Olive oil cake</strong><br><span>Citrus, whipped cream</span></div><div class="price">$10</div></div>
+          <div class="item"><div><strong>Warm brownie</strong><br><span>Vanilla gelato</span></div><div class="price">$11</div></div>
+          <div class="item"><div><strong>Seasonal sorbet</strong><br><span>Ask server</span></div><div class="price">$9</div></div>
+        </div>
+
+        <div class="menu-card">
+          <h3 class="serif">Tonight’s Specials</h3>
+          <p style="margin:0;color:rgba(27,27,27,.70);font-weight:750">
+            <strong>Chef’s pasta</strong> — seasonal veg, brown butter<br>
+            <strong>Oyster add-on</strong> — half dozen with mignonette<br>
+            <strong>Zero-proof spritz</strong> — citrus + herbs
+          </p>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn btn-accent" type="button" data-open-reserve>Reserve</button>
+            <a class="btn btn-outline" href="#visit">Hours</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section style="padding:44px 0;background:var(--panel2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <section class="section" id="visit" style="background: rgba(255,255,255,.55); border-top: 1px solid rgba(0,0,0,.10); border-bottom:1px solid rgba(0,0,0,.10);">
     <div class="container">
-      <h2 style="margin:0;font-size:26px;letter-spacing:-.2px;">Private Events</h2>
-      <p>Quick lead capture for private dining inquiries.</p>
+      <h2>Visit</h2>
+      <p class="sub">Clean “visit” block with hours + a quick inquiry form.</p>
 
-      <div class="two">
+      <div class="split">
         <div class="panel">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">What we host</h3>
-          <p style="margin:0 0 10px;">Birthdays, rehearsal dinners, corporate meals, and holiday parties.</p>
-          <div class="mini">Capacity</div>
-          <p style="margin:4px 0 0;">Up to 45 guests (buyout options available)</p>
+          <div class="serif" style="font-weight:950;font-size:16px;">Hours</div>
+          <p style="margin-top:8px;">
+            Mon–Thu: 4pm–10pm<br/>
+            Fri: 4pm–11pm<br/>
+            Sat: 11am–11pm<br/>
+            Sun: 11am–9pm
+          </p>
+          <div class="mini">Location</div>
+          <p style="margin-top:6px;">123 Harbor St, Providence, RI</p>
+          <div class="row">
+            <a class="btn btn-outline" href="mailto:hello@harborstreetkitchen.com">Email</a>
+            <a class="btn btn-outline" href="tel:+14015557890">Call</a>
+          </div>
         </div>
 
-        <div class="panel" id="reserve">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Reservation / Inquiry</h3>
+        <div class="panel">
+          <div class="serif" style="font-weight:950;font-size:16px;">Private Events</div>
+          <p style="margin-top:8px;">Birthdays, rehearsal dinners, and corporate meals (up to 45 guests).</p>
 
           <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
             <input type="hidden" name="_subject" value="Demo Lead — Restaurant Site" />
@@ -144,19 +389,12 @@
 
             <label>Your name* <input required name="Name" /></label>
             <label>Phone* <input required name="Phone" /></label>
-            <label class="full">Email <input name="Email" type="email" /></label>
-            <label>Type
-              <select name="Type">
-                <option>Reservation</option>
-                <option>Private event</option>
-                <option>General question</option>
-              </select>
-            </label>
-            <label>Requested date/time <input name="Requested Date/Time" placeholder="Fri 7pm" /></label>
-            <label class="full">Details <textarea name="Details" placeholder="Party of 6, celebrating a birthday..."></textarea></label>
+            <label>Email <input name="Email" type="email" /></label>
+            <label>Event date/time <input name="Requested Date/Time" placeholder="Sat 6pm" /></label>
+            <label>Details <textarea name="Details" placeholder="About 25 guests, seated dinner..."></textarea></label>
 
             <div class="row">
-              <button class="btn btn-primary" type="submit">Send</button>
+              <button class="btn btn-primary" type="submit">Send Inquiry</button>
               <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
             </div>
 
@@ -171,7 +409,72 @@
     <div class="container">© <span id="year"></span> Harbor Street Kitchen (Demo). Built by PalmWeb.</div>
   </footer>
 
-  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <!-- Reservation modal -->
+  <div class="modal" id="reserveModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reserveTitle">
+      <div class="modal-head">
+        <div>
+          <div class="serif" id="reserveTitle" style="font-weight:950;font-size:18px;">Reservation Request</div>
+          <div class="mini">This demo uses a simple FormSubmit request (no booking backend).</div>
+        </div>
+        <button class="close" type="button" id="closeModal">✕</button>
+      </div>
+
+      <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
+        <input type="hidden" name="_subject" value="Demo Lead — Restaurant Reservation" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <label>Your name* <input required name="Name" /></label>
+          <label>Phone* <input required name="Phone" /></label>
+          <label>Email <input name="Email" type="email" /></label>
+          <label>Party size <input name="Party Size" placeholder="2" /></label>
+          <label style="grid-column:1/-1;">Requested date/time <input name="Requested Date/Time" placeholder="Fri 7:30pm" /></label>
+          <label style="grid-column:1/-1;">Notes <textarea name="Details" placeholder="High chair, allergies, celebration..."></textarea></label>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-accent" type="submit">Send Request</button>
+          <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Menu tabs
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const panels = Array.from(document.querySelectorAll("[data-panel]"));
+
+    function activate(name){
+      tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+      panels.forEach(p => p.style.display = (p.dataset.panel === name) ? "" : "none");
+    }
+    tabs.forEach(t => t.addEventListener("click", () => activate(t.dataset.tab)));
+
+    // Reservation modal
+    const modal = document.getElementById("reserveModal");
+    const openBtns = document.querySelectorAll("[data-open-reserve]");
+    const closeBtn = document.getElementById("closeModal");
+
+    function openModal(){
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+
+    openBtns.forEach(b => b.addEventListener("click", openModal));
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && modal.classList.contains("show")) closeModal(); });
+  </script>
 </body>
 </html>
-
