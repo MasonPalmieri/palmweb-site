@@ -969,62 +969,88 @@
     </div>
   </section>
 
-  <!-- Tools & Plugins (FIXED) -->
-  <section id="tools">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker"><span class="dot"></span> Tools & Plugins (Interactive)</div>
-          <h2>Custom Tools We Can Build</h2>
-          <p>
-            Examples of lightweight internal tools and plugins that feel like “mini software products” —
-            built fast, branded cleanly, and ready to deploy on the web.
-          </p>
+<!-- Tools & Plugins (FIXED) -->
+<section id="tools" class="work-wrap">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="kicker" style="margin-bottom:10px;">
+          <span class="dot"></span> Tools & Plugins (Interactive)
         </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
-        </div>
+        <h2 style="margin:0 0 8px;">Custom Tools We Can Build</h2>
+        <p style="margin:0; max-width:82ch;">
+          Examples of lightweight internal tools and plugins that feel like “mini software products” —
+          built fast, branded cleanly, and ready to deploy on the web.
+        </p>
       </div>
 
-      <div class="grid">
-        <div class="card">
-          <div class="icon">🧾</div>
-          <h3>Invoice Builder</h3>
-          <p>Quote → Invoice → Print PDF. Dropdown services, quantities, totals, payment terms, due dates, branded output.</p>
-          <div class="card-actions">
-            <a class="btn btn-primary" href="tools/invoice.html">Launch tool</a>
-            <a class="btn btn-outline" href="#contact">Request similar</a>
-          </div>
-          <div class="mini">File: /tools/invoice.html</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">🧠</div>
-          <h3>Lead Intake Plugin</h3>
-          <p>Smart forms with conditional fields, validation, file uploads, and auto-routing to email/CRM.</p>
-          <div class="card-actions">
-            <a class="btn btn-outline" href="#contact">Request a demo</a>
-          </div>
-          <div class="mini">Example: intake → routing → tracking</div>
-        </div>
-
-        <div class="card">
-          <div class="icon">🔒</div>
-          <h3>Client Portal</h3>
-          <p>Login + documents + approvals. Secure pages, downloadable docs, e-sign workflow, and status tracking.</p>
-          <div class="card-actions">
-            <a class="btn btn-outline" href="demos.html">See portal demos</a>
-          </div>
-          <div class="mini">Demo access via Client Access</div>
-        </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <a class="btn btn-outline" href="tools/intake.html">Open Intake Tool</a>
+        <a class="btn btn-outline" href="tools/portal.html">Open Portal Demo</a>
+        <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
       </div>
-
-      <p style="margin-top:14px; color: rgba(11,18,32,.55); font-size:12.5px; font-weight:750;">
-        Demo note: These tools can stay front-end only (like GitHub Pages) or be connected to Stripe, QuickBooks, Airtable, HubSpot, and custom backends.
-      </p>
     </div>
-  </section>
+
+    <div class="grid" style="margin-top:16px;">
+      <!-- Invoice -->
+      <div class="card">
+        <div class="icon">🧾</div>
+        <h3>Invoice Builder</h3>
+        <p>
+          Quote → Invoice → Print PDF. Dropdown services, quantities, totals, payment terms,
+          due dates, branded output.
+        </p>
+
+        <div class="row" style="margin-top:12px;">
+          <a class="btn btn-primary" href="tools/invoice.html">Launch tool</a>
+          <a class="btn btn-outline" href="#contact">Request similar</a>
+        </div>
+
+        <div class="mini">File: /tools/invoice.html</div>
+      </div>
+
+      <!-- Intake -->
+      <div class="card">
+        <div class="icon">🧠</div>
+        <h3>Lead Intake Plugin</h3>
+        <p>
+          Smart forms with conditional fields, validation, routing summaries, and print-ready output —
+          ready for email/CRM integration.
+        </p>
+
+        <div class="row" style="margin-top:12px;">
+          <a class="btn btn-primary" href="tools/intake.html">Launch tool</a>
+          <a class="btn btn-outline" href="#contact">Request similar</a>
+        </div>
+
+        <div class="mini">File: /tools/intake.html</div>
+      </div>
+
+      <!-- Portal -->
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Client Portal Lite</h3>
+        <p>
+          Login gate demo + documents + approvals + printable receipt. Clean portal UX that can be
+          extended to real auth + storage.
+        </p>
+
+        <div class="row" style="margin-top:12px;">
+          <a class="btn btn-primary" href="tools/portal.html">Launch tool</a>
+          <a class="btn btn-outline" href="#contact">Request similar</a>
+        </div>
+
+        <div class="mini">File: /tools/portal.html</div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px; color: rgba(11,18,32,.55); font-size:12.5px; font-weight:750;">
+      Demo note: These tools can stay front-end only (GitHub Pages) or be connected to Stripe, QuickBooks,
+      Airtable, HubSpot, and custom backends.
+    </p>
+  </div>
+</section>
+
 
   <!-- Work (Client + Private Demo) -->
   <section id="work" class="work-wrap">
