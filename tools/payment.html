@@ -3,26 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb — Websites & Automation for Local Businesses</title>
-  <meta name="description" content="PalmWeb builds modern websites and practical automation for locally owned businesses." />
+  <title>PalmWeb — Lead Intake Tool</title>
+  <meta name="description" content="Smart lead intake tool with conditional fields, validation, and print-ready output." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      --bg:#ffffff;
+      --bg:#f6fbff;
+      --card:#ffffff;
       --text:#0b1220;
       --muted:#556173;
       --hair: rgba(15,23,42,.10);
-      --panel:#ffffff;
 
       --blue:#1d79c6;
       --green:#2cab4b;
+      --ink:#0b1220;
 
       --shadow: 0 18px 55px rgba(15,23,42,.10);
       --shadow2: 0 10px 28px rgba(15,23,42,.08);
 
-      --radius: 18px;
-      --max: 1160px;
+      --radius: 22px;
+      --max: 1180px;
     }
 
     *{ box-sizing:border-box; }
@@ -30,104 +31,59 @@
       margin:0;
       padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
       color: var(--text);
       line-height: 1.55;
+      background:
+        radial-gradient(1100px 560px at 20% -10%, rgba(29,121,198,.14), transparent 60%),
+        radial-gradient(1100px 560px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
+        var(--bg);
     }
     a{ color:inherit; }
-    img{ max-width:100%; display:block; }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
 
-    .container{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* ===== Header / Banner (as-is, but cleaner centering) ===== */
     header{
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(255,255,255,.86);
-      backdrop-filter: blur(14px);
+      background: rgba(246,251,255,.86);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--hair);
     }
-
     .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
       padding: 12px 0;
     }
-
-    .nav-grid{
-      display:grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items:center;
-      gap: 14px;
-    }
-
     .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
+      display:flex; align-items:center; gap: 12px;
       text-decoration:none;
+      white-space: nowrap;
       min-width:0;
-      justify-self: start;
     }
-    .brand img{
-      width: 38px;
-      height: 38px;
+    .logo{
+      width: 40px; height: 40px;
       border-radius: 14px;
-      border: 1px solid var(--hair);
-      background: rgba(15,23,42,.02);
-      padding: 6px;
-      object-fit: contain;
-    }
-    .brand-title{
-      display:flex;
-      flex-direction:column;
-      gap: 1px;
-      min-width:0;
-    }
-    .brand-title strong{
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.80);
       font-weight: 950;
       letter-spacing: .2px;
-      font-size: 13.5px;
+      flex: 0 0 auto;
     }
-    .brand-title span{
-      font-weight: 750;
+    .brand strong{ font-weight: 950; font-size: 13.5px; }
+    .brand span{
+      display:block;
       font-size: 12px;
-      color: var(--muted);
+      font-weight: 800;
+      color: rgba(11,18,32,.62);
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
       max-width: 520px;
     }
 
-    nav{
-      justify-self: center;
-      display:flex;
-      align-items:center;
-      gap: 18px;
-      white-space: nowrap;
-    }
-    nav a{
-      text-decoration:none;
-      font-weight: 850;
-      font-size: 13.5px;
-      color: rgba(11,18,32,.72);
-      white-space: nowrap;
-    }
-    nav a:hover{ color: var(--text); }
-
-    .nav-actions{
-      justify-self: end;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-    }
-
-    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -140,335 +96,116 @@
       font-weight: 950;
       cursor:pointer;
       user-select:none;
-      white-space: nowrap; /* keep one line */
+      white-space: nowrap;
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
-
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
       box-shadow: 0 16px 36px rgba(29,121,198,.18);
     }
-    .btn-primary:hover{ box-shadow: 0 20px 52px rgba(29,121,198,.22); }
-
     .btn-outline{
-      background:#fff;
+      background: rgba(255,255,255,.82);
       border-color: var(--hair);
       color: rgba(11,18,32,.92);
     }
-    .btn-outline:hover{
-      background: rgba(15,23,42,.02);
-      border-color: rgba(15,23,42,.14);
+    .btn-outline:hover{ background:#fff; border-color: rgba(15,23,42,.14); }
+    .btn-ink{
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(11,18,32,.18);
+    }
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
-    /* ===== Slim Hero ===== */
-    .hero{
-      padding: 34px 0 18px;
-      border-bottom: 1px solid var(--hair);
-      background:
-        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.10), transparent 60%),
-        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.08), transparent 60%),
-        linear-gradient(180deg, rgba(15,23,42,.02), transparent 60%);
+    main{ padding: 22px 0 48px; }
+
+    .shell{
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
 
-    .kicker{
+    .head{
+      padding: 18px 18px 0;
+    }
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(28px, 3.6vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.9px;
+    }
+    .lead{
+      margin: 0 0 14px;
+      color: rgba(11,18,32,.70);
+      font-weight: 750;
+      max-width: 92ch;
+    }
+
+    .pill{
       display:inline-flex;
       align-items:center;
       gap: 8px;
-      padding: 6px 10px; /* thinner */
-      border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.72);
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(11,18,32,.86);
-      width: fit-content;
-    }
-    .dot{
-      width: 8px; height: 8px;
+      background: rgba(15,23,42,.03);
+      padding: 8px 10px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--blue), var(--green));
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1fr; /* no big right card */
-      gap: 14px;
-    }
-
-    h1{
-      margin: 14px 0 10px;
-      font-size: clamp(32px, 4vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -1px;
-      font-weight: 950;
-      max-width: 100%;
-    }
-
-    .lead{
-      margin: 0;
+      font-weight: 900;
+      font-size: 12px;
       color: rgba(11,18,32,.70);
-      font-size: 15.5px;
-      max-width: 88ch;
-      font-weight: 750;
+      white-space: nowrap;
     }
 
-    /* Button row under tagline */
-    .action-row{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
-    }
-
-    .small-note{
-      margin-top: 10px;
-      font-size: 12.5px;
-      color: rgba(11,18,32,.55);
-      font-weight: 750;
-    }
-
-    /* ===== Content accordion layout ===== */
-    .content{
-      padding: 22px 0 58px;
-    }
-
-    .pair-grid{
+    .grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 14px;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 12px;
+      padding: 18px;
+      align-items:start;
     }
 
-    /* Accordion cards */
-    details.card{
-      background: var(--panel);
+    .card{
+      background: #fff;
       border: 1px solid rgba(15,23,42,.10);
       border-radius: 22px;
       box-shadow: var(--shadow2);
+      padding: 16px;
+      position: relative;
       overflow:hidden;
     }
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(320px 180px at 15% 20%, rgba(29,121,198,.10), transparent 70%),
+        radial-gradient(320px 180px at 90% 0%, rgba(44,171,75,.08), transparent 70%);
+      pointer-events:none;
+    }
+    .card > *{ position: relative; }
 
-    summary.card-head{
-      cursor:pointer;
-      list-style:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      padding: 16px 16px;
+    .card h2{
+      margin:0 0 10px;
+      font-size: 14px;
       font-weight: 950;
       letter-spacing: -0.2px;
-      user-select:none;
-    }
-    summary.card-head::-webkit-details-marker{ display:none; }
-
-    .card-left{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width:0;
-    }
-
-    .icon{
-      width: 40px; height: 40px;
-      border-radius: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      font-size: 18px;
-      flex: 0 0 auto;
-    }
-
-    .card-title{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width:0;
-    }
-
-    .card-title strong{
-      font-size: 15px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .card-title span{
-      font-size: 12.5px;
-      font-weight: 800;
-      color: rgba(11,18,32,.62);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .chev{
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color: rgba(11,18,32,.62);
-      flex: 0 0 auto;
-    }
-    details[open] .chev{
-      transform: rotate(180deg);
-    }
-
-    .card-body{
-      padding: 0 16px 16px;
-      border-top: 1px solid rgba(15,23,42,.08);
-    }
-
-    .body-pad{ padding-top: 14px; }
-
-    .subgrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .tile{
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,.9);
-    }
-    .tile h4{
-      margin:0 0 6px;
-      font-size: 13.5px;
-      font-weight: 950;
-    }
-    .tile p{
-      margin:0;
-      color: rgba(11,18,32,.70);
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    .list{
-      margin: 10px 0 0;
-      padding-left: 18px;
-      color: rgba(11,18,32,.70);
-      font-size: 13.5px;
-      font-weight: 750;
-    }
-    .list li{ margin: 6px 0; }
-
-    .btn-row{
-      margin-top: 12px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
-    }
-
-    /* Footer */
-    footer{
-      border-top: 1px solid var(--hair);
-      background:#fff;
-      padding: 18px 0;
-      color: rgba(11,18,32,.55);
-      font-size: 12px;
-      text-align:center;
-    }
-
-    /* Modal */
-    .modal{
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-      z-index: 200;
-    }
-    .modal.show{ display:flex; }
-
-    .modal-card{
-      width: min(720px, 100%);
-      max-height: 88vh;
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 24px;
-      box-shadow: 0 24px 90px rgba(15,23,42,.35);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-    .modal-head{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(15,23,42,.10);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 12px;
-    }
-    .modal-title{
-      margin:0;
-      font-size: 15px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .modal-sub{
-      margin: 4px 0 0;
-      font-size: 13px;
-      color: rgba(11,18,32,.66);
-      font-weight: 750;
-    }
-    .close-btn{
-      border: 1px solid rgba(15,23,42,.12);
-      background:#fff;
       color: rgba(11,18,32,.92);
-      border-radius: 999px;
-      padding: 8px 10px;
-      cursor:pointer;
-      font-weight: 950;
-      line-height: 1;
-      flex: 0 0 auto;
-      white-space: nowrap;
-    }
-    .close-btn:hover{ background: rgba(15,23,42,.02); }
-
-    .modal-body{
-      padding: 14px 16px 16px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
     }
 
-    .progress{
-      display:flex;
-      gap: 8px;
-      align-items:center;
-      margin-bottom: 12px;
-    }
-    .pdot{
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.14);
-      background: rgba(15,23,42,.05);
-    }
-    .pdot.active{
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      border-color: transparent;
-    }
-    .progress span{
+    .mini{
       font-size: 12px;
       color: rgba(11,18,32,.55);
-      font-weight: 850;
-      margin-left: 6px;
+      font-weight: 800;
     }
 
-    .form-grid{
+    .form{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -489,10 +226,9 @@
       border-radius: 14px;
       border: 1px solid rgba(15,23,42,.12);
       background:#fff;
-      color: rgba(11,18,32,.92);
-      outline:none;
       font-size: 14px;
       font-weight: 750;
+      outline:none;
     }
     input:focus, select:focus, textarea:focus{
       border-color: rgba(29,121,198,.55);
@@ -500,68 +236,149 @@
     }
     textarea{ resize: vertical; min-height: 110px; }
 
-    .checks{
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(15,23,42,.03);
+    .sep{
+      margin: 12px 0;
+      border-top: 1px solid rgba(15,23,42,.10);
+    }
+
+    .chips{
       display:flex;
       flex-wrap:wrap;
       gap: 10px;
+      margin-top: 8px;
     }
-    .check{
+    .chip{
       display:inline-flex;
       align-items:center;
       gap: 8px;
       padding: 8px 10px;
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: #fff;
+      background:#fff;
       font-weight: 850;
       font-size: 13px;
       cursor:pointer;
       user-select:none;
       white-space: nowrap;
     }
-    .check input{ accent-color: var(--blue); }
+    .chip input{ accent-color: var(--blue); }
 
-    .modal-actions{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      align-items:center;
+    .warn{
+      border: 1px solid rgba(255, 153, 0, .35);
+      background: rgba(255, 153, 0, .10);
+      color: rgba(120, 70, 0, .95);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 850;
+      font-size: 13px;
+      margin-top: 10px;
+      display:none;
+    }
+    .ok{
+      border: 1px solid rgba(44,171,75,.28);
+      background: rgba(44,171,75,.10);
+      color: rgba(10, 80, 25, .95);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 850;
+      font-size: 13px;
+      margin-top: 10px;
+      display:none;
     }
 
-    .hint{
-      margin-top: 12px;
-      font-size: 12px;
-      color: rgba(11,18,32,.55);
+    .kv{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+    .kv span:first-child{ color: rgba(11,18,32,.60); font-weight: 850; }
+    .kv strong{ font-weight: 950; color: rgba(11,18,32,.92); }
+
+    .box{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .box h3{
+      margin:0 0 6px;
+      font-size: 13.5px;
+      font-weight: 950;
+    }
+    .box p{
+      margin:0;
+      color: rgba(11,18,32,.70);
+      font-size: 13px;
       font-weight: 750;
     }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .nav-grid{
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          "brand actions"
-          "nav nav";
-      }
-      .brand{ grid-area: brand; }
-      .nav-actions{ grid-area: actions; }
-      nav{
-        grid-area: nav;
-        justify-self: start;
-        overflow:auto;
-        padding-top: 8px;
-      }
+    .file{
+      border: 1px dashed rgba(15,23,42,.22);
+      background: rgba(15,23,42,.03);
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .file strong{ font-weight: 950; }
+    .file .mini{ margin-top: 6px; }
 
-      .pair-grid{ grid-template-columns: 1fr; }
-      .subgrid{ grid-template-columns: 1fr; }
-      .form-grid{ grid-template-columns: 1fr; }
+    .file-list{
+      margin-top: 8px;
+      display:grid;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(11,18,32,.72);
+    }
+    .file-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.85);
+    }
+
+    .actions{
+      margin-top: 12px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .muted-note{
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(11,18,32,.55);
+    }
+
+    /* Print */
+    @media print{
+      header, .no-print{ display:none !important; }
+      body{ background:#fff; }
+      main{ padding:0; }
+      .shell{ box-shadow:none; border:none; background:#fff; }
+      .grid{ grid-template-columns: 1fr; padding: 0; }
+      .card{ box-shadow:none; border: 1px solid #e5e7eb; }
+    }
+
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+      .form{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -569,378 +386,115 @@
 <body>
   <header>
     <div class="container nav">
-      <div class="nav-grid">
-        <a class="brand" href="#top">
-          <img src="assets/logo.png" alt="PalmWeb logo" />
-          <div class="brand-title">
-            <strong>PalmWeb</strong>
-            <span>Websites • Automation • Consulting</span>
-          </div>
-        </a>
-
-        <nav aria-label="Main">
-          <a href="#services">Services</a>
-          <a href="#work">Recent Work</a>
-          <a href="#samples">Public Samples</a>
-          <a href="#tools">Tools</a>
-          <a href="#faq">FAQ</a>
-          <a href="#about">About</a>
-          <a class="btn btn-outline" href="demos.html">Client Access</a>
-        </nav>
-
-        <div class="nav-actions">
-          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+      <a class="brand" href="../index.html">
+        <div class="logo">PW</div>
+        <div>
+          <strong>PalmWeb</strong>
+          <span>Lead Intake Tool (Demo)</span>
         </div>
+      </a>
+
+      <div class="row no-print">
+        <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
+        <button class="btn btn-primary" id="printBtn" type="button">Print / Save PDF</button>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <main id="top" class="hero">
-    <div class="container hero-grid">
-      <div>
-        <div class="kicker"><span class="dot"></span> Modern sites + practical automation for local businesses</div>
-
-        <h1>Build a web presence that feels premium — and works.</h1>
-
-        <p class="lead">
-          PalmWeb designs clean, modern websites and automation workflows that turn requests into action.
-          Clear messaging, fast load times, and simple next steps.
-        </p>
-
-        <!-- Buttons row under tagline (email is now just a button, like everything else) -->
-        <div class="action-row">
-          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-          <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-          <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
-          <a class="btn btn-outline" href="#samples">View Samples</a>
-          <a class="btn btn-outline" href="#tools">View Tools</a>
-          <a class="btn btn-outline" href="demos.html">Client Access</a>
-        </div>
-
-        <div class="small-note">Based in New England • Serving local businesses</div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Content (3 rows, side-by-side accordions) -->
-  <div class="content">
+  <main>
     <div class="container">
-
-      <!-- Row 1: Services + Recent Work -->
-      <div class="pair-grid">
-        <details class="card" id="services">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧭</div>
-              <div class="card-title">
-                <strong>Services</strong>
-                <span>What we build and support</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <div class="subgrid">
-                <div class="tile">
-                  <h4>Website Building</h4>
-                  <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
-                </div>
-                <div class="tile">
-                  <h4>Maintenance</h4>
-                  <p>Updates, fixes, and improvements to keep your site current and fast.</p>
-                </div>
-                <div class="tile">
-                  <h4>Integration & Automation</h4>
-                  <p>Connect forms, email, documents, and spreadsheets to reduce admin work.</p>
-                </div>
-                <div class="tile">
-                  <h4>Domain Migration</h4>
-                  <p>Move domains/email safely without downtime or lost access.</p>
-                </div>
-                <div class="tile">
-                  <h4>Power Suite Development</h4>
-                  <p>Power Apps + Power Automate solutions that improve accuracy and speed.</p>
-                </div>
-                <div class="tile">
-                  <h4>Consulting</h4>
-                  <p>Practical guidance on the best next step, based on your goals.</p>
-                </div>
-              </div>
-
-              <div class="btn-row">
-                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card" id="work">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧩</div>
-              <div class="card-title">
-                <strong>Recent Work</strong>
-                <span>Live sites + private demos</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Bill Noble Fine Art</strong> — gallery-style site + inquiry flow.</li>
-                <li><strong>Missy Wagner Real Estate</strong> — fast, clean, mobile-friendly layout.</li>
-                <li><strong>Agreement Workflow Demo</strong> — create → send → complete → PDF output.</li>
-              </ul>
-
-              <div class="btn-row">
-                <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Bill Noble Fine Art</a>
-                <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Missy Wagner RE</a>
-                <a class="btn btn-outline" href="demos.html">Open Demos</a>
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-
-      <!-- Row 2: Public Samples + Custom Tools -->
-      <div class="pair-grid" style="margin-top:14px;">
-        <details class="card" id="samples">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧪</div>
-              <div class="card-title">
-                <strong>Public Samples</strong>
-                <span>Clickable sample sites</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Plumbing</strong> — fast lead flow + trust cues.</li>
-                <li><strong>Restaurant</strong> — menu highlights + inquiry form.</li>
-                <li><strong>PT / Wellness</strong> — treatments + testimonials + appointment request.</li>
-                <li><strong>Law Firm</strong> — practice areas + consult request intake.</li>
-              </ul>
-
-              <div class="btn-row">
-                <a class="btn btn-outline" href="samples/plumbing.html">Plumbing</a>
-                <a class="btn btn-outline" href="samples/restaurant.html">Restaurant</a>
-                <a class="btn btn-outline" href="samples/wellness.html">Wellness</a>
-                <a class="btn btn-outline" href="samples/law.html">Law Firm</a>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card" id="tools">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧰</div>
-              <div class="card-title">
-                <strong>Custom Tools</strong>
-                <span>Interactive “mini software” demos</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <div class="subgrid">
-                <div class="tile">
-                  <h4>Invoice Builder</h4>
-                  <p>Line items, totals, payment terms, due date, and a clean print view.</p>
-                  <div class="btn-row">
-                    <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
-                  </div>
-                </div>
-
-                <div class="tile">
-                  <h4>Lead Intake Tool</h4>
-                  <p>Smart intake form, validation, summary view, and print-ready output.</p>
-                  <div class="btn-row">
-                    <a class="btn btn-outline" href="tools/intake.html">Open Intake Tool</a>
-                  </div>
-                </div>
-
-                <div class="tile">
-                  <h4>Payment Portal</h4>
-                  <p>Validate invoice #, choose card/ACH, and generate a printable receipt (demo).</p>
-                  <div class="btn-row">
-                    <a class="btn btn-outline" href="tools/payment.html">Open Payment Portal</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="small-note" style="margin-top:12px;">
-                These tools can stay front-end (GitHub Pages) or connect to Stripe/QuickBooks/Airtable/HubSpot/custom backends.
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-
-      <!-- Row 3: FAQ + About -->
-      <div class="pair-grid" style="margin-top:14px;">
-        <details class="card" id="faq">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">❓</div>
-              <div class="card-title">
-                <strong>FAQ</strong>
-                <span>Common questions</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Cost?</strong> I quote based on scope after a short call.</li>
-                <li><strong>Timeline?</strong> Most small sites take 1–3 weeks.</li>
-                <li><strong>Maintenance?</strong> Yes—monthly or as-needed.</li>
-                <li><strong>Automation?</strong> Yes—Power Apps/Automate + integrations.</li>
-              </ul>
-
-              <div class="btn-row">
-                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card" id="about">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">👋</div>
-              <div class="card-title">
-                <strong>About</strong>
-                <span>Local, practical, clean execution</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <p style="margin:0; color: rgba(11,18,32,.70); font-size: 13.5px; font-weight: 750; max-width: 90ch;">
-                I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
-                Clear layout, fast load times, and workflows that make requests easier to manage.
+      <div class="shell">
+        <div class="head">
+          <div class="row" style="justify-content:space-between;">
+            <div>
+              <h1>Lead Intake</h1>
+              <p class="lead">
+                Smart intake form with conditional fields, validation, attachments, and a routing-style summary that’s print-ready.
+                Demo only (front-end) — can connect to email/CRM later.
               </p>
-
-              <div class="btn-row">
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-                <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
-                <a class="btn btn-outline" href="demos.html">Client Access</a>
-              </div>
+            </div>
+            <div class="row no-print" style="justify-content:flex-end;">
+              <span class="pill">Conditional Fields</span>
+              <span class="pill">Validation</span>
+              <span class="pill">Print Output</span>
             </div>
           </div>
-        </details>
-      </div>
-
-    </div>
-  </div>
-
-  <footer>
-    <div class="container">
-      © <span id="year"></span> PalmWeb. All rights reserved.
-    </div>
-  </footer>
-
-  <!-- ======= REQUEST A QUOTE MODAL (3-Step + FormSubmit) ======= -->
-  <div class="modal" id="quoteModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quoteTitle">
-      <div class="modal-head">
-        <div>
-          <h3 class="modal-title" id="quoteTitle">Request a Quote</h3>
-          <p class="modal-sub">Submit this form and I’ll receive the info instantly by email.</p>
-        </div>
-        <button class="close-btn" id="closeModalBtn" aria-label="Close">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="progress" aria-label="Progress">
-          <div class="pdot active" id="dot1"></div>
-          <div class="pdot" id="dot2"></div>
-          <div class="pdot" id="dot3"></div>
-          <span id="stepLabel">Step 1 of 3</span>
         </div>
 
-        <form
-          id="quoteForm"
-          action="https://formsubmit.co/mason@palmweb.net"
-          method="POST"
-          novalidate
-        >
-          <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+        <div class="grid">
+          <!-- Left: Intake Form -->
+          <section class="card">
+            <h2>Intake Form</h2>
+            <div class="mini">Complete the form and click “Generate Summary”.</div>
 
-          <!-- STEP 1 -->
-          <div id="step1">
-            <div style="font-weight:950; margin-bottom:6px;">Contact info</div>
+            <div id="warn" class="warn"></div>
+            <div id="ok" class="ok"></div>
 
-            <div class="form-grid">
+            <div class="form">
               <label class="full">
-                Business name*
-                <input name="Business Name" id="bizName" type="text" placeholder="Example: Smith & Sons Plumbing" required />
+                Service Type*
+                <select id="serviceType" required>
+                  <option value="">Select…</option>
+                  <option value="website">Website (New / Redesign)</option>
+                  <option value="maintenance">Website Maintenance</option>
+                  <option value="automation">Automation / Integration</option>
+                  <option value="domain">Domain / Email Migration</option>
+                  <option value="consulting">Consulting</option>
+                </select>
               </label>
 
               <label>
-                Your name*
-                <input name="Your Name" id="yourName" type="text" placeholder="Your full name" required />
+                Business Name*
+                <input id="biz" placeholder="Example: Smith & Sons Plumbing" />
+              </label>
+
+              <label>
+                Contact Name*
+                <input id="name" placeholder="Full name" />
+              </label>
+
+              <label>
+                Email*
+                <input id="email" type="email" placeholder="you@company.com" />
               </label>
 
               <label>
                 Phone*
-                <input name="Phone" id="phone" type="tel" placeholder="(401) 555-1234" required />
-              </label>
-
-              <label class="full">
-                Email*
-                <input name="Email" id="email" type="email" placeholder="you@yourdomain.com" required />
+                <input id="phone" type="tel" placeholder="(401) 555-1234" />
               </label>
 
               <label class="full">
                 Location (city/state)
-                <input name="Location" id="location" type="text" placeholder="Example: Warwick, RI" />
-              </label>
-            </div>
-          </div>
-
-          <!-- STEP 2 -->
-          <div id="step2" style="display:none;">
-            <div style="font-weight:950; margin-bottom:6px;">Needs + timeline + budget</div>
-
-            <div class="checks">
-              <label class="check"><input type="checkbox" name="Needs" value="New website"> New website</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Website redesign"> Website redesign</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Maintenance/updates"> Maintenance/updates</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Domain + email setup/migration"> Domain + email setup</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Automation (Power Apps/Automate)"> Automation</label>
-              <label class="check"><input type="checkbox" name="Needs" value="Consulting"> Consulting</label>
-            </div>
-
-            <div class="form-grid">
-              <label class="full">
-                Current website (if any)
-                <input name="Current Website" id="currentSite" type="url" placeholder="https://yourwebsite.com" />
+                <input id="location" placeholder="Example: Warwick, RI" />
               </label>
 
               <label class="full">
-                Primary goal
-                <select name="Primary Goal" id="goal">
+                Preferred Contact Method
+                <select id="preferred">
+                  <option value="">Select…</option>
+                  <option>Email</option>
+                  <option>Phone</option>
+                  <option>Text</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="sep"></div>
+
+            <h2 style="margin-top:0;">Project Needs</h2>
+
+            <div class="chips">
+              <label class="chip"><input id="needUrgent" type="checkbox" /> Urgent timeline</label>
+              <label class="chip"><input id="needBudget" type="checkbox" /> Has budget range</label>
+              <label class="chip"><input id="needDecision" type="checkbox" /> Decision maker</label>
+              <label class="chip"><input id="needExisting" type="checkbox" /> Has existing site</label>
+              <label class="chip"><input id="needAssets" type="checkbox" /> Has logo/photos</label>
+            </div>
+
+            <div class="form">
+              <label class="full">
+                Goal / What’s the main outcome?*
+                <select id="goal">
                   <option value="">Select…</option>
                   <option>More calls / leads</option>
                   <option>Bookings / appointments</option>
@@ -951,175 +505,509 @@
                 </select>
               </label>
 
-              <label>
-                Timeline
-                <select name="Timeline" id="timeline">
-                  <option value="">Select…</option>
-                  <option>As soon as possible</option>
-                  <option>This month</option>
-                  <option>Next 1–2 months</option>
-                  <option>Flexible</option>
-                </select>
-              </label>
-
-              <label>
-                Budget range
-                <select name="Budget Range" id="budget">
-                  <option value="">Select…</option>
-                  <option>Under $1,000</option>
-                  <option>$1,000 – $2,000</option>
-                  <option>$2,000 – $4,000</option>
-                  <option>$4,000+</option>
-                  <option>Not sure yet</option>
-                </select>
-              </label>
-            </div>
-          </div>
-
-          <!-- STEP 3 -->
-          <div id="step3" style="display:none;">
-            <div style="font-weight:950; margin-bottom:6px;">Details</div>
-
-            <div class="form-grid">
               <label class="full">
-                Details (pages needed, examples you like, notes, anything helpful)
-                <textarea name="Details" id="details" placeholder="Example: I need Home, Services, About, Contact. I like clean sites like..."></textarea>
-              </label>
-
-              <label class="full">
-                Best way to reach you
-                <select name="Best Contact Method" id="bestReach">
-                  <option value="">Select…</option>
-                  <option>Email</option>
-                  <option>Phone</option>
-                  <option>Text</option>
-                </select>
+                Notes / Details
+                <textarea id="notes" placeholder="Any context, requirements, examples, pages needed, etc."></textarea>
               </label>
             </div>
 
-            <p class="hint">When you hit “Send”, the form submits directly to PalmWeb (no email app needed).</p>
-          </div>
+            <!-- Conditional blocks -->
+            <div id="blockWebsite" style="display:none;">
+              <div class="sep"></div>
+              <h2 style="margin-top:0;">Website Details</h2>
 
-          <div class="modal-actions">
-            <button class="btn btn-outline" id="backBtn" type="button" style="display:none;">Back</button>
-            <button class="btn btn-primary" id="nextBtn" type="button">Next</button>
-            <button class="btn btn-primary" id="sendBtn" type="submit" style="display:none;">Send</button>
-          </div>
-        </form>
+              <div class="form">
+                <label class="full">
+                  Current website URL (if any)
+                  <input id="currentUrl" placeholder="https://yourwebsite.com" />
+                </label>
+
+                <label>
+                  Pages needed
+                  <select id="pages">
+                    <option value="">Select…</option>
+                    <option>1–3 pages</option>
+                    <option>4–6 pages</option>
+                    <option>7–10 pages</option>
+                    <option>10+ pages</option>
+                    <option>Not sure</option>
+                  </select>
+                </label>
+
+                <label>
+                  Platform preference
+                  <select id="platform">
+                    <option value="">Select…</option>
+                    <option>Static HTML (fast + simple)</option>
+                    <option>WordPress</option>
+                    <option>Shopify</option>
+                    <option>Wix/Squarespace</option>
+                    <option>Not sure</option>
+                  </select>
+                </label>
+
+                <label class="full">
+                  Style references (optional)
+                  <input id="refs" placeholder="Links to sites you like" />
+                </label>
+              </div>
+            </div>
+
+            <div id="blockMaintenance" style="display:none;">
+              <div class="sep"></div>
+              <h2 style="margin-top:0;">Maintenance Details</h2>
+
+              <div class="form">
+                <label class="full">
+                  Website URL*
+                  <input id="maintUrl" placeholder="https://yourwebsite.com" />
+                </label>
+
+                <label class="full">
+                  What needs updating?
+                  <textarea id="maintNeeds" placeholder="Example: change homepage text, update hours, add a new service, fix a bug..."></textarea>
+                </label>
+              </div>
+            </div>
+
+            <div id="blockAutomation" style="display:none;">
+              <div class="sep"></div>
+              <h2 style="margin-top:0;">Automation Details</h2>
+
+              <div class="form">
+                <label class="full">
+                  Current tools
+                  <input id="tools" placeholder="Example: Outlook, Excel, SharePoint, QuickBooks, HubSpot..." />
+                </label>
+
+                <label class="full">
+                  What should happen automatically?*
+                  <textarea id="autoGoal" placeholder="Example: form submission → create record → email confirmation → generate PDF..."></textarea>
+                </label>
+
+                <label class="full">
+                  Data source (optional)
+                  <input id="dataSource" placeholder="Example: shared Excel workbook, SharePoint list, CRM..." />
+                </label>
+              </div>
+            </div>
+
+            <div id="blockDomain" style="display:none;">
+              <div class="sep"></div>
+              <h2 style="margin-top:0;">Domain / Email Migration</h2>
+
+              <div class="form">
+                <label class="full">
+                  Domain name*
+                  <input id="domain" placeholder="example.com" />
+                </label>
+
+                <label class="full">
+                  What are you moving?
+                  <select id="moving">
+                    <option value="">Select…</option>
+                    <option>Domain only</option>
+                    <option>Email only</option>
+                    <option>Website hosting</option>
+                    <option>All of the above</option>
+                  </select>
+                </label>
+
+                <label class="full">
+                  Current provider (optional)
+                  <input id="provider" placeholder="Example: GoDaddy, Google Domains, Namecheap..." />
+                </label>
+              </div>
+            </div>
+
+            <div id="blockConsulting" style="display:none;">
+              <div class="sep"></div>
+              <h2 style="margin-top:0;">Consulting</h2>
+
+              <div class="form">
+                <label class="full">
+                  What do you want help deciding?*
+                  <textarea id="consultTopic" placeholder="Example: what platform to use, what pages matter, how to set up intake..."></textarea>
+                </label>
+              </div>
+            </div>
+
+            <!-- Attachments -->
+            <div class="sep"></div>
+            <h2 style="margin-top:0;">Attachments (optional)</h2>
+
+            <div class="file no-print">
+              <div class="row" style="justify-content:space-between;">
+                <div>
+                  <strong>Upload files</strong>
+                  <div class="mini">Demo only (front-end). In production, files would upload to storage and link in CRM/email.</div>
+                </div>
+                <label class="btn btn-outline" style="cursor:pointer;">
+                  Choose files
+                  <input id="files" type="file" multiple style="display:none;" />
+                </label>
+              </div>
+
+              <div id="fileList" class="file-list" style="display:none;"></div>
+            </div>
+
+            <div class="actions no-print">
+              <div class="row">
+                <button class="btn btn-ink" id="generateBtn" type="button">Generate Summary</button>
+                <button class="btn btn-outline" id="fillDemoBtn" type="button">Fill Demo</button>
+                <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
+              </div>
+              <div class="mini">Tip: After generating, print the summary as a PDF.</div>
+            </div>
+
+            <div class="muted-note no-print">
+              Routing idea: send summary to email/CRM, create a lead record, attach files, assign owner, and set status automatically.
+            </div>
+          </section>
+
+          <!-- Right: Routing Summary -->
+          <aside class="card">
+            <h2>Routing Summary</h2>
+            <div class="mini">This panel becomes your “handoff” view for email/CRM.</div>
+
+            <div class="kv"><span>Status</span><strong id="sumStatus">Awaiting input</strong></div>
+            <div class="kv"><span>Service Type</span><strong id="sumType">—</strong></div>
+            <div class="kv"><span>Priority</span><strong id="sumPriority">—</strong></div>
+
+            <div class="sep"></div>
+
+            <div class="kv"><span>Business</span><strong id="sumBiz">—</strong></div>
+            <div class="kv"><span>Contact</span><strong id="sumContact">—</strong></div>
+            <div class="kv"><span>Email</span><strong id="sumEmail">—</strong></div>
+            <div class="kv"><span>Phone</span><strong id="sumPhone">—</strong></div>
+            <div class="kv"><span>Location</span><strong id="sumLocation">—</strong></div>
+            <div class="kv"><span>Preferred</span><strong id="sumPreferred">—</strong></div>
+
+            <div class="sep"></div>
+
+            <div class="box">
+              <h3>Goal</h3>
+              <p id="sumGoal">—</p>
+            </div>
+
+            <div class="box">
+              <h3>Key Notes</h3>
+              <p id="sumNotes">—</p>
+            </div>
+
+            <div class="box">
+              <h3>Conditional Details</h3>
+              <p id="sumDetails">—</p>
+            </div>
+
+            <div class="box">
+              <h3>Attachments</h3>
+              <p id="sumFiles">—</p>
+            </div>
+
+            <div class="row no-print" style="margin-top:12px; justify-content:space-between;">
+              <button class="btn btn-primary" id="printBtn2" type="button">Print / Save PDF</button>
+              <a class="btn btn-outline" href="../tools/payment.html">Payment Portal</a>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const $ = (id) => document.getElementById(id);
 
-    const modal = document.getElementById("quoteModal");
-    const closeBtn = document.getElementById("closeModalBtn");
-    const openBtns = document.querySelectorAll("[data-open-quote]");
+    const warn = $("warn");
+    const ok = $("ok");
 
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const step3 = document.getElementById("step3");
+    const serviceType = $("serviceType");
 
-    const dot1 = document.getElementById("dot1");
-    const dot2 = document.getElementById("dot2");
-    const dot3 = document.getElementById("dot3");
-    const stepLabel = document.getElementById("stepLabel");
+    const blocks = {
+      website: $("blockWebsite"),
+      maintenance: $("blockMaintenance"),
+      automation: $("blockAutomation"),
+      domain: $("blockDomain"),
+      consulting: $("blockConsulting"),
+    };
 
-    const backBtn = document.getElementById("backBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const sendBtn = document.getElementById("sendBtn");
-
-    let currentStep = 1;
-
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-      resetToStep1();
+    function showMsg(el, msg){
+      el.style.display = "";
+      el.textContent = msg;
+    }
+    function hideMsg(el){
+      el.style.display = "none";
+      el.textContent = "";
     }
 
-    function closeModal(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+    function setBlocks(type){
+      Object.values(blocks).forEach(b => b.style.display = "none");
+      if(blocks[type]) blocks[type].style.display = "";
     }
 
-    function resetToStep1(){
-      currentStep = 1;
-      step1.style.display = "";
-      step2.style.display = "none";
-      step3.style.display = "none";
-
-      dot1.classList.add("active");
-      dot2.classList.remove("active");
-      dot3.classList.remove("active");
-      stepLabel.textContent = "Step 1 of 3";
-
-      backBtn.style.display = "none";
-      nextBtn.style.display = "";
-      sendBtn.style.display = "none";
+    function normalizePhone(p){
+      return p.replace(/[^\d]/g,"");
     }
 
-    function goToStep(step){
-      currentStep = step;
-
-      step1.style.display = step === 1 ? "" : "none";
-      step2.style.display = step === 2 ? "" : "none";
-      step3.style.display = step === 3 ? "" : "none";
-
-      dot1.classList.toggle("active", step >= 1);
-      dot2.classList.toggle("active", step >= 2);
-      dot3.classList.toggle("active", step >= 3);
-
-      stepLabel.textContent = `Step ${step} of 3`;
-
-      backBtn.style.display = step === 1 ? "none" : "";
-      nextBtn.style.display = step === 3 ? "none" : "";
-      sendBtn.style.display = step === 3 ? "" : "none";
-
-      modal.querySelector(".modal-body").scrollTop = 0;
+    function isValidEmail(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
     }
 
-    function validateStep1(){
-      const requiredIds = ["bizName","yourName","phone","email"];
-      for(const id of requiredIds){
-        const el = document.getElementById(id);
-        if(!el.value.trim()){
-          el.focus();
-          return false;
-        }
+    function required(id, label){
+      const v = $(id).value.trim();
+      if(!v) return `${label} is required.`;
+      return null;
+    }
+
+    function validate(){
+      hideMsg(warn);
+      hideMsg(ok);
+
+      const errs = [];
+      const type = serviceType.value;
+
+      const biz = $("biz").value.trim();
+      const name = $("name").value.trim();
+      const email = $("email").value.trim();
+      const phone = $("phone").value.trim();
+      const goal = $("goal").value.trim();
+
+      if(!type) errs.push("Service Type is required.");
+      if(!biz) errs.push("Business Name is required.");
+      if(!name) errs.push("Contact Name is required.");
+      if(!email) errs.push("Email is required.");
+      if(email && !isValidEmail(email)) errs.push("Email format looks incorrect.");
+      if(!phone) errs.push("Phone is required.");
+      if(phone && normalizePhone(phone).length < 10) errs.push("Phone should have at least 10 digits.");
+      if(!goal) errs.push("Goal is required.");
+
+      // Conditional required fields
+      if(type === "maintenance"){
+        const e = required("maintUrl","Website URL");
+        if(e) errs.push(e);
       }
+      if(type === "automation"){
+        const e = required("autoGoal","What should happen automatically");
+        if(e) errs.push(e);
+      }
+      if(type === "domain"){
+        const e = required("domain","Domain name");
+        if(e) errs.push(e);
+      }
+      if(type === "consulting"){
+        const e = required("consultTopic","Consulting topic");
+        if(e) errs.push(e);
+      }
+
+      if(errs.length){
+        showMsg(warn, errs[0]);
+        return false;
+      }
+
+      showMsg(ok, "Looks good. Summary generated below.");
       return true;
     }
 
-    openBtns.forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        openModal();
+    function typeLabel(val){
+      const map = {
+        website: "Website (New / Redesign)",
+        maintenance: "Website Maintenance",
+        automation: "Automation / Integration",
+        domain: "Domain / Email Migration",
+        consulting: "Consulting",
+      };
+      return map[val] || "—";
+    }
+
+    function priority(){
+      // Simple demo scoring
+      const score =
+        ($("needUrgent").checked ? 2 : 0) +
+        ($("needDecision").checked ? 1 : 0) +
+        ($("needBudget").checked ? 1 : 0);
+
+      if(score >= 3) return "High";
+      if(score === 2) return "Medium";
+      return "Normal";
+    }
+
+    function detailsSummary(type){
+      if(type === "website"){
+        const parts = [];
+        const url = $("currentUrl").value.trim();
+        const pages = $("pages").value.trim();
+        const platform = $("platform").value.trim();
+        const refs = $("refs").value.trim();
+
+        if(url) parts.push(`Current site: ${url}`);
+        if(pages) parts.push(`Pages: ${pages}`);
+        if(platform) parts.push(`Platform: ${platform}`);
+        if(refs) parts.push(`References: ${refs}`);
+        return parts.length ? parts.join(" • ") : "—";
+      }
+
+      if(type === "maintenance"){
+        const url = $("maintUrl").value.trim();
+        const needs = $("maintNeeds").value.trim();
+        const parts = [];
+        if(url) parts.push(`Site: ${url}`);
+        if(needs) parts.push(`Needs: ${needs}`);
+        return parts.length ? parts.join(" • ") : "—";
+      }
+
+      if(type === "automation"){
+        const tools = $("tools").value.trim();
+        const autoGoal = $("autoGoal").value.trim();
+        const ds = $("dataSource").value.trim();
+        const parts = [];
+        if(tools) parts.push(`Tools: ${tools}`);
+        if(autoGoal) parts.push(`Automation: ${autoGoal}`);
+        if(ds) parts.push(`Data: ${ds}`);
+        return parts.length ? parts.join(" • ") : "—";
+      }
+
+      if(type === "domain"){
+        const dom = $("domain").value.trim();
+        const moving = $("moving").value.trim();
+        const provider = $("provider").value.trim();
+        const parts = [];
+        if(dom) parts.push(`Domain: ${dom}`);
+        if(moving) parts.push(`Move: ${moving}`);
+        if(provider) parts.push(`Provider: ${provider}`);
+        return parts.length ? parts.join(" • ") : "—";
+      }
+
+      if(type === "consulting"){
+        const topic = $("consultTopic").value.trim();
+        return topic ? topic : "—";
+      }
+
+      return "—";
+    }
+
+    function fileNames(){
+      const input = $("files");
+      const files = Array.from(input.files || []);
+      if(!files.length) return [];
+      return files.map(f => f.name);
+    }
+
+    function renderFiles(){
+      const list = $("fileList");
+      const names = fileNames();
+
+      if(!names.length){
+        list.style.display = "none";
+        list.innerHTML = "";
+        return;
+      }
+
+      list.style.display = "";
+      list.innerHTML = names.map(n => `
+        <div class="file-item">
+          <div>${n}</div>
+          <div class="mini">Selected</div>
+        </div>
+      `).join("");
+    }
+
+    function generateSummary(){
+      if(!validate()) return;
+
+      const type = serviceType.value;
+
+      $("sumStatus").textContent = "Ready for routing";
+      $("sumType").textContent = typeLabel(type);
+      $("sumPriority").textContent = priority();
+
+      $("sumBiz").textContent = $("biz").value.trim() || "—";
+      $("sumContact").textContent = $("name").value.trim() || "—";
+      $("sumEmail").textContent = $("email").value.trim() || "—";
+      $("sumPhone").textContent = $("phone").value.trim() || "—";
+      $("sumLocation").textContent = $("location").value.trim() || "—";
+      $("sumPreferred").textContent = $("preferred").value.trim() || "—";
+
+      $("sumGoal").textContent = $("goal").value.trim() || "—";
+      $("sumNotes").textContent = ($("notes").value.trim() || "—");
+      $("sumDetails").textContent = detailsSummary(type);
+
+      const names = fileNames();
+      $("sumFiles").textContent = names.length ? names.join(", ") : "—";
+    }
+
+    function resetAll(){
+      hideMsg(warn);
+      hideMsg(ok);
+
+      // Clear inputs
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        if(el.type === "checkbox") el.checked = false;
+        else if(el.type === "file") el.value = "";
+        else el.value = "";
       });
-    });
 
-    closeBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
-    document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modal.classList.contains("show")) closeModal(); });
+      // Reset blocks
+      setBlocks("");
 
-    nextBtn.addEventListener("click", () => {
-      if(currentStep === 1){
-        if(!validateStep1()) return;
-        goToStep(2);
-        return;
-      }
-      if(currentStep === 2){
-        goToStep(3);
-        return;
-      }
-    });
+      // Reset summary
+      $("sumStatus").textContent = "Awaiting input";
+      $("sumType").textContent = "—";
+      $("sumPriority").textContent = "—";
+      $("sumBiz").textContent = "—";
+      $("sumContact").textContent = "—";
+      $("sumEmail").textContent = "—";
+      $("sumPhone").textContent = "—";
+      $("sumLocation").textContent = "—";
+      $("sumPreferred").textContent = "—";
+      $("sumGoal").textContent = "—";
+      $("sumNotes").textContent = "—";
+      $("sumDetails").textContent = "—";
+      $("sumFiles").textContent = "—";
 
-    backBtn.addEventListener("click", () => {
-      if(currentStep === 2) goToStep(1);
-      if(currentStep === 3) goToStep(2);
-    });
+      renderFiles();
+    }
+
+    function fillDemo(){
+      resetAll();
+
+      serviceType.value = "automation";
+      setBlocks("automation");
+
+      $("biz").value = "Smith & Sons Plumbing";
+      $("name").value = "Jordan Smith";
+      $("email").value = "jordan@smithsonsplumbing.com";
+      $("phone").value = "(401) 555-1234";
+      $("location").value = "Warwick, RI";
+      $("preferred").value = "Email";
+
+      $("needUrgent").checked = true;
+      $("needDecision").checked = true;
+      $("needBudget").checked = true;
+
+      $("goal").value = "More calls / leads";
+      $("notes").value = "Need a simple intake → auto-email summary → spreadsheet log. Also want a PDF quote generated from line items.";
+
+      $("tools").value = "Outlook, Excel, SharePoint";
+      $("autoGoal").value = "When a lead form is submitted, create a SharePoint list item, send an email confirmation, and generate a PDF summary.";
+      $("dataSource").value = "Shared Excel workbook + SharePoint list";
+
+      generateSummary();
+    }
+
+    // Events
+    serviceType.addEventListener("change", () => setBlocks(serviceType.value));
+    $("files").addEventListener("change", renderFiles);
+
+    $("generateBtn").addEventListener("click", generateSummary);
+    $("resetBtn").addEventListener("click", resetAll);
+    $("fillDemoBtn").addEventListener("click", fillDemo);
+
+    $("printBtn").addEventListener("click", () => window.print());
+    $("printBtn2").addEventListener("click", () => window.print());
+
+    // Init
+    setBlocks("");
+    renderFiles();
   </script>
 </body>
 </html>
