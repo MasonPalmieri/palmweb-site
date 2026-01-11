@@ -231,7 +231,7 @@
       text-underline-offset: 4px;
     }
 
-    /* NEW: Quick Contact + Big Logo layout */
+    /* Quick Contact + Big Logo layout */
     .quick-wrap{
       display:flex;
       align-items:flex-start;
@@ -371,9 +371,33 @@
     }
 
     .work-desc{
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    /* Portfolio enhancements */
+    .work-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .work-bullets{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    .work-bullets li{ margin: 6px 0; }
+
+    .mini{
+      font-size: 12px;
+      font-weight: 850;
+      color: #64748b;
+      margin-top: 10px;
     }
 
     /* FAQ */
@@ -680,9 +704,7 @@
       .two-col{ grid-template-columns: 1fr; }
       nav{ display:none; }
 
-      .quick-wrap{
-        justify-content:flex-start;
-      }
+      .quick-wrap{ justify-content:flex-start; }
     }
 
     /* On mobile, show logo above card and centered */
@@ -706,15 +728,9 @@
         max-height: 90vh;
         border-radius: 20px 20px 16px 16px;
       }
-      .modal-head{
-        padding: 14px 14px;
-      }
-      .modal-body{
-        padding: 12px 14px 14px;
-      }
-      .form-grid{
-        grid-template-columns: 1fr;
-      }
+      .modal-head{ padding: 14px 14px; }
+      .modal-body{ padding: 12px 14px 14px; }
+      .form-grid{ grid-template-columns: 1fr; }
       input, select, textarea{
         padding: 11px 11px;
         border-radius: 12px;
@@ -724,9 +740,7 @@
         font-size: 12.5px;
         padding: 7px 10px;
       }
-      .modal-actions{
-        justify-content: stretch;
-      }
+      .modal-actions{ justify-content: stretch; }
       .modal-actions .btn{
         flex: 1 1 auto;
         justify-content:center;
@@ -752,8 +766,8 @@
         <a href="#faq">FAQ</a>
         <a href="#about">About</a>
 
-        <!-- Hidden Demos Access (password protected) -->
-        <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
+        <!-- Demos Access (password protected) -->
+        <a class="btn btn-outline" href="demos.html">Client Access</a>
 
         <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
       </nav>
@@ -774,9 +788,7 @@
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
           <a class="btn btn-outline" href="#services">See Services</a>
           <a class="btn btn-outline" href="#work">View Work</a>
-
-          <!-- Hidden Demos Access (password protected) -->
-          <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
+          <a class="btn btn-outline" href="demos.html">Client Access</a>
         </div>
 
         <p style="margin-top:14px; font-size:13px; color:#64748b; font-weight:650;">
@@ -809,7 +821,7 @@
 
           <div class="quick-row">
             <span>Client Access</span>
-            <a href="#" data-open-access>Enter password</a>
+            <a href="demos.html">Enter demos</a>
           </div>
         </aside>
 
@@ -874,7 +886,7 @@
       <div class="section-head">
         <div>
           <h2>Recent Work</h2>
-          <p>Examples of simple, effective websites built for real local businesses.</p>
+          <p>Real sites plus demo builds across multiple industries — designed for speed, clarity, and lead generation.</p>
         </div>
       </div>
 
@@ -883,20 +895,118 @@
           <div class="tag">Fine Art</div>
           <div class="work-title">Bill Noble Fine Art</div>
           <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact info.</div>
-          <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">
-            Visit billnoblefineart.com
-          </a>
+
+          <ul class="work-bullets">
+            <li>Design + build (mobile-first)</li>
+            <li>Gallery layout + inquiry flow</li>
+            <li>Performance + basic on-page SEO</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Visit Site</a>
+          </div>
+
+          <div class="mini">Stack: HTML/CSS • Lead capture</div>
         </div>
 
         <div class="work">
           <div class="tag">Real Estate</div>
           <div class="work-title">Missy Wagner Real Estate</div>
           <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
-          <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">
-            Visit missywagnerre.com
-          </a>
+
+          <ul class="work-bullets">
+            <li>Navigation + conversion-focused layout</li>
+            <li>Fast contact access on mobile</li>
+            <li>SEO-ready page structure</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Visit Site</a>
+          </div>
+
+          <div class="mini">Stack: HTML/CSS • Copy + layout</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Home Services</div>
+          <div class="work-title">Local Plumbing Website (Demo)</div>
+          <div class="work-desc">Built for speed, trust, and quick calls — ideal for service businesses.</div>
+
+          <ul class="work-bullets">
+            <li>Service sections + trust cues</li>
+            <li>Call/quote CTAs placed for mobile</li>
+            <li>Lead capture flow (email)</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
+            <a class="btn btn-outline" href="#contact">Request Similar</a>
+          </div>
+
+          <div class="mini">Focus: conversions • mobile calls</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Restaurant</div>
+          <div class="work-title">Restaurant Landing Page (Demo)</div>
+          <div class="work-desc">A clean menu + reservations flow that looks great on phones.</div>
+
+          <ul class="work-bullets">
+            <li>Menu sections designed for scanning</li>
+            <li>Reservation/call-to-action placement</li>
+            <li>Hours + location clarity</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
+            <a class="btn btn-outline" href="#contact">Request Similar</a>
+          </div>
+
+          <div class="mini">Focus: clarity • quick actions</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Wellness</div>
+          <div class="work-title">Chiropractic / PT Site (Demo)</div>
+          <div class="work-desc">Designed to explain services clearly and convert visitors into appointments.</div>
+
+          <ul class="work-bullets">
+            <li>Service layout + insurance-friendly copy</li>
+            <li>Appointment request flow</li>
+            <li>FAQ + credibility structure</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="demos.html">View Demo Portal</a>
+            <a class="btn btn-outline" href="#contact">Request Similar</a>
+          </div>
+
+          <div class="mini">Focus: trust • appointments</div>
+        </div>
+
+        <div class="work">
+          <div class="tag">Automation</div>
+          <div class="work-title">Agreement Workflow Demo</div>
+          <div class="work-desc">Create → sign → send → recipient completes → signed PDF output (portal-style workflow).</div>
+
+          <ul class="work-bullets">
+            <li>Client portal UX pattern</li>
+            <li>Guided flow (create → send → complete)</li>
+            <li>Document output (PDF) step</li>
+          </ul>
+
+          <div class="work-actions">
+            <a class="btn btn-outline" href="demos.html">Open Demo</a>
+            <a class="btn btn-outline" href="#services">See Automation</a>
+          </div>
+
+          <div class="mini">Focus: workflows • admin time savings</div>
         </div>
       </div>
+
+      <p style="margin-top:14px; color:#64748b; font-size:12.5px; font-weight:750;">
+        Note: Demo builds showcase layout, UX patterns, and automation workflows. Live client links are shown when available.
+      </p>
     </div>
   </section>
 
@@ -924,6 +1034,11 @@
         <summary>Do you offer maintenance?</summary>
         <p>Yes — monthly plans or as-needed changes depending on what you prefer.</p>
       </details>
+
+      <details>
+        <summary>Can you help with automation?</summary>
+        <p>Yes — I build lightweight Power Apps/Automate systems that reduce admin work and prevent errors.</p>
+      </details>
     </div>
   </section>
 
@@ -948,7 +1063,7 @@
           <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="#work">View Work</a>
-            <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
+            <a class="btn btn-outline" href="demos.html">Client Access</a>
           </div>
         </div>
 
@@ -967,7 +1082,7 @@
           <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
             <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email Me</a>
-            <a class="btn btn-outline" href="#" data-open-access>Client Access</a>
+            <a class="btn btn-outline" href="demos.html">Client Access</a>
           </div>
         </div>
       </div>
@@ -1136,39 +1251,6 @@
     </div>
   </div>
 
-  <!-- ======= CLIENT ACCESS MODAL (PASSWORD TO SEE DEMOS) ======= -->
-  <div class="modal access-modal" id="accessModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
-      <div class="modal-head">
-        <div>
-          <h3 class="modal-title" id="accessTitle">Client Access</h3>
-          <p class="modal-sub">Enter password to view confidential demos.</p>
-        </div>
-        <button class="close-btn" id="closeAccessBtn" aria-label="Close">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="access-form">
-          <label>
-            Password
-            <input id="accessPw" type="password" placeholder="Enter password" autocomplete="off" />
-          </label>
-
-          <div class="access-error" id="accessErr">Incorrect password.</div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-            <button class="btn btn-primary" id="accessEnterBtn" type="button">Enter</button>
-            <button class="btn btn-outline" id="accessCancelBtn" type="button">Cancel</button>
-          </div>
-
-          <div class="access-hint">
-            Tip: you can share this password with clients to access the demo portal.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -1284,64 +1366,6 @@
     backBtn.addEventListener("click", () => {
       if(currentStep === 2) goToStep(1);
       if(currentStep === 3) goToStep(2);
-    });
-
-    // ============ Client Access modal ============
-    const accessModal = document.getElementById("accessModal");
-    const openAccessBtns = document.querySelectorAll("[data-open-access]");
-    const closeAccessBtn = document.getElementById("closeAccessBtn");
-    const accessCancelBtn = document.getElementById("accessCancelBtn");
-    const accessEnterBtn = document.getElementById("accessEnterBtn");
-    const accessPw = document.getElementById("accessPw");
-    const accessErr = document.getElementById("accessErr");
-
-    const ACCESS_PASSWORD = "hallam";
-
-    function openAccess(){
-      accessModal.classList.add("show");
-      accessModal.setAttribute("aria-hidden","false");
-      accessErr.style.display = "none";
-      accessPw.value = "";
-      document.body.style.overflow = "hidden";
-      setTimeout(()=>accessPw.focus(), 80);
-    }
-
-    function closeAccess(){
-      accessModal.classList.remove("show");
-      accessModal.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
-
-    function enterAccess(){
-      const val = accessPw.value.trim();
-      if(val === ACCESS_PASSWORD){
-        // store a short-lived session flag
-        sessionStorage.setItem("pw_demo_access", "true");
-        window.location.href = "demos.html";
-        return;
-      }
-      accessErr.style.display = "block";
-      accessPw.focus();
-    }
-
-    openAccessBtns.forEach(b=>{
-      b.addEventListener("click",(e)=>{
-        e.preventDefault();
-        openAccess();
-      });
-    });
-
-    closeAccessBtn.addEventListener("click", closeAccess);
-    accessCancelBtn.addEventListener("click", closeAccess);
-    accessEnterBtn.addEventListener("click", enterAccess);
-
-    accessModal.addEventListener("click",(e)=>{
-      if(e.target === accessModal) closeAccess();
-    });
-
-    document.addEventListener("keydown",(e)=>{
-      if(e.key === "Escape" && accessModal.classList.contains("show")) closeAccess();
-      if(e.key === "Enter" && accessModal.classList.contains("show")) enterAccess();
     });
   </script>
 </body>
