@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lead Intake Builder — PalmWeb Tool Demo</title>
+  <meta name="description" content="A working plugin-style intake tool: conditional fields, validation, routing summary, and print-ready output." />
+  <meta name="theme-color" content="#ffffff" />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#556173;
+      --hair: rgba(15,23,42,.10);
+      --panel:#ffffff;
+
+      --blue:#1d79c6;
+      --green:#2cab4b;
+
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
+      --shadow2: 0 10px 30px rgba(15,23,42,.08);
+      --radius: 22px;
+
+      --max: 1100px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.55}
+    a{color:inherit}
+    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+    header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.86);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--hair);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;text-decoration:none;
+      font-weight:950;
+    }
+    .badge{
+      font-weight:950;font-size:12px;
+      background: rgba(29,121,198,.10);
+      border:1px solid rgba(29,121,198,.18);
+      padding:6px 10px;border-radius:999px;
+      color: rgba(11,18,32,.86);
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:10px 14px;border-radius:999px;border:1px solid transparent;
+      text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap;
+      transition:transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{
+      color:#fff;background:linear-gradient(135deg,var(--blue),var(--green));
+      box-shadow:0 18px 44px rgba(29,121,198,.20);
+    }
+    .btn-outline{
+      background:#fff;border:1px solid var(--hair);color:rgba(11,18,32,.92);
+    }
+    .btn-outline:hover{background:rgba(15,23,42,.02);border-color:rgba(15,23,42,.14)}
+    .btn-ink{
+      background:#0b1220;color:#fff;border-color:transparent;
+      box-shadow:0 18px 44px rgba(11,18,32,.16);
+    }
+
+    main{padding:26px 0 50px}
+    .kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 10px;border-radius:999px;
+      border:1px solid var(--hair);
+      background:rgba(15,23,42,.02);
+      font-size:12px;font-weight:900;color:rgba(11,18,32,.86);
+    }
+    .dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--blue),var(--green))}
+    h1{margin:12px 0 8px;font-size:clamp(30px,3.6vw,46px);letter-spacing:-.8px;line-height:1.05}
+    .sub{margin:0;color:rgba(11,18,32,.68);font-weight:750;max-width:78ch}
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      margin-top: 16px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow2);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(360px 220px at 15% 10%, rgba(29,121,198,.12), transparent 70%),
+        radial-gradient(360px 220px at 95% 0%, rgba(44,171,75,.10), transparent 70%);
+      pointer-events:none;
+    }
+    .card > *{position:relative}
+
+    .section-title{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;
+    }
+    .section-title h2{margin:0;font-size:15px;font-weight:950}
+    .mini{font-size:12px;color:rgba(11,18,32,.55);font-weight:850}
+
+    label{display:flex;flex-direction:column;gap:6px;font-weight:900;font-size:13px}
+    input,select,textarea{
+      padding:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);
+      font-size:14px;background:#fff;outline:none;font-weight:750;color:rgba(11,18,32,.92);
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
+    }
+    textarea{min-height:110px;resize:vertical}
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .full{grid-column:1/-1}
+
+    .chips{
+      margin-top:10px;
+      display:flex;flex-wrap:wrap;gap:10px;
+      padding:12px;border-radius:18px;
+      background: rgba(15,23,42,.03);
+      border: 1px solid rgba(15,23,42,.10);
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      background:#fff;border:1px solid rgba(15,23,42,.10);
+      font-weight:850;font-size:13px;cursor:pointer;user-select:none;
+    }
+    .chip input{accent-color: var(--blue);}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .alert{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(180,83,9,.20);
+      background: rgba(180,83,9,.08);
+      color: rgba(120,53,15,.92);
+      font-weight:850;
+      display:none;
+    }
+
+    .summary{
+      border:1px dashed rgba(15,23,42,.22);
+      border-radius:18px;
+      padding:12px;
+      background: rgba(255,255,255,.70);
+      margin-top:12px;
+      font-weight:750;
+      color: rgba(11,18,32,.78);
+      white-space:pre-wrap;
+    }
+    .summary strong{color:rgba(11,18,32,.92)}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.75);
+      padding:7px 10px;border-radius:999px;
+      font-weight:900;font-size:12px;color:rgba(11,18,32,.86);
+    }
+
+    /* Print */
+    @media print{
+      header,.no-print{display:none !important}
+      body{background:#fff}
+      main{padding:0}
+      .layout{grid-template-columns:1fr}
+      .card{box-shadow:none}
+      .card:before{display:none}
+      a{color:#000;text-decoration:none}
+    }
+
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="../index.html" aria-label="Back to PalmWeb">
+        ← PalmWeb <span class="badge">Working Tool Example</span>
+      </a>
+      <div class="row">
+        <a class="btn btn-outline" href="../index.html">Back</a>
+        <button class="btn btn-primary" type="button" id="printBtn">Print</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="kicker"><span class="dot"></span> Lead Intake Plugin (Demo)</div>
+      <h1>Lead Intake Builder</h1>
+      <p class="sub">
+        A working plugin-style tool: conditional fields, validation, a routing summary, and a print-friendly output.
+        No backend required (perfect for GitHub Pages).
+      </p>
+
+      <div class="layout">
+        <!-- FORM -->
+        <section class="card">
+          <div class="section-title">
+            <h2>Lead details</h2>
+            <span class="mini">Build → review → copy/print</span>
+          </div>
+
+          <div class="grid2">
+            <label class="full">Business / Client name*
+              <input id="clientName" placeholder="Example: Smith & Sons Plumbing" />
+            </label>
+
+            <label>Contact name*
+              <input id="contactName" placeholder="Full name" />
+            </label>
+
+            <label>Phone*
+              <input id="phone" placeholder="(401) 555-1234" />
+            </label>
+
+            <label class="full">Email
+              <input id="email" type="email" placeholder="you@domain.com" />
+            </label>
+
+            <label class="full">Project type*
+              <select id="projectType">
+                <option value="">Select…</option>
+                <option>New website</option>
+                <option>Website redesign</option>
+                <option>Maintenance/updates</option>
+                <option>Automation/workflow</option>
+                <option>Custom tool/plugin</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label class="full" id="otherWrap" style="display:none;">If “Other”, describe
+              <input id="otherText" placeholder="Short description" />
+            </label>
+          </div>
+
+          <div style="margin-top:12px; font-weight:950;">Needs</div>
+          <div class="chips" aria-label="Needs">
+            <label class="chip"><input type="checkbox" value="Lead form + routing" class="need" /> Lead form + routing</label>
+            <label class="chip"><input type="checkbox" value="Appointment booking" class="need" /> Appointment booking</label>
+            <label class="chip"><input type="checkbox" value="Payment/Stripe" class="need" /> Payment/Stripe</label>
+            <label class="chip"><input type="checkbox" value="CRM integration" class="need" /> CRM integration</label>
+            <label class="chip"><input type="checkbox" value="Document automation" class="need" /> Document automation</label>
+            <label class="chip"><input type="checkbox" value="Portal/login" class="need" /> Portal/login</label>
+          </div>
+
+          <div class="grid2" style="margin-top:12px;">
+            <label>Timeline
+              <select id="timeline">
+                <option value="">Select…</option>
+                <option>ASAP</option>
+                <option>This month</option>
+                <option>Next 1–2 months</option>
+                <option>Flexible</option>
+              </select>
+            </label>
+
+            <label>Budget range
+              <select id="budget">
+                <option value="">Select…</option>
+                <option>Under $1,000</option>
+                <option>$1,000 – $2,000</option>
+                <option>$2,000 – $4,000</option>
+                <option>$4,000+</option>
+                <option>Not sure yet</option>
+              </select>
+            </label>
+
+            <label class="full">Notes
+              <textarea id="notes" placeholder="Key requirements, examples, constraints…"></textarea>
+            </label>
+          </div>
+
+          <div class="alert" id="alertBox">Please fill the required fields: Client name, Contact name, Phone, and Project type.</div>
+
+          <div class="row no-print">
+            <button class="btn btn-primary" type="button" id="buildBtn">Build routing summary</button>
+            <button class="btn btn-outline" type="button" id="resetBtn">Reset</button>
+            <span class="mini">Tip: Copy summary → paste into email/CRM</span>
+          </div>
+        </section>
+
+        <!-- OUTPUT -->
+        <aside class="card">
+          <div class="section-title">
+            <h2>Routing summary</h2>
+            <span class="pill" id="routePill">Route: —</span>
+          </div>
+
+          <div class="mini">This block is intentionally print-friendly.</div>
+
+          <div class="summary" id="summaryBox">
+<strong>Lead Intake Summary</strong>
+Build a summary to preview the output.
+          </div>
+
+          <div class="row no-print">
+            <button class="btn btn-ink" type="button" id="copyBtn">Copy summary</button>
+            <button class="btn btn-outline" type="button" id="printBtn2">Print</button>
+          </div>
+
+          <p class="mini" style="margin-top:12px;">
+            Demo note: This can be wired to FormSubmit, HubSpot, Airtable, or a serverless endpoint later.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const clientName = $("clientName");
+    const contactName = $("contactName");
+    const phone = $("phone");
+    const email = $("email");
+    const projectType = $("projectType");
+    const otherWrap = $("otherWrap");
+    const otherText = $("otherText");
+    const timeline = $("timeline");
+    const budget = $("budget");
+    const notes = $("notes");
+
+    const alertBox = $("alertBox");
+    const summaryBox = $("summaryBox");
+    const routePill = $("routePill");
+
+    const buildBtn = $("buildBtn");
+    const resetBtn = $("resetBtn");
+    const copyBtn = $("copyBtn");
+    const printBtn = $("printBtn");
+    const printBtn2 = $("printBtn2");
+
+    function getNeeds(){
+      return Array.from(document.querySelectorAll(".need:checked")).map(x => x.value);
+    }
+
+    function routeFor(type, needs){
+      const t = (type || "").toLowerCase();
+      const n = needs.map(x => x.toLowerCase());
+
+      if(t.includes("automation") || n.some(x => x.includes("document") || x.includes("crm"))) return "Automation / Workflow";
+      if(t.includes("custom tool") || n.some(x => x.includes("portal") || x.includes("payment"))) return "Custom Tool / Plugin";
+      if(t.includes("maintenance")) return "Maintenance";
+      if(t.includes("redesign") || t.includes("new website")) return "Website Build";
+      return "General";
+    }
+
+    function setOtherVisibility(){
+      otherWrap.style.display = (projectType.value === "Other") ? "" : "none";
+    }
+    projectType.addEventListener("change", setOtherVisibility);
+    setOtherVisibility();
+
+    function validate(){
+      const ok = clientName.value.trim() && contactName.value.trim() && phone.value.trim() && projectType.value.trim();
+      alertBox.style.display = ok ? "none" : "block";
+      return !!ok;
+    }
+
+    function buildSummary(){
+      if(!validate()) return;
+
+      const needs = getNeeds();
+      const route = routeFor(projectType.value, needs);
+      routePill.textContent = `Route: ${route}`;
+
+      const now = new Date();
+      const stamp = now.toLocaleString();
+
+      const pt = projectType.value === "Other"
+        ? `Other — ${otherText.value.trim() || "(not specified)"}`
+        : projectType.value;
+
+      const lines = [];
+      lines.push(`Lead Intake Summary`);
+      lines.push(`Generated: ${stamp}`);
+      lines.push(``);
+      lines.push(`Client: ${clientName.value.trim()}`);
+      lines.push(`Contact: ${contactName.value.trim()}`);
+      lines.push(`Phone: ${phone.value.trim()}`);
+      lines.push(`Email: ${email.value.trim() || "(not provided)"}`);
+      lines.push(``);
+      lines.push(`Project type: ${pt}`);
+      lines.push(`Needs: ${needs.length ? needs.join(", ") : "(none selected)"}`);
+      lines.push(`Timeline: ${timeline.value || "(not provided)"}`);
+      lines.push(`Budget: ${budget.value || "(not provided)"}`);
+      lines.push(``);
+      lines.push(`Routing suggestion: ${route}`);
+      lines.push(``);
+      lines.push(`Notes:`);
+      lines.push(`${notes.value.trim() || "(none)"}`);
+
+      summaryBox.textContent = lines.join("\n");
+    }
+
+    function resetAll(){
+      [clientName, contactName, phone, email, otherText, notes].forEach(el => el.value = "");
+      [projectType, timeline, budget].forEach(el => el.value = "");
+      document.querySelectorAll(".need").forEach(el => el.checked = false);
+      setOtherVisibility();
+      alertBox.style.display = "none";
+      routePill.textContent = "Route: —";
+      summaryBox.textContent = "Lead Intake Summary\nBuild a summary to preview the output.";
+    }
+
+    async function copySummary(){
+      const text = summaryBox.textContent.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy summary", 900);
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy summary", 900);
+      }
+    }
+
+    buildBtn.addEventListener("click", buildSummary);
+    resetBtn.addEventListener("click", resetAll);
+    copyBtn.addEventListener("click", copySummary);
+    printBtn.addEventListener("click", () => window.print());
+    printBtn2.addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
