@@ -12,14 +12,16 @@
       --bg:#ffffff;
       --text:#0b1220;
       --muted:#556173;
-      --hair: rgba(15,23,42,.10);
       --panel:#ffffff;
 
       --blue:#1d79c6;
       --green:#2cab4b;
 
+      --hair: rgba(15,23,42,.08);
+      --border: rgba(15,23,42,.12);
+
       --shadow: 0 18px 55px rgba(15,23,42,.10);
-      --shadow2: 0 10px 28px rgba(15,23,42,.08);
+      --shadow2: 0 10px 30px rgba(15,23,42,.08);
 
       --radius: 18px;
       --max: 1160px;
@@ -43,7 +45,7 @@
       padding: 0 20px;
     }
 
-    /* ===== Header / Banner (as-is, but cleaner centering) ===== */
+    /* ===== Header ===== */
     header{
       position: sticky;
       top: 0;
@@ -52,25 +54,19 @@
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--hair);
     }
-
     .nav{
-      padding: 12px 0;
-    }
-
-    .nav-grid{
-      display:grid;
-      grid-template-columns: 1fr auto 1fr;
+      display:flex;
       align-items:center;
-      gap: 14px;
+      justify-content:space-between;
+      gap: 16px;
+      padding: 14px 0;
     }
-
     .brand{
       display:flex;
       align-items:center;
       gap: 12px;
       text-decoration:none;
       min-width:0;
-      justify-self: start;
     }
     .brand img{
       width: 38px;
@@ -91,6 +87,7 @@
       font-weight: 950;
       letter-spacing: .2px;
       font-size: 13.5px;
+      white-space: nowrap;
     }
     .brand-title span{
       font-weight: 750;
@@ -103,11 +100,10 @@
     }
 
     nav{
-      justify-self: center;
       display:flex;
       align-items:center;
-      gap: 18px;
-      white-space: nowrap;
+      gap: 16px;
+      flex-wrap: nowrap;
     }
     nav a{
       text-decoration:none;
@@ -118,16 +114,6 @@
     }
     nav a:hover{ color: var(--text); }
 
-    .nav-actions{
-      justify-self: end;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-    }
-
-    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -140,7 +126,8 @@
       font-weight: 950;
       cursor:pointer;
       user-select:none;
-      white-space: nowrap; /* keep one line */
+      white-space: nowrap;          /* keep buttons to one line */
+      flex-wrap: nowrap;
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
@@ -148,10 +135,11 @@
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 16px 36px rgba(29,121,198,.18);
+      box-shadow: 0 18px 44px rgba(29,121,198,.18);
     }
-    .btn-primary:hover{ box-shadow: 0 20px 52px rgba(29,121,198,.22); }
-
+    .btn-primary:hover{
+      box-shadow: 0 22px 60px rgba(29,121,198,.22);
+    }
     .btn-outline{
       background:#fff;
       border-color: var(--hair);
@@ -162,28 +150,30 @@
       border-color: rgba(15,23,42,.14);
     }
 
-    /* ===== Slim Hero ===== */
+    /* ===== Hero ===== */
     .hero{
-      padding: 34px 0 18px;
+      position: relative;
+      padding: 44px 0 24px;
       border-bottom: 1px solid var(--hair);
       background:
-        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.10), transparent 60%),
-        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.08), transparent 60%),
-        linear-gradient(180deg, rgba(15,23,42,.02), transparent 60%);
+        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.14), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
+        linear-gradient(180deg, rgba(15,23,42,.02), transparent 55%);
     }
 
     .kicker{
       display:inline-flex;
       align-items:center;
       gap: 8px;
-      padding: 6px 10px; /* thinner */
+      padding: 6px 10px;                 /* thinner */
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.72);
+      background: rgba(255,255,255,.70);
       font-size: 12px;
       font-weight: 900;
       color: rgba(11,18,32,.86);
       width: fit-content;
+      white-space: nowrap;
     }
     .dot{
       width: 8px; height: 8px;
@@ -191,187 +181,334 @@
       background: linear-gradient(135deg, var(--blue), var(--green));
     }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1fr; /* no big right card */
-      gap: 14px;
+    .hero-inner{
+      max-width: 980px;                  /* keeps it less "in your face" */
+      padding: 0 2px;
     }
 
     h1{
       margin: 14px 0 10px;
-      font-size: clamp(32px, 4vw, 56px);
-      line-height: 1.05;
+      font-size: clamp(34px, 4.2vw, 58px);
+      line-height: 1.02;
       letter-spacing: -1px;
       font-weight: 950;
-      max-width: 100%;
     }
 
     .lead{
-      margin: 0;
+      margin: 0 0 16px;
       color: rgba(11,18,32,.70);
       font-size: 15.5px;
-      max-width: 88ch;
+      max-width: 75ch;
       font-weight: 750;
     }
 
-    /* Button row under tagline */
-    .action-row{
-      margin-top: 14px;
+    .hero-actions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      align-items:center;
+      margin-top: 14px;
     }
 
-    .small-note{
-      margin-top: 10px;
-      font-size: 12.5px;
+    .hero-foot{
+      margin-top: 12px;
+      font-size:12.5px;
       color: rgba(11,18,32,.55);
       font-weight: 750;
     }
 
-    /* ===== Content accordion layout ===== */
-    .content{
-      padding: 22px 0 58px;
+    /* ===== Accordions area ===== */
+    .accordions-wrap{
+      padding: 28px 0 52px;
+      background: rgba(15,23,42,.01);
     }
 
-    .pair-grid{
+    .accordion-grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;   /* single full-width column */
       gap: 14px;
-      margin-top: 14px;
+      margin-top: 18px;
     }
 
-    /* Accordion cards */
-    details.card{
-      background: var(--panel);
+    details.accordion-item{
       border: 1px solid rgba(15,23,42,.10);
       border-radius: 22px;
+      background: rgba(255,255,255,.84);
       box-shadow: var(--shadow2);
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    summary.card-head{
-      cursor:pointer;
-      list-style:none;
+    summary.accordion-summary{
+      cursor: pointer;
+      list-style: none;
+      padding: 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      padding: 16px 16px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-      user-select:none;
+      gap: 14px;
     }
-    summary.card-head::-webkit-details-marker{ display:none; }
+    summary.accordion-summary::-webkit-details-marker{ display:none; }
 
-    .card-left{
+    .acc-left{
       display:flex;
       align-items:center;
       gap: 12px;
-      min-width:0;
+      min-width: 0;
     }
 
-    .icon{
-      width: 40px; height: 40px;
+    .acc-icon{
+      width: 44px;
+      height: 44px;
       border-radius: 14px;
       display:flex;
       align-items:center;
       justify-content:center;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      font-size: 18px;
+      background: rgba(255,255,255,.92);
       flex: 0 0 auto;
+      font-size: 18px;
     }
 
-    .card-title{
-      display:flex;
-      flex-direction:column;
-      gap: 2px;
-      min-width:0;
-    }
+    .acc-text{ min-width:0; }
 
-    .card-title strong{
-      font-size: 15px;
+    .acc-title{
+      font-weight: 950;
+      letter-spacing: -.2px;
       white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
     }
-    .card-title span{
-      font-size: 12.5px;
+
+    .acc-sub{
       font-weight: 800;
-      color: rgba(11,18,32,.62);
+      font-size: 12.5px;
+      color: rgba(11,18,32,.60);
       white-space: nowrap;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 70ch;
     }
 
-    .chev{
+    .acc-caret{
       width: 30px;
       height: 30px;
       border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background:#fff;
+      border: 1px solid rgba(15,23,42,.12);
       display:flex;
       align-items:center;
       justify-content:center;
-      color: rgba(11,18,32,.62);
+      background: rgba(255,255,255,.95);
+      font-weight: 950;
+      color: rgba(11,18,32,.60);
       flex: 0 0 auto;
+      transition: transform .18s ease;
     }
-    details[open] .chev{
-      transform: rotate(180deg);
-    }
+    details[open] .acc-caret{ transform: rotate(180deg); }
 
-    .card-body{
+    .accordion-body{
       padding: 0 16px 16px;
       border-top: 1px solid rgba(15,23,42,.08);
     }
 
-    .body-pad{ padding-top: 14px; }
+    .subhead{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      margin: 14px 0 12px;
+    }
+    .subhead h3{
+      margin:0;
+      font-size: 16px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .subhead p{
+      margin:0;
+      color: rgba(11,18,32,.65);
+      font-weight: 750;
+      font-size: 13.5px;
+    }
 
-    .subgrid{
+    /* Cards inside accordion */
+    .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 14px;
       margin-top: 12px;
     }
 
-    .tile{
+    .card{
+      background: var(--panel);
       border: 1px solid rgba(15,23,42,.10);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(255,255,255,.9);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      min-height: 150px;
     }
-    .tile h4{
-      margin:0 0 6px;
-      font-size: 13.5px;
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(320px 180px at 15% 20%, rgba(29,121,198,.08), transparent 70%),
+        radial-gradient(320px 180px at 90% 0%, rgba(44,171,75,.07), transparent 70%);
+      pointer-events:none;
+    }
+    .card > *{ position: relative; }
+
+    .card h4{
+      margin: 0 0 6px;
+      font-size: 14.5px;
       font-weight: 950;
+      letter-spacing: -0.2px;
     }
-    .tile p{
-      margin:0;
-      color: rgba(11,18,32,.70);
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    .list{
-      margin: 10px 0 0;
-      padding-left: 18px;
+    .card p{
+      margin: 0;
       color: rgba(11,18,32,.70);
       font-size: 13.5px;
       font-weight: 750;
     }
-    .list li{ margin: 6px 0; }
-
-    .btn-row{
-      margin-top: 12px;
+    .card-actions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      align-items:center;
+      margin-top: 12px;
     }
 
-    /* Footer */
+    .mini{
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 850;
+      color: rgba(11,18,32,.55);
+    }
+
+    /* Simple list for work items */
+    .work-list{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .work{
+      background:#fff;
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+      position: relative;
+      overflow:hidden;
+    }
+    .work:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(340px 200px at 18% 15%, rgba(29,121,198,.08), transparent 70%),
+        radial-gradient(340px 200px at 92% 0%, rgba(44,171,75,.06), transparent 70%);
+      pointer-events:none;
+    }
+    .work > *{ position: relative; }
+
+    .tag{
+      display:inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.80);
+      width: fit-content;
+      color: rgba(11,18,32,.86);
+      margin-bottom: 8px;
+      white-space: nowrap;
+    }
+    .work-title{
+      font-weight: 950;
+      font-size: 14.5px;
+      margin: 0 0 8px;
+      letter-spacing: -0.2px;
+    }
+    .work-desc{
+      margin: 0 0 12px;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
+    }
+    .work-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    /* FAQ inside accordion */
+    .faq details{
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 18px;
+      background:#fff;
+      box-shadow: var(--shadow2);
+      padding: 12px 14px;
+    }
+    .faq details + details{ margin-top: 10px; }
+
+    .faq summary{
+      cursor:pointer;
+      font-weight: 950;
+      color: rgba(11,18,32,.92);
+      list-style: none;
+    }
+    .faq summary::-webkit-details-marker{ display:none; }
+    .faq summary:after{
+      content:"+";
+      float:right;
+      font-weight: 950;
+      color: rgba(11,18,32,.55);
+    }
+    .faq details[open] summary:after{ content:"–"; }
+    .faq p{
+      margin: 10px 0 0;
+      color: rgba(11,18,32,.70);
+      font-size: 13.5px;
+      font-weight: 750;
+      max-width: 90ch;
+    }
+
+    /* About/contact */
+    .two-col{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .box{
+      background:#fff;
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+    .box h4{
+      margin: 0 0 10px;
+      font-size: 14.5px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .line{
+      margin-top: 10px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      color: rgba(11,18,32,.70);
+      font-weight: 750;
+      font-size: 13.5px;
+    }
+    .line a{
+      font-weight: 950;
+      text-decoration:none;
+      white-space: nowrap;
+    }
+    .line a:hover{ text-decoration: underline; text-underline-offset: 4px; }
+
     footer{
       border-top: 1px solid var(--hair);
       background:#fff;
@@ -380,8 +517,24 @@
       font-size: 12px;
       text-align:center;
     }
+    .footer-inner{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .footer-logo{
+      width: 18px; height: 18px;
+      object-fit: contain;
+      border-radius: 6px;
+      opacity:.9;
+      border: 1px solid rgba(15,23,42,.10);
+      padding: 2px;
+      background: rgba(15,23,42,.02);
+    }
 
-    /* Modal */
+    /* ===== Quote Modal ===== */
     .modal{
       position: fixed;
       inset: 0;
@@ -393,7 +546,6 @@
       z-index: 200;
     }
     .modal.show{ display:flex; }
-
     .modal-card{
       width: min(720px, 100%);
       max-height: 88vh;
@@ -466,6 +618,7 @@
       color: rgba(11,18,32,.55);
       font-weight: 850;
       margin-left: 6px;
+      white-space: nowrap;
     }
 
     .form-grid{
@@ -532,9 +685,7 @@
       gap: 10px;
       justify-content:space-between;
       flex-wrap:wrap;
-      align-items:center;
     }
-
     .hint{
       margin-top: 12px;
       font-size: 12px;
@@ -544,23 +695,10 @@
 
     /* Responsive */
     @media (max-width: 980px){
-      .nav-grid{
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          "brand actions"
-          "nav nav";
-      }
-      .brand{ grid-area: brand; }
-      .nav-actions{ grid-area: actions; }
-      nav{
-        grid-area: nav;
-        justify-self: start;
-        overflow:auto;
-        padding-top: 8px;
-      }
-
-      .pair-grid{ grid-template-columns: 1fr; }
-      .subgrid{ grid-template-columns: 1fr; }
+      nav{ display:none; }
+      .grid{ grid-template-columns: 1fr; }
+      .work-list{ grid-template-columns: 1fr; }
+      .two-col{ grid-template-columns: 1fr; }
       .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
@@ -569,36 +707,31 @@
 <body>
   <header>
     <div class="container nav">
-      <div class="nav-grid">
-        <a class="brand" href="#top">
-          <img src="assets/logo.png" alt="PalmWeb logo" />
-          <div class="brand-title">
-            <strong>PalmWeb</strong>
-            <span>Websites • Automation • Consulting</span>
-          </div>
-        </a>
-
-        <nav aria-label="Main">
-          <a href="#services">Services</a>
-          <a href="#work">Recent Work</a>
-          <a href="#samples">Public Samples</a>
-          <a href="#tools">Tools</a>
-          <a href="#faq">FAQ</a>
-          <a href="#about">About</a>
-          <a class="btn btn-outline" href="demos.html">Client Access</a>
-        </nav>
-
-        <div class="nav-actions">
-          <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+      <a class="brand" href="#top">
+        <img src="assets/logo.png" alt="PalmWeb logo" />
+        <div class="brand-title">
+          <strong>PalmWeb</strong>
+          <span>Websites • Automation • Consulting</span>
         </div>
-      </div>
+      </a>
+
+      <nav aria-label="Main">
+        <a href="#services">Services</a>
+        <a href="#work">Recent Work</a>
+        <a href="#samples">Public Samples</a>
+        <a href="#tools">Tools</a>
+        <a href="#faq">FAQ</a>
+        <a href="#about">About</a>
+        <a class="btn btn-outline" href="demos.html">Client Access</a>
+        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+      </nav>
     </div>
   </header>
 
   <!-- Hero -->
   <main id="top" class="hero">
-    <div class="container hero-grid">
-      <div>
+    <div class="container">
+      <div class="hero-inner">
         <div class="kicker"><span class="dot"></span> Modern sites + practical automation for local businesses</div>
 
         <h1>Build a web presence that feels premium — and works.</h1>
@@ -608,8 +741,7 @@
           Clear messaging, fast load times, and simple next steps.
         </p>
 
-        <!-- Buttons row under tagline (email is now just a button, like everything else) -->
-        <div class="action-row">
+        <div class="hero-actions">
           <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
           <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
           <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
@@ -618,243 +750,323 @@
           <a class="btn btn-outline" href="demos.html">Client Access</a>
         </div>
 
-        <div class="small-note">Based in New England • Serving local businesses</div>
+        <div class="hero-foot">Based in New England • Serving local businesses</div>
       </div>
     </div>
   </main>
 
-  <!-- Content (3 rows, side-by-side accordions) -->
-  <div class="content">
+  <!-- Accordions (single full-width column) -->
+  <section class="accordions-wrap">
     <div class="container">
+      <div class="accordion-grid">
 
-      <!-- Row 1: Services + Recent Work -->
-      <div class="pair-grid">
-        <details class="card" id="services">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧭</div>
-              <div class="card-title">
-                <strong>Services</strong>
-                <span>What we build and support</span>
+        <!-- Services -->
+        <details class="accordion-item" id="services">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">🧩</div>
+              <div class="acc-text">
+                <div class="acc-title">Services</div>
+                <div class="acc-sub">What we build and support</div>
               </div>
             </div>
-            <div class="chev">⌄</div>
+            <div class="acc-caret">⌄</div>
           </summary>
 
-          <div class="card-body">
-            <div class="body-pad">
-              <div class="subgrid">
-                <div class="tile">
-                  <h4>Website Building</h4>
-                  <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
-                </div>
-                <div class="tile">
-                  <h4>Maintenance</h4>
-                  <p>Updates, fixes, and improvements to keep your site current and fast.</p>
-                </div>
-                <div class="tile">
-                  <h4>Integration & Automation</h4>
-                  <p>Connect forms, email, documents, and spreadsheets to reduce admin work.</p>
-                </div>
-                <div class="tile">
-                  <h4>Domain Migration</h4>
-                  <p>Move domains/email safely without downtime or lost access.</p>
-                </div>
-                <div class="tile">
-                  <h4>Power Suite Development</h4>
-                  <p>Power Apps + Power Automate solutions that improve accuracy and speed.</p>
-                </div>
-                <div class="tile">
-                  <h4>Consulting</h4>
-                  <p>Practical guidance on the best next step, based on your goals.</p>
-                </div>
+          <div class="accordion-body">
+            <div class="grid">
+              <div class="card">
+                <h4>Website Building</h4>
+                <p>Modern, mobile-first sites designed for trust, clarity, and quick action.</p>
               </div>
-
-              <div class="btn-row">
-                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+              <div class="card">
+                <h4>Website Maintenance</h4>
+                <p>Updates, fixes, content edits, and improvements to keep your website current.</p>
+              </div>
+              <div class="card">
+                <h4>Domain Migration</h4>
+                <p>Move domains, email, or websites safely—without downtime or losing access.</p>
+              </div>
+              <div class="card">
+                <h4>Outlook Power Suite Development</h4>
+                <p>Power Apps + Power Automate solutions that reduce admin work and improve accuracy.</p>
+              </div>
+              <div class="card">
+                <h4>Integration & Automation</h4>
+                <p>Connect forms, email, docs, and spreadsheets so requests turn into action automatically.</p>
+              </div>
+              <div class="card">
+                <h4>Consulting</h4>
+                <p>Practical guidance—what matters, what doesn’t, and the best next step.</p>
               </div>
             </div>
           </div>
         </details>
 
-        <details class="card" id="work">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧩</div>
-              <div class="card-title">
-                <strong>Recent Work</strong>
-                <span>Live sites + private demos</span>
+        <!-- Recent Work -->
+        <details class="accordion-item" id="work">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">🧪</div>
+              <div class="acc-text">
+                <div class="acc-title">Recent Work</div>
+                <div class="acc-sub">Live sites + private demos</div>
               </div>
             </div>
-            <div class="chev">⌄</div>
+            <div class="acc-caret">⌄</div>
           </summary>
 
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Bill Noble Fine Art</strong> — gallery-style site + inquiry flow.</li>
-                <li><strong>Missy Wagner Real Estate</strong> — fast, clean, mobile-friendly layout.</li>
-                <li><strong>Agreement Workflow Demo</strong> — create → send → complete → PDF output.</li>
-              </ul>
+          <div class="accordion-body">
+            <div class="work-list">
+              <div class="work">
+                <div class="tag">Fine Art</div>
+                <div class="work-title">Bill Noble Fine Art</div>
+                <div class="work-desc">Gallery-style site built to showcase artwork with clean navigation and contact flow.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Visit site</a>
+                  <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
+                </div>
+              </div>
 
-              <div class="btn-row">
-                <a class="btn btn-outline" href="https://billnoblefineart.com" target="_blank" rel="noreferrer">Bill Noble Fine Art</a>
-                <a class="btn btn-outline" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Missy Wagner RE</a>
-                <a class="btn btn-outline" href="demos.html">Open Demos</a>
+              <div class="work">
+                <div class="tag">Real Estate</div>
+                <div class="work-title">Missy Wagner Real Estate</div>
+                <div class="work-desc">Clear contact options, mobile-friendly design, and quick listing access.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="https://missywagnerre.com" target="_blank" rel="noreferrer">Visit site</a>
+                  <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
+                </div>
+              </div>
+
+              <div class="work">
+                <div class="tag">Automation</div>
+                <div class="work-title">Agreement Workflow Demo</div>
+                <div class="work-desc">Create → sign → send → recipient completes → signed PDF output (portal-style UX).</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="demos.html">Open demo portal</a>
+                  <a class="btn btn-outline" href="#services">Automation services</a>
+                </div>
+              </div>
+
+              <div class="work">
+                <div class="tag">Portfolio</div>
+                <div class="work-title">All Samples</div>
+                <div class="work-desc">A quick hub to explore public samples and private demos.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="#samples">View samples</a>
+                  <a class="btn btn-outline" href="demos.html">View demos</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mini">Note: Private demos are restricted for client confidentiality.</div>
+          </div>
+        </details>
+
+        <!-- Public Samples -->
+        <details class="accordion-item" id="samples">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">🧷</div>
+              <div class="acc-text">
+                <div class="acc-title">Public Samples</div>
+                <div class="acc-sub">Clickable sample websites</div>
+              </div>
+            </div>
+            <div class="acc-caret">⌄</div>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="work-list">
+              <div class="work">
+                <div class="tag">Home Services</div>
+                <div class="work-title">Plumbing Website (Sample)</div>
+                <div class="work-desc">Conversion-focused layout with “call now” actions and a fast lead form.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="samples/plumbing.html">Open sample</a>
+                  <a class="btn btn-outline" href="#about">Request similar</a>
+                </div>
+                <div class="mini">File: /samples/plumbing.html</div>
+              </div>
+
+              <div class="work">
+                <div class="tag">Restaurant</div>
+                <div class="work-title">Restaurant Landing Page (Sample)</div>
+                <div class="work-desc">Menu highlights, hours, and a reservation/event inquiry form.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="samples/restaurant.html">Open sample</a>
+                  <a class="btn btn-outline" href="#about">Request similar</a>
+                </div>
+                <div class="mini">File: /samples/restaurant.html</div>
+              </div>
+
+              <div class="work">
+                <div class="tag">Wellness</div>
+                <div class="work-title">PT / Wellness Website (Sample)</div>
+                <div class="work-desc">Treatments, testimonials, and an appointment request flow.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="samples/wellness.html">Open sample</a>
+                  <a class="btn btn-outline" href="#about">Request similar</a>
+                </div>
+                <div class="mini">File: /samples/wellness.html</div>
+              </div>
+
+              <div class="work">
+                <div class="tag">Legal</div>
+                <div class="work-title">Law Firm Website (Sample)</div>
+                <div class="work-desc">Practice areas, bios, and an intake-style consult request form.</div>
+                <div class="work-actions">
+                  <a class="btn btn-primary" href="samples/law.html">Open sample</a>
+                  <a class="btn btn-outline" href="#about">Request similar</a>
+                </div>
+                <div class="mini">File: /samples/law.html</div>
               </div>
             </div>
           </div>
         </details>
+
+        <!-- Tools -->
+        <details class="accordion-item" id="tools">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">🧾</div>
+              <div class="acc-text">
+                <div class="acc-title">Custom Tools</div>
+                <div class="acc-sub">Interactive “mini software” demos</div>
+              </div>
+            </div>
+            <div class="acc-caret">⌄</div>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="grid">
+              <div class="card">
+                <h4>Invoice Builder</h4>
+                <p>Quote → Invoice → Print PDF. Services dropdown, quantities, totals, payment terms, due dates.</p>
+                <div class="card-actions">
+                  <a class="btn btn-primary" href="tools/invoice.html">Open tool</a>
+                  <a class="btn btn-outline" href="#" data-open-quote>Request similar</a>
+                </div>
+                <div class="mini">File: /tools/invoice.html</div>
+              </div>
+
+              <div class="card">
+                <h4>Lead Intake Tool</h4>
+                <p>Smart intake form demo with validation and clean output, ready for email/CRM routing.</p>
+                <div class="card-actions">
+                  <a class="btn btn-outline" href="tools/intake.html">Open tool</a>
+                </div>
+                <div class="mini">File: /tools/intake.html</div>
+              </div>
+
+              <div class="card">
+                <h4>Payment Portal Demo</h4>
+                <p>Invoice lookup + payment method selection (card/ACH). Demo UX ready for Stripe integration.</p>
+                <div class="card-actions">
+                  <a class="btn btn-outline" href="tools/payment.html">Open demo</a>
+                </div>
+                <div class="mini">File: /tools/payment.html</div>
+              </div>
+            </div>
+
+            <div class="mini">
+              Note: These tools can stay front-end only (GitHub Pages) or be connected to Stripe, QuickBooks, Airtable, HubSpot, and custom backends.
+            </div>
+          </div>
+        </details>
+
+        <!-- FAQ -->
+        <details class="accordion-item" id="faq">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">❓</div>
+              <div class="acc-text">
+                <div class="acc-title">FAQ</div>
+                <div class="acc-sub">Common questions</div>
+              </div>
+            </div>
+            <div class="acc-caret">⌄</div>
+          </summary>
+
+          <div class="accordion-body faq">
+            <details>
+              <summary>How much does a website cost?</summary>
+              <p>After a short consult, I provide a clear quote and scope based on your needs.</p>
+            </details>
+
+            <details>
+              <summary>How long does it take?</summary>
+              <p>Most small-business sites take 1–3 weeks depending on content readiness and review rounds.</p>
+            </details>
+
+            <details>
+              <summary>Do you offer maintenance?</summary>
+              <p>Yes — monthly plans or as-needed changes depending on what you prefer.</p>
+            </details>
+
+            <details>
+              <summary>Can you help with automation?</summary>
+              <p>Yes — Power Apps/Automate systems that reduce admin work and improve accuracy.</p>
+            </details>
+          </div>
+        </details>
+
+        <!-- About -->
+        <details class="accordion-item" id="about">
+          <summary class="accordion-summary">
+            <div class="acc-left">
+              <div class="acc-icon">👋</div>
+              <div class="acc-text">
+                <div class="acc-title">About</div>
+                <div class="acc-sub">Local, practical, clean execution</div>
+              </div>
+            </div>
+            <div class="acc-caret">⌄</div>
+          </summary>
+
+          <div class="accordion-body">
+            <div class="two-col">
+              <div class="box">
+                <h4>Mason Palmieri</h4>
+                <p style="margin:0; color: rgba(11,18,32,.70); font-size:13.5px; font-weight:750;">
+                  I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
+                  I earned my MBA from Bryant University and played Division I baseball there for five years.
+                </p>
+
+                <div class="work-actions" style="margin-top:14px;">
+                  <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+                  <a class="btn btn-outline" href="#tools">View tools</a>
+                  <a class="btn btn-outline" href="demos.html">Client Access</a>
+                </div>
+              </div>
+
+              <div class="box" id="contact">
+                <h4>Contact</h4>
+                <div class="line">Email: <a href="mailto:mason@palmweb.net">mason@palmweb.net</a></div>
+                <div class="line">
+                  Facebook:
+                  <a href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Message me</a>
+                </div>
+                <div class="line">Location: <span style="font-weight:950; color: rgba(11,18,32,.92); white-space:nowrap;">New England</span></div>
+
+                <div class="work-actions" style="margin-top:14px;">
+                  <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
+                  <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
+                  <a class="btn btn-outline" href="demos.html">Client Access</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
       </div>
-
-      <!-- Row 2: Public Samples + Custom Tools -->
-      <div class="pair-grid" style="margin-top:14px;">
-        <details class="card" id="samples">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧪</div>
-              <div class="card-title">
-                <strong>Public Samples</strong>
-                <span>Clickable sample sites</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Plumbing</strong> — fast lead flow + trust cues.</li>
-                <li><strong>Restaurant</strong> — menu highlights + inquiry form.</li>
-                <li><strong>PT / Wellness</strong> — treatments + testimonials + appointment request.</li>
-                <li><strong>Law Firm</strong> — practice areas + consult request intake.</li>
-              </ul>
-
-              <div class="btn-row">
-                <a class="btn btn-outline" href="samples/plumbing.html">Plumbing</a>
-                <a class="btn btn-outline" href="samples/restaurant.html">Restaurant</a>
-                <a class="btn btn-outline" href="samples/wellness.html">Wellness</a>
-                <a class="btn btn-outline" href="samples/law.html">Law Firm</a>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card" id="tools">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">🧰</div>
-              <div class="card-title">
-                <strong>Custom Tools</strong>
-                <span>Interactive “mini software” demos</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <div class="subgrid">
-                <div class="tile">
-                  <h4>Invoice Builder</h4>
-                  <p>Line items, totals, payment terms, due date, and a clean print view.</p>
-                  <div class="btn-row">
-                    <a class="btn btn-primary" href="tools/invoice.html">Open Invoice Tool</a>
-                  </div>
-                </div>
-
-                <div class="tile">
-                  <h4>Lead Intake Tool</h4>
-                  <p>Smart intake form, validation, summary view, and print-ready output.</p>
-                  <div class="btn-row">
-                    <a class="btn btn-outline" href="tools/intake.html">Open Intake Tool</a>
-                  </div>
-                </div>
-
-                <div class="tile">
-                  <h4>Payment Portal</h4>
-                  <p>Validate invoice #, choose card/ACH, and generate a printable receipt (demo).</p>
-                  <div class="btn-row">
-                    <a class="btn btn-outline" href="tools/payment.html">Open Payment Portal</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="small-note" style="margin-top:12px;">
-                These tools can stay front-end (GitHub Pages) or connect to Stripe/QuickBooks/Airtable/HubSpot/custom backends.
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-
-      <!-- Row 3: FAQ + About -->
-      <div class="pair-grid" style="margin-top:14px;">
-        <details class="card" id="faq">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">❓</div>
-              <div class="card-title">
-                <strong>FAQ</strong>
-                <span>Common questions</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <ul class="list">
-                <li><strong>Cost?</strong> I quote based on scope after a short call.</li>
-                <li><strong>Timeline?</strong> Most small sites take 1–3 weeks.</li>
-                <li><strong>Maintenance?</strong> Yes—monthly or as-needed.</li>
-                <li><strong>Automation?</strong> Yes—Power Apps/Automate + integrations.</li>
-              </ul>
-
-              <div class="btn-row">
-                <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="card" id="about">
-          <summary class="card-head">
-            <div class="card-left">
-              <div class="icon">👋</div>
-              <div class="card-title">
-                <strong>About</strong>
-                <span>Local, practical, clean execution</span>
-              </div>
-            </div>
-            <div class="chev">⌄</div>
-          </summary>
-
-          <div class="card-body">
-            <div class="body-pad">
-              <p style="margin:0; color: rgba(11,18,32,.70); font-size: 13.5px; font-weight: 750; max-width: 90ch;">
-                I’m Mason Palmieri — founder of PalmWeb. I build practical websites and automation tools for local businesses.
-                Clear layout, fast load times, and workflows that make requests easier to manage.
-              </p>
-
-              <div class="btn-row">
-                <a class="btn btn-outline" href="mailto:mason@palmweb.net">Email</a>
-                <a class="btn btn-outline" href="https://www.facebook.com/profile.php?id=61585833374096" target="_blank" rel="noreferrer">Facebook</a>
-                <a class="btn btn-outline" href="demos.html">Client Access</a>
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-
     </div>
-  </div>
+  </section>
 
   <footer>
-    <div class="container">
-      © <span id="year"></span> PalmWeb. All rights reserved.
+    <div class="container footer-inner">
+      <img class="footer-logo" src="assets/logo.png" alt="PalmWeb" />
+      <div>© <span id="year"></span> PalmWeb. All rights reserved.</div>
     </div>
   </footer>
 
@@ -877,12 +1089,7 @@
           <span id="stepLabel">Step 1 of 3</span>
         </div>
 
-        <form
-          id="quoteForm"
-          action="https://formsubmit.co/mason@palmweb.net"
-          method="POST"
-          novalidate
-        >
+        <form id="quoteForm" action="https://formsubmit.co/mason@palmweb.net" method="POST" novalidate>
           <input type="hidden" name="_subject" value="PalmWeb Quote Request" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
@@ -1013,6 +1220,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // ============ Quote modal ============
     const modal = document.getElementById("quoteModal");
     const closeBtn = document.getElementById("closeModalBtn");
     const openBtns = document.querySelectorAll("[data-open-quote]");
@@ -1093,6 +1301,7 @@
       return true;
     }
 
+    // Openers
     openBtns.forEach(btn => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -1101,8 +1310,13 @@
     });
 
     closeBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
-    document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modal.classList.contains("show")) closeModal(); });
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    });
 
     nextBtn.addEventListener("click", () => {
       if(currentStep === 1){
@@ -1119,6 +1333,17 @@
     backBtn.addEventListener("click", () => {
       if(currentStep === 2) goToStep(1);
       if(currentStep === 3) goToStep(2);
+    });
+
+    // Optional: only one accordion open at a time (clean UX)
+    const accordionItems = document.querySelectorAll("details.accordion-item");
+    accordionItems.forEach(d => {
+      d.addEventListener("toggle", () => {
+        if(!d.open) return;
+        accordionItems.forEach(other => {
+          if(other !== d) other.open = false;
+        });
+      });
     });
   </script>
 </body>
