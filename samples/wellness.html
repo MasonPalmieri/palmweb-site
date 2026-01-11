@@ -7,37 +7,211 @@
   <meta name="description" content="Physical therapy and rehab. Personalized plans, clear progress, and easy scheduling." />
   <meta name="theme-color" content="#ffffff" />
   <style>
-    :root{ --blue:#1d79c6; --green:#2cab4b; --bg:#fff; --panel:#fff; --panel2:#f7fbff; --border:#e5e7eb; --text:#0f172a; --muted:#475569; --shadow:0 14px 34px rgba(15,23,42,.10); --radius:18px; --max:1120px; }
-    *{box-sizing:border-box} html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);line-height:1.55}
-    a{color:inherit} .container{max-width:var(--max);margin:0 auto;padding:0 18px}
-    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    :root{
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#5b6574;
+      --brand:#16a34a;
+      --accent:#0ea5e9;
+      --card:#ffffff;
+      --border: rgba(15,23,42,.10);
+      --shadow: 0 16px 50px rgba(15,23,42,.08);
+      --shadow2: 0 10px 28px rgba(15,23,42,.06);
+      --radius: 24px;
+      --max: 1140px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1000px 600px at 20% -10%, rgba(14,165,233,.12), transparent 60%),
+        radial-gradient(1000px 600px at 90% 0%, rgba(22,163,74,.10), transparent 60%),
+        #fff;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a{color:inherit}
+    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+    header{
+      position:sticky;top:0;z-index:50;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
     .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
     .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .badge{font-weight:950;font-size:12px;color:#0b3a5f;background:rgba(29,121,198,.10);border:1px solid rgba(29,121,198,.22);padding:6px 10px;border-radius:999px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid transparent;text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap}
-    .btn-primary{color:#fff;background:linear-gradient(135deg,var(--blue),var(--green));box-shadow:0 12px 26px rgba(29,121,198,.22)}
+    .badge{
+      font-weight:950;font-size:12px;color:#064e3b;
+      background: rgba(22,163,74,.10);
+      border:1px solid rgba(22,163,74,.22);
+      padding:6px 10px;border-radius:999px;
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;border:1px solid transparent;
+      text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap;
+      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--accent), var(--brand));
+      box-shadow: 0 18px 44px rgba(14,165,233,.18);
+    }
     .btn-outline{background:#fff;border:1px solid var(--border)}
-    .hero{padding:46px 0 24px;background:
-      radial-gradient(900px 420px at 15% -10%, rgba(29,121,198,.18), transparent 60%),
-      radial-gradient(900px 420px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
-      linear-gradient(180deg,var(--panel2),#fff 70%);
-      border-bottom:1px solid var(--border)}
-    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:start}
-    h1{margin:0 0 10px;font-size:clamp(30px,4vw,46px);line-height:1.05;letter-spacing:-.8px}
-    p{margin:0 0 14px;color:var(--muted)}
-    .panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .btn-outline:hover{background: rgba(15,23,42,.02)}
+
+    /* Different layout: centered hero + big card */
+    .hero{
+      padding: 34px 0 18px;
+      text-align:center;
+    }
+    h1{
+      margin:0 auto 10px;
+      font-size: clamp(30px, 3.6vw, 46px);
+      letter-spacing: -0.9px;
+      line-height: 1.05;
+      max-width: 22ch;
+    }
+    p{margin:0 auto 14px;color: rgba(11,18,32,.70);font-weight:750;max-width: 78ch}
+
+    .hero-card{
+      margin-top: 16px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      text-align:left;
+    }
+    .stat{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow2);
+    }
+    .stat strong{display:block;font-size:12px;color: rgba(11,18,32,.55);font-weight:900}
+    .stat span{display:block;font-size:18px;font-weight:950;margin-top:6px}
+
+    .section{padding: 44px 0}
+    .section h2{margin:0;font-size:26px;letter-spacing:-.2px}
+    .section p.sub{margin:8px 0 0;color: rgba(11,18,32,.65);font-weight:750}
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .card{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
     .card h3{margin:0 0 6px;font-size:16px;font-weight:950}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .mini{font-size:12px;color:#64748b;font-weight:800}
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .card p{margin:0;color: rgba(11,18,32,.68);font-weight:750}
+
+    /* Timeline */
+    .timeline{
+      margin-top: 14px;
+      display:grid;
+      gap: 10px;
+    }
+    .step{
+      display:flex;gap:12px;align-items:flex-start;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow2);
+      padding: 14px;
+    }
+    .num{
+      width: 32px; height: 32px;
+      border-radius: 999px;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg, var(--accent), var(--brand));
+      color:#fff;
+      font-weight: 950;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+    .step strong{display:block;font-weight:950}
+    .step span{display:block;color: rgba(11,18,32,.68);font-weight:750;margin-top:4px}
+
+    /* Pricing */
+    .pricing{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .price-card{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
+    .price{
+      font-size: 30px;
+      font-weight: 950;
+      letter-spacing: -0.6px;
+      margin: 8px 0;
+    }
+    .mini{font-size:12px;color: rgba(11,18,32,.55);font-weight:850}
+
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .panel{
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 24px;
+      box-shadow: var(--shadow2);
+      padding: 16px;
+    }
     label{display:flex;flex-direction:column;gap:6px;font-weight:900;font-size:13px}
-    input,textarea,select{padding:12px;border-radius:14px;border:1px solid var(--border);font-size:14px;background:#fff}
-    textarea{min-height:110px;resize:vertical}
-    footer{border-top:1px solid var(--border);padding:18px 0;color:#64748b;font-size:12px;text-align:center}
-    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);padding:8px 10px;border-radius:999px;background:#fff;font-weight:900;font-size:13px;color:#334155}
-    @media(max-width:980px){.hero-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+    input,textarea,select{
+      padding:12px;border-radius:14px;border:1px solid rgba(15,23,42,.12);
+      font-size:14px;background:#fff;outline:none;
+    }
+    input:focus,textarea:focus,select:focus{
+      border-color: rgba(14,165,233,.55);
+      box-shadow: 0 0 0 4px rgba(14,165,233,.10);
+    }
+    textarea{min-height: 110px; resize: vertical}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+    footer{
+      border-top: 1px solid rgba(15,23,42,.10);
+      padding: 18px 0;
+      color: rgba(11,18,32,.55);
+      font-size: 12px;
+      text-align:center;
+      background: rgba(255,255,255,.55);
+    }
+
+    @media (max-width: 980px){
+      .hero-card{grid-template-columns: 1fr}
+      .cards{grid-template-columns: 1fr}
+      .pricing{grid-template-columns: 1fr}
+      .split{grid-template-columns: 1fr}
+      h1{max-width: 26ch}
+    }
   </style>
 </head>
 <body>
@@ -56,80 +230,100 @@
   </header>
 
   <main class="hero">
-    <div class="container hero-grid">
-      <section>
-        <h1>Move better. Feel better. Get back to what you love.</h1>
-        <p>Personalized plans, clear progress, and easy scheduling. Serving Rhode Island patients with evidence-based care.</p>
+    <div class="container">
+      <h1>Move better. Feel better. Get back to what you love.</h1>
+      <p>Evidence-based care, clear progress, and simple scheduling — built for busy lives.</p>
 
-        <div class="row">
-          <a class="btn btn-primary" href="#schedule">Request an Appointment</a>
-          <a class="btn btn-outline" href="#treatments">Treatments</a>
-          <a class="btn btn-outline" href="#faq">Insurance</a>
+      <div class="row" style="justify-content:center;">
+        <a class="btn btn-primary" href="#schedule">Request an Appointment</a>
+        <a class="btn btn-outline" href="#treatments">Treatments</a>
+        <a class="btn btn-outline" href="#first">First Visit</a>
+      </div>
+
+      <div class="hero-card" aria-label="Clinic highlights">
+        <div class="stat">
+          <strong>Availability</strong>
+          <span>Most visits within 7 days</span>
         </div>
-
-        <div class="row" style="margin-top:14px;">
-          <span class="pill">Sports injuries</span>
-          <span class="pill">Back & neck pain</span>
-          <span class="pill">Post-surgery rehab</span>
+        <div class="stat">
+          <strong>Hours</strong>
+          <span>Mon–Fri 8–6 • Sat 9–1</span>
         </div>
+        <div class="stat">
+          <strong>Location</strong>
+          <span>200 Main St, Warwick</span>
+        </div>
+      </div>
 
-        <p class="mini" style="margin-top:12px;">Demo note: Sample wellness site built by PalmWeb.</p>
-      </section>
-
-      <aside class="panel">
-        <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Clinic Info</h3>
-        <div class="mini">Hours</div>
-        <p style="margin:4px 0 10px;">Mon–Fri 8am–6pm • Sat 9am–1pm</p>
-        <div class="mini">Location</div>
-        <p style="margin:4px 0 10px;">200 Main St, Warwick, RI</p>
-        <div class="mini">New patients</div>
-        <p style="margin:4px 0 0;">Most appointments available within 7 days.</p>
-      </aside>
+      <p class="mini" style="margin-top:12px;">Demo note: Sample wellness/PT site built by PalmWeb.</p>
     </div>
   </main>
 
-  <section id="treatments" style="padding:44px 0;">
+  <section class="section" id="treatments">
     <div class="container">
-      <h2 style="margin:0;font-size:26px;letter-spacing:-.2px;">Treatments</h2>
-      <p>Clean layout with clear “what we help” categories.</p>
+      <h2>Treatments</h2>
+      <p class="sub">Calm spacing + “clinical” clarity (different from the other samples).</p>
 
-      <div class="grid">
+      <div class="cards">
         <div class="card"><h3>Manual Therapy</h3><p>Hands-on treatment to reduce pain and improve mobility.</p></div>
-        <div class="card"><h3>Strength & Mobility</h3><p>Personalized program built around your goals and lifestyle.</p></div>
-        <div class="card"><h3>Return-to-Sport</h3><p>Sport-specific rehab with measurable progress milestones.</p></div>
+        <div class="card"><h3>Strength & Mobility</h3><p>Plans built around your goals and lifestyle — measurable progress.</p></div>
+        <div class="card"><h3>Return-to-Sport</h3><p>Sport-specific rehab with milestones you can track.</p></div>
       </div>
     </div>
   </section>
 
-  <section style="padding:44px 0;background:var(--panel2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <section class="section" id="first" style="background: rgba(255,255,255,.55); border-top:1px solid rgba(15,23,42,.10); border-bottom:1px solid rgba(15,23,42,.10);">
     <div class="container">
-      <h2 style="margin:0;font-size:26px;letter-spacing:-.2px;">What Patients Say</h2>
-      <p>Short testimonials (believable + confidence-building).</p>
+      <h2>Your First Visit</h2>
+      <p class="sub">A timeline is a totally different component that screams “custom design.”</p>
 
-      <div class="grid">
-        <div class="card"><h3>“I’m running again.”</h3><p>Clear plan, steady progress, and great coaching. Pain is gone.</p><div class="mini">— Alex M.</div></div>
-        <div class="card"><h3>“Explained everything.”</h3><p>They made it simple and helped me stay consistent at home.</p><div class="mini">— Renee K.</div></div>
-        <div class="card"><h3>“Professional and friendly.”</h3><p>Appointments were on time and the care felt personalized.</p><div class="mini">— Chris D.</div></div>
+      <div class="timeline">
+        <div class="step"><div class="num">1</div><div><strong>Assessment</strong><span>We listen, evaluate movement, and identify what’s driving the issue.</span></div></div>
+        <div class="step"><div class="num">2</div><div><strong>Plan</strong><span>You get a clear plan with goals, timelines, and at-home work that fits your schedule.</span></div></div>
+        <div class="step"><div class="num">3</div><div><strong>Progress</strong><span>We track improvements and adjust so you keep moving forward.</span></div></div>
       </div>
-    </div>
-  </section>
 
-  <section id="faq" style="padding:44px 0;">
-    <div class="container">
-      <h2 style="margin:0;font-size:26px;letter-spacing:-.2px;">Insurance & FAQs</h2>
-      <p>FAQ content helps conversion without clutter.</p>
+      <div style="margin-top:18px;">
+        <h2 style="margin:0;font-size:22px;letter-spacing:-.2px;">Transparent Pricing (Demo)</h2>
+        <p class="sub">Optional pricing cards (another unique layout).</p>
 
-      <div class="two">
-        <div class="panel">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Insurance</h3>
-          <p style="margin:0 0 10px;">We accept many major plans. Call and we’ll verify benefits before your first visit.</p>
-          <div class="mini">What to bring</div>
-          <p style="margin:4px 0 0;">Insurance card • Photo ID • Referral (if required)</p>
+        <div class="pricing">
+          <div class="price-card">
+            <div style="font-weight:950;">Initial evaluation</div>
+            <div class="price">$145</div>
+            <div class="mini">60 minutes • full assessment</div>
+          </div>
+          <div class="price-card">
+            <div style="font-weight:950;">Follow-up visit</div>
+            <div class="price">$110</div>
+            <div class="mini">45 minutes • progress work</div>
+          </div>
+          <div class="price-card">
+            <div style="font-weight:950;">Sports performance</div>
+            <div class="price">$125</div>
+            <div class="mini">45 minutes • return-to-sport</div>
+          </div>
         </div>
 
-        <div class="panel" id="schedule">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Request an Appointment</h3>
+        <div class="mini" style="margin-top:10px;">Pricing is sample content for demo purposes.</div>
+      </div>
+    </div>
+  </section>
 
+  <section class="section" id="schedule">
+    <div class="container">
+      <h2>Request an Appointment</h2>
+      <p class="sub">Still uses FormSubmit exactly like your original.</p>
+
+      <div class="split">
+        <div class="panel">
+          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Insurance & FAQs</h3>
+          <p style="margin:0 0 10px;">We accept many major plans. Call and we’ll verify benefits before your first visit.</p>
+          <div class="mini">What to bring</div>
+          <p style="margin-top:6px;">Insurance card • Photo ID • Referral (if required)</p>
+        </div>
+
+        <div class="panel">
           <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
             <input type="hidden" name="_subject" value="Demo Lead — Wellness/PT Site" />
             <input type="hidden" name="_captcha" value="false" />
@@ -160,4 +354,3 @@
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>
-
