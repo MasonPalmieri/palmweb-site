@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WCV Premier LLC — Expert Home Buyers (Demo Redesign)</title>
-  <meta name="description" content="Demo redesign for WCV Premier LLC: modern layout, clarity, mobile-first structure, and conversion-focused CTAs." />
+  <meta name="description" content="Demo redesign for WCV Premier LLC: modern layout, clarity, mobile-first structure, and conversion-focused CTAs with automation demo." />
   <meta name="theme-color" content="#fbfaf6" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
@@ -12,25 +12,26 @@
 <body>
   <header>
     <div class="container nav">
-      <div class="brand">
+      <a class="brand" href="index.html">
         <img src="assets/wcv-logo.png" alt="WCV Premier LLC logo" />
         <div class="brand-title">
           <strong>WCV Premier LLC</strong>
           <span>Demo redesign • Expert Home Buyers</span>
         </div>
-      </div>
+      </a>
 
       <nav aria-label="Main">
         <a href="index.html" data-page="index.html">Home</a>
+        <a href="automation.html" data-page="automation.html">Automation</a>
         <a href="faq-s.html" data-page="faq-s.html">FAQ</a>
         <a href="contact.html" data-page="contact.html">Contact</a>
         <a href="terms-and-conditions.html" data-page="terms-and-conditions.html">Terms</a>
         <a href="privacy-policy.html" data-page="privacy-policy.html">Privacy</a>
       </nav>
 
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <div class="nav-actions">
         <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
-        <a class="btn btn-primary" href="contact.html">Get an Offer</a>
+        <a class="btn btn-primary" href="automation.html">Start Automated Intake</a>
       </div>
     </div>
   </header>
@@ -39,37 +40,57 @@
     <div class="kicker"><span class="dot"></span> Local • Fast • Straightforward</div>
 
     <div class="hero-grid">
-      <section>
+      <section class="hero-copy">
         <h1>Sell your home without the stress — fair offers, flexible closing.</h1>
         <p class="lead">
           WCV Premier LLC helps homeowners and agents navigate distressed or “as-is” sales with clarity and speed.
-          This demo shows a modern, conversion-focused layout that’s easier to read and easier to act on.
+          This demo shows a modern, conversion-focused layout and a lightweight automation flow (intake → qualification → next steps).
         </p>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="contact.html">Request a Cash Offer</a>
+          <a class="btn btn-primary" href="automation.html">Request a Cash Offer</a>
           <a class="btn btn-outline" href="faq-s.html">Read FAQs</a>
           <a class="btn btn-outline" href="#how">How it works</a>
         </div>
 
         <p class="note">Serving Massachusetts & Rhode Island • Options for quick or flexible closing</p>
+
+        <div class="trust">
+          <div class="trust-item">
+            <div class="trust-title">Clear process</div>
+            <div class="trust-text">Less back-and-forth. You’ll know the next step.</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-title">Automation-ready</div>
+            <div class="trust-text">Lead intake routes to follow-up templates + CRM export.</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-title">Mobile-first</div>
+            <div class="trust-text">Fast to read, fast to act — on any device.</div>
+          </div>
+        </div>
       </section>
 
       <aside class="hero-card">
-        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-media" role="img" aria-label="WCV Premier hero image"></div>
+
         <div class="hero-card-body">
           <div class="card-title">Quick Steps</div>
           <p class="card-text">A simple process designed to reduce back-and-forth.</p>
 
           <div class="quick">
-            <div class="qrow"><span>1</span><span style="font-weight:950;">Tell us about the property</span></div>
-            <div class="qrow"><span>2</span><span style="font-weight:950;">We review & confirm details</span></div>
-            <div class="qrow"><span>3</span><span style="font-weight:950;">Offer + closing timeline</span></div>
+            <div class="qrow"><span>1</span><span>Tell us about the property</span></div>
+            <div class="qrow"><span>2</span><span>We review & confirm details</span></div>
+            <div class="qrow"><span>3</span><span>Offer + closing timeline</span></div>
           </div>
 
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn btn-primary" href="contact.html">Start</a>
-            <a class="btn btn-outline" href="faq-s.html">Questions?</a>
+          <div class="hero-card-actions">
+            <a class="btn btn-primary" href="automation.html">Start</a>
+            <a class="btn btn-outline" href="contact.html">Questions?</a>
+          </div>
+
+          <div class="mini-note">
+            Demo feature: The Automation page generates next steps, an email draft, and a CRM-ready JSON export.
           </div>
         </div>
       </aside>
@@ -82,13 +103,16 @@
         <h2>How it works</h2>
         <p>Clear steps, quick communication, and a closing plan that fits your timeline.</p>
       </div>
+      <div class="section-actions">
+        <a class="btn btn-outline" href="automation.html">Try Automated Intake</a>
+      </div>
     </div>
 
     <div class="grid">
       <div class="card">
         <div class="icon">🏠</div>
         <h3>Share property details</h3>
-        <p>Address, condition, and your preferred timeline — we keep it simple and focused.</p>
+        <p>Address, condition, and timeline — we keep it simple and focused.</p>
       </div>
 
       <div class="card">
@@ -118,15 +142,18 @@
       </div>
 
       <div class="box">
-        <h3>Why this layout converts better</h3>
+        <h3>Workflow automation preview</h3>
         <ul class="list">
-          <li>Clear headline + CTAs above the fold</li>
-          <li>Short scannable sections with trust cues</li>
-          <li>Mobile-friendly navigation and spacing</li>
-          <li>FAQ and Contact are prioritized</li>
+          <li>Guided intake captures the right details the first time</li>
+          <li>Auto-generated “next steps” + follow-up email draft</li>
+          <li>Lead export JSON for CRM / Zapier / Power Automate</li>
+          <li>Contact page auto-fills with the lead summary</li>
         </ul>
         <hr class="hr" />
-        <a class="btn btn-primary" href="contact.html">Request a Cash Offer</a>
+        <div class="row">
+          <a class="btn btn-primary" href="automation.html">Start Automated Intake</a>
+          <a class="btn btn-outline" href="contact.html">Or Contact Us</a>
+        </div>
       </div>
     </div>
   </section>
