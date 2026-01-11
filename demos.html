@@ -384,6 +384,7 @@
 
   <section class="container">
     <div class="grid">
+      <!-- Demo 1 -->
       <div class="card">
         <div class="badge">Client Portal Demo</div>
         <div class="title">Agreement Workflow</div>
@@ -398,28 +399,30 @@
         </div>
 
         <div class="row">
-          <button class="btn btn-primary" id="openDemoBtn" type="button">Open Demo</button>
+          <button class="btn btn-primary" data-gated-demo="fillsignsend" type="button">Open Demo</button>
           <a class="btn btn-outline" href="index.html">Return</a>
         </div>
       </div>
 
-      <!-- Optional second slot (ready when you add more demos)
+      <!-- Demo 2 -->
       <div class="card">
-        <div class="badge">Automation Demo</div>
-        <div class="title">Intake → Document Builder</div>
+        <div class="badge">Prospective Client Demo</div>
+        <div class="title">WCV Premier LLC — Redesign</div>
         <div class="desc">
-          Demonstrates a lead intake form that generates a ready-to-send document automatically.
+          Modernized site demo: cleaner hero, stronger CTAs, FAQ accordion, mobile-friendly layout, and improved readability.
         </div>
+
         <div class="meta">
-          <div class="pill">Form intake</div>
-          <div class="pill">Auto document</div>
-          <div class="pill">Email ready</div>
+          <div class="pill">Website redesign</div>
+          <div class="pill">Conversion-focused</div>
+          <div class="pill">Mobile-first</div>
         </div>
+
         <div class="row">
-          <a class="btn btn-outline" href="#">Coming soon</a>
+          <button class="btn btn-primary" data-gated-demo="wcvpremier" type="button">Open Demo</button>
+          <a class="btn btn-outline" href="demosites/wcvpremier/index.html">Direct Link</a>
         </div>
       </div>
-      -->
     </div>
   </section>
 
@@ -448,7 +451,12 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     const DEMO_PASSWORD = "hallam";
-    const DEMO_URL = "demosites/fillsignsend/index.html";
+
+    // Demo map
+    const DEMOS = {
+      fillsignsend: "demosites/fillsignsend/index.html",
+      wcvpremier: "demosites/wcvpremier/index.html"
+    };
 
     // Remember unlock for 2 hours
     const GATE_KEY = "palmweb_demo_gate_until";
@@ -463,7 +471,8 @@
       localStorage.setItem(GATE_KEY, String(Date.now() + UNLOCK_MS));
     }
 
-    const openDemoBtn = document.getElementById("openDemoBtn");
+    let pendingDemoKey = null;
+
     const modal = document.getElementById("pwModal");
     const pwInput = document.getElementById("pwInput");
     const pwError = document.getElementById("pwError");
@@ -481,28 +490,38 @@
     function closeModal(){
       modal.classList.remove("show");
       modal.setAttribute("aria-hidden", "true");
+      pendingDemoKey = null;
+    }
+
+    function goDemo(key){
+      const url = DEMOS[key];
+      if(!url) return;
+      location.href = url;
     }
 
     function enter(){
       const v = (pwInput.value || "").trim();
-
       if(v !== DEMO_PASSWORD){
         pwError.classList.add("show");
         pwInput.focus();
         return;
       }
-
       setUnlocked();
-      location.href = DEMO_URL;
+      if(pendingDemoKey) goDemo(pendingDemoKey);
     }
 
-    // Open demo
-    openDemoBtn.addEventListener("click", () => {
-      if(isUnlocked()){
-        location.href = DEMO_URL;
-        return;
-      }
-      openModal();
+    // Bind gated demo buttons
+    document.querySelectorAll("[data-gated-demo]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.getAttribute("data-gated-demo");
+        pendingDemoKey = key;
+
+        if(isUnlocked()){
+          goDemo(key);
+          return;
+        }
+        openModal();
+      });
     });
 
     cancelBtn.addEventListener("click", closeModal);
@@ -510,7 +529,7 @@
 
     enterBtn.addEventListener("click", enter);
 
-    // Only bind Enter on the input (prevents global double-trigger “spaz”)
+    // Only bind Enter on the input (prevents global double-trigger)
     pwInput.addEventListener("keydown", (e) => {
       if(e.key === "Enter"){
         e.preventDefault();
