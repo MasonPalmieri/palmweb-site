@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WCV Premier LLC — Automated Intake (Demo)</title>
+  <meta name="description" content="Demo automation intake: capture property details, qualify timeline, generate next steps and follow-up draft, export CRM-ready JSON." />
+  <meta name="theme-color" content="#fbfaf6" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img src="assets/wcv-logo.png" alt="WCV Premier LLC logo" />
+        <div class="brand-title">
+          <strong>WCV Premier LLC</strong>
+          <span>Automation demo • Intake → Next steps</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main">
+        <a href="index.html" data-page="index.html">Home</a>
+        <a href="automation.html" data-page="automation.html">Automation</a>
+        <a href="faq-s.html" data-page="faq-s.html">FAQ</a>
+        <a href="contact.html" data-page="contact.html">Contact</a>
+        <a href="terms-and-conditions.html" data-page="terms-and-conditions.html">Terms</a>
+        <a href="privacy-policy.html" data-page="privacy-policy.html">Privacy</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
+        <a class="btn btn-primary" href="contact.html">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container hero">
+    <div class="kicker"><span class="dot"></span> Demo automation • Front-end only</div>
+    <h1 class="page-title">Automated Intake</h1>
+    <p class="lead">
+      This demo shows how WCV can reduce back-and-forth: guided intake → qualification → next steps + follow-up draft.
+      Submissions can be exported as JSON (CRM-ready) and auto-filled into the Contact page.
+    </p>
+
+    <div class="automation-layout">
+      <section class="wizard card-soft" aria-label="Intake wizard">
+        <div class="wizard-head">
+          <div>
+            <div class="section-title">Guided intake</div>
+            <div class="wizard-sub">3 short steps. Takes ~60 seconds.</div>
+          </div>
+          <div class="stepper" aria-label="Steps">
+            <div class="step active" data-step-dot="1">1</div>
+            <div class="step" data-step-dot="2">2</div>
+            <div class="step" data-step-dot="3">3</div>
+          </div>
+        </div>
+
+        <form id="wizardForm" class="wizard-body" novalidate>
+          <!-- STEP 1 -->
+          <div class="step-panel" data-step="1">
+            <div class="field-grid">
+              <label class="field">
+                <span>Full name</span>
+                <input id="name" type="text" placeholder="Jane Smith" autocomplete="name" required />
+              </label>
+
+              <label class="field">
+                <span>Phone</span>
+                <input id="phone" type="tel" placeholder="(401) 555-0123" autocomplete="tel" />
+              </label>
+
+              <label class="field full">
+                <span>Email</span>
+                <input id="email" type="email" placeholder="jane@email.com" autocomplete="email" required />
+              </label>
+
+              <label class="field full">
+                <span>Property address</span>
+                <input id="address" type="text" placeholder="123 Main St, Providence, RI" required />
+              </label>
+            </div>
+
+            <div class="wizard-actions">
+              <span class="hintline">Next: timeline + property details</span>
+              <button class="btn btn-primary" type="button" id="next1">Continue</button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="step-panel" data-step="2" hidden>
+            <div class="field-grid">
+              <label class="field">
+                <span>Seller type</span>
+                <select id="sellerType">
+                  <option value="homeowner" selected>Homeowner</option>
+                  <option value="agent">Agent / Broker</option>
+                  <option value="executor">Executor / Probate</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Timeline</span>
+                <select id="timeline">
+                  <option value="asap" selected>ASAP (0–30 days)</option>
+                  <option value="soon">Soon (30–60 days)</option>
+                  <option value="flexible">Flexible (60+ days)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Property condition</span>
+                <select id="condition">
+                  <option value="good" selected>Good / livable</option>
+                  <option value="needs-work">Needs work</option>
+                  <option value="major">Major repairs</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Occupancy</span>
+                <select id="occupancy">
+                  <option value="owner" selected>Owner occupied</option>
+                  <option value="tenant">Tenant occupied</option>
+                  <option value="vacant">Vacant</option>
+                </select>
+              </label>
+
+              <label class="field full">
+                <span>Notes (optional)</span>
+                <textarea id="notes" placeholder="Anything we should know (repairs, liens, access, etc.)"></textarea>
+              </label>
+            </div>
+
+            <div class="wizard-actions">
+              <button class="btn btn-outline" type="button" id="back2">Back</button>
+              <button class="btn btn-primary" type="button" id="next2">Generate Next Steps</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="step-panel" data-step="3" hidden>
+            <div class="result-grid">
+              <div class="result-card">
+                <div class="result-title">Auto-generated next steps</div>
+                <ul class="checklist" id="nextSteps"></ul>
+                <div class="mini-note">
+                  Demo automation: these steps are generated based on timeline/condition/occupancy.
+                </div>
+              </div>
+
+              <div class="result-card">
+                <div class="result-title">Estimated offer range (demo)</div>
+                <div class="offerbox">
+                  <div class="offerline">
+                    <span>Range</span>
+                    <strong id="offerRange">$—</strong>
+                  </div>
+                  <div class="offerline">
+                    <span>Close</span>
+                    <strong id="closeWindow">—</strong>
+                  </div>
+                </div>
+                <div class="mini-note">
+                  This is a placeholder heuristic for the demo. In a real automation, WCV could connect comps + internal rules.
+                </div>
+              </div>
+
+              <div class="result-card full">
+                <div class="result-title">Follow-up email draft</div>
+                <textarea class="draft" id="emailDraft" readonly></textarea>
+                <div class="row">
+                  <button class="btn btn-outline" type="button" id="copyDraft">Copy Email</button>
+                  <button class="btn btn-outline" type="button" id="exportJson">Export JSON</button>
+                  <a class="btn btn-primary" href="contact.html" id="toContact">Open Contact (auto-filled)</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="wizard-actions">
+              <button class="btn btn-outline" type="button" id="back3">Back</button>
+              <button class="btn btn-primary" type="button" id="saveLead">Save Lead</button>
+            </div>
+          </div>
+
+          <div class="form-error" id="formError" role="alert" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <aside class="side card-soft" aria-label="Automation notes">
+        <div class="section-title">What this demonstrates</div>
+
+        <div class="side-block">
+          <div class="side-title">1) Lead intake</div>
+          <div class="side-text">Collects the right info once, reducing follow-up cycles.</div>
+        </div>
+
+        <div class="side-block">
+          <div class="side-title">2) Routing rules</div>
+          <div class="side-text">Timeline + condition generate next steps and suggested close window.</div>
+        </div>
+
+        <div class="side-block">
+          <div class="side-title">3) CRM-ready export</div>
+          <div class="side-text">Export JSON simulates pushing leads into HubSpot / Airtable / SharePoint / Zapier.</div>
+        </div>
+
+        <hr class="hr" />
+
+        <div class="mini-note">
+          In production, this page could POST to a serverless endpoint (Netlify, Cloudflare, Azure Functions),
+          then trigger email + SMS + CRM + calendar scheduling automatically.
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> WCV Premier LLC • Automation demo for PalmWeb.</div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+  <script>
+    (function(){
+      const $ = (id) => document.getElementById(id);
+
+      const formError = $("formError");
+
+      const dots = Array.from(document.querySelectorAll("[data-step-dot]"));
+      const panels = Array.from(document.querySelectorAll(".step-panel"));
+
+      const next1 = $("next1");
+      const next2 = $("next2");
+      const back2 = $("back2");
+      const back3 = $("back3");
+
+      const copyDraft = $("copyDraft");
+      const exportJson = $("exportJson");
+      const saveLead = $("saveLead");
+
+      const nextSteps = $("nextSteps");
+      const offerRange = $("offerRange");
+      const closeWindow = $("closeWindow");
+      const emailDraft = $("emailDraft");
+
+      const STORAGE_KEY = "wcv_demo_lead";
+
+      function setStep(n){
+        dots.forEach(d => d.classList.toggle("active", Number(d.dataset.stepDot) === n));
+        panels.forEach(p => {
+          const is = Number(p.dataset.step) === n;
+          p.hidden = !is;
+        });
+        formError.textContent = "";
+        formError.classList.remove("show");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function showError(msg){
+        formError.textContent = msg;
+        formError.classList.add("show");
+      }
+
+      function val(id){
+        return String($(id).value || "").trim();
+      }
+
+      function buildNextSteps(lead){
+        const steps = [];
+        steps.push("Confirm best callback time and access details (tenant/lockbox/vacant).");
+
+        if(lead.timeline === "asap") steps.push("Prioritize same-day review and schedule a quick call.");
+        if(lead.timeline === "soon") steps.push("Schedule a short call within 24–48 hours.");
+        if(lead.timeline === "flexible") steps.push("Set a flexible review window and discuss preferred close date.");
+
+        if(lead.condition === "major") steps.push("Request 5–8 photos or a short walkthrough video to estimate repairs.");
+        if(lead.condition === "needs-work") steps.push("Confirm repairs needed (roof/HVAC/plumbing) and estimate scope.");
+        if(lead.condition === "good") steps.push("Confirm any minor updates and preferred closing timeline.");
+
+        if(lead.occupancy === "tenant") steps.push("Collect lease status, rent amount, and tenant cooperation notes.");
+        if(lead.occupancy === "vacant") steps.push("Confirm utilities status and property security.");
+        if(lead.occupancy === "owner") steps.push("Confirm ideal move-out date and any assistance needed.");
+
+        steps.push("Prepare offer options and a simple closing plan (fast vs. flexible).");
+        return steps;
+      }
+
+      function estimateRange(lead){
+        // DEMO ONLY: a lightweight “heuristic”
+        // Start at a pretend baseline and adjust by condition/timeline.
+        let baseLow = 235000;
+        let baseHigh = 285000;
+
+        if(lead.condition === "needs-work"){ baseLow -= 25000; baseHigh -= 15000; }
+        if(lead.condition === "major"){ baseLow -= 55000; baseHigh -= 35000; }
+
+        if(lead.timeline === "asap"){ baseLow -= 10000; baseHigh -= 5000; }
+        if(lead.timeline === "flexible"){ baseLow += 5000; baseHigh += 9000; }
+
+        if(lead.occupancy === "tenant"){ baseLow -= 8000; baseHigh -= 4000; }
+        if(lead.occupancy === "vacant"){ baseLow -= 2000; baseHigh -= 1000; }
+
+        return { low: Math.max(50000, baseLow), high: Math.max(60000, baseHigh) };
+      }
+
+      function closeText(timeline){
+        if(timeline === "asap") return "7–21 days (demo)";
+        if(timeline === "soon") return "21–45 days (demo)";
+        return "45–90+ days (demo)";
+      }
+
+      function money(n){
+        return Number(n).toLocaleString(undefined, { style:"currency", currency:"USD", maximumFractionDigits: 0 });
+      }
+
+      function buildEmail(lead, range){
+        const firstName = (lead.name || "").split(" ")[0] || "there";
+        const occ = lead.occupancy === "owner" ? "owner-occupied" : (lead.occupancy === "tenant" ? "tenant-occupied" : "vacant");
+        const cond =
+          lead.condition === "good" ? "in good condition" :
+          lead.condition === "needs-work" ? "needing some work" : "needing major repairs";
+
+        return [
+          `Subject: Quick next steps for ${lead.address}`,
+          ``,
+          `Hi ${firstName},`,
+          ``,
+          `Thanks for reaching out about ${lead.address}. Based on the details you shared (${occ}, ${cond}, timeline: ${lead.timeline.toUpperCase()}), here are the next steps:`,
+          ``,
+          `1) We confirm a few details (access, any repairs, and your preferred closing date).`,
+          `2) We prepare offer options and a simple closing plan.`,
+          `3) If everything looks good, we schedule signing and move toward closing.`,
+          ``,
+          `For the demo, an estimated range is ${money(range.low)}–${money(range.high)} (final numbers depend on verification and market comps).`,
+          ``,
+          `What’s the best time for a quick call today or tomorrow?`,
+          ``,
+          `— WCV Premier LLC`,
+          `Contact: (your number) • (your email)`
+        ].join("\n");
+      }
+
+      function getLead(){
+        return {
+          name: val("name"),
+          phone: val("phone"),
+          email: val("email"),
+          address: val("address"),
+          sellerType: $("sellerType").value,
+          timeline: $("timeline").value,
+          condition: $("condition").value,
+          occupancy: $("occupancy").value,
+          notes: val("notes"),
+          createdAt: new Date().toISOString(),
+          source: "automation_demo"
+        };
+      }
+
+      function validateStep1(){
+        const name = val("name");
+        const email = val("email");
+        const address = val("address");
+
+        if(!name) return "Please enter your name.";
+        if(!email || !email.includes("@")) return "Please enter a valid email.";
+        if(!address) return "Please enter the property address.";
+        return "";
+      }
+
+      function renderStep3(lead){
+        const steps = buildNextSteps(lead);
+        nextSteps.innerHTML = steps.map(s => `<li>${escapeHtml(s)}</li>`).join("");
+
+        const range = estimateRange(lead);
+        offerRange.textContent = `${money(range.low)} – ${money(range.high)}`;
+        closeWindow.textContent = closeText(lead.timeline);
+
+        emailDraft.value = buildEmail(lead, range);
+
+        return { steps, range };
+      }
+
+      function escapeHtml(str){
+        return String(str || "")
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;");
+      }
+
+      next1.addEventListener("click", () => {
+        const err = validateStep1();
+        if(err){ showError(err); return; }
+        setStep(2);
+      });
+
+      back2.addEventListener("click", () => setStep(1));
+
+      next2.addEventListener("click", () => {
+        const lead = getLead();
+        const err = validateStep1();
+        if(err){ showError(err); setStep(1); return; }
+        renderStep3(lead);
+        setStep(3);
+      });
+
+      back3.addEventListener("click", () => setStep(2));
+
+      copyDraft.addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText(emailDraft.value || "");
+          copyDraft.textContent = "Copied!";
+          setTimeout(() => copyDraft.textContent = "Copy Email", 1200);
+        }catch{
+          showError("Copy failed in this browser. You can manually select and copy the text.");
+        }
+      });
+
+      exportJson.addEventListener("click", () => {
+        const lead = getLead();
+        const { steps, range } = renderStep3(lead);
+
+        const payload = {
+          ...lead,
+          automation: {
+            nextSteps: steps,
+            estimate: range,
+            closeWindow: closeText(lead.timeline)
+          }
+        };
+
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "wcv-lead.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      saveLead.addEventListener("click", () => {
+        const lead = getLead();
+        const { steps, range } = renderStep3(lead);
+
+        const payload = {
+          ...lead,
+          automation: {
+            nextSteps: steps,
+            estimate: range,
+            closeWindow: closeText(lead.timeline),
+            emailDraft: emailDraft.value
+          }
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        saveLead.textContent = "Saved!";
+        setTimeout(() => saveLead.textContent = "Save Lead", 1200);
+      });
+
+      // initialize
+      setStep(1);
+    })();
+  </script>
+</body>
+</html>
