@@ -3,583 +3,920 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb Tools — Invoice Builder</title>
-  <meta name="theme-color" content="#0b1220" />
+  <title>PalmWeb — Invoice Builder (Tool Demo)</title>
+  <meta name="description" content="A demo plugin-style invoice tool: services dropdown, line items, totals, payment terms, due date, and a print-ready invoice view. No backend required." />
+  <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      --bg:#0b1220;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --shadow: 0 20px 70px rgba(0,0,0,.45);
+      --bg:#f5f7fb;
+      --paper:#ffffff;
+      --text:#0b1220;
+      --muted:#4b5563;
+      --line: rgba(15,23,42,.12);
+      --shadow: 0 18px 60px rgba(15,23,42,.10);
+      --shadow2: 0 10px 26px rgba(15,23,42,.08);
       --radius: 22px;
-      --max: 1160px;
-      --blue:#43cbff;
-      --green:#60ff9d;
-      --warn:#ffcc66;
-      --danger:#ff4f63;
+      --max: 1220px;
+
+      --brand:#111827;
+      --accent:#2563eb; /* modern blue */
+      --accent2:#06b6d4; /* cyan */
+      --good:#16a34a;
+      --warn:#b45309;
+      --danger:#ef4444;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     html,body{
       margin:0;padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:
-        radial-gradient(1200px 700px at 15% -10%, rgba(67,203,255,.18), transparent 60%),
-        radial-gradient(1200px 700px at 90% 0%, rgba(96,255,157,.12), transparent 60%),
+        radial-gradient(1100px 700px at 20% -10%, rgba(37,99,235,.14), transparent 60%),
+        radial-gradient(1100px 700px at 90% 0%, rgba(6,182,212,.10), transparent 60%),
         var(--bg);
-      color:var(--text);
-      line-height:1.55;
+      color: var(--text);
+      line-height: 1.55;
     }
-    a{color:inherit}
-    .container{max-width:var(--max);margin:0 auto;padding:20px 18px 70px}
+    a{ color: inherit; text-decoration:none; }
+    .container{ max-width: var(--max); margin:0 auto; padding: 18px; }
 
     header{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:12px;padding: 12px 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245,247,251,.82);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
     }
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .logo{
-      width: 42px;height: 42px;border-radius: 14px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      display:flex;align-items:center;justify-content:center;
-      font-weight: 950; letter-spacing: .5px;
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding: 14px 0;
     }
-    .brand strong{font-size:14px;font-weight:950}
-    .brand span{display:block;font-size:12px;color:var(--muted);font-weight:750}
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width:0;
+    }
+    .mark{
+      width: 42px; height: 42px; border-radius: 14px;
+      background: rgba(37,99,235,.12);
+      border: 1px solid rgba(37,99,235,.18);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 950;
+      letter-spacing: .4px;
+    }
+    .brand strong{ font-weight: 950; font-size: 14px; }
+    .brand span{ display:block; font-size: 12px; color: rgba(11,18,32,.62); font-weight: 800; }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight: 950; font-size: 12px;
+      color: rgba(11,18,32,.92);
+      background: rgba(37,99,235,.10);
+      border: 1px solid rgba(37,99,235,.18);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
 
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:999px;border:1px solid transparent;
-      text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap;
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      text-decoration:none;
+      font-weight: 950;
+      cursor:pointer;
+      user-select:none;
+      white-space: nowrap;
       transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
     }
-    .btn:active{transform: translateY(1px)}
-    .btn-primary{
-      color:#04101a;
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 16px 40px rgba(67,203,255,.16);
+    .btn:active{ transform: translateY(1px); }
+    .btn-outline{
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--line);
     }
-    .btn-muted{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
+    .btn-outline:hover{ background:#fff; }
+    .btn-primary{
+      color:#fff;
+      background: linear-gradient(135deg, rgba(37,99,235,.98), rgba(6,182,212,.92));
+      box-shadow: 0 18px 44px rgba(37,99,235,.16);
+    }
+    .btn-primary:hover{ box-shadow: 0 20px 56px rgba(37,99,235,.20); }
+    .btn-ink{
+      color:#fff;
+      background: var(--brand);
+      box-shadow: 0 18px 44px rgba(17,24,39,.16);
     }
     .btn-danger{
-      border: 1px solid rgba(255,79,99,.35);
-      background: rgba(255,79,99,.10);
-      color: var(--text);
+      color:#fff;
+      background: var(--danger);
+      box-shadow: 0 18px 44px rgba(239,68,68,.14);
+    }
+    .btn-small{
+      padding: 8px 10px;
+      font-size: 12px;
+      border-radius: 999px;
     }
 
+    .hero{
+      padding: 18px 0 0;
+    }
     h1{
-      margin: 10px 0 6px;
-      font-size: clamp(26px, 3vw, 40px);
+      margin: 0 0 6px;
+      font-size: clamp(24px, 2.6vw, 34px);
       letter-spacing: -0.6px;
       line-height: 1.1;
     }
     .lead{
-      margin:0;
-      color:var(--muted);
-      font-weight:750;
-      max-width: 90ch;
-      font-size: 14px;
+      margin: 0;
+      color: rgba(11,18,32,.68);
+      font-weight: 750;
+      max-width: 92ch;
+      font-size: 13px;
     }
 
     .grid{
-      margin-top: 18px;
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 12px;
+      align-items:start;
+      margin-top: 14px;
     }
 
     .card{
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 28px;
       box-shadow: var(--shadow);
-      padding: 16px;
-      position: relative;
       overflow:hidden;
+      position: relative;
     }
     .card::before{
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(360px 220px at 15% 10%, rgba(67,203,255,.12), transparent 70%),
-        radial-gradient(360px 220px at 92% 0%, rgba(96,255,157,.10), transparent 70%);
+        radial-gradient(520px 240px at 15% 10%, rgba(37,99,235,.12), transparent 70%),
+        radial-gradient(520px 240px at 92% 0%, rgba(6,182,212,.10), transparent 70%);
       pointer-events:none;
     }
-    .card > *{position:relative}
+    .card > *{ position: relative; }
 
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding: 7px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;font-weight:950;
-      color: rgba(255,255,255,.92);
-      width: fit-content;
+    .card-head{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.50);
+    }
+    .card-head strong{ font-weight: 950; font-size: 13px; letter-spacing: -0.2px; }
+    .card-body{ padding: 16px; }
+
+    .section-title{
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(11,18,32,.60);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
     }
 
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .muted{color: var(--muted); font-weight:750}
-
-    label{display:flex;flex-direction:column;gap:6px;font-weight:900;font-size:13px}
-    .input, select, textarea{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.92);
-      outline:none;
-      font-weight: 850;
-      font-size: 14px;
-    }
-    .input:focus, select:focus, textarea:focus{
-      border-color: rgba(67,203,255,.55);
-      box-shadow: 0 0 0 4px rgba(67,203,255,.12);
-    }
-    textarea{min-height: 96px; resize: vertical}
-
-    .two{
+    .form-grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
+    .form-grid .full{ grid-column: 1 / -1; }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(11,18,32,.84);
+    }
+    input, textarea, select{
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: #fff;
+      font-size: 14px;
+      outline:none;
+      color: var(--text);
+    }
+    textarea{ min-height: 86px; resize: vertical; }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(37,99,235,.50);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    }
+
+    .muted{
+      color: rgba(11,18,32,.62);
+      font-weight: 750;
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .lineitems{
+      margin-top: 14px;
+      border-top: 1px solid rgba(15,23,42,.10);
+      padding-top: 14px;
+    }
+
+    .li-row{
+      display:grid;
+      grid-template-columns: 1.4fr 1fr .6fr .8fr .8fr auto;
+      gap: 10px;
+      align-items:end;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+    }
+    .li-row:last-child{ border-bottom:none; padding-bottom: 0; }
+
+    .li-row .mini-label{
+      font-size: 11px;
+      color: rgba(11,18,32,.60);
+      font-weight: 850;
+      margin-bottom: 6px;
+      display:block;
+    }
+    .li-row .cell{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .pillbar{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top: 12px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(11,18,32,.82);
+    }
+
+    /* Preview invoice */
+    .invoice{
+      background: #fff;
+      border-radius: 24px;
+      border: 1px solid rgba(15,23,42,.10);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .inv-top{
+      padding: 18px 18px 12px;
+      border-bottom: 2px solid #111;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 12px;
+      align-items:start;
+    }
+    .inv-title{
+      display:flex; align-items:center; gap:10px;
+    }
+    .inv-logo{
+      width: 44px; height: 44px; border-radius: 14px;
+      background: rgba(37,99,235,.10);
+      border: 1px solid rgba(37,99,235,.18);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 950;
+      letter-spacing: .4px;
+    }
+    .inv-title strong{ font-size: 16px; font-weight: 950; }
+    .inv-title div{ line-height: 1.2; }
+    .inv-sub{
+      margin-top: 6px;
+      font-size: 12px;
+      color: rgba(17,24,39,.68);
+      font-weight: 750;
+    }
+
+    .inv-meta{
+      display:grid;
+      gap: 8px;
+      justify-items:end;
+      text-align:right;
+    }
+    .meta-line{
+      display:flex;
+      gap: 10px;
+      justify-content:space-between;
+      width: 100%;
+      max-width: 320px;
+      font-size: 12px;
+      color: rgba(17,24,39,.78);
+      font-weight: 850;
+    }
+    .meta-line span:first-child{ color: rgba(17,24,39,.55); font-weight: 900; }
+
+    .inv-mid{
+      padding: 14px 18px 6px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .box{
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(249,250,251,.65);
+    }
+    .box .box-title{
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: rgba(17,24,39,.55);
+      font-weight: 950;
+      margin: 0 0 8px;
+    }
+    .box .box-body{
+      font-weight: 850;
+      color: rgba(17,24,39,.84);
+      font-size: 12px;
+      white-space: pre-line;
+    }
 
     table{
-      width:100%;
+      width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      overflow:hidden;
+      margin-top: 12px;
+      border: 1px solid rgba(15,23,42,.10);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
+      overflow:hidden;
+      background:#fff;
     }
-    th,td{
-      text-align:left;
+    th, td{
       padding: 10px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      font-size: 13px;
+      font-size: 12px;
       vertical-align: top;
     }
-    th{font-size:12px;color:rgba(255,255,255,.72);font-weight:950}
-    tr:last-child td{border-bottom:none}
-
-    .cell-actions{width: 90px}
-    .mini{font-size:12px;color: rgba(255,255,255,.62);font-weight:800}
-    .right{text-align:right}
-    .total{
-      font-size: 18px;
+    th{
+      background: #f9fafb;
+      color:#111;
       font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(15,23,42,.10);
+    }
+    td{
+      border-bottom: 1px solid rgba(15,23,42,.06);
+      color: rgba(17,24,39,.84);
+      font-weight: 750;
+    }
+    tr:last-child td{ border-bottom:none; }
+
+    .right{ text-align:right; }
+    .desc{ color: rgba(17,24,39,.62); font-weight: 750; margin-top: 2px; }
+
+    .inv-bot{
+      padding: 12px 18px 18px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items:end;
+    }
+    .notes{
+      font-size: 12px;
+      color: rgba(17,24,39,.72);
+      font-weight: 750;
+      white-space: pre-line;
+    }
+    .totals{
+      width: min(420px, 100%);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 16px;
+      background: rgba(249,250,251,.65);
+      padding: 12px;
+    }
+    .totals .trow{
+      display:flex; justify-content:space-between; gap: 10px;
+      padding: 6px 0;
+      font-size: 12px;
+      color: rgba(17,24,39,.78);
+      font-weight: 850;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+    }
+    .totals .trow:last-child{ border-bottom:none; }
+    .totals .trow strong{ font-weight: 950; color:#111; }
+    .totals .grand{
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 2px solid #111;
+      display:flex; justify-content:space-between; gap:10px;
+      font-weight: 950;
+      color:#111;
+      font-size: 16px;
       letter-spacing: -0.2px;
     }
 
-    .notice{
-      border: 1px solid rgba(255,204,102,.28);
-      background: rgba(255,204,102,.10);
-      padding: 10px 12px;
-      border-radius: 14px;
-      color: rgba(255,255,255,.90);
+    .tinybar{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.50);
+    }
+
+    .hint{
+      border: 1px solid rgba(37,99,235,.18);
+      background: rgba(37,99,235,.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(11,18,32,.88);
       font-weight: 850;
       font-size: 13px;
+      margin-top: 12px;
     }
 
-    /* Printable */
+    .footer{
+      margin-top: 14px;
+      color: rgba(11,18,32,.55);
+      font-weight: 850;
+      font-size: 12px;
+      text-align:center;
+      padding: 16px 0 6px;
+    }
+
+    /* Print */
+    @page{
+      size: letter;
+      margin: 0.55in;
+    }
     @media print{
-      body{ background:#fff; color:#111; }
+      html, body{ background:#fff !important; color:#111 !important; }
       header, .no-print{ display:none !important; }
-      .container{ padding:0; }
-      .card{ box-shadow:none; background:#fff; border:1px solid #ddd; }
-      .card::before{ display:none; }
-      .input, select, textarea{ border:1px solid #ddd; background:#fff; color:#111; box-shadow:none; }
-      table{ border:1px solid #ddd; background:#fff; }
-      th,td{ border-bottom:1px solid #eee; color:#111; }
-      .muted,.mini{ color:#444; }
+      .container{ max-width:100% !important; padding:0 !important; }
+      .grid{ display:block !important; margin-top:0 !important; }
+      .card{
+        background:#fff !important;
+        border:none !important;
+        box-shadow:none !important;
+        border-radius:0 !important;
+      }
+      .card::before{ display:none !important; }
+      .card-head, .card-body{ padding:0 !important; }
+      .invoice{
+        border: 1px solid #e5e7eb !important;
+        box-shadow:none !important;
+        border-radius: 14px !important;
+      }
+      .inv-top{ border-bottom: 2px solid #111 !important; }
+      table{ border:1px solid #e5e7eb !important; }
+      th{ background:#f9fafb !important; border-bottom: 1px solid #e5e7eb !important; }
+      td{ border-bottom: 1px solid #f3f4f6 !important; }
+      a{ color:#111 !important; text-decoration:none !important; }
     }
 
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-      .two{grid-template-columns:1fr}
-      .cell-actions{width:auto}
+    @media (max-width: 1040px){
+      .grid{ grid-template-columns: 1fr; }
+      .li-row{
+        grid-template-columns: 1fr 1fr .7fr .7fr .8fr auto;
+      }
+    }
+    @media (max-width: 720px){
+      .form-grid{ grid-template-columns: 1fr; }
+      .inv-top{ grid-template-columns: 1fr; }
+      .inv-meta{ justify-items:start; text-align:left; }
+      .inv-mid{ grid-template-columns: 1fr; }
+      .inv-bot{ grid-template-columns: 1fr; }
+      .tinybar{ justify-content:flex-start; }
+      .li-row{
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <header class="no-print">
-      <a class="brand" href="../index.html">
-        <div class="logo">PW</div>
+  <header class="no-print">
+    <div class="container nav">
+      <div class="brand">
+        <div class="mark">PW</div>
         <div>
-          <strong>PalmWeb Tools</strong>
-          <span>Invoice Builder (Demo)</span>
+          <strong>PalmWeb</strong>
+          <span>Tool Demo • Invoice Builder</span>
         </div>
-      </a>
+        <span class="badge">Working Tool Example</span>
+      </div>
 
       <div class="row">
-        <a class="btn btn-muted" href="../index.html">Back to Site</a>
-        <button class="btn btn-muted" id="btnLoadSample" type="button">Load Sample</button>
-        <button class="btn btn-muted" id="btnSaveDraft" type="button">Save Draft</button>
-        <button class="btn btn-muted" id="btnClear" type="button">Clear</button>
-        <button class="btn btn-primary" id="btnPrint" type="button">Print / Save PDF</button>
-      </div>
-    </header>
-
-    <div class="row" style="justify-content:space-between; gap:12px; flex-wrap:wrap;">
-      <div>
-        <div class="badge">Working Tool Example</div>
-        <h1>Invoice Builder</h1>
-        <p class="lead">
-          A demo plugin-style tool: services dropdown, line items, totals, payment terms, due date, and a printable invoice view.
-          No backend required.
-        </p>
-      </div>
-      <div class="notice no-print" style="max-width:520px;">
-        Tip: GitHub Pages-friendly. Saves drafts locally in your browser (localStorage). Print button opens “Save as PDF”.
+        <a class="btn btn-outline" href="index.html">Back to Site</a>
+        <button class="btn btn-primary" id="printBtnTop" type="button">Print Invoice</button>
       </div>
     </div>
+  </header>
 
+  <div class="container hero no-print">
+    <h1>Invoice Builder</h1>
+    <p class="lead">
+      A demo plugin-style tool: services dropdown, line items, totals, payment terms, due date automation, and a print-ready invoice.
+      No backend required — perfect for GitHub Pages.
+    </p>
+  </div>
+
+  <div class="container">
     <div class="grid">
-      <!-- Left: Inputs -->
-      <div class="card">
-        <div class="badge">Invoice Details</div>
 
-        <div class="two" style="margin-top:12px;">
-          <label>Invoice #
-            <input class="input" id="invNumber" placeholder="INV-1001" />
-          </label>
-          <label>Invoice date
-            <input class="input" id="invDate" type="date" />
-          </label>
+      <!-- LEFT: Builder -->
+      <div class="card no-print" id="builderCard">
+        <div class="card-head">
+          <strong>Invoice Details</strong>
+          <div class="row">
+            <button class="btn btn-outline btn-small" id="resetBtn" type="button">Reset</button>
+            <button class="btn btn-ink btn-small" id="printBtn" type="button">Print</button>
+          </div>
         </div>
 
-        <div class="two" style="margin-top:12px;">
-          <label>Bill to (Client)
-            <input class="input" id="billTo" placeholder="Company / Person name" />
-          </label>
-          <label>Client email
-            <input class="input" id="clientEmail" type="email" placeholder="client@email.com" />
-          </label>
-        </div>
+        <div class="card-body">
+          <div class="section-title">Basics</div>
 
-        <label style="margin-top:12px;">Client address
-          <textarea id="clientAddress" placeholder="Street&#10;City, ST ZIP"></textarea>
-        </label>
+          <div class="form-grid">
+            <label>Invoice #
+              <input id="invNumber" placeholder="INV-1001" />
+            </label>
 
-        <div class="two" style="margin-top:12px;">
-          <label>Payment terms
-            <select id="terms">
-              <option value="due">Due on receipt</option>
-              <option value="net7">Net 7</option>
-              <option value="net15" selected>Net 15</option>
-              <option value="net30">Net 30</option>
-            </select>
-          </label>
-          <label>Due date (auto)
-            <input class="input" id="dueDate" type="date" />
-          </label>
-        </div>
+            <label>Invoice date
+              <input id="invDate" type="date" />
+            </label>
 
-        <label style="margin-top:12px;">Notes (optional)
-          <textarea id="notes" placeholder="Thank you for your business."></textarea>
-        </label>
-
-        <div class="badge" style="margin-top:16px;">Line Items</div>
-
-        <div class="two" style="margin-top:12px;">
-          <label>Service
-            <select id="svcSelect"></select>
-          </label>
-          <label>Quantity
-            <input class="input" id="svcQty" type="number" min="1" step="1" value="1" />
-          </label>
-        </div>
-
-        <div class="two" style="margin-top:12px;">
-          <label>Rate
-            <input class="input" id="svcRate" type="number" min="0" step="0.01" />
-          </label>
-          <label>Description override (optional)
-            <input class="input" id="svcDesc" placeholder="Leave blank to use service name" />
-          </label>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <button class="btn btn-primary" id="btnAddLine" type="button">Add Line Item</button>
-          <button class="btn btn-muted" id="btnAddCustom" type="button">Add Custom Item</button>
-          <span class="mini">Custom item lets you type any service + rate.</span>
-        </div>
-
-        <div class="two" style="margin-top:16px;">
-          <label>Discount
-            <div class="row" style="gap:8px;">
-              <input class="input" id="discountVal" type="number" min="0" step="0.01" value="0" style="flex:1;" />
-              <select id="discountType" style="width:140px;">
-                <option value="amount">$</option>
-                <option value="percent">%</option>
+            <label>Payment terms
+              <select id="terms">
+                <option value="0">Due on receipt</option>
+                <option value="7">Net 7</option>
+                <option value="15" selected>Net 15</option>
+                <option value="30">Net 30</option>
+                <option value="45">Net 45</option>
               </select>
+            </label>
+
+            <label>Due date (auto)
+              <input id="dueDate" type="date" />
+            </label>
+          </div>
+
+          <div class="lineitems">
+            <div class="section-title">Line items</div>
+
+            <div id="items"></div>
+
+            <div class="pillbar">
+              <button class="btn btn-primary btn-small" id="addItemBtn" type="button">+ Add line item</button>
+              <span class="pill">Tip: choose a service → qty updates totals</span>
             </div>
-          </label>
 
-          <label>Tax rate (%)
-            <input class="input" id="taxRate" type="number" min="0" step="0.01" value="0" />
-          </label>
+            <div class="form-grid" style="margin-top:14px;">
+              <label>Discount
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <input id="discountValue" type="number" min="0" step="0.01" placeholder="0" />
+                  <select id="discountType">
+                    <option value="amount">$ amount</option>
+                    <option value="percent">% percent</option>
+                  </select>
+                </div>
+              </label>
+
+              <label>Tax rate (%)
+                <input id="taxRate" type="number" min="0" step="0.01" placeholder="0" />
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;border-top:1px solid rgba(15,23,42,.10);padding-top:14px;">
+            <div class="section-title">Parties</div>
+
+            <div class="form-grid">
+              <label>From (your business)
+                <textarea id="fromBlock" placeholder="PalmWeb&#10;Your address&#10;Phone • Email"></textarea>
+              </label>
+
+              <label>Bill to (client)
+                <textarea id="toBlock" placeholder="Company / Person&#10;Address line&#10;Email / Phone"></textarea>
+              </label>
+
+              <label class="full">Notes (optional)
+                <textarea id="notes" placeholder="Thank you for your business."></textarea>
+              </label>
+            </div>
+
+            <div class="hint">
+              This is a front-end only demo. Printing generates a clean invoice layout (not the edit form).
+            </div>
+          </div>
+
+          <div class="footer">© <span id="year"></span> PalmWeb — invoice tool demo.</div>
         </div>
       </div>
 
-      <!-- Right: Preview -->
-      <div class="card">
-        <div class="badge">Invoice Preview</div>
-
-        <div style="margin-top:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-          <div>
-            <div style="font-weight:950; font-size:16px;">PalmWeb</div>
-            <div class="mini">Demo Invoice Tool</div>
-            <div class="mini" style="margin-top:8px;">mason@palmweb.net</div>
-          </div>
-
-          <div style="min-width:260px;">
-            <div class="mini">Invoice #</div>
-            <div id="pInvNumber" style="font-weight:950;">—</div>
-
-            <div class="mini" style="margin-top:10px;">Invoice date</div>
-            <div id="pInvDate" style="font-weight:950;">—</div>
-
-            <div class="mini" style="margin-top:10px;">Due date</div>
-            <div id="pDueDate" style="font-weight:950;">—</div>
-
-            <div class="mini" style="margin-top:10px;">Terms</div>
-            <div id="pTerms" style="font-weight:950;">—</div>
+      <!-- RIGHT: Preview (print this) -->
+      <div class="card" id="previewCard">
+        <div class="card-head no-print">
+          <strong>Invoice Preview</strong>
+          <div class="row">
+            <span class="badge" style="background:rgba(22,163,74,.10);border-color:rgba(22,163,74,.18);">Print-ready</span>
           </div>
         </div>
 
-        <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;">
-          <div class="mini">Bill to</div>
-          <div id="pBillTo" style="font-weight:950;">—</div>
-          <div id="pClientEmail" class="mini" style="margin-top:4px;">—</div>
-          <div id="pClientAddress" class="mini" style="margin-top:8px; white-space:pre-line;">—</div>
-        </div>
+        <div class="card-body">
+          <div class="invoice" id="invoicePaper" aria-label="Invoice preview">
+            <div class="inv-top">
+              <div>
+                <div class="inv-title">
+                  <div class="inv-logo">PW</div>
+                  <div>
+                    <strong id="pFromName">PalmWeb</strong>
+                    <div class="inv-sub" id="pFromSub">Modern websites + tools</div>
+                  </div>
+                </div>
+                <div class="inv-sub" id="pFromBlock" style="white-space:pre-line;margin-top:10px;"></div>
+              </div>
 
-        <div style="margin-top:14px;">
-          <table aria-label="Invoice line items">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th class="right">Qty</th>
-                <th class="right">Rate</th>
-                <th class="right">Line total</th>
-                <th class="cell-actions no-print"> </th>
-              </tr>
-            </thead>
-            <tbody id="linesBody"></tbody>
-          </table>
-        </div>
+              <div class="inv-meta">
+                <div style="font-size:20px;font-weight:950;letter-spacing:-.4px;">Invoice</div>
+                <div class="meta-line"><span>Invoice #</span><span id="pInvNumber">—</span></div>
+                <div class="meta-line"><span>Invoice date</span><span id="pInvDate">—</span></div>
+                <div class="meta-line"><span>Payment terms</span><span id="pTerms">—</span></div>
+                <div class="meta-line"><span>Due date</span><span id="pDueDate">—</span></div>
+              </div>
+            </div>
 
-        <div style="margin-top:14px; display:grid; gap:8px; max-width: 420px; margin-left:auto;">
-          <div style="display:flex; justify-content:space-between; gap:12px;">
-            <div class="mini">Subtotal</div>
-            <div id="pSubtotal" style="font-weight:950;">$0.00</div>
-          </div>
-          <div style="display:flex; justify-content:space-between; gap:12px;">
-            <div class="mini">Discount</div>
-            <div id="pDiscount" style="font-weight:950;">-$0.00</div>
-          </div>
-          <div style="display:flex; justify-content:space-between; gap:12px;">
-            <div class="mini">Tax</div>
-            <div id="pTax" style="font-weight:950;">$0.00</div>
-          </div>
-          <div style="display:flex; justify-content:space-between; gap:12px; border-top:1px solid rgba(255,255,255,.10); padding-top:10px;">
-            <div class="total">Total</div>
-            <div id="pTotal" class="total">$0.00</div>
-          </div>
-        </div>
+            <div class="inv-mid">
+              <div class="box">
+                <div class="box-title">Bill to</div>
+                <div class="box-body" id="pToBlock">—</div>
+              </div>
+              <div class="box">
+                <div class="box-title">Summary</div>
+                <div class="box-body" id="pSummary">
+                  Prepared by PalmWeb • Print to PDF or paper
+                </div>
+              </div>
+            </div>
 
-        <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,.10); padding-top:14px;">
-          <div class="mini">Notes</div>
-          <div id="pNotes" class="muted" style="white-space:pre-line;">—</div>
-        </div>
+            <div style="padding: 0 18px 8px;">
+              <table aria-label="Invoice line items">
+                <thead>
+                  <tr>
+                    <th style="width:44%;">Service</th>
+                    <th style="width:18%;">Qty</th>
+                    <th class="right" style="width:19%;">Rate</th>
+                    <th class="right" style="width:19%;">Line total</th>
+                  </tr>
+                </thead>
+                <tbody id="pTbody">
+                  <!-- injected -->
+                </tbody>
+              </table>
+            </div>
 
-        <div class="row no-print" style="margin-top:14px; justify-content:flex-end;">
-          <button class="btn btn-muted" id="btnCopyTotal" type="button">Copy Total</button>
-          <button class="btn btn-primary" id="btnPrint2" type="button">Print / Save PDF</button>
+            <div class="inv-bot">
+              <div class="notes">
+                <strong style="color:#111;">Notes</strong>
+                <div id="pNotes" style="margin-top:6px;">—</div>
+              </div>
+
+              <div class="totals" aria-label="Totals">
+                <div class="trow"><span>Subtotal</span><span id="pSubtotal">$0.00</span></div>
+                <div class="trow"><span>Discount</span><span id="pDiscount">$0.00</span></div>
+                <div class="trow"><span>Tax</span><span id="pTax">$0.00</span></div>
+                <div class="grand"><span>Total</span><span id="pTotal">$0.00</span></div>
+              </div>
+            </div>
+
+            <div style="padding: 0 18px 18px;">
+              <div class="box" style="background:#fff;">
+                <div class="box-title">Payment</div>
+                <div class="box-body" id="pPayment">
+                  Payment due by the due date shown above.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tinybar no-print">
+            <button class="btn btn-outline btn-small" id="exportBtn" type="button">Export JSON</button>
+            <button class="btn btn-primary btn-small" id="printBtn2" type="button">Print Invoice</button>
+          </div>
+
+          <div class="muted no-print">
+            Print tip: Use “Save as PDF” for a clean shareable invoice.
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 
   <script>
-    // --- Data (edit these to match your real offerings) ---
-    const SERVICES = [
-      { id:"web-landing", name:"Landing Page Build", rate: 750, note:"Single-page marketing site" },
-      { id:"web-multi", name:"Multi-page Website", rate: 1800, note:"3–5 pages, responsive" },
-      { id:"seo", name:"SEO Setup + Indexing", rate: 350, note:"On-page + Search Console" },
-      { id:"hosting", name:"Hosting + DNS Setup", rate: 120, note:"Annual setup" },
-      { id:"automation", name:"Automation / Workflow Tool", rate: 900, note:"Custom internal tool/plugin" },
-      { id:"maintenance", name:"Monthly Maintenance", rate: 150, note:"Updates + small edits" }
-    ];
-
-    // --- State ---
-    const state = {
-      lines: []
-    };
-
-    // --- Helpers ---
+    // ---------- Helpers ----------
     const $ = (id) => document.getElementById(id);
-    const money = (n) => {
-      const v = Number(n || 0);
-      return v.toLocaleString(undefined, { style:"currency", currency:"USD" });
-    };
-    const clampNum = (n) => (Number.isFinite(n) ? n : 0);
+
+    function pad2(n){ return String(n).padStart(2, "0"); }
 
     function todayISO(){
       const d = new Date();
-      const off = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - off*60000);
-      return local.toISOString().slice(0,10);
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
     }
 
-    function addDays(dateISO, days){
-      if(!dateISO) return "";
-      const d = new Date(dateISO + "T00:00:00");
-      d.setDate(d.getDate() + days);
-      const off = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - off*60000);
-      return local.toISOString().slice(0,10);
+    function addDaysISO(iso, days){
+      const d = new Date(iso + "T00:00:00");
+      d.setDate(d.getDate() + Number(days || 0));
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
     }
 
-    function calcDueDate(){
-      const invDate = $("invDate").value;
-      const terms = $("terms").value;
-      if(!invDate) return;
-
-      let days = 0;
-      if(terms === "net7") days = 7;
-      if(terms === "net15") days = 15;
-      if(terms === "net30") days = 30;
-      $("dueDate").value = addDays(invDate, days);
+    function fmtDate(iso){
+      if(!iso) return "—";
+      const d = new Date(iso + "T00:00:00");
+      return `${pad2(d.getMonth()+1)}/${pad2(d.getDate())}/${d.getFullYear()}`;
     }
 
-    function computeTotals(){
-      const subtotal = state.lines.reduce((sum, l) => sum + (l.qty * l.rate), 0);
-
-      const discountVal = clampNum(parseFloat($("discountVal").value));
-      const discountType = $("discountType").value;
-      let discount = 0;
-
-      if(discountType === "percent"){
-        discount = subtotal * (discountVal / 100);
-      } else {
-        discount = discountVal;
-      }
-      discount = Math.min(discount, subtotal);
-
-      const taxable = Math.max(0, subtotal - discount);
-      const taxRate = clampNum(parseFloat($("taxRate").value));
-      const tax = taxable * (taxRate / 100);
-
-      const total = taxable + tax;
-
-      return { subtotal, discount, tax, total };
+    function money(n){
+      const v = Number(n || 0);
+      return v.toLocaleString(undefined, { style:"currency", currency:"USD" });
     }
 
-    function renderLines(){
-      const body = $("linesBody");
-      body.innerHTML = "";
+    function cleanText(v){
+      return String(v || "").trim();
+    }
 
-      if(state.lines.length === 0){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td colspan="5" style="padding:14px;">
-            <div style="font-weight:950;">No line items yet</div>
-            <div class="mini">Use the service dropdown on the left to add items.</div>
-          </td>
+    // ---------- Service catalog ----------
+    const SERVICES = [
+      { name:"Website Design (Landing Page)", rate: 850, desc:"Modern single-page site with contact + sections" },
+      { name:"Website Build (5 pages)", rate: 2200, desc:"Multi-page site build with responsive layout" },
+      { name:"Tool / Plugin Prototype", rate: 1200, desc:"Front-end tool demo (no backend) like this invoice" },
+      { name:"SEO Setup + Analytics", rate: 450, desc:"Basic SEO, Search Console, Analytics tracking" },
+      { name:"Content Refresh", rate: 300, desc:"Copy polish + layout tweaks + CTA improvements" },
+      { name:"Maintenance (Monthly)", rate: 150, desc:"Updates, small fixes, and uptime checks" },
+      { name:"Custom (enter manually)", rate: null, desc:"" }
+    ];
+
+    // ---------- State ----------
+    let items = [];
+
+    function defaultInvoiceNumber(){
+      // Simple nice-looking demo number
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = pad2(d.getMonth()+1);
+      const day = pad2(d.getDate());
+      const rand = Math.floor(100 + Math.random()*900);
+      return `INV-${y}${m}${day}-${rand}`;
+    }
+
+    function seed(){
+      $("invNumber").value = defaultInvoiceNumber();
+      $("invDate").value = todayISO();
+      $("terms").value = "15";
+      $("dueDate").value = addDaysISO($("invDate").value, $("terms").value);
+
+      $("discountValue").value = "0";
+      $("discountType").value = "amount";
+      $("taxRate").value = "0";
+
+      $("fromBlock").value = "PalmWeb\nProvidence, RI\n(401) 555-0000 • hello@palmweb.net";
+      $("toBlock").value = "Company / Person name\nStreet\nCity, ST ZIP\nclient@email.com";
+      $("notes").value = "Thank you for your business.";
+
+      items = [
+        { serviceIndex: 0, customName:"", customDesc:"", qty: 1, rate: SERVICES[0].rate },
+        { serviceIndex: 2, customName:"", customDesc:"", qty: 1, rate: SERVICES[2].rate },
+      ];
+      renderItems();
+      recalc();
+    }
+
+    // ---------- Line items UI ----------
+    function serviceOptionsHTML(selectedIndex){
+      return SERVICES.map((s, idx) => {
+        const sel = (idx === selectedIndex) ? "selected" : "";
+        return `<option value="${idx}" ${sel}>${s.name}</option>`;
+      }).join("");
+    }
+
+    function renderItems(){
+      const wrap = $("items");
+      wrap.innerHTML = items.map((it, i) => {
+        const isCustom = Number(it.serviceIndex) === (SERVICES.length - 1);
+        const service = SERVICES[Number(it.serviceIndex)] || SERVICES[0];
+
+        const nameVal = isCustom ? (it.customName || "") : "";
+        const descVal = isCustom ? (it.customDesc || "") : "";
+
+        return `
+          <div class="li-row" data-i="${i}">
+            <div class="cell">
+              <span class="mini-label">Service</span>
+              <select data-field="serviceIndex">
+                ${serviceOptionsHTML(Number(it.serviceIndex))}
+              </select>
+              ${isCustom ? `
+                <div style="margin-top:8px;">
+                  <span class="mini-label">Custom name</span>
+                  <input data-field="customName" placeholder="e.g., Brand refresh" value="${escapeHtml(nameVal)}" />
+                </div>
+                <div style="margin-top:8px;">
+                  <span class="mini-label">Custom description</span>
+                  <input data-field="customDesc" placeholder="Short description" value="${escapeHtml(descVal)}" />
+                </div>
+              ` : `
+                <div class="muted" style="margin-top:8px;">
+                  ${escapeHtml(service.desc || "")}
+                </div>
+              `}
+            </div>
+
+            <div class="cell">
+              <span class="mini-label">Details (optional)</span>
+              <input data-field="details" placeholder="e.g., 2 revisions" value="${escapeHtml(it.details || "")}" />
+            </div>
+
+            <div class="cell">
+              <span class="mini-label">Qty</span>
+              <input data-field="qty" type="number" min="0" step="1" value="${Number(it.qty || 0)}" />
+            </div>
+
+            <div class="cell">
+              <span class="mini-label">Rate</span>
+              <input data-field="rate" type="number" min="0" step="0.01" value="${Number(it.rate || 0)}" />
+            </div>
+
+            <div class="cell">
+              <span class="mini-label">Line total</span>
+              <input value="${money(Number(it.qty||0) * Number(it.rate||0))}" disabled />
+            </div>
+
+            <div class="cell" style="align-items:flex-end;">
+              <button class="btn btn-outline btn-small" data-action="dup" type="button" title="Duplicate">⎘</button>
+              <button class="btn btn-danger btn-small" data-action="del" type="button" title="Remove">✕</button>
+            </div>
+          </div>
         `;
-        body.appendChild(tr);
-        return;
-      }
+      }).join("");
 
-      state.lines.forEach((l, idx) => {
-        const tr = document.createElement("tr");
+      wrap.querySelectorAll(".li-row").forEach(row => {
+        const idx = Number(row.getAttribute("data-i"));
+        row.addEventListener("input", (e) => {
+          const el = e.target;
+          if(!el || !el.dataset) return;
+          const field = el.dataset.field;
+          if(!field) return;
 
-        tr.innerHTML = `
-          <td>
-            <div style="font-weight:950;">${escapeHtml(l.name)}</div>
-            <div class="mini">${escapeHtml(l.note || "")}</div>
-          </td>
-          <td class="right">
-            <input class="input" style="width:84px;" type="number" min="0" step="1" value="${l.qty}" data-qty="${idx}" />
-          </td>
-          <td class="right">
-            <input class="input" style="width:110px;" type="number" min="0" step="0.01" value="${l.rate}" data-rate="${idx}" />
-          </td>
-          <td class="right" style="font-weight:950;">${money(l.qty * l.rate)}</td>
-          <td class="cell-actions no-print">
-            <button class="btn btn-danger" type="button" data-remove="${idx}" style="padding:8px 10px;">Remove</button>
-          </td>
-        `;
+          if(field === "serviceIndex"){
+            items[idx].serviceIndex = Number(el.value);
+            const isCustom = items[idx].serviceIndex === (SERVICES.length - 1);
+            if(!isCustom){
+              const s = SERVICES[items[idx].serviceIndex];
+              items[idx].rate = (s.rate != null) ? s.rate : Number(items[idx].rate || 0);
+              items[idx].customName = "";
+              items[idx].customDesc = "";
+            }
+            renderItems(); // re-render to show/hide custom fields
+            recalc();
+            return;
+          }
 
-        body.appendChild(tr);
-      });
+          if(field === "qty") items[idx].qty = Number(el.value || 0);
+          else if(field === "rate") items[idx].rate = Number(el.value || 0);
+          else items[idx][field] = el.value;
 
-      // bind qty/rate edits
-      body.querySelectorAll("[data-qty]").forEach(inp => {
-        inp.addEventListener("input", (e) => {
-          const i = Number(e.target.getAttribute("data-qty"));
-          state.lines[i].qty = Math.max(0, parseInt(e.target.value || "0", 10));
-          sync();
+          // Update line total input display without full rerender
+          const lineTotalInput = row.querySelector('input[disabled]');
+          if(lineTotalInput){
+            lineTotalInput.value = money(Number(items[idx].qty||0) * Number(items[idx].rate||0));
+          }
+          recalc();
+        });
+
+        row.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-action]");
+          if(!btn) return;
+          const action = btn.dataset.action;
+
+          if(action === "del"){
+            items.splice(idx, 1);
+            if(items.length === 0) items.push({ serviceIndex: 0, customName:"", customDesc:"", qty: 1, rate: SERVICES[0].rate });
+            renderItems();
+            recalc();
+          }
+          if(action === "dup"){
+            const copy = JSON.parse(JSON.stringify(items[idx]));
+            items.splice(idx+1, 0, copy);
+            renderItems();
+            recalc();
+          }
         });
       });
-
-      body.querySelectorAll("[data-rate]").forEach(inp => {
-        inp.addEventListener("input", (e) => {
-          const i = Number(e.target.getAttribute("data-rate"));
-          state.lines[i].rate = Math.max(0, parseFloat(e.target.value || "0"));
-          sync();
-        });
-      });
-
-      body.querySelectorAll("[data-remove]").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const i = Number(e.target.getAttribute("data-remove"));
-          state.lines.splice(i, 1);
-          sync();
-        });
-      });
-    }
-
-    function renderPreview(){
-      $("pInvNumber").textContent = $("invNumber").value || "—";
-      $("pInvDate").textContent = $("invDate").value || "—";
-      $("pDueDate").textContent = $("dueDate").value || "—";
-
-      const termsLabel = {
-        due: "Due on receipt",
-        net7: "Net 7",
-        net15: "Net 15",
-        net30: "Net 30"
-      }[$("terms").value] || "—";
-      $("pTerms").textContent = termsLabel;
-
-      $("pBillTo").textContent = $("billTo").value || "—";
-      $("pClientEmail").textContent = $("clientEmail").value || "—";
-      $("pClientAddress").textContent = $("clientAddress").value || "—";
-      $("pNotes").textContent = $("notes").value || "—";
-
-      const { subtotal, discount, tax, total } = computeTotals();
-      $("pSubtotal").textContent = money(subtotal);
-      $("pDiscount").textContent = "-" + money(discount);
-      $("pTax").textContent = money(tax);
-      $("pTotal").textContent = money(total);
     }
 
     function escapeHtml(str){
-      return String(str ?? "")
+      return String(str || "")
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
         .replaceAll(">","&gt;")
@@ -587,211 +924,190 @@
         .replaceAll("'","&#039;");
     }
 
-    function sync(){
-      renderLines();
-      renderPreview();
-    }
+    // ---------- Calculations + Preview ----------
+    function recalc(){
+      const invNumber = cleanText($("invNumber").value);
+      const invDate = $("invDate").value;
+      const termsDays = Number($("terms").value || 0);
 
-    // --- Add line item flows ---
-    function populateServices(){
-      const sel = $("svcSelect");
-      sel.innerHTML = "";
-      SERVICES.forEach(s => {
-        const opt = document.createElement("option");
-        opt.value = s.id;
-        opt.textContent = `${s.name} — ${money(s.rate)}`;
-        sel.appendChild(opt);
-      });
-      // set rate from selected
-      const first = SERVICES[0];
-      if(first) $("svcRate").value = String(first.rate);
-    }
-
-    function onServiceChange(){
-      const id = $("svcSelect").value;
-      const svc = SERVICES.find(s => s.id === id);
-      if(!svc) return;
-      $("svcRate").value = String(svc.rate);
-      $("svcDesc").value = "";
-    }
-
-    function addSelectedService(){
-      const id = $("svcSelect").value;
-      const svc = SERVICES.find(s => s.id === id);
-      if(!svc) return;
-
-      const qty = Math.max(1, parseInt($("svcQty").value || "1", 10));
-      const rate = Math.max(0, parseFloat($("svcRate").value || String(svc.rate)));
-      const desc = ($("svcDesc").value || "").trim();
-
-      state.lines.push({
-        name: desc || svc.name,
-        note: svc.note || "",
-        qty,
-        rate
-      });
-
-      $("svcQty").value = "1";
-      $("svcDesc").value = "";
-      sync();
-    }
-
-    function addCustomItem(){
-      const name = prompt("Custom item name (e.g., 'Rush delivery'):");
-      if(!name) return;
-
-      const rateStr = prompt("Rate (number):", "100");
-      if(rateStr === null) return;
-      const rate = Math.max(0, parseFloat(rateStr || "0"));
-
-      const qtyStr = prompt("Quantity:", "1");
-      if(qtyStr === null) return;
-      const qty = Math.max(1, parseInt(qtyStr || "1", 10));
-
-      state.lines.push({ name, note:"Custom item", qty, rate });
-      sync();
-    }
-
-    // --- Persistence ---
-    const DRAFT_KEY = "palmweb_invoice_draft_v1";
-
-    function getDraft(){
-      try{
-        const raw = localStorage.getItem(DRAFT_KEY);
-        return raw ? JSON.parse(raw) : null;
-      }catch{
-        return null;
+      // due date auto (but allow manual edits after initial calc)
+      const autoDue = addDaysISO(invDate || todayISO(), termsDays);
+      if($("dueDate").dataset.userEdited !== "true"){
+        $("dueDate").value = autoDue;
       }
+
+      const dueDate = $("dueDate").value;
+      const termsLabel = termsDays === 0 ? "Due on receipt" : `Net ${termsDays}`;
+
+      const discountValue = Number($("discountValue").value || 0);
+      const discountType = $("discountType").value;
+      const taxRate = Number($("taxRate").value || 0);
+
+      // subtotal
+      const subtotal = items.reduce((sum, it) => sum + (Number(it.qty||0) * Number(it.rate||0)), 0);
+
+      // discount
+      let discount = 0;
+      if(discountType === "percent"){
+        discount = subtotal * (discountValue / 100);
+      }else{
+        discount = discountValue;
+      }
+      if(discount < 0) discount = 0;
+      if(discount > subtotal) discount = subtotal;
+
+      const taxable = Math.max(0, subtotal - discount);
+      const tax = taxable * (taxRate / 100);
+      const total = taxable + tax;
+
+      // Preview blocks
+      const fromBlock = cleanText($("fromBlock").value);
+      const toBlock = cleanText($("toBlock").value);
+      const notes = cleanText($("notes").value);
+
+      // From “name” = first line
+      const fromLines = fromBlock ? fromBlock.split("\n") : [];
+      const fromName = fromLines[0] ? fromLines[0].trim() : "PalmWeb";
+
+      $("pFromName").textContent = fromName || "PalmWeb";
+      $("pFromSub").textContent = "Invoice";
+      $("pFromBlock").textContent = fromBlock || "—";
+      $("pToBlock").textContent = toBlock || "—";
+
+      $("pInvNumber").textContent = invNumber || "—";
+      $("pInvDate").textContent = fmtDate(invDate);
+      $("pTerms").textContent = termsLabel;
+      $("pDueDate").textContent = fmtDate(dueDate);
+
+      // Line items table
+      const tbody = $("pTbody");
+      tbody.innerHTML = items.map(it => {
+        const idx = Number(it.serviceIndex || 0);
+        const service = SERVICES[idx] || SERVICES[0];
+        const isCustom = idx === (SERVICES.length - 1);
+
+        const serviceName = isCustom ? (cleanText(it.customName) || "Custom service") : service.name;
+        const detail = cleanText(it.details);
+        const desc = isCustom ? cleanText(it.customDesc) : (service.desc || "");
+        const descLine = [detail, desc].filter(Boolean).join(" • ");
+
+        const qty = Number(it.qty || 0);
+        const rate = Number(it.rate || 0);
+        const lineTotal = qty * rate;
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight:950;color:#111;">${escapeHtml(serviceName)}</div>
+              ${descLine ? `<div class="desc">${escapeHtml(descLine)}</div>` : ""}
+            </td>
+            <td>${qty}</td>
+            <td class="right">${money(rate)}</td>
+            <td class="right">${money(lineTotal)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Totals
+      $("pSubtotal").textContent = money(subtotal);
+      $("pDiscount").textContent = (discount > 0) ? `- ${money(discount)}` : money(0);
+      $("pTax").textContent = money(tax);
+      $("pTotal").textContent = money(total);
+
+      $("pNotes").textContent = notes || "—";
+
+      $("pPayment").textContent =
+        termsDays === 0
+          ? "Payment is due upon receipt."
+          : `Payment is due within ${termsDays} days (by ${fmtDate(dueDate)}).`;
     }
 
-    function saveDraft(){
-      const payload = {
-        fields: {
-          invNumber: $("invNumber").value,
-          invDate: $("invDate").value,
-          dueDate: $("dueDate").value,
-          terms: $("terms").value,
-          billTo: $("billTo").value,
-          clientEmail: $("clientEmail").value,
-          clientAddress: $("clientAddress").value,
-          notes: $("notes").value,
-          discountVal: $("discountVal").value,
-          discountType: $("discountType").value,
-          taxRate: $("taxRate").value,
+    // ---------- Events ----------
+    $("addItemBtn").addEventListener("click", () => {
+      items.push({
+        serviceIndex: 0,
+        customName:"",
+        customDesc:"",
+        details:"",
+        qty: 1,
+        rate: SERVICES[0].rate
+      });
+      renderItems();
+      recalc();
+    });
+
+    $("invNumber").addEventListener("input", recalc);
+    $("invDate").addEventListener("input", () => {
+      $("dueDate").dataset.userEdited = "false";
+      recalc();
+    });
+
+    $("terms").addEventListener("change", () => {
+      $("dueDate").dataset.userEdited = "false";
+      recalc();
+    });
+
+    $("dueDate").addEventListener("input", () => {
+      $("dueDate").dataset.userEdited = "true";
+      recalc();
+    });
+
+    $("discountValue").addEventListener("input", recalc);
+    $("discountType").addEventListener("change", recalc);
+    $("taxRate").addEventListener("input", recalc);
+
+    $("fromBlock").addEventListener("input", recalc);
+    $("toBlock").addEventListener("input", recalc);
+    $("notes").addEventListener("input", recalc);
+
+    function doPrint(){
+      // Ensure latest values are pushed to preview before printing
+      recalc();
+      window.print();
+    }
+
+    $("printBtn").addEventListener("click", doPrint);
+    $("printBtn2").addEventListener("click", doPrint);
+    $("printBtnTop").addEventListener("click", doPrint);
+
+    $("resetBtn").addEventListener("click", () => {
+      if(confirm("Reset the invoice to the default sample?")){
+        $("dueDate").dataset.userEdited = "false";
+        seed();
+      }
+    });
+
+    $("exportBtn").addEventListener("click", () => {
+      const data = {
+        invoiceNumber: cleanText($("invNumber").value),
+        invoiceDate: $("invDate").value,
+        termsDays: Number($("terms").value || 0),
+        dueDate: $("dueDate").value,
+        from: $("fromBlock").value,
+        billTo: $("toBlock").value,
+        notes: $("notes").value,
+        discount: {
+          value: Number($("discountValue").value || 0),
+          type: $("discountType").value
         },
-        lines: state.lines
+        taxRate: Number($("taxRate").value || 0),
+        items: items
       };
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
-      alert("Draft saved (this browser only).");
-    }
 
-    function loadDraft(d){
-      if(!d) return;
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = (data.invoiceNumber || "invoice") + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
 
-      const f = d.fields || {};
-      $("invNumber").value = f.invNumber || "";
-      $("invDate").value = f.invDate || todayISO();
-      $("terms").value = f.terms || "net15";
-      calcDueDate();
-      $("dueDate").value = f.dueDate || $("dueDate").value;
-
-      $("billTo").value = f.billTo || "";
-      $("clientEmail").value = f.clientEmail || "";
-      $("clientAddress").value = f.clientAddress || "";
-      $("notes").value = f.notes || "";
-
-      $("discountVal").value = f.discountVal ?? "0";
-      $("discountType").value = f.discountType || "amount";
-      $("taxRate").value = f.taxRate ?? "0";
-
-      state.lines = Array.isArray(d.lines) ? d.lines : [];
-      sync();
-    }
-
-    function clearAll(){
-      if(!confirm("Clear invoice and line items?")) return;
-      state.lines = [];
-      $("invNumber").value = "";
-      $("billTo").value = "";
-      $("clientEmail").value = "";
-      $("clientAddress").value = "";
-      $("notes").value = "";
-      $("discountVal").value = "0";
-      $("discountType").value = "amount";
-      $("taxRate").value = "0";
-      $("terms").value = "net15";
-      $("invDate").value = todayISO();
-      calcDueDate();
-      sync();
-    }
-
-    function loadSample(){
-      const sample = {
-        fields: {
-          invNumber: "INV-1042",
-          invDate: todayISO(),
-          terms: "net15",
-          billTo: "Acme Home Services",
-          clientEmail: "accounts@acmehomeservices.com",
-          clientAddress: "88 Harbor Ave\nProvidence, RI 02903",
-          notes: "Thanks for the project — let us know if you'd like ongoing monthly maintenance.\nPayment via ACH or card upon request.",
-          discountVal: "0",
-          discountType: "amount",
-          taxRate: "0"
-        },
-        lines: [
-          { name:"Multi-page Website", note:"3–5 pages, responsive", qty: 1, rate: 1800 },
-          { name:"SEO Setup + Indexing", note:"On-page + Search Console", qty: 1, rate: 350 },
-          { name:"Hosting + DNS Setup", note:"Annual setup", qty: 1, rate: 120 }
-        ]
-      };
-      loadDraft(sample);
-    }
-
-    function copyTotal(){
-      const { total } = computeTotals();
-      navigator.clipboard?.writeText(money(total)).then(
-        () => alert("Total copied to clipboard."),
-        () => alert("Couldn’t copy. Your browser may block clipboard access.")
-      );
-    }
-
-    // --- Init ---
-    function bind(){
-      $("svcSelect").addEventListener("change", onServiceChange);
-      $("btnAddLine").addEventListener("click", addSelectedService);
-      $("btnAddCustom").addEventListener("click", addCustomItem);
-
-      ["invNumber","invDate","billTo","clientEmail","clientAddress","notes","discountVal","discountType","taxRate","terms","dueDate"]
-        .forEach(id => $(id).addEventListener("input", () => {
-          if(id === "invDate" || id === "terms") calcDueDate();
-          sync();
-        }));
-
-      $("btnPrint").addEventListener("click", () => window.print());
-      $("btnPrint2").addEventListener("click", () => window.print());
-      $("btnSaveDraft").addEventListener("click", saveDraft);
-      $("btnLoadSample").addEventListener("click", loadSample);
-      $("btnClear").addEventListener("click", clearAll);
-      $("btnCopyTotal").addEventListener("click", copyTotal);
-    }
-
-    // Default values
-    populateServices();
-    bind();
-
-    $("invDate").value = todayISO();
-    $("terms").value = "net15";
-    calcDueDate();
-
-    // Auto-load existing draft if present
-    const existing = getDraft();
-    if(existing){
-      loadDraft(existing);
-    }else{
-      sync();
-    }
+    // ---------- Init ----------
+    $("year").textContent = new Date().getFullYear();
+    seed();
   </script>
 </body>
 </html>
-
