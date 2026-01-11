@@ -42,10 +42,7 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .nav{
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
-      padding: 14px 0;
-    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
     .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
     .brand strong{font-weight:950}
     .badge{
@@ -67,47 +64,35 @@
     .btn-outline{background: rgba(255,255,255,.78); border:1px solid var(--border)}
     .btn-outline:hover{background:#fff}
 
-    .hero{
-      padding: 28px 0 24px;
-    }
-
+    .hero{padding: 24px 0 18px}
     .hero-wrap{
       border-radius: 28px;
       border: 1px solid rgba(0,0,0,.10);
       box-shadow: var(--shadow);
       overflow:hidden;
-      background:
-        radial-gradient(1200px 600px at 10% 0%, rgba(180,83,9,.10), transparent 60%),
-        linear-gradient(90deg, rgba(17,24,39,.06), rgba(255,255,255,.15));
-      position:relative;
+      background: rgba(255,255,255,.60);
     }
     .hero-inner{
       display:grid;
       grid-template-columns: 1.05fr .95fr;
       gap: 14px;
-      padding: 22px;
+      padding: 18px;
+      align-items: stretch;
     }
+
     .hero-photo{
       border-radius: 22px;
       border:1px solid rgba(0,0,0,.10);
-      background:
-        linear-gradient(135deg, rgba(17,24,39,.08), rgba(180,83,9,.10)),
-        radial-gradient(700px 320px at 30% 20%, rgba(255,255,255,.40), transparent 60%);
-      min-height: 280px;
       box-shadow: var(--shadow2);
-      position:relative;
       overflow:hidden;
-    }
-    .hero-photo::after{
-      content:"";
-      position:absolute; inset:0;
+      min-height: 340px;
       background:
-        radial-gradient(360px 220px at 30% 20%, rgba(255,255,255,.55), transparent 60%),
-        radial-gradient(420px 260px at 80% 0%, rgba(180,83,9,.18), transparent 65%);
-      opacity:.85;
+        linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.08)),
+        url("https://source.unsplash.com/1600x1000/?restaurant,dining") center/cover no-repeat;
+      position:relative;
     }
     .hero-photo .label{
-      position:absolute; left: 16px; bottom: 16px; z-index:2;
+      position:absolute; left: 16px; bottom: 16px;
       background: rgba(255,255,255,.86);
       border:1px solid rgba(0,0,0,.10);
       border-radius: 999px;
@@ -135,13 +120,26 @@
       color: rgba(27,27,27,.82);
     }
 
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .g{
+      border-radius: 18px;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow: var(--shadow2);
+      min-height: 120px;
+      background-size: cover;
+      background-position: center;
+    }
+
     .section{padding: 44px 0}
     .section h2{margin:0;font-size: 28px}
     .section p.sub{margin:8px 0 0; color: rgba(27,27,27,.68); font-weight: 750}
 
-    .menu-tabs{
-      display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px;
-    }
+    .menu-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px}
     .tab{
       border: 1px solid rgba(0,0,0,.12);
       background: rgba(255,255,255,.70);
@@ -150,18 +148,9 @@
       font-weight: 950;
       cursor:pointer;
     }
-    .tab.active{
-      background: var(--brand);
-      color:#fff;
-      border-color: transparent;
-    }
+    .tab.active{background: var(--brand); color:#fff; border-color: transparent}
 
-    .menu-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
+    .menu-grid{display:grid;grid-template-columns: 1fr 1fr;gap: 12px;margin-top: 14px}
     .menu-card{
       background:#fff;
       border: 1px solid rgba(0,0,0,.10);
@@ -169,19 +158,30 @@
       box-shadow: var(--shadow2);
       padding: 16px;
     }
-    .menu-card h3{margin:0 0 8px;font-size: 16px;font-weight: 950}
-    .item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(0,0,0,.08)}
+    .menu-card h3{margin:0 0 10px;font-size: 16px;font-weight: 950}
+
+    .item{
+      display:grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 12px;
+      align-items:center;
+      padding: 10px 0;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
     .item:first-of-type{border-top:0;padding-top:0}
+    .thumb{
+      width: 64px; height: 48px;
+      border-radius: 14px;
+      border:1px solid rgba(0,0,0,.10);
+      background-size: cover;
+      background-position:center;
+      box-shadow: var(--shadow2);
+    }
     .item strong{font-weight:950}
     .item span{color: rgba(27,27,27,.70); font-weight: 750}
     .price{font-weight: 950}
 
-    .split{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
+    .split{display:grid;grid-template-columns: 1fr 1fr;gap: 12px;margin-top: 14px}
     .panel{
       background: rgba(255,255,255,.78);
       border: 1px solid rgba(0,0,0,.10);
@@ -247,6 +247,8 @@
       .hero-inner{grid-template-columns: 1fr}
       .menu-grid{grid-template-columns: 1fr}
       .split{grid-template-columns: 1fr}
+      .gallery{grid-template-columns: 1fr 1fr}
+      .hero-photo{min-height: 260px}
     }
   </style>
 </head>
@@ -271,10 +273,7 @@
         <div class="hero-inner">
           <section>
             <h1>Seasonal plates, craft cocktails, and a warm neighborhood room.</h1>
-            <p>
-              A modern American kitchen focused on locally sourced ingredients, weekend brunch,
-              and private dining for special nights.
-            </p>
+            <p>Locally sourced ingredients, weekend brunch, and private dining for special nights.</p>
 
             <div class="row">
               <a class="btn btn-primary" href="#menu">Explore Menu</a>
@@ -288,10 +287,17 @@
               <span class="chip">Private events</span>
             </div>
 
+            <div class="gallery" aria-label="Food gallery">
+              <div class="g" style="background-image:url('https://source.unsplash.com/800x600/?food,starter');"></div>
+              <div class="g" style="background-image:url('https://source.unsplash.com/800x600/?pasta,restaurant');"></div>
+              <div class="g" style="background-image:url('https://source.unsplash.com/800x600/?cocktail,bar');"></div>
+              <div class="g" style="background-image:url('https://source.unsplash.com/800x600/?dessert,cake');"></div>
+            </div>
+
             <p class="mini" style="margin-top:12px;">Demo note: Sample restaurant site built by PalmWeb.</p>
           </section>
 
-          <aside class="hero-photo" aria-label="Restaurant photo placeholder">
+          <aside class="hero-photo" aria-label="Restaurant dining photo">
             <div class="label">Tonight’s mood: warm + modern</div>
           </aside>
         </div>
@@ -302,7 +308,7 @@
   <section class="section" id="menu">
     <div class="container">
       <h2>Menu</h2>
-      <p class="sub">This layout feels totally different: editorial typography + “tabs” + item pricing.</p>
+      <p class="sub">Editorial typography + tabs + real thumbnails.</p>
 
       <div class="menu-tabs" role="tablist" aria-label="Menu categories">
         <button class="tab active" type="button" data-tab="starters">Starters</button>
@@ -314,30 +320,78 @@
       <div class="menu-grid">
         <div class="menu-card" data-panel="starters">
           <h3 class="serif">Starters</h3>
-          <div class="item"><div><strong>Burrata + tomatoes</strong><br><span>Basil oil, sea salt</span></div><div class="price">$14</div></div>
-          <div class="item"><div><strong>Charred shishitos</strong><br><span>Lemon, flaky salt</span></div><div class="price">$11</div></div>
-          <div class="item"><div><strong>Crispy calamari</strong><br><span>Chili-lime aioli</span></div><div class="price">$15</div></div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?burrata');"></div>
+            <div><strong>Burrata + tomatoes</strong><br><span>Basil oil, sea salt</span></div>
+            <div class="price">$14</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?peppers,food');"></div>
+            <div><strong>Charred shishitos</strong><br><span>Lemon, flaky salt</span></div>
+            <div class="price">$11</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?calamari');"></div>
+            <div><strong>Crispy calamari</strong><br><span>Chili-lime aioli</span></div>
+            <div class="price">$15</div>
+          </div>
         </div>
 
         <div class="menu-card" data-panel="mains" style="display:none;">
           <h3 class="serif">Mains</h3>
-          <div class="item"><div><strong>Steak frites</strong><br><span>Herb butter, fries</span></div><div class="price">$32</div></div>
-          <div class="item"><div><strong>Pan-seared salmon</strong><br><span>Seasonal veg, lemon</span></div><div class="price">$28</div></div>
-          <div class="item"><div><strong>Veggie bowl</strong><br><span>Grains, greens, tahini</span></div><div class="price">$19</div></div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?steak,frites');"></div>
+            <div><strong>Steak frites</strong><br><span>Herb butter, fries</span></div>
+            <div class="price">$32</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?salmon,plate');"></div>
+            <div><strong>Pan-seared salmon</strong><br><span>Seasonal veg, lemon</span></div>
+            <div class="price">$28</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?grain,bowl');"></div>
+            <div><strong>Veggie bowl</strong><br><span>Grains, greens, tahini</span></div>
+            <div class="price">$19</div>
+          </div>
         </div>
 
         <div class="menu-card" data-panel="cocktails" style="display:none;">
           <h3 class="serif">Cocktails</h3>
-          <div class="item"><div><strong>Espresso martini</strong><br><span>Vanilla, cold brew</span></div><div class="price">$15</div></div>
-          <div class="item"><div><strong>Paloma</strong><br><span>Grapefruit, lime</span></div><div class="price">$14</div></div>
-          <div class="item"><div><strong>Seasonal spritz</strong><br><span>Rotating feature</span></div><div class="price">$14</div></div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?espresso,martini');"></div>
+            <div><strong>Espresso martini</strong><br><span>Vanilla, cold brew</span></div>
+            <div class="price">$15</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?paloma,cocktail');"></div>
+            <div><strong>Paloma</strong><br><span>Grapefruit, lime</span></div>
+            <div class="price">$14</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?spritz,drink');"></div>
+            <div><strong>Seasonal spritz</strong><br><span>Rotating feature</span></div>
+            <div class="price">$14</div>
+          </div>
         </div>
 
         <div class="menu-card" data-panel="dessert" style="display:none;">
           <h3 class="serif">Dessert</h3>
-          <div class="item"><div><strong>Olive oil cake</strong><br><span>Citrus, whipped cream</span></div><div class="price">$10</div></div>
-          <div class="item"><div><strong>Warm brownie</strong><br><span>Vanilla gelato</span></div><div class="price">$11</div></div>
-          <div class="item"><div><strong>Seasonal sorbet</strong><br><span>Ask server</span></div><div class="price">$9</div></div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?cake,dessert');"></div>
+            <div><strong>Olive oil cake</strong><br><span>Citrus, whipped cream</span></div>
+            <div class="price">$10</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?brownie');"></div>
+            <div><strong>Warm brownie</strong><br><span>Vanilla gelato</span></div>
+            <div class="price">$11</div>
+          </div>
+          <div class="item">
+            <div class="thumb" style="background-image:url('https://source.unsplash.com/400x300/?sorbet');"></div>
+            <div><strong>Seasonal sorbet</strong><br><span>Ask server</span></div>
+            <div class="price">$9</div>
+          </div>
         </div>
 
         <div class="menu-card">
@@ -359,7 +413,7 @@
   <section class="section" id="visit" style="background: rgba(255,255,255,.55); border-top: 1px solid rgba(0,0,0,.10); border-bottom:1px solid rgba(0,0,0,.10);">
     <div class="container">
       <h2>Visit</h2>
-      <p class="sub">Clean “visit” block with hours + a quick inquiry form.</p>
+      <p class="sub">Hours + quick inquiry form.</p>
 
       <div class="split">
         <div class="panel">
@@ -409,13 +463,12 @@
     <div class="container">© <span id="year"></span> Harbor Street Kitchen (Demo). Built by PalmWeb.</div>
   </footer>
 
-  <!-- Reservation modal -->
   <div class="modal" id="reserveModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reserveTitle">
       <div class="modal-head">
         <div>
           <div class="serif" id="reserveTitle" style="font-weight:950;font-size:18px;">Reservation Request</div>
-          <div class="mini">This demo uses a simple FormSubmit request (no booking backend).</div>
+          <div class="mini">This demo uses FormSubmit (no booking backend).</div>
         </div>
         <button class="close" type="button" id="closeModal">✕</button>
       </div>
@@ -431,7 +484,7 @@
           <label>Email <input name="Email" type="email" /></label>
           <label>Party size <input name="Party Size" placeholder="2" /></label>
           <label style="grid-column:1/-1;">Requested date/time <input name="Requested Date/Time" placeholder="Fri 7:30pm" /></label>
-          <label style="grid-column:1/-1;">Notes <textarea name="Details" placeholder="High chair, allergies, celebration..."></textarea></label>
+          <label style="grid-column:1/-1;">Notes <textarea name="Details" placeholder="Allergies, celebration..."></textarea></label>
         </div>
 
         <div class="row">
@@ -448,7 +501,6 @@
     // Menu tabs
     const tabs = Array.from(document.querySelectorAll(".tab"));
     const panels = Array.from(document.querySelectorAll("[data-panel]"));
-
     function activate(name){
       tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
       panels.forEach(p => p.style.display = (p.dataset.panel === name) ? "" : "none");
@@ -470,7 +522,6 @@
       modal.setAttribute("aria-hidden","true");
       document.body.style.overflow = "";
     }
-
     openBtns.forEach(b => b.addEventListener("click", openModal));
     closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
