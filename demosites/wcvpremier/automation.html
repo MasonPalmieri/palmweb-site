@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WCV Premier LLC — Automated Intake (Demo)</title>
-  <meta name="description" content="Demo automation intake: capture property details, qualify timeline, generate next steps and follow-up draft, export CRM-ready JSON." />
+  <meta name="description" content="Demo automation: lead intake → qualification → next steps + follow-up draft + CRM export JSON." />
   <meta name="theme-color" content="#fbfaf6" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
@@ -37,11 +37,11 @@
   </header>
 
   <main class="container hero">
-    <div class="kicker"><span class="dot"></span> Demo automation • Front-end only</div>
+    <div class="kicker"><span class="dot"></span> Demo automation • Static site (no backend)</div>
     <h1 class="page-title">Automated Intake</h1>
     <p class="lead">
-      This demo shows how WCV can reduce back-and-forth: guided intake → qualification → next steps + follow-up draft.
-      Submissions can be exported as JSON (CRM-ready) and auto-filled into the Contact page.
+      A common “tedious task” in this industry is chasing details, rewriting the same follow-ups,
+      and manually routing leads. This demo simulates automating that: intake → qualification → next steps + email + call script.
     </p>
 
     <div class="automation-layout">
@@ -49,7 +49,7 @@
         <div class="wizard-head">
           <div>
             <div class="section-title">Guided intake</div>
-            <div class="wizard-sub">3 short steps. Takes ~60 seconds.</div>
+            <div class="wizard-sub">3 steps • Generates next steps + drafts automatically</div>
           </div>
           <div class="stepper" aria-label="Steps">
             <div class="step active" data-step-dot="1">1</div>
@@ -84,7 +84,7 @@
             </div>
 
             <div class="wizard-actions">
-              <span class="hintline">Next: timeline + property details</span>
+              <span class="hintline">Next: details that usually take multiple follow-ups</span>
               <button class="btn btn-primary" type="button" id="next1">Continue</button>
             </div>
           </div>
@@ -129,15 +129,33 @@
                 </select>
               </label>
 
+              <label class="field">
+                <span>Photos available?</span>
+                <select id="photos">
+                  <option value="yes" selected>Yes</option>
+                  <option value="no">No</option>
+                  <option value="some">Some</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Any liens / legal complexity?</span>
+                <select id="legal">
+                  <option value="no" selected>No</option>
+                  <option value="yes">Yes</option>
+                  <option value="unsure">Not sure</option>
+                </select>
+              </label>
+
               <label class="field full">
                 <span>Notes (optional)</span>
-                <textarea id="notes" placeholder="Anything we should know (repairs, liens, access, etc.)"></textarea>
+                <textarea id="notes" placeholder="Repairs, access, probate, tenant status, etc."></textarea>
               </label>
             </div>
 
             <div class="wizard-actions">
               <button class="btn btn-outline" type="button" id="back2">Back</button>
-              <button class="btn btn-primary" type="button" id="next2">Generate Next Steps</button>
+              <button class="btn btn-primary" type="button" id="next2">Generate Automation Outputs</button>
             </div>
           </div>
 
@@ -145,37 +163,49 @@
           <div class="step-panel" data-step="3" hidden>
             <div class="result-grid">
               <div class="result-card">
-                <div class="result-title">Auto-generated next steps</div>
-                <ul class="checklist" id="nextSteps"></ul>
+                <div class="result-title">Lead qualification (auto)</div>
+                <div class="qual">
+                  <div class="qual-row">
+                    <span>Priority</span>
+                    <strong id="qPriority">—</strong>
+                  </div>
+                  <div class="qual-row">
+                    <span>Route to</span>
+                    <strong id="qRoute">—</strong>
+                  </div>
+                  <div class="qual-row">
+                    <span>Reason</span>
+                    <strong id="qReason">—</strong>
+                  </div>
+                </div>
                 <div class="mini-note">
-                  Demo automation: these steps are generated based on timeline/condition/occupancy.
+                  This simulates routing rules (e.g., tenant + legal → senior review).
                 </div>
               </div>
 
               <div class="result-card">
-                <div class="result-title">Estimated offer range (demo)</div>
-                <div class="offerbox">
-                  <div class="offerline">
-                    <span>Range</span>
-                    <strong id="offerRange">$—</strong>
-                  </div>
-                  <div class="offerline">
-                    <span>Close</span>
-                    <strong id="closeWindow">—</strong>
-                  </div>
-                </div>
-                <div class="mini-note">
-                  This is a placeholder heuristic for the demo. In a real automation, WCV could connect comps + internal rules.
-                </div>
+                <div class="result-title">Auto-generated next steps</div>
+                <ul class="checklist" id="nextSteps"></ul>
               </div>
 
               <div class="result-card full">
                 <div class="result-title">Follow-up email draft</div>
                 <textarea class="draft" id="emailDraft" readonly></textarea>
                 <div class="row">
-                  <button class="btn btn-outline" type="button" id="copyDraft">Copy Email</button>
-                  <button class="btn btn-outline" type="button" id="exportJson">Export JSON</button>
-                  <a class="btn btn-primary" href="contact.html" id="toContact">Open Contact (auto-filled)</a>
+                  <button class="btn btn-outline" type="button" id="copyEmail">Copy Email</button>
+                </div>
+              </div>
+
+              <div class="result-card full">
+                <div class="result-title">Call script (for first contact)</div>
+                <textarea class="draft" id="callScript" readonly></textarea>
+                <div class="row">
+                  <button class="btn btn-outline" type="button" id="copyScript">Copy Script</button>
+                  <button class="btn btn-outline" type="button" id="exportJson">Export CRM JSON</button>
+                  <a class="btn btn-primary" href="contact.html">Open Contact (auto-filled)</a>
+                </div>
+                <div class="mini-note">
+                  Export JSON simulates pushing to CRM / SharePoint list / Zapier / Power Automate.
                 </div>
               </div>
             </div>
@@ -191,28 +221,28 @@
       </section>
 
       <aside class="side card-soft" aria-label="Automation notes">
-        <div class="section-title">What this demonstrates</div>
+        <div class="section-title">Why this is a good demo</div>
 
         <div class="side-block">
-          <div class="side-title">1) Lead intake</div>
-          <div class="side-text">Collects the right info once, reducing follow-up cycles.</div>
+          <div class="side-title">Tedious task automated</div>
+          <div class="side-text">Stops repeated “Can you send photos / timeline / occupancy / liens?” follow-ups.</div>
         </div>
 
         <div class="side-block">
-          <div class="side-title">2) Routing rules</div>
-          <div class="side-text">Timeline + condition generate next steps and suggested close window.</div>
+          <div class="side-title">Consistent qualification</div>
+          <div class="side-text">Rules decide priority + routing instantly and consistently.</div>
         </div>
 
         <div class="side-block">
-          <div class="side-title">3) CRM-ready export</div>
-          <div class="side-text">Export JSON simulates pushing leads into HubSpot / Airtable / SharePoint / Zapier.</div>
+          <div class="side-title">Faster responses</div>
+          <div class="side-text">Auto-generates the first email + call script so your team can respond in minutes.</div>
         </div>
 
         <hr class="hr" />
 
         <div class="mini-note">
-          In production, this page could POST to a serverless endpoint (Netlify, Cloudflare, Azure Functions),
-          then trigger email + SMS + CRM + calendar scheduling automatically.
+          In production, this page would send data to an endpoint and trigger:
+          Email + SMS + CRM record + task assignment + calendar scheduling automatically.
         </div>
       </aside>
     </div>
@@ -227,33 +257,15 @@
     (function(){
       const $ = (id) => document.getElementById(id);
 
-      const formError = $("formError");
-
       const dots = Array.from(document.querySelectorAll("[data-step-dot]"));
       const panels = Array.from(document.querySelectorAll(".step-panel"));
-
-      const next1 = $("next1");
-      const next2 = $("next2");
-      const back2 = $("back2");
-      const back3 = $("back3");
-
-      const copyDraft = $("copyDraft");
-      const exportJson = $("exportJson");
-      const saveLead = $("saveLead");
-
-      const nextSteps = $("nextSteps");
-      const offerRange = $("offerRange");
-      const closeWindow = $("closeWindow");
-      const emailDraft = $("emailDraft");
+      const formError = $("formError");
 
       const STORAGE_KEY = "wcv_demo_lead";
 
       function setStep(n){
         dots.forEach(d => d.classList.toggle("active", Number(d.dataset.stepDot) === n));
-        panels.forEach(p => {
-          const is = Number(p.dataset.step) === n;
-          p.hidden = !is;
-        });
+        panels.forEach(p => p.hidden = Number(p.dataset.step) !== n);
         formError.textContent = "";
         formError.classList.remove("show");
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -264,77 +276,100 @@
         formError.classList.add("show");
       }
 
-      function val(id){
-        return String($(id).value || "").trim();
+      function v(id){ return String($(id).value || "").trim(); }
+
+      function validateStep1(){
+        if(!v("name")) return "Please enter your name.";
+        const em = v("email");
+        if(!em || !em.includes("@")) return "Please enter a valid email.";
+        if(!v("address")) return "Please enter the property address.";
+        return "";
       }
 
-      function buildNextSteps(lead){
+      function getLead(){
+        return {
+          name: v("name"),
+          phone: v("phone"),
+          email: v("email"),
+          address: v("address"),
+          sellerType: $("sellerType").value,
+          timeline: $("timeline").value,
+          condition: $("condition").value,
+          occupancy: $("occupancy").value,
+          photos: $("photos").value,
+          legal: $("legal").value,
+          notes: v("notes"),
+          createdAt: new Date().toISOString(),
+          source: "automation_demo"
+        };
+      }
+
+      function qualify(lead){
+        // Simple rules for demo effect:
+        // tenant + legal yes/unsure => high priority + senior review
+        // asap + major => high priority
+        // asap or soon => medium
+        // else => normal
+        let priority = "Normal";
+        let route = "Standard follow-up";
+        const reasons = [];
+
+        if(lead.timeline === "asap"){ reasons.push("timeline ASAP"); }
+        if(lead.condition === "major"){ reasons.push("major repairs"); }
+        if(lead.occupancy === "tenant"){ reasons.push("tenant occupied"); }
+        if(lead.legal === "yes"){ reasons.push("legal complexity"); }
+        if(lead.legal === "unsure"){ reasons.push("legal unknown"); }
+        if(lead.photos === "no"){ reasons.push("needs photos"); }
+
+        const hard = (lead.occupancy === "tenant") && (lead.legal !== "no");
+        const urgent = (lead.timeline === "asap") && (lead.condition === "major");
+
+        if(hard || urgent){
+          priority = "High";
+          route = "Senior review + fast call";
+        } else if(lead.timeline === "asap" || lead.timeline === "soon"){
+          priority = "Medium";
+          route = "Call within 24–48 hours";
+        } else {
+          priority = "Normal";
+          route = "Standard follow-up";
+        }
+
+        const reason = reasons.length ? reasons.join(", ") : "standard lead";
+        return { priority, route, reason };
+      }
+
+      function nextSteps(lead, q){
         const steps = [];
-        steps.push("Confirm best callback time and access details (tenant/lockbox/vacant).");
-
-        if(lead.timeline === "asap") steps.push("Prioritize same-day review and schedule a quick call.");
-        if(lead.timeline === "soon") steps.push("Schedule a short call within 24–48 hours.");
-        if(lead.timeline === "flexible") steps.push("Set a flexible review window and discuss preferred close date.");
-
-        if(lead.condition === "major") steps.push("Request 5–8 photos or a short walkthrough video to estimate repairs.");
-        if(lead.condition === "needs-work") steps.push("Confirm repairs needed (roof/HVAC/plumbing) and estimate scope.");
-        if(lead.condition === "good") steps.push("Confirm any minor updates and preferred closing timeline.");
-
+        steps.push("Confirm best callback time and access details.");
+        if(lead.photos !== "yes") steps.push("Request 5–8 photos or a short walkthrough video.");
         if(lead.occupancy === "tenant") steps.push("Collect lease status, rent amount, and tenant cooperation notes.");
-        if(lead.occupancy === "vacant") steps.push("Confirm utilities status and property security.");
-        if(lead.occupancy === "owner") steps.push("Confirm ideal move-out date and any assistance needed.");
-
-        steps.push("Prepare offer options and a simple closing plan (fast vs. flexible).");
+        if(lead.legal !== "no") steps.push("Ask about liens/probate/foreclosure timeline and gather basic docs if available.");
+        if(lead.condition === "major") steps.push("Estimate repair scope: roof/HVAC/plumbing/foundation (high level).");
+        if(lead.timeline === "asap") steps.push("Offer fast close option (7–21 days) and verify constraints.");
+        steps.push("Prepare offer options and a simple closing plan (fast vs flexible).");
+        steps.push("Send summary + next steps to the lead (email/SMS) and create CRM task.");
         return steps;
       }
 
-      function estimateRange(lead){
-        // DEMO ONLY: a lightweight “heuristic”
-        // Start at a pretend baseline and adjust by condition/timeline.
-        let baseLow = 235000;
-        let baseHigh = 285000;
-
-        if(lead.condition === "needs-work"){ baseLow -= 25000; baseHigh -= 15000; }
-        if(lead.condition === "major"){ baseLow -= 55000; baseHigh -= 35000; }
-
-        if(lead.timeline === "asap"){ baseLow -= 10000; baseHigh -= 5000; }
-        if(lead.timeline === "flexible"){ baseLow += 5000; baseHigh += 9000; }
-
-        if(lead.occupancy === "tenant"){ baseLow -= 8000; baseHigh -= 4000; }
-        if(lead.occupancy === "vacant"){ baseLow -= 2000; baseHigh -= 1000; }
-
-        return { low: Math.max(50000, baseLow), high: Math.max(60000, baseHigh) };
-      }
-
-      function closeText(timeline){
-        if(timeline === "asap") return "7–21 days (demo)";
-        if(timeline === "soon") return "21–45 days (demo)";
-        return "45–90+ days (demo)";
-      }
-
-      function money(n){
-        return Number(n).toLocaleString(undefined, { style:"currency", currency:"USD", maximumFractionDigits: 0 });
-      }
-
-      function buildEmail(lead, range){
-        const firstName = (lead.name || "").split(" ")[0] || "there";
+      function buildEmail(lead, q, steps){
+        const first = (lead.name || "").split(" ")[0] || "there";
+        const timeline = lead.timeline === "asap" ? "ASAP" : (lead.timeline === "soon" ? "Soon" : "Flexible");
         const occ = lead.occupancy === "owner" ? "owner-occupied" : (lead.occupancy === "tenant" ? "tenant-occupied" : "vacant");
-        const cond =
-          lead.condition === "good" ? "in good condition" :
-          lead.condition === "needs-work" ? "needing some work" : "needing major repairs";
+        const cond = lead.condition === "good" ? "good condition" : (lead.condition === "needs-work" ? "needs work" : "needs major repairs");
+
+        const topSteps = steps.slice(0, 4).map((s,i)=>`${i+1}) ${s}`).join("\n");
 
         return [
-          `Subject: Quick next steps for ${lead.address}`,
+          `Subject: Next steps for ${lead.address}`,
           ``,
-          `Hi ${firstName},`,
+          `Hi ${first},`,
           ``,
-          `Thanks for reaching out about ${lead.address}. Based on the details you shared (${occ}, ${cond}, timeline: ${lead.timeline.toUpperCase()}), here are the next steps:`,
+          `Thanks for reaching out about ${lead.address}. Based on what you shared (${occ}, ${cond}, timeline: ${timeline}), here’s what we’ll do next:`,
           ``,
-          `1) We confirm a few details (access, any repairs, and your preferred closing date).`,
-          `2) We prepare offer options and a simple closing plan.`,
-          `3) If everything looks good, we schedule signing and move toward closing.`,
+          topSteps,
           ``,
-          `For the demo, an estimated range is ${money(range.low)}–${money(range.high)} (final numbers depend on verification and market comps).`,
+          `We’ve marked this as Priority: ${q.priority} (${q.reason}).`,
           ``,
           `What’s the best time for a quick call today or tomorrow?`,
           ``,
@@ -343,48 +378,35 @@
         ].join("\n");
       }
 
-      function getLead(){
-        return {
-          name: val("name"),
-          phone: val("phone"),
-          email: val("email"),
-          address: val("address"),
-          sellerType: $("sellerType").value,
-          timeline: $("timeline").value,
-          condition: $("condition").value,
-          occupancy: $("occupancy").value,
-          notes: val("notes"),
-          createdAt: new Date().toISOString(),
-          source: "automation_demo"
-        };
-      }
-
-      function validateStep1(){
-        const name = val("name");
-        const email = val("email");
-        const address = val("address");
-
-        if(!name) return "Please enter your name.";
-        if(!email || !email.includes("@")) return "Please enter a valid email.";
-        if(!address) return "Please enter the property address.";
-        return "";
-      }
-
-      function renderStep3(lead){
-        const steps = buildNextSteps(lead);
-        nextSteps.innerHTML = steps.map(s => `<li>${escapeHtml(s)}</li>`).join("");
-
-        const range = estimateRange(lead);
-        offerRange.textContent = `${money(range.low)} – ${money(range.high)}`;
-        closeWindow.textContent = closeText(lead.timeline);
-
-        emailDraft.value = buildEmail(lead, range);
-
-        return { steps, range };
+      function buildCallScript(lead, q){
+        const timeline = lead.timeline === "asap" ? "ASAP" : (lead.timeline === "soon" ? "Soon" : "Flexible");
+        return [
+          `CALL SCRIPT — ${lead.address}`,
+          `Lead priority: ${q.priority} | Route: ${q.route}`,
+          ``,
+          `1) Intro`,
+          `   “Hi ${lead.name || ""}, this is ____ with WCV Premier. Thanks for reaching out about ${lead.address}.”`,
+          ``,
+          `2) Confirm key facts (30–60 seconds)`,
+          `   - Timeline: ${timeline}`,
+          `   - Occupancy: ${lead.occupancy}`,
+          `   - Condition: ${lead.condition}`,
+          `   - Photos: ${lead.photos}`,
+          `   - Legal/Liens: ${lead.legal}`,
+          ``,
+          `3) One clarifying question`,
+          `   “What’s the #1 thing you want to solve with this sale (speed, certainty, avoiding repairs, etc.)?”`,
+          ``,
+          `4) Set next step`,
+          `   “Great — next we’ll review details and come back with offer options + a closing plan.”`,
+          ``,
+          `5) Close`,
+          `   “If you can text/email any photos, that speeds things up. What’s the best email/number to send a summary to?”`
+        ].join("\n");
       }
 
       function escapeHtml(str){
-        return String(str || "")
+        return String(str||"")
           .replaceAll("&","&amp;")
           .replaceAll("<","&lt;")
           .replaceAll(">","&gt;")
@@ -392,48 +414,24 @@
           .replaceAll("'","&#039;");
       }
 
-      next1.addEventListener("click", () => {
-        const err = validateStep1();
-        if(err){ showError(err); return; }
-        setStep(2);
-      });
+      function renderStep3(lead){
+        const q = qualify(lead);
+        const steps = nextSteps(lead, q);
 
-      back2.addEventListener("click", () => setStep(1));
+        $("qPriority").textContent = q.priority;
+        $("qRoute").textContent = q.route;
+        $("qReason").textContent = q.reason;
 
-      next2.addEventListener("click", () => {
-        const lead = getLead();
-        const err = validateStep1();
-        if(err){ showError(err); setStep(1); return; }
-        renderStep3(lead);
-        setStep(3);
-      });
+        $("nextSteps").innerHTML = steps.map(s => `<li>${escapeHtml(s)}</li>`).join("");
 
-      back3.addEventListener("click", () => setStep(2));
+        $("emailDraft").value = buildEmail(lead, q, steps);
+        $("callScript").value = buildCallScript(lead, q);
 
-      copyDraft.addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText(emailDraft.value || "");
-          copyDraft.textContent = "Copied!";
-          setTimeout(() => copyDraft.textContent = "Copy Email", 1200);
-        }catch{
-          showError("Copy failed in this browser. You can manually select and copy the text.");
-        }
-      });
+        return { q, steps };
+      }
 
-      exportJson.addEventListener("click", () => {
-        const lead = getLead();
-        const { steps, range } = renderStep3(lead);
-
-        const payload = {
-          ...lead,
-          automation: {
-            nextSteps: steps,
-            estimate: range,
-            closeWindow: closeText(lead.timeline)
-          }
-        };
-
-        const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+      function downloadJson(obj){
+        const blob = new Blob([JSON.stringify(obj, null, 2)], { type:"application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -442,28 +440,80 @@
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
+      }
+
+      $("next1").addEventListener("click", () => {
+        const err = validateStep1();
+        if(err){ showError(err); return; }
+        setStep(2);
       });
 
-      saveLead.addEventListener("click", () => {
+      $("back2").addEventListener("click", () => setStep(1));
+
+      $("next2").addEventListener("click", () => {
+        const err = validateStep1();
+        if(err){ showError(err); setStep(1); return; }
         const lead = getLead();
-        const { steps, range } = renderStep3(lead);
+        renderStep3(lead);
+        setStep(3);
+      });
+
+      $("back3").addEventListener("click", () => setStep(2));
+
+      $("copyEmail").addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText($("emailDraft").value || "");
+          $("copyEmail").textContent = "Copied!";
+          setTimeout(() => $("copyEmail").textContent = "Copy Email", 1200);
+        }catch{
+          showError("Copy failed in this browser. You can manually select and copy the text.");
+        }
+      });
+
+      $("copyScript").addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText($("callScript").value || "");
+          $("copyScript").textContent = "Copied!";
+          setTimeout(() => $("copyScript").textContent = "Copy Script", 1200);
+        }catch{
+          showError("Copy failed in this browser. You can manually select and copy the text.");
+        }
+      });
+
+      $("exportJson").addEventListener("click", () => {
+        const lead = getLead();
+        const { q, steps } = renderStep3(lead);
+        const payload = {
+          ...lead,
+          automation: {
+            qualification: q,
+            nextSteps: steps,
+            emailDraft: $("emailDraft").value,
+            callScript: $("callScript").value
+          }
+        };
+        downloadJson(payload);
+      });
+
+      $("saveLead").addEventListener("click", () => {
+        const lead = getLead();
+        const { q, steps } = renderStep3(lead);
 
         const payload = {
           ...lead,
           automation: {
+            qualification: q,
             nextSteps: steps,
-            estimate: range,
-            closeWindow: closeText(lead.timeline),
-            emailDraft: emailDraft.value
+            emailDraft: $("emailDraft").value,
+            callScript: $("callScript").value
           }
         };
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-        saveLead.textContent = "Saved!";
-        setTimeout(() => saveLead.textContent = "Save Lead", 1200);
+        $("saveLead").textContent = "Saved!";
+        setTimeout(() => $("saveLead").textContent = "Save Lead", 1200);
       });
 
-      // initialize
       setStep(1);
     })();
   </script>
