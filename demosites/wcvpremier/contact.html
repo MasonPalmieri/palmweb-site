@@ -40,7 +40,7 @@
     <div class="kicker"><span class="dot"></span> Get in touch</div>
     <h1 class="page-title">Contact</h1>
     <p class="lead">
-      For the demo, this page shows how an automation intake can pre-fill a lead summary and reduce admin time.
+      For the demo, this page shows how automation intake can pre-fill a lead summary and generate standard follow-up content.
     </p>
 
     <div class="contact-grid">
@@ -71,12 +71,12 @@
           </div>
 
           <div class="row">
-            <a class="btn btn-outline" href="automation.html">Use Automated Intake Instead</a>
+            <a class="btn btn-outline" href="automation.html">Use Automated Intake</a>
             <button class="btn btn-primary" type="button" id="demoSend">Demo Send</button>
           </div>
 
           <div class="mini-note" id="sentNote" style="display:none;">
-            Demo: message captured locally (no backend). In production, this would send to email + CRM + task queue.
+            Demo: message captured locally (no backend). In production, this would create a CRM record + task assignment + email/SMS.
           </div>
         </form>
       </section>
@@ -85,7 +85,7 @@
         <div class="section-title">Automation lead summary</div>
 
         <div id="leadEmpty" class="mini-note">
-          No saved lead yet. Run the <a href="automation.html" style="text-decoration:underline;">Automated Intake</a> to see this auto-fill.
+          No saved lead yet. Run the <a href="automation.html" style="text-decoration:underline;">Automated Intake</a> to see auto-generated outputs here.
         </div>
 
         <div id="leadBox" class="leadbox" hidden>
@@ -98,6 +98,12 @@
           </div>
 
           <div class="leadbox-body">
+            <div class="kv"><span>Priority</span><strong id="lPriority">—</strong></div>
+            <div class="kv"><span>Route</span><strong id="lRoute">—</strong></div>
+            <div class="kv"><span>Reason</span><strong id="lReason">—</strong></div>
+
+            <hr class="hr" />
+
             <div class="kv"><span>Name</span><strong id="lName">—</strong></div>
             <div class="kv"><span>Email</span><strong id="lEmail">—</strong></div>
             <div class="kv"><span>Phone</span><strong id="lPhone">—</strong></div>
@@ -105,17 +111,15 @@
 
             <hr class="hr" />
 
-            <div class="kv"><span>Timeline</span><strong id="lTimeline">—</strong></div>
-            <div class="kv"><span>Condition</span><strong id="lCond">—</strong></div>
-            <div class="kv"><span>Occupancy</span><strong id="lOcc">—</strong></div>
+            <div class="result-title" style="margin-top:0;">Auto-generated email</div>
+            <textarea class="draft" id="lDraftEmail" readonly></textarea>
 
-            <hr class="hr" />
-
-            <div class="result-title" style="margin-top:0;">Draft email (from automation)</div>
-            <textarea class="draft" id="lDraft" readonly></textarea>
+            <div class="result-title" style="margin-top:10px;">Auto-generated call script</div>
+            <textarea class="draft" id="lDraftScript" readonly></textarea>
 
             <div class="row">
-              <button class="btn btn-outline" type="button" id="copyLeadDraft">Copy Draft</button>
+              <button class="btn btn-outline" type="button" id="copyLeadEmail">Copy Email</button>
+              <button class="btn btn-outline" type="button" id="copyLeadScript">Copy Script</button>
               <button class="btn btn-outline" type="button" id="exportLeadJson">Export JSON</button>
             </div>
           </div>
@@ -137,79 +141,47 @@
       const leadEmpty = $("leadEmpty");
       const leadBox = $("leadBox");
 
-      function money(n){
-        return Number(n).toLocaleString(undefined, { style:"currency", currency:"USD", maximumFractionDigits: 0 });
+      function renderNone(){
+        leadEmpty.style.display = "block";
+        leadBox.hidden = true;
       }
-
-      function safe(v){ return String(v || "—"); }
 
       function loadLead(){
         const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw){
-          leadEmpty.style.display = "block";
-          leadBox.hidden = true;
-          return null;
-        }
-        try{
-          return JSON.parse(raw);
-        }catch{
-          return null;
-        }
+        if(!raw) return null;
+        try{ return JSON.parse(raw); }catch{ return null; }
       }
 
       function renderLead(lead){
-        if(!lead){
-          leadEmpty.style.display = "block";
-          leadBox.hidden = true;
-          return;
-        }
+        if(!lead){ renderNone(); return; }
+
         leadEmpty.style.display = "none";
         leadBox.hidden = false;
 
-        $("lTitle").textContent = safe(lead.address);
+        $("lTitle").textContent = lead.address || "Lead";
         $("lSub").textContent = lead.createdAt ? new Date(lead.createdAt).toLocaleString() : "Saved lead";
 
-        $("lName").textContent = safe(lead.name);
-        $("lEmail").textContent = safe(lead.email);
-        $("lPhone").textContent = safe(lead.phone);
-        $("lAddr").textContent = safe(lead.address);
+        $("lPriority").textContent = lead.automation?.qualification?.priority || "—";
+        $("lRoute").textContent = lead.automation?.qualification?.route || "—";
+        $("lReason").textContent = lead.automation?.qualification?.reason || "—";
 
-        $("lTimeline").textContent = safe(lead.timeline);
-        $("lCond").textContent = safe(lead.condition);
-        $("lOcc").textContent = safe(lead.occupancy);
+        $("lName").textContent = lead.name || "—";
+        $("lEmail").textContent = lead.email || "—";
+        $("lPhone").textContent = lead.phone || "—";
+        $("lAddr").textContent = lead.address || "—";
 
-        $("lDraft").value = safe(lead.automation?.emailDraft);
+        $("lDraftEmail").value = lead.automation?.emailDraft || "";
+        $("lDraftScript").value = lead.automation?.callScript || "";
 
-        // optional auto-fill contact form fields
+        // Prefill contact form
         $("cName").value = lead.name || "";
         $("cEmail").value = lead.email || "";
         $("cAddress").value = lead.address || "";
         $("cMsg").value =
-          `Hi WCV,\n\nI submitted an automated intake for ${lead.address}. Please let me know next steps.\n\nThanks,\n${lead.name || ""}`;
+          `Hi WCV,\n\nI submitted an intake for ${lead.address}. Please let me know next steps.\n\nThanks,\n${lead.name || ""}`;
       }
 
-      const lead = loadLead();
-      renderLead(lead);
-
-      $("clearLead").addEventListener("click", () => {
-        localStorage.removeItem(STORAGE_KEY);
-        renderLead(null);
-      });
-
-      $("copyLeadDraft").addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText($("lDraft").value || "");
-          $("copyLeadDraft").textContent = "Copied!";
-          setTimeout(() => $("copyLeadDraft").textContent = "Copy Draft", 1200);
-        }catch{
-          alert("Copy failed in this browser. You can manually select and copy the text.");
-        }
-      });
-
-      $("exportLeadJson").addEventListener("click", () => {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return;
-
+      function downloadJson(raw){
         const blob = new Blob([raw], { type:"application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -219,6 +191,40 @@
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
+      }
+
+      const lead = loadLead();
+      renderLead(lead);
+
+      $("clearLead").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        renderNone();
+      });
+
+      $("copyLeadEmail").addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText($("lDraftEmail").value || "");
+          $("copyLeadEmail").textContent = "Copied!";
+          setTimeout(() => $("copyLeadEmail").textContent = "Copy Email", 1200);
+        }catch{
+          alert("Copy failed. You can manually select and copy.");
+        }
+      });
+
+      $("copyLeadScript").addEventListener("click", async () => {
+        try{
+          await navigator.clipboard.writeText($("lDraftScript").value || "");
+          $("copyLeadScript").textContent = "Copied!";
+          setTimeout(() => $("copyLeadScript").textContent = "Copy Script", 1200);
+        }catch{
+          alert("Copy failed. You can manually select and copy.");
+        }
+      });
+
+      $("exportLeadJson").addEventListener("click", () => {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        downloadJson(raw);
       });
 
       $("demoSend").addEventListener("click", () => {
