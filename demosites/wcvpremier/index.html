@@ -6,14 +6,427 @@
   <title>WCV Premier LLC — Expert Home Buyers (Demo Redesign)</title>
   <meta name="description" content="Demo redesign for WCV Premier LLC: modern layout, clarity, mobile-first structure, and conversion-focused CTAs with automation demo." />
   <meta name="theme-color" content="#fbfaf6" />
-  <link rel="stylesheet" href="assets/style.css" />
+
+  <!-- Keep your existing stylesheet (if it loads correctly it can still contribute).
+       The inline CSS below is a “layout + component” baseline that fixes the broken formatting. -->
+  <link rel="stylesheet" href="./assets/style.css" />
+
+  <style>
+    /* -----------------------------
+      Baseline reset + tokens
+    ------------------------------*/
+    :root{
+      --bg: #fbfaf6;
+      --panel: #ffffff;
+      --text: #0b1220;
+      --muted: #4b5563;
+      --border: rgba(15, 23, 42, .12);
+      --shadow: 0 10px 30px rgba(2, 8, 23, .08);
+
+      --primary: #0ea5a4;         /* teal */
+      --primary-2: #0b8f8e;
+      --primary-ink: #062c2c;
+
+      --radius: 16px;
+      --radius-sm: 12px;
+      --container: 1120px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img{ max-width: 100%; height: auto; display: block; }
+    a{ color: inherit; text-decoration: none; }
+    p{ margin: 0 0 12px; }
+    h1,h2,h3{ margin: 0 0 10px; line-height: 1.15; }
+    ul{ margin: 0; padding-left: 18px; }
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+
+    /* -----------------------------
+      Layout helpers
+    ------------------------------*/
+    .container{
+      width: min(100% - 32px, var(--container));
+      margin-inline: auto;
+    }
+
+    /* -----------------------------
+      Header / Nav
+    ------------------------------*/
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(251,250,246,.82);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .brand img{
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      object-fit: cover;
+    }
+    .brand-title strong{
+      display:block;
+      font-size: 15px;
+      letter-spacing: .2px;
+    }
+    .brand-title span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    nav[aria-label="Main"]{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    nav[aria-label="Main"] a{
+      font-size: 13px;
+      color: rgba(11,18,32,.86);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    nav[aria-label="Main"] a:hover{
+      border-color: var(--border);
+      background: rgba(255,255,255,.6);
+    }
+    nav[aria-label="Main"] a[aria-current="page"]{
+      border-color: rgba(14,165,164,.35);
+      background: rgba(14,165,164,.10);
+      color: #064b4b;
+    }
+
+    .nav-actions{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* -----------------------------
+      Buttons
+    ------------------------------*/
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 650;
+      font-size: 13px;
+      letter-spacing: .2px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: linear-gradient(180deg, var(--primary), var(--primary-2));
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(14,165,164,.25);
+    }
+    .btn-primary:hover{ box-shadow: 0 14px 28px rgba(14,165,164,.30); }
+    .btn-outline{
+      background: rgba(255,255,255,.65);
+      border-color: var(--border);
+      color: rgba(11,18,32,.88);
+    }
+    .btn-outline:hover{
+      background: rgba(255,255,255,.9);
+      border-color: rgba(15,23,42,.18);
+    }
+
+    /* -----------------------------
+      Hero
+    ------------------------------*/
+    main.hero{
+      padding: 34px 0 10px;
+    }
+    .kicker{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.65);
+      border-radius: 999px;
+      color: rgba(11,18,32,.84);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(14,165,164,.12);
+    }
+
+    .hero-grid{
+      display: grid;
+      grid-template-columns: 1.25fr .9fr;
+      gap: 22px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(1200px 450px at 10% 0%, rgba(14,165,164,.10), transparent 55%),
+                  radial-gradient(900px 420px at 95% 25%, rgba(11,143,142,.10), transparent 52%),
+                  rgba(255,255,255,.55);
+      border-radius: calc(var(--radius) + 8px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy h1{
+      font-size: clamp(28px, 2.7vw, 44px);
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .lead{
+      color: rgba(11,18,32,.78);
+      font-size: 15px;
+      max-width: 62ch;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 10px;
+    }
+    .note{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .trust{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .trust-item{
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 12px 11px;
+    }
+    .trust-title{
+      font-weight: 750;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    .trust-text{
+      color: rgba(11,18,32,.72);
+      font-size: 13px;
+    }
+
+    /* -----------------------------
+      Hero Card
+    ------------------------------*/
+    .hero-card{
+      background: rgba(255,255,255,.85);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 6px);
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(2, 8, 23, .08);
+    }
+    .hero-media{
+      height: 170px;
+      background:
+        linear-gradient(135deg, rgba(14,165,164,.55), rgba(11,143,142,.18)),
+        url("./assets/hero.jpg");
+      background-size: cover;
+      background-position: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-card-body{ padding: 16px; }
+    .card-title{
+      font-weight: 800;
+      letter-spacing: .2px;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .card-text{ color: rgba(11,18,32,.72); font-size: 13px; }
+
+    .quick{
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+    .qrow{
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      background: rgba(251,250,246,.6);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: 14px;
+      font-size: 13px;
+      color: rgba(11,18,32,.82);
+    }
+    .qrow span:first-child{
+      display: inline-grid;
+      place-items: center;
+      width: 26px; height: 26px;
+      border-radius: 999px;
+      background: rgba(14,165,164,.14);
+      border: 1px solid rgba(14,165,164,.25);
+      font-weight: 800;
+      color: #075f5f;
+    }
+
+    .hero-card-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .mini-note{
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(15,23,42,.18);
+      color: rgba(11,18,32,.70);
+      font-size: 12.5px;
+    }
+
+    /* -----------------------------
+      Sections
+    ------------------------------*/
+    section.container{
+      padding: 30px 0 18px;
+    }
+    .section-head{
+      display:flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .section-head h2{
+      font-size: clamp(20px, 2vw, 28px);
+      letter-spacing: -0.3px;
+    }
+    .section-head p{ color: rgba(11,18,32,.72); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card{
+      background: rgba(255,255,255,.85);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 22px rgba(2,8,23,.05);
+    }
+    .icon{
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .card h3{ font-size: 15px; margin-bottom: 6px; }
+    .card p{ color: rgba(11,18,32,.72); font-size: 13.5px; margin: 0; }
+
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .box{
+      background: rgba(255,255,255,.80);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .box h3{ font-size: 15px; margin-bottom: 8px; }
+    .list li{ margin: 6px 0; color: rgba(11,18,32,.78); font-size: 13.5px; }
+    .hr{
+      border: 0;
+      border-top: 1px solid rgba(15,23,42,.12);
+      margin: 14px 0;
+    }
+    .row{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* -----------------------------
+      Footer
+    ------------------------------*/
+    footer{
+      border-top: 1px solid var(--border);
+      padding: 18px 0;
+      margin-top: 20px;
+      color: rgba(11,18,32,.72);
+      font-size: 13px;
+    }
+
+    /* -----------------------------
+      Responsive
+    ------------------------------*/
+    @media (max-width: 980px){
+      .nav{
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .brand{ justify-content: center; min-width: unset; }
+      .nav-actions{ width: 100%; justify-content: center; }
+      .hero-grid{
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+      .trust{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .two-col{ grid-template-columns: 1fr; }
+      nav[aria-label="Main"]{ justify-content: center; }
+    }
+  </style>
 </head>
 
 <body>
   <header>
     <div class="container nav">
-      <a class="brand" href="index.html">
-        <img src="assets/wcv-logo.png" alt="WCV Premier LLC logo" />
+      <a class="brand" href="index.html" aria-label="WCV Premier LLC home">
+        <img src="./assets/wcv-logo.png" alt="WCV Premier LLC logo" />
         <div class="brand-title">
           <strong>WCV Premier LLC</strong>
           <span>Demo redesign • Expert Home Buyers</span>
@@ -37,7 +450,7 @@
   </header>
 
   <main class="container hero">
-    <div class="kicker"><span class="dot"></span> Local • Fast • Straightforward</div>
+    <div class="kicker"><span class="dot" aria-hidden="true"></span> Local • Fast • Straightforward</div>
 
     <div class="hero-grid">
       <section class="hero-copy">
@@ -55,30 +468,30 @@
 
         <p class="note">Serving Massachusetts & Rhode Island • Options for quick or flexible closing</p>
 
-        <div class="trust">
-          <div class="trust-item">
+        <div class="trust" role="list">
+          <div class="trust-item" role="listitem">
             <div class="trust-title">Clear process</div>
             <div class="trust-text">Less back-and-forth. You’ll know the next step.</div>
           </div>
-          <div class="trust-item">
+          <div class="trust-item" role="listitem">
             <div class="trust-title">Automation-ready</div>
             <div class="trust-text">Lead intake routes to follow-up templates + CRM export.</div>
           </div>
-          <div class="trust-item">
+          <div class="trust-item" role="listitem">
             <div class="trust-title">Mobile-first</div>
             <div class="trust-text">Fast to read, fast to act — on any device.</div>
           </div>
         </div>
       </section>
 
-      <aside class="hero-card">
+      <aside class="hero-card" aria-label="Quick steps">
         <div class="hero-media" role="img" aria-label="WCV Premier hero image"></div>
 
         <div class="hero-card-body">
           <div class="card-title">Quick Steps</div>
           <p class="card-text">A simple process designed to reduce back-and-forth.</p>
 
-          <div class="quick">
+          <div class="quick" aria-label="Steps">
             <div class="qrow"><span>1</span><span>Tell us about the property</span></div>
             <div class="qrow"><span>2</span><span>We review & confirm details</span></div>
             <div class="qrow"><span>3</span><span>Offer + closing timeline</span></div>
@@ -110,19 +523,19 @@
 
     <div class="grid">
       <div class="card">
-        <div class="icon">🏠</div>
+        <div class="icon" aria-hidden="true">🏠</div>
         <h3>Share property details</h3>
         <p>Address, condition, and timeline — we keep it simple and focused.</p>
       </div>
 
       <div class="card">
-        <div class="icon">🧾</div>
+        <div class="icon" aria-hidden="true">🧾</div>
         <h3>Review + confirm</h3>
         <p>We verify the basics and ask only what’s needed to prepare a clean offer.</p>
       </div>
 
       <div class="card">
-        <div class="icon">✅</div>
+        <div class="icon" aria-hidden="true">✅</div>
         <h3>Offer + closing options</h3>
         <p>Choose a fast close or a flexible date. Transparent steps end-to-end.</p>
       </div>
@@ -162,6 +575,21 @@
     <div class="container">© <span id="year"></span> WCV Premier LLC • Demo redesign for PalmWeb.</div>
   </footer>
 
-  <script src="assets/site.js"></script>
+  <!-- Keep your existing JS; also add a tiny fallback so year + active nav works even if assets/site.js fails -->
+  <script src="./assets/site.js"></script>
+  <script>
+    (function () {
+      // Year
+      var y = document.getElementById("year");
+      if (y && !y.textContent) y.textContent = new Date().getFullYear();
+
+      // Active nav link
+      var path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+      document.querySelectorAll('nav[aria-label="Main"] a[data-page]').forEach(function (a) {
+        var page = (a.getAttribute("data-page") || "").toLowerCase();
+        if (page === path) a.setAttribute("aria-current", "page");
+      });
+    })();
+  </script>
 </body>
 </html>
