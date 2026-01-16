@@ -33,7 +33,7 @@
     a{ color:inherit; text-decoration:none; }
     button{ font-family:inherit; }
 
-    /* Simple top bar like PDF (pages 6–7) */
+    /* Simple top bar */
     .topbar{
       position:sticky;
       top:0;
@@ -50,9 +50,7 @@
       justify-content:space-between;
       gap:12px;
     }
-    .brand{
-      font-weight:800;
-    }
+    .brand{ font-weight:800; }
     .nav{
       display:flex;
       align-items:center;
@@ -60,10 +58,7 @@
       font-size:13px;
       color:#111827;
     }
-    .nav a{
-      color:#111827;
-      opacity:.9;
-    }
+    .nav a{ color:#111827; opacity:.9; }
     .nav a:hover{ opacity:1; text-decoration:underline; }
 
     .nav-right{
@@ -105,7 +100,7 @@
     .view{ display:none; }
     .view.active{ display:block; }
 
-    /* Landing (PDF page 7) */
+    /* Landing */
     .landing{
       text-align:center;
       padding: 40px 0 10px;
@@ -198,7 +193,7 @@
       margin: 6px 0 12px;
     }
 
-    /* Dashboard (PDF pages 5–6) */
+    /* Dashboard */
     .center-title{
       text-align:center;
       margin-top: 34px;
@@ -259,7 +254,7 @@
     }
     .dash-card .btn{ align-self:flex-start; }
 
-    /* Upload (PDF page 4) */
+    /* Upload */
     .upload{
       display:flex;
       align-items:center;
@@ -293,14 +288,10 @@
       cursor:pointer;
       user-select:none;
     }
-    .drop strong{
-      color:#6b7280;
-    }
-    .upload-actions{
-      margin-top: 14px;
-    }
+    .drop strong{ color:#6b7280; }
+    .upload-actions{ margin-top: 14px; }
 
-    /* Assign recipients (PDF page 3) */
+    /* Assign recipients modal */
     .modal{
       position:fixed;
       inset:0;
@@ -361,13 +352,12 @@
       user-select:none;
     }
 
-    /* Tag document (PDF pages 1–2) */
+    /* Tag document */
     .tag-layout{
       display:grid;
       grid-template-columns: 260px 1fr;
       gap: 0;
       min-height: calc(100vh - 54px);
-      border-top: 0;
     }
     @media (max-width: 980px){
       .tag-layout{ grid-template-columns: 1fr; }
@@ -391,10 +381,13 @@
       font-weight: 800;
       font-size: 12.5px;
       margin-bottom: 8px;
-      cursor: grab;
+      cursor: pointer;
       user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .tool:active{ cursor:grabbing; }
+    .tool.active{
+      outline: 2px solid #111;
+    }
     .assign{
       margin-top: 14px;
       padding-top: 12px;
@@ -414,16 +407,26 @@
       background: #fff;
     }
 
-    /* big white page area */
+    /* PDF page area */
     .page{
       width: min(740px, 100%);
-      aspect-ratio: 8.5 / 11;
       margin: 0 auto;
       border: 1px solid #d1d5db;
       background: #fff;
       box-shadow: 0 10px 28px rgba(0,0,0,.08);
       position: relative;
       overflow:hidden;
+    }
+
+    /* Critical: iOS + pointer dragging */
+    #docPage{
+      touch-action: none;
+    }
+
+    .pdf-canvas{
+      display:block;
+      width: 100%;
+      height: auto;
     }
 
     .page .hint{
@@ -436,28 +439,8 @@
       font-weight: 700;
       font-size: 12px;
       pointer-events:none;
-    }
-
-    /* faint sample text on page like PDF page 1 */
-    .sample{
-      position:absolute;
-      left: 54%;
-      top: 24%;
-      transform: translateX(-50%);
-      width: 260px;
-      font-size: 11px;
-      color:#111;
-      opacity:.8;
-      line-height: 2.4;
-      font-weight:700;
-      pointer-events:none;
-    }
-    .line{
-      display:inline-block;
-      border-bottom: 1px solid #111;
-      width: 110px;
-      transform: translateY(-2px);
-      margin-left: 6px;
+      text-align:center;
+      padding: 18px;
     }
 
     /* placed fields */
@@ -469,10 +452,12 @@
       border-radius: 4px;
       font-size: 12px;
       font-weight: 850;
-      cursor: move;
+      cursor: grab;
       user-select:none;
       min-width: 120px;
+      -webkit-tap-highlight-color: transparent;
     }
+    .placed:active{ cursor:grabbing; }
     .placed small{
       display:block;
       font-size: 10px;
@@ -493,7 +478,19 @@
       font-size: 12px;
     }
 
-    /* tiny footer like PDF */
+    .pager{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pager span{
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
     .foot{
       text-align:center;
       color:#9ca3af;
@@ -526,7 +523,7 @@
 
   <div class="wrap">
 
-    <!-- LANDING (PDF page 7) -->
+    <!-- LANDING -->
     <section class="view active" id="viewLanding">
       <div class="landing">
         <h1>A simpler way to draft, send,<br/>and sign documents.</h1>
@@ -575,7 +572,7 @@
       </div>
     </section>
 
-    <!-- DASHBOARD (PDF pages 5–6) -->
+    <!-- DASHBOARD -->
     <section class="view" id="viewDashboard">
       <div class="center-title">
         <h2>Welcome back</h2>
@@ -617,69 +614,73 @@
       </div>
     </section>
 
-    <!-- UPLOAD (PDF page 4) -->
+    <!-- UPLOAD -->
     <section class="view" id="viewUpload">
       <div class="upload">
         <div class="upload-card">
           <h2>Upload a Document</h2>
-          <p>Drag and drop your PDF or Word file below or click to browse.</p>
+          <p>Drag and drop your PDF below or click to browse. Or start from a blank PDF.</p>
 
           <div class="drop" id="dropZone" role="button" tabindex="0">
-            <strong>Click</strong> to choose a file or <strong>drag</strong> it here
+            <strong>Click</strong> to choose a PDF or <strong>drag</strong> it here
           </div>
 
-          <input id="fileInput" type="file" accept=".pdf,.doc,.docx" style="display:none;" />
+          <input id="fileInput" type="file" accept=".pdf" style="display:none;" />
 
-          <div class="upload-actions">
+          <div class="upload-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
             <button class="btn btn-muted" id="uploadNextBtn" type="button" disabled>Next</button>
+            <button class="btn btn-outline" id="blankPdfBtn" type="button">Start from Blank PDF</button>
           </div>
 
           <div style="margin-top:10px; color:#6b7280; font-weight:650; font-size:12px;">
             Selected: <span id="fileName">(none)</span>
           </div>
+
+          <div style="margin-top:10px; color:#6b7280; font-weight:650; font-size:12px;">
+            Note: This demo viewer supports PDFs. DOC/DOCX would require server-side conversion.
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- TAG DOCUMENT (PDF pages 1–2) -->
+    <!-- TAG DOCUMENT -->
     <section class="view" id="viewTag">
       <div class="tag-layout">
         <aside class="side">
           <div style="font-weight:900; margin:2px 0 10px;">DraftSendSign</div>
 
-          <h3>Fields</h3>
-          <div class="tool" draggable="true" data-tool="signature">Signature</div>
-          <div class="tool" draggable="true" data-tool="initials">Initials</div>
-          <div class="tool" draggable="true" data-tool="date">Date</div>
-          <div class="tool" draggable="true" data-tool="text">Text Input</div>
+          <h3>Fields (tap to select)</h3>
+          <div class="tool" data-tool="signature">Signature</div>
+          <div class="tool" data-tool="initials">Initials</div>
+          <div class="tool" data-tool="date">Date</div>
+          <div class="tool" data-tool="text">Text Input</div>
 
           <div class="assign">
             <h3 style="margin-top:0;">Assigning For:</h3>
-            <select class="select" id="assignSelect">
-              <option value="Alice (alice@example.com)">Alice (alice@example.com)</option>
-              <option value="Bob (bob@example.com)">Bob (bob@example.com)</option>
-            </select>
+            <select class="select" id="assignSelect"></select>
           </div>
 
           <div style="margin-top:14px; color:#6b7280; font-size:12px; font-weight:650;">
-            Drag a field onto the document to place it.
+            1) Tap a field tool<br/>
+            2) Tap on the document to place it<br/>
+            3) Drag placed fields to reposition
           </div>
         </aside>
 
         <main class="canvas-wrap">
           <div class="page" id="docPage">
-            <div class="sample">
-              Contract<br/>
-              Print Name <span class="line"></span><br/>
-              Sign <span class="line"></span><br/>
-              Date <span class="line"></span>
-            </div>
-            <div class="hint" id="docHint">Drag a field here to place on the document</div>
+            <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
+            <div class="hint" id="docHint">Select a field, then tap/click on the document to place it</div>
           </div>
 
           <div class="tag-actions">
-            <span>Tip: drag placed fields to reposition them.</span>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <span id="tagTip">Tip: drag placed fields to reposition them.</span>
+
+            <div class="pager">
+              <button class="btn btn-outline" id="prevPageBtn" type="button">Prev</button>
+              <span id="pageIndicator">Page 1</span>
+              <button class="btn btn-outline" id="nextPageBtn" type="button">Next</button>
+
               <button class="btn btn-outline" id="backToRecipientsBtn" type="button">Back</button>
               <button class="btn btn-primary" id="finishBtn" type="button">Next: Send</button>
             </div>
@@ -688,7 +689,7 @@
       </div>
     </section>
 
-    <!-- Placeholder simple pages -->
+    <!-- Placeholder pages -->
     <section class="view" id="viewDocs">
       <div class="center-title">
         <h2>My Documents</h2>
@@ -716,7 +717,7 @@
 
   </div>
 
-  <!-- Assign Recipients modal (PDF page 3) -->
+  <!-- Assign Recipients modal -->
   <div class="modal" id="recipientsModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
       <h2>Assign Recipients</h2>
@@ -731,9 +732,14 @@
     </div>
   </div>
 
+  <!-- PDF.js + pdf-lib -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
   <script>
-    // Mirror the PDF flow (pages 7→6→4→3→1/2)
-    // This is a static demo: no backend calls.
+    // =========================
+    // Demo App (single file)
+    // =========================
 
     document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -741,7 +747,10 @@
       authed: false,
       fileName: null,
       recipients: [{ name: "Alice", email: "alice@example.com" }],
-      placed: []
+      placed: [],
+      pdfBytes: null,          // Uint8Array
+      pdfPageNumber: 1,
+      pdfDocHandle: null       // pdf.js document handle
     };
 
     const views = {
@@ -760,7 +769,6 @@
       Object.values(views).forEach(v => v.classList.remove("active"));
       views[key].classList.add("active");
 
-      // Toggle top nav like PDF page 6
       navAuthed.style.display = state.authed ? "flex" : "none";
       navPublic.style.display = state.authed ? "none" : "flex";
     }
@@ -802,19 +810,51 @@
     });
     document.getElementById("docsStartUploadBtn").addEventListener("click", () => showView("upload"));
 
-    // Upload (PDF page 4)
+    // Upload
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const uploadNextBtn = document.getElementById("uploadNextBtn");
     const fileNameSpan = document.getElementById("fileName");
+    const blankPdfBtn = document.getElementById("blankPdfBtn");
 
-    function setFile(f){
-      if(!f) return;
-      state.fileName = f.name;
-      fileNameSpan.textContent = state.fileName;
+    function setUploadUiReady(name){
+      state.fileName = name;
+      fileNameSpan.textContent = name;
       uploadNextBtn.disabled = false;
       uploadNextBtn.classList.remove("btn-muted");
       uploadNextBtn.classList.add("btn-primary");
+    }
+
+    async function fileToUint8Array(file){
+      const ab = await file.arrayBuffer();
+      return new Uint8Array(ab);
+    }
+
+    async function createBlankPdfBytes(){
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+      const pdfDoc = await PDFDocument.create();
+
+      // US Letter (8.5x11) in points
+      const page = pdfDoc.addPage([612, 792]);
+
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      page.drawText("Blank Document", { x: 72, y: 740, size: 18, font, color: rgb(0.1,0.1,0.1) });
+      page.drawText("Add fields on the right, then send.", { x: 72, y: 715, size: 11, font, color: rgb(0.35,0.35,0.35) });
+
+      const bytes = await pdfDoc.save();
+      return new Uint8Array(bytes);
+    }
+
+    async function setFile(file){
+      if(!file) return;
+      const ext = (file.name.split(".").pop() || "").toLowerCase();
+      if(ext !== "pdf"){
+        alert("This demo supports PDF uploads only.");
+        return;
+      }
+
+      state.pdfBytes = await fileToUint8Array(file);
+      setUploadUiReady(file.name);
     }
 
     dropZone.addEventListener("click", () => fileInput.click());
@@ -825,9 +865,9 @@
       }
     });
 
-    fileInput.addEventListener("change", (e) => {
+    fileInput.addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0];
-      setFile(f);
+      await setFile(f);
     });
 
     dropZone.addEventListener("dragover", (e) => {
@@ -837,14 +877,20 @@
     dropZone.addEventListener("dragleave", () => {
       dropZone.style.background = "#fafafa";
     });
-    dropZone.addEventListener("drop", (e) => {
+    dropZone.addEventListener("drop", async (e) => {
       e.preventDefault();
       dropZone.style.background = "#fafafa";
       const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      setFile(f);
+      await setFile(f);
     });
 
-    // Next -> Assign Recipients modal (PDF page 3)
+    blankPdfBtn.addEventListener("click", async () => {
+      state.pdfBytes = await createBlankPdfBytes();
+      setUploadUiReady("blank.pdf");
+      openRecipientsModal();
+    });
+
+    // Next -> recipients modal
     uploadNextBtn.addEventListener("click", () => openRecipientsModal());
 
     // Recipients modal
@@ -901,14 +947,28 @@
       });
     }
 
+    function renderAssignDropdown(){
+      const select = document.getElementById("assignSelect");
+      select.innerHTML = "";
+      state.recipients.forEach((r) => {
+        const labelName = (r.name || "Signer").trim();
+        const labelEmail = (r.email || "email@example.com").trim();
+        const opt = document.createElement("option");
+        opt.value = `${labelName} (${labelEmail})`;
+        opt.textContent = `${labelName} (${labelEmail})`;
+        select.appendChild(opt);
+      });
+      if(select.options.length === 0){
+        const opt = document.createElement("option");
+        opt.value = "Signer (email@example.com)";
+        opt.textContent = "Signer (email@example.com)";
+        select.appendChild(opt);
+      }
+    }
+
     addRecipientLink.addEventListener("click", () => {
       state.recipients.push({ name:"", email:"" });
       renderRecipients();
-    });
-
-    nextTagBar.addEventListener("click", () => {
-      closeRecipientsModal();
-      showView("tag");
     });
 
     recipientsModal.addEventListener("click", (e) => {
@@ -917,37 +977,76 @@
 
     document.getElementById("backToRecipientsBtn").addEventListener("click", openRecipientsModal);
 
-    // Tag doc drag/drop (PDF pages 1–2)
+    // =========================
+    // PDF Viewer (pdf.js)
+    // =========================
     const docPage = document.getElementById("docPage");
     const docHint = document.getElementById("docHint");
+    const pdfCanvas = document.getElementById("pdfCanvas");
+    const pageIndicator = document.getElementById("pageIndicator");
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+
+    // Configure pdf.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+
+    async function loadPdf(pdfBytes){
+      state.pdfDocHandle = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+      state.pdfPageNumber = 1;
+      await renderPdfPage();
+    }
+
+    async function renderPdfPage(){
+      if(!state.pdfDocHandle) return;
+
+      const page = await state.pdfDocHandle.getPage(state.pdfPageNumber);
+
+      // Fit to container width
+      const containerWidth = docPage.clientWidth - 2;
+      const unscaled = page.getViewport({ scale: 1 });
+      const scale = containerWidth / unscaled.width;
+
+      const viewport = page.getViewport({ scale });
+
+      const ctx = pdfCanvas.getContext("2d", { alpha: false });
+      pdfCanvas.width = Math.floor(viewport.width);
+      pdfCanvas.height = Math.floor(viewport.height);
+
+      // Ensure overlay container matches canvas height
+      docPage.style.height = pdfCanvas.height + "px";
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      pageIndicator.textContent = `Page ${state.pdfPageNumber} / ${state.pdfDocHandle.numPages}`;
+
+      prevPageBtn.disabled = state.pdfPageNumber <= 1;
+      nextPageBtn.disabled = state.pdfPageNumber >= state.pdfDocHandle.numPages;
+      prevPageBtn.classList.toggle("btn-muted", prevPageBtn.disabled);
+      nextPageBtn.classList.toggle("btn-muted", nextPageBtn.disabled);
+    }
+
+    prevPageBtn.addEventListener("click", async () => {
+      if(!state.pdfDocHandle || state.pdfPageNumber <= 1) return;
+      state.pdfPageNumber -= 1;
+      clearPlacedFields();
+      await renderPdfPage();
+    });
+
+    nextPageBtn.addEventListener("click", async () => {
+      if(!state.pdfDocHandle || state.pdfPageNumber >= state.pdfDocHandle.numPages) return;
+      state.pdfPageNumber += 1;
+      clearPlacedFields();
+      await renderPdfPage();
+    });
+
+    // =========================
+    // Tagging tools (iOS + desktop)
+    // - tap a tool -> tap page to place
+    // - pointer drag placed fields
+    // =========================
     const assignSelect = document.getElementById("assignSelect");
-
-    let dragToolType = null;
-
-    document.querySelectorAll(".tool").forEach(t => {
-      t.addEventListener("dragstart", (e) => {
-        dragToolType = t.getAttribute("data-tool");
-        e.dataTransfer.setData("text/plain", dragToolType);
-      });
-    });
-
-    docPage.addEventListener("dragover", (e) => {
-      e.preventDefault();
-    });
-
-    docPage.addEventListener("drop", (e) => {
-      e.preventDefault();
-      const type = e.dataTransfer.getData("text/plain") || dragToolType;
-      if(!type) return;
-
-      const rect = docPage.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      placeField(type, x, y);
-      docHint.style.display = "none";
-      dragToolType = null;
-    });
+    let activeToolType = null;
 
     function labelFor(type){
       if(type === "signature") return "Signature";
@@ -956,30 +1055,43 @@
       return "Text Input";
     }
 
-    function placeField(type, x, y){
-      const el = document.createElement("div");
-      el.className = "placed";
-      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 140)) + "px";
-      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 40)) + "px";
+    function setActiveTool(type){
+      activeToolType = type;
+      document.querySelectorAll(".tool").forEach(el => {
+        el.classList.toggle("active", el.getAttribute("data-tool") === type);
+      });
+      docHint.style.display = "flex";
+      docHint.textContent = `Place: ${labelFor(type)} (tap/click on document)`;
+    }
 
-      const who = assignSelect.value;
-      el.innerHTML = `${labelFor(type)}<small>${who}</small>`;
+    document.querySelectorAll(".tool").forEach(t => {
+      t.addEventListener("click", () => setActiveTool(t.getAttribute("data-tool")));
+    });
 
-      // simple drag within page
+    function clearPlacedFields(){
+      // demo keeps placed fields per page as overlays; when paging we clear for simplicity
+      docPage.querySelectorAll(".placed").forEach(el => el.remove());
+    }
+
+    function enableDragWithinPage(el){
       let dragging = false;
       let startX = 0, startY = 0, origLeft = 0, origTop = 0;
 
-      el.addEventListener("mousedown", (ev) => {
+      el.addEventListener("pointerdown", (ev) => {
         dragging = true;
+        el.setPointerCapture(ev.pointerId);
+
         startX = ev.clientX;
         startY = ev.clientY;
         origLeft = parseFloat(el.style.left);
         origTop = parseFloat(el.style.top);
+
         ev.preventDefault();
       });
 
-      window.addEventListener("mousemove", (ev) => {
+      el.addEventListener("pointermove", (ev) => {
         if(!dragging) return;
+
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
 
@@ -990,10 +1102,59 @@
         el.style.top = newTop + "px";
       });
 
-      window.addEventListener("mouseup", () => { dragging = false; });
+      el.addEventListener("pointerup", () => { dragging = false; });
+      el.addEventListener("pointercancel", () => { dragging = false; });
+    }
 
+    function placeField(type, x, y){
+      const el = document.createElement("div");
+      el.className = "placed";
+
+      // clamp inside page
+      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 140)) + "px";
+      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 40)) + "px";
+
+      const who = assignSelect.value || "Signer (email@example.com)";
+      el.innerHTML = `${labelFor(type)}<small>${who}</small>`;
+
+      enableDragWithinPage(el);
       docPage.appendChild(el);
     }
+
+    // Place on page (tap/click)
+    docPage.addEventListener("pointerdown", (e) => {
+      // don't place if user is dragging an existing field
+      if(e.target.closest(".placed")) return;
+      if(!activeToolType) return;
+      if(!state.pdfDocHandle) return;
+
+      const rect = docPage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      placeField(activeToolType, x, y);
+      docHint.style.display = "none";
+    });
+
+    // Next: Tag Document
+    nextTagBar.addEventListener("click", async () => {
+      closeRecipientsModal();
+      showView("tag");
+
+      renderAssignDropdown();
+
+      if(!state.pdfBytes){
+        docHint.style.display = "flex";
+        docHint.textContent = "No PDF loaded. Go back and upload a PDF or start blank.";
+        return;
+      }
+
+      clearPlacedFields();
+      await loadPdf(state.pdfBytes);
+
+      // default tool selected
+      setActiveTool("signature");
+    });
 
     // Finish (fake next step)
     document.getElementById("finishBtn").addEventListener("click", () => {
@@ -1001,7 +1162,7 @@
       showView("dashboard");
     });
 
-    // Start in landing, like PDF page 7
+    // Start in landing
     showView("landing");
   </script>
 </body>
