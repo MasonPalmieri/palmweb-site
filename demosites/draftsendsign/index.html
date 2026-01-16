@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DraftSendSign — Demo</title>
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --panel:#f3f4f6;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius:14px;
+      --btn:#111111;
+      --btnText:#ffffff;
+      --btnOutline:#ffffff;
+      --btnOutlineText:#111111;
+      --danger:#ef4444;
+      --dangerSoft:#fee2e2;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:var(--bg);
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font-family:inherit; }
+
+    /* Simple top bar like PDF (pages 6–7) */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width: 1100px;
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      font-weight:800;
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      font-size:13px;
+      color:#111827;
+    }
+    .nav a{
+      color:#111827;
+      opacity:.9;
+    }
+    .nav a:hover{ opacity:1; text-decoration:underline; }
+
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:8px;
+      padding:9px 14px;
+      font-weight:800;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .btn-primary{
+      background:var(--btn);
+      color:var(--btnText);
+    }
+    .btn-outline{
+      background:var(--btnOutline);
+      color:var(--btnOutlineText);
+      border:1px solid #111;
+    }
+    .btn-muted{
+      background:#e5e7eb;
+      color:#111827;
+      border:1px solid #d1d5db;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin:0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    /* Landing (PDF page 7) */
+    .landing{
+      text-align:center;
+      padding: 40px 0 10px;
+    }
+    .landing h1{
+      font-size: clamp(30px, 4vw, 56px);
+      margin: 18px 0 8px;
+      letter-spacing: -1.2px;
+      font-weight: 900;
+    }
+    .landing p{
+      margin:0 auto 18px;
+      max-width: 640px;
+      color: var(--muted);
+      font-weight:600;
+      line-height:1.6;
+      font-size: 14px;
+    }
+    .cta-row{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 16px 0 34px;
+    }
+
+    .tri{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .tri .tri-item{
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .tri .tri-item strong{
+      display:block;
+      color:#111827;
+      font-weight:900;
+      margin-bottom: 6px;
+    }
+    @media (max-width: 860px){
+      .tri{ grid-template-columns:1fr; text-align:left; }
+    }
+
+    .pricing{
+      background: #f5f5f7;
+      margin-top: 46px;
+      padding: 42px 0;
+    }
+    .pricing h2{
+      text-align:center;
+      margin:0;
+      font-size: 28px;
+      font-weight:900;
+      letter-spacing:-0.6px;
+    }
+    .pricing p{
+      text-align:center;
+      margin: 8px auto 26px;
+      color: var(--muted);
+      font-weight:650;
+      max-width: 560px;
+    }
+    .price-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(260px, 360px));
+      gap: 18px;
+      justify-content:center;
+      padding: 0 16px;
+    }
+    .price-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .price-card strong{
+      display:block;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .price{
+      font-size: 22px;
+      font-weight: 950;
+      margin: 6px 0 12px;
+    }
+
+    /* Dashboard (PDF pages 5–6) */
+    .center-title{
+      text-align:center;
+      margin-top: 34px;
+    }
+    .center-title h2{
+      margin: 0 0 6px;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing:-0.6px;
+    }
+    .center-title p{
+      margin:0;
+      color: var(--muted);
+      font-weight:650;
+      font-size: 13px;
+    }
+
+    .card-grid{
+      margin: 26px auto 0;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 18px;
+      max-width: 900px;
+    }
+    @media (max-width: 860px){
+      .card-grid{ grid-template-columns:1fr; }
+    }
+
+    .dash-card{
+      border: 1px solid #111;
+      border-radius: 12px;
+      padding: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      min-height: 135px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .dash-card.danger{
+      border-color: #ef4444;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(239,68,68,.12);
+    }
+    .dash-card h3{
+      margin:0;
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .dash-card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 12.5px;
+      font-weight: 650;
+      line-height:1.5;
+      max-width: 66ch;
+    }
+    .dash-card .btn{ align-self:flex-start; }
+
+    /* Upload (PDF page 4) */
+    .upload{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height: 62vh;
+    }
+    .upload-card{
+      width: min(560px, 100%);
+      text-align:center;
+      padding: 22px;
+    }
+    .upload-card h2{
+      margin:0;
+      font-size: 28px;
+      font-weight: 900;
+    }
+    .upload-card p{
+      margin: 8px auto 18px;
+      color: var(--muted);
+      font-weight:650;
+      font-size: 13px;
+      max-width: 420px;
+    }
+    .drop{
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 22px;
+      background: #fafafa;
+      color: #9ca3af;
+      font-weight: 750;
+      cursor:pointer;
+      user-select:none;
+    }
+    .drop strong{
+      color:#6b7280;
+    }
+    .upload-actions{
+      margin-top: 14px;
+    }
+
+    /* Assign recipients (PDF page 3) */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 16px;
+      background: rgba(0,0,0,.55);
+      z-index: 999;
+    }
+    .modal.show{ display:flex; }
+    .modal-card{
+      width: min(620px, 100%);
+      background:#fff;
+      border-radius: 8px;
+      border:1px solid var(--line);
+      box-shadow: 0 18px 60px rgba(0,0,0,.22);
+      padding: 18px;
+      text-align:center;
+    }
+    .modal-card h2{
+      margin:0 0 12px;
+      font-weight: 950;
+      font-size: 18px;
+    }
+    .row{
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .field{
+      width: 180px;
+      padding: 9px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .link{
+      font-size: 12px;
+      font-weight: 800;
+      color: #2563eb;
+      cursor:pointer;
+      user-select:none;
+    }
+    .link.danger{ color: #ef4444; }
+    .next-bar{
+      margin-top: 12px;
+      width:100%;
+      border-radius: 3px;
+      background:#111;
+      color:#fff;
+      padding: 10px 12px;
+      font-weight: 900;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    /* Tag document (PDF pages 1–2) */
+    .tag-layout{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      min-height: calc(100vh - 54px);
+      border-top: 0;
+    }
+    @media (max-width: 980px){
+      .tag-layout{ grid-template-columns: 1fr; }
+    }
+
+    .side{
+      border-right: 1px solid var(--line);
+      background: #f3f4f6;
+      padding: 14px;
+    }
+    .side h3{
+      margin: 4px 0 10px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .tool{
+      background:#fff;
+      border:1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 10px 10px;
+      font-weight: 800;
+      font-size: 12.5px;
+      margin-bottom: 8px;
+      cursor: grab;
+      user-select:none;
+    }
+    .tool:active{ cursor:grabbing; }
+    .assign{
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    .select{
+      width:100%;
+      padding: 10px 10px;
+      border:1px solid #cbd5e1;
+      border-radius:4px;
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+
+    .canvas-wrap{
+      padding: 18px;
+      background: #fff;
+    }
+
+    /* big white page area */
+    .page{
+      width: min(740px, 100%);
+      aspect-ratio: 8.5 / 11;
+      margin: 0 auto;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+      position: relative;
+      overflow:hidden;
+    }
+
+    .page .hint{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#9ca3af;
+      font-weight: 700;
+      font-size: 12px;
+      pointer-events:none;
+    }
+
+    /* faint sample text on page like PDF page 1 */
+    .sample{
+      position:absolute;
+      left: 54%;
+      top: 24%;
+      transform: translateX(-50%);
+      width: 260px;
+      font-size: 11px;
+      color:#111;
+      opacity:.8;
+      line-height: 2.4;
+      font-weight:700;
+      pointer-events:none;
+    }
+    .line{
+      display:inline-block;
+      border-bottom: 1px solid #111;
+      width: 110px;
+      transform: translateY(-2px);
+      margin-left: 6px;
+    }
+
+    /* placed fields */
+    .placed{
+      position:absolute;
+      border: 1px solid #111827;
+      background: rgba(255,255,255,.92);
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 850;
+      cursor: move;
+      user-select:none;
+      min-width: 120px;
+    }
+    .placed small{
+      display:block;
+      font-size: 10px;
+      font-weight: 750;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .tag-actions{
+      max-width: 740px;
+      margin: 10px auto 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* tiny footer like PDF */
+    .foot{
+      text-align:center;
+      color:#9ca3af;
+      font-size: 12px;
+      font-weight: 650;
+      margin-top: 26px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">DraftSendSign</div>
+
+      <div class="nav-right">
+        <div class="nav" id="navAuthed" style="display:none;">
+          <a href="#" data-nav="upload">Upload Document</a>
+          <a href="#" data-nav="docs">My Documents</a>
+          <a href="#" data-nav="account">Account</a>
+        </div>
+
+        <div class="nav" id="navPublic">
+          <a href="#" id="loginLink">Login</a>
+          <button class="btn btn-primary" id="signupBtn" type="button">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- LANDING (PDF page 7) -->
+    <section class="view active" id="viewLanding">
+      <div class="landing">
+        <h1>A simpler way to draft, send,<br/>and sign documents.</h1>
+        <p>Professional-grade e-signature tools at a fraction of the cost.</p>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="getStartedBtn" type="button">Get Started</button>
+          <button class="btn btn-outline" id="exploreBtn" type="button">Explore Features</button>
+        </div>
+
+        <div class="tri">
+          <div class="tri-item">
+            <strong>Draft</strong>
+            Create legally sound agreements in minutes using smart templates.
+          </div>
+          <div class="tri-item">
+            <strong>Send</strong>
+            Securely send to one or multiple signers with real-time tracking.
+          </div>
+          <div class="tri-item">
+            <strong>Sign</strong>
+            Mobile-friendly signing with legally binding e-signatures.
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing" id="pricing">
+        <div class="wrap" style="padding-top:0; padding-bottom:0;">
+          <h2>Simple Pricing</h2>
+          <p>Unlimited documents. No limits. No contracts.</p>
+        </div>
+
+        <div class="price-grid">
+          <div class="price-card">
+            <strong>Monthly</strong>
+            <div class="price">$9.99/month</div>
+            <button class="btn btn-primary" type="button" id="chooseMonthly">Choose Plan</button>
+          </div>
+          <div class="price-card">
+            <strong>Annual</strong>
+            <div class="price">$99.99/year</div>
+            <button class="btn btn-primary" type="button" id="chooseAnnual">Choose Plan</button>
+          </div>
+        </div>
+
+        <div class="foot">© <span id="year"></span> DraftSendSign. All rights reserved.</div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD (PDF pages 5–6) -->
+    <section class="view" id="viewDashboard">
+      <div class="center-title">
+        <h2>Welcome back</h2>
+        <p>Choose an action to get started.</p>
+      </div>
+
+      <div class="card-grid">
+        <div class="dash-card">
+          <div>
+            <h3>Upload New Document</h3>
+            <p>Start a new document and prepare it for signature.</p>
+          </div>
+          <button class="btn btn-primary" id="startUploadBtn" type="button">Start Upload</button>
+        </div>
+
+        <div class="dash-card">
+          <div>
+            <h3>View Signed Documents</h3>
+            <p>Access documents you’ve drafted or sent.</p>
+          </div>
+          <button class="btn btn-primary" id="viewDocsBtn" type="button">View Documents</button>
+        </div>
+
+        <div class="dash-card">
+          <div>
+            <h3>Settings</h3>
+            <p>Update your profile, plan, or security options.</p>
+          </div>
+          <button class="btn btn-primary" id="settingsBtn" type="button">Account Settings</button>
+        </div>
+
+        <div class="dash-card danger">
+          <div>
+            <h3 style="color:#ef4444;">Logout</h3>
+            <p>Sign out of your account securely.</p>
+          </div>
+          <button class="btn btn-primary" id="logoutBtn" type="button">Logout</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- UPLOAD (PDF page 4) -->
+    <section class="view" id="viewUpload">
+      <div class="upload">
+        <div class="upload-card">
+          <h2>Upload a Document</h2>
+          <p>Drag and drop your PDF or Word file below or click to browse.</p>
+
+          <div class="drop" id="dropZone" role="button" tabindex="0">
+            <strong>Click</strong> to choose a file or <strong>drag</strong> it here
+          </div>
+
+          <input id="fileInput" type="file" accept=".pdf,.doc,.docx" style="display:none;" />
+
+          <div class="upload-actions">
+            <button class="btn btn-muted" id="uploadNextBtn" type="button" disabled>Next</button>
+          </div>
+
+          <div style="margin-top:10px; color:#6b7280; font-weight:650; font-size:12px;">
+            Selected: <span id="fileName">(none)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAG DOCUMENT (PDF pages 1–2) -->
+    <section class="view" id="viewTag">
+      <div class="tag-layout">
+        <aside class="side">
+          <div style="font-weight:900; margin:2px 0 10px;">DraftSendSign</div>
+
+          <h3>Fields</h3>
+          <div class="tool" draggable="true" data-tool="signature">Signature</div>
+          <div class="tool" draggable="true" data-tool="initials">Initials</div>
+          <div class="tool" draggable="true" data-tool="date">Date</div>
+          <div class="tool" draggable="true" data-tool="text">Text Input</div>
+
+          <div class="assign">
+            <h3 style="margin-top:0;">Assigning For:</h3>
+            <select class="select" id="assignSelect">
+              <option value="Alice (alice@example.com)">Alice (alice@example.com)</option>
+              <option value="Bob (bob@example.com)">Bob (bob@example.com)</option>
+            </select>
+          </div>
+
+          <div style="margin-top:14px; color:#6b7280; font-size:12px; font-weight:650;">
+            Drag a field onto the document to place it.
+          </div>
+        </aside>
+
+        <main class="canvas-wrap">
+          <div class="page" id="docPage">
+            <div class="sample">
+              Contract<br/>
+              Print Name <span class="line"></span><br/>
+              Sign <span class="line"></span><br/>
+              Date <span class="line"></span>
+            </div>
+            <div class="hint" id="docHint">Drag a field here to place on the document</div>
+          </div>
+
+          <div class="tag-actions">
+            <span>Tip: drag placed fields to reposition them.</span>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-outline" id="backToRecipientsBtn" type="button">Back</button>
+              <button class="btn btn-primary" id="finishBtn" type="button">Next: Send</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+    <!-- Placeholder simple pages -->
+    <section class="view" id="viewDocs">
+      <div class="center-title">
+        <h2>My Documents</h2>
+        <p>(Demo placeholder)</p>
+      </div>
+      <div style="max-width:900px; margin:22px auto; border:1px solid var(--line); border-radius:12px; padding:18px;">
+        <div style="font-weight:900; margin-bottom:8px;">No documents yet</div>
+        <div style="color:var(--muted); font-weight:650; font-size:13px;">Use “Upload New Document” to start a workflow.</div>
+        <div style="margin-top:14px;">
+          <button class="btn btn-primary" id="docsStartUploadBtn" type="button">Start Upload</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="viewAccount">
+      <div class="center-title">
+        <h2>Account</h2>
+        <p>(Demo placeholder)</p>
+      </div>
+      <div style="max-width:900px; margin:22px auto; border:1px solid var(--line); border-radius:12px; padding:18px;">
+        <div style="font-weight:900; margin-bottom:8px;">Settings</div>
+        <div style="color:var(--muted); font-weight:650; font-size:13px;">This demo page mirrors the “Account Settings” tile.</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Assign Recipients modal (PDF page 3) -->
+  <div class="modal" id="recipientsModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <h2>Assign Recipients</h2>
+
+      <div id="recipientsList" style="display:flex; flex-direction:column; gap:10px; align-items:center;"></div>
+
+      <div style="margin-top:10px;">
+        <span class="link" id="addRecipientLink">+ Add Another Recipient</span>
+      </div>
+
+      <div class="next-bar" id="nextTagBar">Next: Tag Document</div>
+    </div>
+  </div>
+
+  <script>
+    // Mirror the PDF flow (pages 7→6→4→3→1/2)
+    // This is a static demo: no backend calls.
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const state = {
+      authed: false,
+      fileName: null,
+      recipients: [{ name: "Alice", email: "alice@example.com" }],
+      placed: []
+    };
+
+    const views = {
+      landing: document.getElementById("viewLanding"),
+      dashboard: document.getElementById("viewDashboard"),
+      upload: document.getElementById("viewUpload"),
+      tag: document.getElementById("viewTag"),
+      docs: document.getElementById("viewDocs"),
+      account: document.getElementById("viewAccount"),
+    };
+
+    const navAuthed = document.getElementById("navAuthed");
+    const navPublic = document.getElementById("navPublic");
+
+    function showView(key){
+      Object.values(views).forEach(v => v.classList.remove("active"));
+      views[key].classList.add("active");
+
+      // Toggle top nav like PDF page 6
+      navAuthed.style.display = state.authed ? "flex" : "none";
+      navPublic.style.display = state.authed ? "none" : "flex";
+    }
+
+    // Top nav routing
+    document.querySelectorAll("[data-nav]").forEach(a => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const dest = a.getAttribute("data-nav");
+        if(dest === "upload") showView("upload");
+        if(dest === "docs") showView("docs");
+        if(dest === "account") showView("account");
+      });
+    });
+
+    // Landing actions
+    function fakeAuthAndGoDashboard(){
+      state.authed = true;
+      showView("dashboard");
+    }
+
+    document.getElementById("getStartedBtn").addEventListener("click", fakeAuthAndGoDashboard);
+    document.getElementById("signupBtn").addEventListener("click", fakeAuthAndGoDashboard);
+    document.getElementById("loginLink").addEventListener("click", (e) => { e.preventDefault(); fakeAuthAndGoDashboard(); });
+
+    document.getElementById("exploreBtn").addEventListener("click", () => {
+      document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("chooseMonthly").addEventListener("click", fakeAuthAndGoDashboard);
+    document.getElementById("chooseAnnual").addEventListener("click", fakeAuthAndGoDashboard);
+
+    // Dashboard actions
+    document.getElementById("startUploadBtn").addEventListener("click", () => showView("upload"));
+    document.getElementById("viewDocsBtn").addEventListener("click", () => showView("docs"));
+    document.getElementById("settingsBtn").addEventListener("click", () => showView("account"));
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      state.authed = false;
+      showView("landing");
+    });
+    document.getElementById("docsStartUploadBtn").addEventListener("click", () => showView("upload"));
+
+    // Upload (PDF page 4)
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const uploadNextBtn = document.getElementById("uploadNextBtn");
+    const fileNameSpan = document.getElementById("fileName");
+
+    function setFile(f){
+      if(!f) return;
+      state.fileName = f.name;
+      fileNameSpan.textContent = state.fileName;
+      uploadNextBtn.disabled = false;
+      uploadNextBtn.classList.remove("btn-muted");
+      uploadNextBtn.classList.add("btn-primary");
+    }
+
+    dropZone.addEventListener("click", () => fileInput.click());
+    dropZone.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      const f = e.target.files && e.target.files[0];
+      setFile(f);
+    });
+
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.style.background = "#ffffff";
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.style.background = "#fafafa";
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.style.background = "#fafafa";
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      setFile(f);
+    });
+
+    // Next -> Assign Recipients modal (PDF page 3)
+    uploadNextBtn.addEventListener("click", () => openRecipientsModal());
+
+    // Recipients modal
+    const recipientsModal = document.getElementById("recipientsModal");
+    const recipientsList = document.getElementById("recipientsList");
+    const addRecipientLink = document.getElementById("addRecipientLink");
+    const nextTagBar = document.getElementById("nextTagBar");
+
+    function openRecipientsModal(){
+      renderRecipients();
+      recipientsModal.classList.add("show");
+      recipientsModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeRecipientsModal(){
+      recipientsModal.classList.remove("show");
+      recipientsModal.setAttribute("aria-hidden", "true");
+    }
+
+    function renderRecipients(){
+      recipientsList.innerHTML = "";
+
+      state.recipients.forEach((r, idx) => {
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const name = document.createElement("input");
+        name.className = "field";
+        name.placeholder = "Name";
+        name.value = r.name;
+        name.addEventListener("input", () => { state.recipients[idx].name = name.value; });
+
+        const email = document.createElement("input");
+        email.className = "field";
+        email.placeholder = "Email";
+        email.value = r.email;
+        email.addEventListener("input", () => { state.recipients[idx].email = email.value; });
+
+        const remove = document.createElement("span");
+        remove.className = "link danger";
+        remove.textContent = "Remove";
+        remove.addEventListener("click", () => {
+          state.recipients.splice(idx, 1);
+          if(state.recipients.length === 0){
+            state.recipients.push({ name:"", email:"" });
+          }
+          renderRecipients();
+        });
+
+        row.appendChild(name);
+        row.appendChild(email);
+        row.appendChild(remove);
+        recipientsList.appendChild(row);
+      });
+    }
+
+    addRecipientLink.addEventListener("click", () => {
+      state.recipients.push({ name:"", email:"" });
+      renderRecipients();
+    });
+
+    nextTagBar.addEventListener("click", () => {
+      closeRecipientsModal();
+      showView("tag");
+    });
+
+    recipientsModal.addEventListener("click", (e) => {
+      if(e.target === recipientsModal) closeRecipientsModal();
+    });
+
+    document.getElementById("backToRecipientsBtn").addEventListener("click", openRecipientsModal);
+
+    // Tag doc drag/drop (PDF pages 1–2)
+    const docPage = document.getElementById("docPage");
+    const docHint = document.getElementById("docHint");
+    const assignSelect = document.getElementById("assignSelect");
+
+    let dragToolType = null;
+
+    document.querySelectorAll(".tool").forEach(t => {
+      t.addEventListener("dragstart", (e) => {
+        dragToolType = t.getAttribute("data-tool");
+        e.dataTransfer.setData("text/plain", dragToolType);
+      });
+    });
+
+    docPage.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    });
+
+    docPage.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData("text/plain") || dragToolType;
+      if(!type) return;
+
+      const rect = docPage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      placeField(type, x, y);
+      docHint.style.display = "none";
+      dragToolType = null;
+    });
+
+    function labelFor(type){
+      if(type === "signature") return "Signature";
+      if(type === "initials") return "Initials";
+      if(type === "date") return "Date";
+      return "Text Input";
+    }
+
+    function placeField(type, x, y){
+      const el = document.createElement("div");
+      el.className = "placed";
+      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 140)) + "px";
+      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 40)) + "px";
+
+      const who = assignSelect.value;
+      el.innerHTML = `${labelFor(type)}<small>${who}</small>`;
+
+      // simple drag within page
+      let dragging = false;
+      let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+
+      el.addEventListener("mousedown", (ev) => {
+        dragging = true;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        origLeft = parseFloat(el.style.left);
+        origTop = parseFloat(el.style.top);
+        ev.preventDefault();
+      });
+
+      window.addEventListener("mousemove", (ev) => {
+        if(!dragging) return;
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+
+        const newLeft = Math.max(8, Math.min(origLeft + dx, docPage.clientWidth - el.offsetWidth - 8));
+        const newTop  = Math.max(8, Math.min(origTop + dy, docPage.clientHeight - el.offsetHeight - 8));
+
+        el.style.left = newLeft + "px";
+        el.style.top = newTop + "px";
+      });
+
+      window.addEventListener("mouseup", () => { dragging = false; });
+
+      docPage.appendChild(el);
+    }
+
+    // Finish (fake next step)
+    document.getElementById("finishBtn").addEventListener("click", () => {
+      alert("Demo complete: next step would be Send + signature workflow (backend).");
+      showView("dashboard");
+    });
+
+    // Start in landing, like PDF page 7
+    showView("landing");
+  </script>
+</body>
+</html>
