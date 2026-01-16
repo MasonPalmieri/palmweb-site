@@ -16,8 +16,8 @@
       --btnText:#ffffff;
       --btnOutline:#ffffff;
       --btnOutlineText:#111111;
+      --danger:#ef4444;
     }
-
     *{ box-sizing:border-box; }
     body{
       margin:0;
@@ -25,9 +25,8 @@
       color:var(--text);
       background:var(--bg);
     }
-
     a{ color:inherit; text-decoration:none; }
-    button{ font-family:inherit; }
+    button, input, select, textarea { font-family:inherit; }
 
     .topbar{
       position:sticky;
@@ -55,7 +54,6 @@
     }
     .nav a{ color:#111827; opacity:.9; }
     .nav a:hover{ opacity:1; text-decoration:underline; }
-
     .nav-right{ display:flex; align-items:center; gap:10px; }
 
     .btn{
@@ -69,6 +67,7 @@
     .btn-primary{ background:var(--btn); color:var(--btnText); }
     .btn-outline{ background:var(--btnOutline); color:var(--btnOutlineText); border:1px solid #111; }
     .btn-muted{ background:#e5e7eb; color:#111827; border:1px solid #d1d5db; }
+    .btn-danger{ background: var(--danger); color:#fff; }
 
     .wrap{
       max-width: 1100px;
@@ -102,20 +101,8 @@
       margin-top: 46px;
       padding: 42px 0;
     }
-    .pricing h2{
-      text-align:center;
-      margin:0;
-      font-size: 28px;
-      font-weight:900;
-      letter-spacing:-0.6px;
-    }
-    .pricing p{
-      text-align:center;
-      margin: 8px auto 26px;
-      color: var(--muted);
-      font-weight:650;
-      max-width: 560px;
-    }
+    .pricing h2{ text-align:center; margin:0; font-size: 28px; font-weight:900; letter-spacing:-0.6px; }
+    .pricing p{ text-align:center; margin: 8px auto 26px; color: var(--muted); font-weight:650; max-width: 560px; }
     .price-grid{
       display:grid;
       grid-template-columns: repeat(2, minmax(260px, 360px));
@@ -136,12 +123,7 @@
 
     /* Dashboard */
     .center-title{ text-align:center; margin-top: 34px; }
-    .center-title h2{
-      margin: 0 0 6px;
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing:-0.6px;
-    }
+    .center-title h2{ margin: 0 0 6px; font-size: 34px; font-weight: 900; letter-spacing:-0.6px; }
     .center-title p{ margin:0; color: var(--muted); font-weight:650; font-size: 13px; }
 
     .card-grid{
@@ -212,42 +194,59 @@
     }
     .modal.show{ display:flex; }
     .modal-card{
-      width: min(620px, 100%);
+      width: min(720px, 100%);
       background:#fff;
-      border-radius: 8px;
+      border-radius: 10px;
       border:1px solid var(--line);
       box-shadow: 0 18px 60px rgba(0,0,0,.22);
       padding: 18px;
-      text-align:center;
     }
-    .modal-card h2{ margin:0 0 12px; font-weight: 950; font-size: 18px; }
+    .modal-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .modal-title h2{ margin:0; font-weight: 950; font-size: 18px; }
+    .modal-close{
+      cursor:pointer;
+      font-weight:900;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background:#fff;
+    }
+
     .row{ display:flex; gap: 10px; justify-content:center; flex-wrap:wrap; align-items:center; }
     .field{
       width: 180px;
       padding: 9px 10px;
       border: 1px solid #d1d5db;
-      border-radius: 4px;
+      border-radius: 6px;
       font-weight: 700;
       font-size: 13px;
     }
     .link{ font-size: 12px; font-weight: 800; color: #2563eb; cursor:pointer; user-select:none; }
-    .link.danger{ color: #ef4444; }
+    .link.danger{ color: var(--danger); }
     .next-bar{
       margin-top: 12px;
       width:100%;
-      border-radius: 3px;
+      border-radius: 8px;
       background:#111;
       color:#fff;
       padding: 10px 12px;
       font-weight: 900;
       cursor:pointer;
       user-select:none;
+      text-align:center;
     }
 
     /* Tag view */
     .tag-layout{
       display:grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 280px 1fr;
       gap: 0;
       min-height: calc(100vh - 54px);
     }
@@ -259,9 +258,9 @@
     .tool{
       background:#fff;
       border:1px solid #cbd5e1;
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 10px 10px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 12.5px;
       margin-bottom: 8px;
       cursor: pointer;
@@ -275,9 +274,51 @@
       width:100%;
       padding: 10px 10px;
       border:1px solid #cbd5e1;
-      border-radius:4px;
+      border-radius:8px;
       font-weight: 800;
       font-size: 12.5px;
+      background:#fff;
+    }
+
+    .editor{
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    .editor .box{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.05);
+    }
+    .editor .label{ font-size: 11px; font-weight: 900; color:#374151; margin: 10px 0 6px; }
+    .editor input, .editor select, .editor textarea{
+      width:100%;
+      padding: 9px 10px;
+      border:1px solid #cbd5e1;
+      border-radius: 8px;
+      font-weight: 750;
+      font-size: 12.5px;
+      background:#fff;
+    }
+    .editor textarea{ min-height: 74px; resize: vertical; }
+    .editor .actions{
+      display:flex;
+      gap:10px;
+      margin-top: 10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      background:#eef2ff;
+      border:1px solid #c7d2fe;
+      color:#3730a3;
+      padding: 6px 8px;
+      border-radius: 999px;
+      margin-top: 8px;
     }
 
     .canvas-wrap{ padding: 18px; background: #fff; }
@@ -292,7 +333,7 @@
       overflow:hidden;
     }
 
-    /* Important for iOS dragging */
+    /* iOS dragging */
     #docPage{ touch-action: none; }
 
     .pdf-canvas{ display:block; width: 100%; height: auto; }
@@ -304,7 +345,7 @@
       align-items:center;
       justify-content:center;
       color:#9ca3af;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 12px;
       pointer-events:none;
       text-align:center;
@@ -315,23 +356,29 @@
     .placed{
       position:absolute;
       border: 1px solid #111827;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       padding: 6px 8px;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 12px;
-      font-weight: 850;
+      font-weight: 900;
       cursor: grab;
       user-select:none;
-      min-width: 120px;
+      min-width: 140px;
       -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
     }
     .placed:active{ cursor:grabbing; }
     .placed small{
       display:block;
       font-size: 10px;
-      font-weight: 750;
+      font-weight: 800;
       color: #6b7280;
       margin-top: 2px;
+      line-height:1.2;
+      max-width: 22ch;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space:nowrap;
     }
 
     .tag-actions{
@@ -355,6 +402,44 @@
       font-size: 12px;
       font-weight: 650;
       margin-top: 26px;
+    }
+
+    .template-form{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 760px){ .template-form{ grid-template-columns: 1fr; } }
+    .template-form label{
+      display:block;
+      font-size: 11px;
+      font-weight: 900;
+      color:#374151;
+      margin-bottom: 6px;
+    }
+    .template-form input, .template-form select, .template-form textarea{
+      width:100%;
+      padding: 10px 10px;
+      border:1px solid #cbd5e1;
+      border-radius: 10px;
+      font-weight: 750;
+      font-size: 13px;
+    }
+    .template-form textarea{ min-height: 92px; resize: vertical; grid-column: 1 / -1; }
+    .template-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .note{
+      color: var(--muted);
+      font-weight: 650;
+      font-size: 12px;
+      margin-top: 6px;
+      line-height:1.4;
     }
   </style>
 </head>
@@ -380,7 +465,6 @@
   </div>
 
   <div class="wrap">
-
     <!-- LANDING -->
     <section class="view active" id="viewLanding">
       <div class="landing">
@@ -462,7 +546,7 @@
       <div class="upload">
         <div class="upload-card">
           <h2>Upload a Document</h2>
-          <p>Upload a PDF or start from a blank PDF.</p>
+          <p>Upload a PDF or generate an agreement from a smart template.</p>
 
           <div class="drop" id="dropZone" role="button" tabindex="0">
             <strong>Click</strong> to choose a PDF or <strong>drag</strong> it here
@@ -472,11 +556,15 @@
 
           <div class="upload-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
             <button class="btn btn-muted" id="uploadNextBtn" type="button" disabled>Next</button>
-            <button class="btn btn-outline" id="blankPdfBtn" type="button">Start from Blank PDF</button>
+            <button class="btn btn-outline" id="blankPdfBtn" type="button">Start from Template</button>
           </div>
 
           <div style="margin-top:10px; color:#6b7280; font-weight:650; font-size:12px;">
             Selected: <span id="fileName">(none)</span>
+          </div>
+
+          <div class="note">
+            Demo note: PDF viewing is client-side. (No backend used.)
           </div>
         </div>
       </div>
@@ -497,12 +585,74 @@
           <div class="assign">
             <h3 style="margin-top:0;">Assigning For:</h3>
             <select class="select" id="assignSelect"></select>
+            <div class="note">This sets the default recipient for new fields.</div>
           </div>
 
-          <div style="margin-top:14px; color:#6b7280; font-size:12px; font-weight:650;">
-            1) Tap a field tool<br/>
-            2) Tap on the document to place it<br/>
-            3) Drag placed fields to reposition
+          <!-- Field editor -->
+          <div class="editor">
+            <h3 style="margin:0 0 8px;">Field Editor</h3>
+            <div class="box">
+              <div id="editorEmpty" class="note">
+                Select a tool (left) to configure it, then tap on the document to place.
+              </div>
+
+              <div id="editorBody" style="display:none;">
+                <div class="pill" id="editorModePill">New field</div>
+
+                <div class="label">Type</div>
+                <input id="edType" disabled />
+
+                <div class="label">Label (what signer sees)</div>
+                <input id="edLabel" placeholder="e.g., Signature" />
+
+                <div class="label">Assigned recipient</div>
+                <select id="edAssigned"></select>
+
+                <div id="edSignatureBlock" style="display:none;">
+                  <div class="label">Signature input</div>
+                  <select id="edSigMode">
+                    <option value="typed">Typed signature</option>
+                    <option value="drawn">Drawn signature (placeholder)</option>
+                  </select>
+
+                  <div class="label">Typed name</div>
+                  <input id="edSigName" placeholder="e.g., Alice Johnson" />
+
+                  <div class="note">This is a demo value shown inside the field box before “sending”.</div>
+                </div>
+
+                <div id="edInitialsBlock" style="display:none;">
+                  <div class="label">Initials</div>
+                  <input id="edInitials" placeholder="e.g., AJ" />
+                </div>
+
+                <div id="edDateBlock" style="display:none;">
+                  <div class="label">Date source</div>
+                  <select id="edDateMode">
+                    <option value="auto">Auto (today)</option>
+                    <option value="fixed">Fixed date</option>
+                  </select>
+
+                  <div class="label">Fixed date (if selected)</div>
+                  <input id="edDateFixed" type="date" />
+                </div>
+
+                <div id="edTextBlock" style="display:none;">
+                  <div class="label">Text value</div>
+                  <textarea id="edTextValue" placeholder="e.g., Company legal name..."></textarea>
+                </div>
+
+                <div class="actions">
+                  <button class="btn btn-primary" id="edApplyBtn" type="button">Apply</button>
+                  <button class="btn btn-outline" id="edCancelBtn" type="button">Clear</button>
+                  <button class="btn btn-danger" id="edDeleteBtn" type="button" style="display:none;">Delete</button>
+                </div>
+
+                <div class="note" id="editorHint">
+                  After Apply, tap on the document to place the field.
+                </div>
+              </div>
+            </div>
           </div>
         </aside>
 
@@ -513,7 +663,7 @@
           </div>
 
           <div class="tag-actions">
-            <span>Tip: drag placed fields to reposition them.</span>
+            <span>Tip: tap an existing field to edit it.</span>
 
             <div class="pager">
               <button class="btn btn-outline" id="prevPageBtn" type="button">Prev</button>
@@ -548,7 +698,10 @@
   <!-- Recipients modal -->
   <div class="modal" id="recipientsModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
-      <h2>Assign Recipients</h2>
+      <div class="modal-title">
+        <h2>Assign Recipients</h2>
+        <button class="modal-close" id="recipientsCloseBtn" type="button">Close</button>
+      </div>
 
       <div id="recipientsList" style="display:flex; flex-direction:column; gap:10px; align-items:center;"></div>
 
@@ -560,23 +713,67 @@
     </div>
   </div>
 
-  <!-- ✅ Use pdf.js LEGACY build (reliable globals) + pdf-lib -->
+  <!-- Template modal -->
+  <div class="modal" id="templateModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-title">
+        <h2>Create from Template</h2>
+        <button class="modal-close" id="templateCloseBtn" type="button">Close</button>
+      </div>
+
+      <div class="note">
+        Pick a template and fill the prompts. We’ll generate a PDF you can tag and send.
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="display:block; font-size:11px; font-weight:900; color:#374151; margin-bottom:6px;">Template</label>
+        <select id="tplSelect" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-weight:800;">
+          <option value="nda">Mutual NDA</option>
+          <option value="service">Service Agreement</option>
+          <option value="offer">Employment Offer Letter</option>
+          <option value="lease">Lease Addendum</option>
+        </select>
+      </div>
+
+      <div class="template-form" id="tplFields"></div>
+
+      <div class="template-actions">
+        <button class="btn btn-outline" id="tplCancelBtn" type="button">Cancel</button>
+        <button class="btn btn-primary" id="tplGenerateBtn" type="button">Generate PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ pdf.js legacy + worker + pdf-lib -->
   <script src="https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.min.js"></script>
   <script src="https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
   <script>
+    // Utilities
+    function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+    function todayISO(){
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2,"0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    }
+    async function nextFrame(){ return new Promise(res => requestAnimationFrame(() => res())); }
+
     document.getElementById("year").textContent = new Date().getFullYear();
 
     const state = {
       authed: false,
       fileName: null,
       recipients: [{ name: "Alice", email: "alice@example.com" }],
-      pdfBytes: null,        // Uint8Array
-      pdfDocHandle: null,    // pdf.js document
-      pdfPageNumber: 1
+      pdfBytes: null,
+      pdfDocHandle: null,
+      pdfPageNumber: 1,
+      activeToolType: null,
+      pendingField: null,
+      selectedFieldId: null
     };
 
+    // Views
     const views = {
       landing: document.getElementById("viewLanding"),
       dashboard: document.getElementById("viewDashboard"),
@@ -585,7 +782,6 @@
       docs: document.getElementById("viewDocs"),
       account: document.getElementById("viewAccount"),
     };
-
     const navAuthed = document.getElementById("navAuthed");
     const navPublic = document.getElementById("navPublic");
 
@@ -596,7 +792,6 @@
       navPublic.style.display = state.authed ? "none" : "flex";
     }
 
-    // top nav routing
     document.querySelectorAll("[data-nav]").forEach(a => {
       a.addEventListener("click", (e) => {
         e.preventDefault();
@@ -607,11 +802,7 @@
       });
     });
 
-    function fakeAuthAndGoDashboard(){
-      state.authed = true;
-      showView("dashboard");
-    }
-
+    function fakeAuthAndGoDashboard(){ state.authed = true; showView("dashboard"); }
     document.getElementById("getStartedBtn").addEventListener("click", fakeAuthAndGoDashboard);
     document.getElementById("signupBtn").addEventListener("click", fakeAuthAndGoDashboard);
     document.getElementById("loginLink").addEventListener("click", (e) => { e.preventDefault(); fakeAuthAndGoDashboard(); });
@@ -621,12 +812,13 @@
     document.getElementById("startUploadBtn").addEventListener("click", () => showView("upload"));
     document.getElementById("viewDocsBtn").addEventListener("click", () => showView("docs"));
     document.getElementById("settingsBtn").addEventListener("click", () => showView("account"));
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      state.authed = false;
-      showView("landing");
+    document.getElementById("logoutBtn").addEventListener("click", () => { state.authed = false; showView("landing"); });
+
+    document.getElementById("exploreBtn").addEventListener("click", () => {
+      document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
     });
 
-    // Upload elements
+    // Upload
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const uploadNextBtn = document.getElementById("uploadNextBtn");
@@ -646,32 +838,17 @@
       return new Uint8Array(ab);
     }
 
-    async function createBlankPdfBytes(){
-      const { PDFDocument, StandardFonts, rgb } = PDFLib;
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([612, 792]);
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      page.drawText("Blank Document", { x: 72, y: 740, size: 18, font, color: rgb(0.1,0.1,0.1) });
-      return new Uint8Array(await pdfDoc.save());
-    }
-
     async function setFile(file){
       if(!file) return;
       const ext = (file.name.split(".").pop() || "").toLowerCase();
-      if(ext !== "pdf"){
-        alert("This demo supports PDF uploads only.");
-        return;
-      }
+      if(ext !== "pdf"){ alert("This demo supports PDF uploads only."); return; }
       state.pdfBytes = await fileToUint8Array(file);
       setUploadUiReady(file.name);
     }
 
     dropZone.addEventListener("click", () => fileInput.click());
     dropZone.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        fileInput.click();
-      }
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); fileInput.click(); }
     });
     fileInput.addEventListener("change", async (e) => {
       const f = e.target.files && e.target.files[0];
@@ -686,17 +863,204 @@
       await setFile(f);
     });
 
-    blankPdfBtn.addEventListener("click", async () => {
-      state.pdfBytes = await createBlankPdfBytes();
-      setUploadUiReady("blank.pdf");
-      openRecipientsModal();
+    // Template modal
+    const templateModal = document.getElementById("templateModal");
+    const tplSelect = document.getElementById("tplSelect");
+    const tplFields = document.getElementById("tplFields");
+    const tplCloseBtn = document.getElementById("templateCloseBtn");
+    const tplCancelBtn = document.getElementById("tplCancelBtn");
+    const tplGenerateBtn = document.getElementById("tplGenerateBtn");
+
+    blankPdfBtn.addEventListener("click", () => openTemplateModal());
+    tplCloseBtn.addEventListener("click", () => closeTemplateModal());
+    tplCancelBtn.addEventListener("click", () => closeTemplateModal());
+    templateModal.addEventListener("click", (e) => { if(e.target === templateModal) closeTemplateModal(); });
+
+    function openTemplateModal(){
+      templateModal.classList.add("show");
+      templateModal.setAttribute("aria-hidden", "false");
+      renderTemplateFields();
+    }
+    function closeTemplateModal(){
+      templateModal.classList.remove("show");
+      templateModal.setAttribute("aria-hidden", "true");
+    }
+
+    const templateSchemas = {
+      nda: {
+        title: "Mutual Non-Disclosure Agreement",
+        fields: [
+          { key:"partyA", label:"Disclosing Party (Company A)", type:"text", placeholder:"e.g., Acme Medical Solutions, Inc." },
+          { key:"partyB", label:"Receiving Party (Company B)", type:"text", placeholder:"e.g., Northshore Devices LLC" },
+          { key:"effective", label:"Effective date", type:"date", placeholder:"" },
+          { key:"term", label:"Term (months)", type:"number", placeholder:"12" },
+          { key:"purpose", label:"Purpose / context", type:"textarea", placeholder:"e.g., evaluating a potential partnership..." }
+        ]
+      },
+      service: {
+        title: "Service Agreement",
+        fields: [
+          { key:"client", label:"Client name", type:"text", placeholder:"e.g., Bay State Labs" },
+          { key:"provider", label:"Provider name", type:"text", placeholder:"e.g., DraftSendSign Services" },
+          { key:"start", label:"Start date", type:"date", placeholder:"" },
+          { key:"fee", label:"Monthly fee (USD)", type:"number", placeholder:"2500" },
+          { key:"scope", label:"Scope of services", type:"textarea", placeholder:"e.g., onboarding, support, reporting..." }
+        ]
+      },
+      offer: {
+        title: "Employment Offer Letter",
+        fields: [
+          { key:"candidate", label:"Candidate name", type:"text", placeholder:"e.g., Jordan Lee" },
+          { key:"company", label:"Company name", type:"text", placeholder:"e.g., DraftSendSign Inc." },
+          { key:"role", label:"Role / title", type:"text", placeholder:"e.g., Operations Analyst" },
+          { key:"start", label:"Start date", type:"date", placeholder:"" },
+          { key:"salary", label:"Annual salary (USD)", type:"number", placeholder:"90000" }
+        ]
+      },
+      lease: {
+        title: "Lease Addendum",
+        fields: [
+          { key:"landlord", label:"Landlord", type:"text", placeholder:"e.g., Harbor Properties" },
+          { key:"tenant", label:"Tenant", type:"text", placeholder:"e.g., DraftSendSign Inc." },
+          { key:"address", label:"Premises address", type:"text", placeholder:"e.g., 123 Main St, Boston, MA" },
+          { key:"effective", label:"Effective date", type:"date", placeholder:"" },
+          { key:"change", label:"Addendum details", type:"textarea", placeholder:"e.g., amended parking terms..." }
+        ]
+      }
+    };
+
+    function renderTemplateFields(){
+      const schema = templateSchemas[tplSelect.value];
+      tplFields.innerHTML = "";
+      schema.fields.forEach(f => {
+        const wrap = document.createElement("div");
+        const label = document.createElement("label");
+        label.textContent = f.label;
+        wrap.appendChild(label);
+
+        let input;
+        if(f.type === "textarea"){
+          input = document.createElement("textarea");
+          input.placeholder = f.placeholder || "";
+        } else {
+          input = document.createElement("input");
+          input.type = f.type === "date" ? "date" : (f.type === "number" ? "number" : "text");
+          input.placeholder = f.placeholder || "";
+        }
+        input.id = `tpl_${f.key}`;
+        if(f.type === "date"){ input.value = todayISO(); }
+        wrap.appendChild(input);
+
+        tplFields.appendChild(wrap);
+      });
+    }
+    tplSelect.addEventListener("change", renderTemplateFields);
+
+    async function generatePdfFromTemplate(templateKey){
+      const schema = templateSchemas[templateKey];
+      const values = {};
+      schema.fields.forEach(f => {
+        const el = document.getElementById(`tpl_${f.key}`);
+        values[f.key] = (el && "value" in el) ? el.value : "";
+      });
+
+      const { PDFDocument, StandardFonts, rgb } = PDFLib;
+      const pdfDoc = await PDFDocument.create();
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+      const page = pdfDoc.addPage([612, 792]);
+      const margin = 60;
+      let y = 740;
+
+      function drawLine(text, opts={}){
+        const size = opts.size || 11;
+        const fnt = opts.bold ? fontBold : font;
+        const color = opts.muted ? rgb(0.35,0.35,0.35) : rgb(0.1,0.1,0.1);
+        const words = String(text || "").split(" ");
+        let line = "";
+        for(const w of words){
+          const test = line ? (line + " " + w) : w;
+          const width = fnt.widthOfTextAtSize(test, size);
+          if(width > (612 - margin*2) && line){
+            page.drawText(line, { x: margin, y, size, font: fnt, color });
+            y -= size + 6;
+            line = w;
+          } else {
+            line = test;
+          }
+        }
+        if(line){
+          page.drawText(line, { x: margin, y, size, font: fnt, color });
+          y -= size + 6;
+        }
+        y -= 2;
+      }
+
+      page.drawText(schema.title, { x: margin, y, size: 18, font: fontBold, color: rgb(0.1,0.1,0.1) });
+      y -= 26;
+
+      const eff = values.effective || values.start || todayISO();
+      drawLine(`Effective Date: ${eff}`, { muted:true });
+      y -= 8;
+
+      if(templateKey === "nda"){
+        drawLine(`This Mutual Non-Disclosure Agreement (“Agreement”) is entered into by and between ${values.partyA || "[Company A]"} and ${values.partyB || "[Company B]"} (each a “Party”, collectively the “Parties”).`);
+        drawLine(`Purpose. The Parties wish to exchange certain confidential information for the purpose of: ${values.purpose || "[Purpose]"}.`);
+        drawLine(`Confidential Information. “Confidential Information” includes non-public business, technical, financial, and operational information disclosed in any form.`);
+        drawLine(`Obligations. Each Party will (a) use Confidential Information solely for the Purpose, (b) protect it using reasonable care, and (c) not disclose it except to personnel with a need to know.`);
+        drawLine(`Term. This Agreement remains in effect for ${values.term || "12"} months from the Effective Date. Confidentiality obligations survive for 3 years following termination.`);
+        drawLine(`No License. No rights are granted except as needed to evaluate the Purpose.`);
+      }
+      if(templateKey === "service"){
+        drawLine(`This Service Agreement (“Agreement”) is between ${values.client || "[Client]"} (“Client”) and ${values.provider || "[Provider]"} (“Provider”).`);
+        drawLine(`Scope. Provider will perform: ${values.scope || "[Scope]"}.`);
+        drawLine(`Fees. Client will pay Provider $${values.fee || "0"} per month, due within 15 days of invoice.`);
+        drawLine(`Term. Services begin on ${values.start || "[Start Date]"} and continue month-to-month unless terminated with 30 days’ notice.`);
+        drawLine(`Confidentiality. Each party will protect the other party’s confidential information.`);
+      }
+      if(templateKey === "offer"){
+        drawLine(`${values.company || "[Company]"} is pleased to offer ${values.candidate || "[Candidate]"} the position of ${values.role || "[Role]"} effective ${values.start || "[Start Date]"}.`);
+        drawLine(`Compensation. Base salary will be $${values.salary || "0"} per year, paid in accordance with standard payroll practices.`);
+        drawLine(`Employment Relationship. Employment is at-will unless otherwise required by law.`);
+        drawLine(`Confidentiality & IP. You agree to protect confidential information and assign work product created within scope of employment.`);
+      }
+      if(templateKey === "lease"){
+        drawLine(`This Lease Addendum (“Addendum”) is entered into by ${values.landlord || "[Landlord]"} (“Landlord”) and ${values.tenant || "[Tenant]"} (“Tenant”).`);
+        drawLine(`Premises: ${values.address || "[Address]"}. Effective ${values.effective || "[Effective Date]"}.`);
+        drawLine(`Addendum Terms. ${values.change || "[Describe changes]"}.`);
+        drawLine(`All other terms of the Lease remain in full force and effect.`);
+      }
+
+      y -= 10;
+      drawLine("IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.", { bold:true });
+
+      y -= 12;
+      drawLine("Party A: ________________________________", { muted:true });
+      drawLine("Party B: ________________________________", { muted:true });
+      drawLine("Date:    ________________________________", { muted:true });
+
+      return new Uint8Array(await pdfDoc.save());
+    }
+
+    tplGenerateBtn.addEventListener("click", async () => {
+      try{
+        const key = tplSelect.value;
+        state.pdfBytes = await generatePdfFromTemplate(key);
+        closeTemplateModal();
+        setUploadUiReady(`${key}.pdf`);
+        openRecipientsModal();
+      }catch(err){
+        alert("Template generation failed: " + (err?.message || String(err)));
+      }
     });
 
-    // recipients modal
+    // Recipients modal
     const recipientsModal = document.getElementById("recipientsModal");
     const recipientsList = document.getElementById("recipientsList");
     const addRecipientLink = document.getElementById("addRecipientLink");
     const nextTagBar = document.getElementById("nextTagBar");
+    const recipientsCloseBtn = document.getElementById("recipientsCloseBtn");
 
     function openRecipientsModal(){
       renderRecipients();
@@ -707,7 +1071,6 @@
       recipientsModal.classList.remove("show");
       recipientsModal.setAttribute("aria-hidden", "true");
     }
-
     function renderRecipients(){
       recipientsList.innerHTML = "";
       state.recipients.forEach((r, idx) => {
@@ -731,9 +1094,7 @@
         remove.textContent = "Remove";
         remove.addEventListener("click", () => {
           state.recipients.splice(idx, 1);
-          if(state.recipients.length === 0){
-            state.recipients.push({ name:"", email:"" });
-          }
+          if(state.recipients.length === 0) state.recipients.push({ name:"", email:"" });
           renderRecipients();
         });
 
@@ -749,46 +1110,23 @@
       renderRecipients();
     });
 
-    uploadNextBtn.addEventListener("click", openRecipientsModal);
+    recipientsCloseBtn.addEventListener("click", closeRecipientsModal);
     recipientsModal.addEventListener("click", (e) => { if(e.target === recipientsModal) closeRecipientsModal(); });
+
+    uploadNextBtn.addEventListener("click", openRecipientsModal);
     document.getElementById("backToRecipientsBtn").addEventListener("click", openRecipientsModal);
 
-    function renderAssignDropdown(){
-      const select = document.getElementById("assignSelect");
-      select.innerHTML = "";
-      state.recipients.forEach((r) => {
-        const n = (r.name || "Signer").trim();
-        const em = (r.email || "email@example.com").trim();
-        const opt = document.createElement("option");
-        opt.value = `${n} (${em})`;
-        opt.textContent = `${n} (${em})`;
-        select.appendChild(opt);
-      });
-      if(select.options.length === 0){
-        const opt = document.createElement("option");
-        opt.value = "Signer (email@example.com)";
-        opt.textContent = "Signer (email@example.com)";
-        select.appendChild(opt);
-      }
-    }
-
-    // PDF viewer + tagging
+    // PDF viewer
     const docPage = document.getElementById("docPage");
     const docHint = document.getElementById("docHint");
     const pdfCanvas = document.getElementById("pdfCanvas");
     const pageIndicator = document.getElementById("pageIndicator");
     const prevPageBtn = document.getElementById("prevPageBtn");
     const nextPageBtn = document.getElementById("nextPageBtn");
-    const assignSelect = document.getElementById("assignSelect");
 
-    // Ensure pdf.js worker is set (legacy global)
     if (window.pdfjsLib) {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js";
-    }
-
-    async function nextFrame(){
-      return new Promise(resolve => requestAnimationFrame(() => resolve()));
     }
 
     function showError(msg){
@@ -797,9 +1135,7 @@
     }
 
     async function loadPdf(pdfBytes){
-      if(!window.pdfjsLib){
-        throw new Error("pdfjsLib is not available. The pdf.js script failed to load.");
-      }
+      if(!window.pdfjsLib) throw new Error("pdfjsLib missing; pdf.js failed to load.");
       state.pdfDocHandle = await window.pdfjsLib.getDocument({ data: pdfBytes }).promise;
       state.pdfPageNumber = 1;
       await renderPdfPage();
@@ -807,17 +1143,10 @@
 
     async function renderPdfPage(){
       if(!state.pdfDocHandle) return;
-
-      // Wait one frame so layout is real (fixes width=0 after view switch)
       await nextFrame();
-
       const page = await state.pdfDocHandle.getPage(state.pdfPageNumber);
-
       const containerWidth = docPage.clientWidth - 2;
-      if(containerWidth <= 10){
-        throw new Error("PDF container has zero width. Ensure the Tag view is visible before rendering.");
-      }
-
+      if(containerWidth <= 10) throw new Error("PDF container has zero width.");
       const unscaled = page.getViewport({ scale: 1 });
       const scale = containerWidth / unscaled.width;
       const viewport = page.getViewport({ scale });
@@ -825,7 +1154,6 @@
       const ctx = pdfCanvas.getContext("2d", { alpha: false });
       pdfCanvas.width = Math.floor(viewport.width);
       pdfCanvas.height = Math.floor(viewport.height);
-
       docPage.style.height = pdfCanvas.height + "px";
 
       await page.render({ canvasContext: ctx, viewport }).promise;
@@ -835,19 +1163,16 @@
       nextPageBtn.disabled = state.pdfPageNumber >= state.pdfDocHandle.numPages;
     }
 
-    function clearPlacedFields(){
-      docPage.querySelectorAll(".placed").forEach(el => el.remove());
-    }
+    function clearPlacedFields(){ docPage.querySelectorAll(".placed").forEach(el => el.remove()); }
 
     prevPageBtn.addEventListener("click", async () => {
       try{
         if(!state.pdfDocHandle || state.pdfPageNumber <= 1) return;
         state.pdfPageNumber -= 1;
         clearPlacedFields();
+        clearEditorSelection();
         await renderPdfPage();
-      }catch(err){
-        showError("PDF render error:\n" + (err?.message || String(err)));
-      }
+      }catch(err){ showError("PDF render error:\n" + (err?.message || String(err))); }
     });
 
     nextPageBtn.addEventListener("click", async () => {
@@ -855,13 +1180,62 @@
         if(!state.pdfDocHandle || state.pdfPageNumber >= state.pdfDocHandle.numPages) return;
         state.pdfPageNumber += 1;
         clearPlacedFields();
+        clearEditorSelection();
         await renderPdfPage();
-      }catch(err){
-        showError("PDF render error:\n" + (err?.message || String(err)));
-      }
+      }catch(err){ showError("PDF render error:\n" + (err?.message || String(err))); }
     });
 
-    let activeToolType = null;
+    // Assign dropdown + editor
+    const assignSelect = document.getElementById("assignSelect");
+    function recipientsAsOptions(){
+      return state.recipients.map(r => {
+        const n = (r.name || "Signer").trim();
+        const em = (r.email || "email@example.com").trim();
+        return `${n} (${em})`;
+      });
+    }
+    function renderAssignDropdown(){
+      const opts = recipientsAsOptions();
+      assignSelect.innerHTML = "";
+      opts.forEach(v => {
+        const o = document.createElement("option");
+        o.value = v; o.textContent = v;
+        assignSelect.appendChild(o);
+      });
+      if(assignSelect.options.length === 0){
+        const o = document.createElement("option");
+        o.value = "Signer (email@example.com)";
+        o.textContent = "Signer (email@example.com)";
+        assignSelect.appendChild(o);
+      }
+    }
+
+    const editorEmpty = document.getElementById("editorEmpty");
+    const editorBody = document.getElementById("editorBody");
+    const editorModePill = document.getElementById("editorModePill");
+
+    const edType = document.getElementById("edType");
+    const edLabel = document.getElementById("edLabel");
+    const edAssigned = document.getElementById("edAssigned");
+
+    const edSignatureBlock = document.getElementById("edSignatureBlock");
+    const edSigMode = document.getElementById("edSigMode");
+    const edSigName = document.getElementById("edSigName");
+
+    const edInitialsBlock = document.getElementById("edInitialsBlock");
+    const edInitials = document.getElementById("edInitials");
+
+    const edDateBlock = document.getElementById("edDateBlock");
+    const edDateMode = document.getElementById("edDateMode");
+    const edDateFixed = document.getElementById("edDateFixed");
+
+    const edTextBlock = document.getElementById("edTextBlock");
+    const edTextValue = document.getElementById("edTextValue");
+
+    const edApplyBtn = document.getElementById("edApplyBtn");
+    const edCancelBtn = document.getElementById("edCancelBtn");
+    const edDeleteBtn = document.getElementById("edDeleteBtn");
+    const editorHint = document.getElementById("editorHint");
 
     function labelFor(type){
       if(type === "signature") return "Signature";
@@ -869,18 +1243,155 @@
       if(type === "date") return "Date";
       return "Text Input";
     }
+    function showEditor(){ editorEmpty.style.display="none"; editorBody.style.display="block"; }
+    function hideEditor(){ editorEmpty.style.display="block"; editorBody.style.display="none"; }
+    function setEditorBlocks(type){
+      edSignatureBlock.style.display = (type === "signature") ? "block" : "none";
+      edInitialsBlock.style.display  = (type === "initials") ? "block" : "none";
+      edDateBlock.style.display      = (type === "date") ? "block" : "none";
+      edTextBlock.style.display      = (type === "text") ? "block" : "none";
+    }
+    function renderEditorAssignedOptions(selected){
+      const opts = recipientsAsOptions();
+      edAssigned.innerHTML = "";
+      opts.forEach(v => {
+        const o = document.createElement("option");
+        o.value = v; o.textContent = v;
+        edAssigned.appendChild(o);
+      });
+      if(edAssigned.options.length === 0){
+        const o = document.createElement("option");
+        o.value = "Signer (email@example.com)";
+        o.textContent = "Signer (email@example.com)";
+        edAssigned.appendChild(o);
+      }
+      edAssigned.value = selected || edAssigned.options[0].value;
+    }
+
+    function clearEditorSelection(){
+      state.activeToolType = null;
+      state.pendingField = null;
+      state.selectedFieldId = null;
+      document.querySelectorAll(".tool").forEach(el => el.classList.remove("active"));
+      hideEditor();
+      docHint.style.display = "flex";
+      docHint.textContent = "Select a tool, configure it, then tap on the document to place.";
+    }
 
     function setActiveTool(type){
-      activeToolType = type;
+      state.activeToolType = type;
+      state.selectedFieldId = null;
+      state.pendingField = null;
+
       document.querySelectorAll(".tool").forEach(el => {
         el.classList.toggle("active", el.getAttribute("data-tool") === type);
       });
+
+      showEditor();
+      editorModePill.textContent = "New field";
+      edDeleteBtn.style.display = "none";
+
+      edType.value = labelFor(type);
+      edLabel.value = labelFor(type);
+      renderEditorAssignedOptions(assignSelect.value);
+
+      edSigMode.value = "typed";
+      edSigName.value = "";
+      edInitials.value = "";
+      edDateMode.value = "auto";
+      edDateFixed.value = todayISO();
+      edTextValue.value = "";
+
+      setEditorBlocks(type);
+
+      editorHint.textContent = "After Apply, tap on the document to place the field.";
       docHint.style.display = "flex";
-      docHint.textContent = `Place: ${labelFor(type)}\nTap/click on the document`;
+      docHint.textContent = "Configure the field in the sidebar, then tap on the document to place.";
     }
 
     document.querySelectorAll(".tool").forEach(t => {
       t.addEventListener("click", () => setActiveTool(t.getAttribute("data-tool")));
+    });
+
+    assignSelect.addEventListener("change", () => {
+      if(state.activeToolType && !state.selectedFieldId){
+        renderEditorAssignedOptions(assignSelect.value);
+      }
+    });
+
+    function buildFieldFromEditor(){
+      const type = state.activeToolType;
+      if(!type) return null;
+      const assigned = edAssigned.value || assignSelect.value;
+      const label = (edLabel.value || labelFor(type)).trim();
+
+      let displayValue = "";
+      let meta = {};
+
+      if(type === "signature"){
+        const mode = edSigMode.value;
+        const name = (edSigName.value || "").trim();
+        displayValue = mode === "typed" ? (name ? `/${name}/` : "/Typed Signature/") : "[Draw here]";
+        meta = { mode, name };
+      }
+      if(type === "initials"){
+        const ini = (edInitials.value || "").trim();
+        displayValue = ini || "[Initials]";
+        meta = { initials: ini };
+      }
+      if(type === "date"){
+        const mode = edDateMode.value;
+        const date = mode === "auto" ? todayISO() : (edDateFixed.value || todayISO());
+        displayValue = date;
+        meta = { mode, date };
+      }
+      if(type === "text"){
+        const text = (edTextValue.value || "").trim();
+        displayValue = text ? text.slice(0, 24) : "[Text]";
+        meta = { text };
+      }
+
+      return {
+        id: state.selectedFieldId || uid(),
+        type,
+        label,
+        assigned,
+        displayValue,
+        meta,
+        page: state.pdfPageNumber
+      };
+    }
+
+    edApplyBtn.addEventListener("click", () => {
+      const field = buildFieldFromEditor();
+      if(!field){ alert("Select a tool first."); return; }
+
+      if(state.selectedFieldId){
+        const el = docPage.querySelector(`.placed[data-id="${state.selectedFieldId}"]`);
+        if(el){
+          el.dataset.type = field.type;
+          el.dataset.label = field.label;
+          el.dataset.assigned = field.assigned;
+          el.dataset.page = String(field.page);
+          el.dataset.meta = JSON.stringify(field.meta);
+          el.dataset.value = field.displayValue;
+          el.innerHTML = `${field.label}: ${field.displayValue}<small>${field.assigned}</small>`;
+        }
+        docHint.style.display = "flex";
+        docHint.textContent = "Updated field.";
+      } else {
+        state.pendingField = field;
+        docHint.style.display = "flex";
+        docHint.textContent = "Tap on the document to place the field.";
+      }
+    });
+
+    edCancelBtn.addEventListener("click", () => clearEditorSelection());
+    edDeleteBtn.addEventListener("click", () => {
+      if(!state.selectedFieldId) return;
+      const el = docPage.querySelector(`.placed[data-id="${state.selectedFieldId}"]`);
+      if(el) el.remove();
+      clearEditorSelection();
     });
 
     function enableDragWithinPage(el){
@@ -888,10 +1399,10 @@
       let startX = 0, startY = 0, origLeft = 0, origTop = 0;
 
       el.addEventListener("pointerdown", (ev) => {
+        selectPlacedField(el);
         dragging = true;
         el.setPointerCapture(ev.pointerId);
-        startX = ev.clientX;
-        startY = ev.clientY;
+        startX = ev.clientX; startY = ev.clientY;
         origLeft = parseFloat(el.style.left);
         origTop = parseFloat(el.style.top);
         ev.preventDefault();
@@ -901,7 +1412,6 @@
         if(!dragging) return;
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
-
         const newLeft = Math.max(8, Math.min(origLeft + dx, docPage.clientWidth - el.offsetWidth - 8));
         const newTop  = Math.max(8, Math.min(origTop + dy, docPage.clientHeight - el.offsetHeight - 8));
         el.style.left = newLeft + "px";
@@ -912,29 +1422,74 @@
       el.addEventListener("pointercancel", () => { dragging = false; });
     }
 
-    function placeField(type, x, y){
+    function placeField(field, x, y){
       const el = document.createElement("div");
       el.className = "placed";
-      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 140)) + "px";
-      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 40)) + "px";
+      el.dataset.id = field.id;
+      el.dataset.type = field.type;
+      el.dataset.label = field.label;
+      el.dataset.assigned = field.assigned;
+      el.dataset.page = String(field.page);
+      el.dataset.meta = JSON.stringify(field.meta || {});
+      el.dataset.value = field.displayValue || "";
 
-      const who = assignSelect.value || "Signer (email@example.com)";
-      el.innerHTML = `${labelFor(type)}<small>${who}</small>`;
+      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 160)) + "px";
+      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 54)) + "px";
 
+      el.innerHTML = `${field.label}: ${field.displayValue}<small>${field.assigned}</small>`;
       enableDragWithinPage(el);
       docPage.appendChild(el);
     }
 
+    function selectPlacedField(el){
+      state.selectedFieldId = el.dataset.id;
+      state.activeToolType = el.dataset.type;
+      state.pendingField = null;
+
+      document.querySelectorAll(".tool").forEach(tool => {
+        tool.classList.toggle("active", tool.getAttribute("data-tool") === state.activeToolType);
+      });
+
+      showEditor();
+      editorModePill.textContent = "Editing existing field";
+      edDeleteBtn.style.display = "inline-block";
+
+      const type = state.activeToolType;
+      edType.value = labelFor(type);
+      edLabel.value = el.dataset.label || labelFor(type);
+      renderEditorAssignedOptions(el.dataset.assigned || assignSelect.value);
+      setEditorBlocks(type);
+
+      let meta = {};
+      try{ meta = JSON.parse(el.dataset.meta || "{}"); } catch {}
+      edSigMode.value = meta.mode || "typed";
+      edSigName.value = meta.name || "";
+      edInitials.value = meta.initials || "";
+      edDateMode.value = meta.mode || "auto";
+      edDateFixed.value = meta.date || todayISO();
+      edTextValue.value = meta.text || "";
+
+      editorHint.textContent = "Edit values and click Apply to update this field.";
+      docHint.style.display = "flex";
+      docHint.textContent = "Editing field. Click Apply to update, or Delete to remove.";
+    }
+
     docPage.addEventListener("pointerdown", (e) => {
       if(e.target.closest(".placed")) return;
-      if(!activeToolType) return;
       if(!state.pdfDocHandle) return;
+
+      if(!state.pendingField){
+        docHint.style.display = "flex";
+        docHint.textContent = "Select a tool and click Apply before placing.";
+        return;
+      }
 
       const rect = docPage.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      placeField(activeToolType, x, y);
+      state.pendingField.page = state.pdfPageNumber;
+      placeField(state.pendingField, x, y);
       docHint.style.display = "none";
     });
 
@@ -945,9 +1500,10 @@
 
         renderAssignDropdown();
         clearPlacedFields();
+        clearEditorSelection();
 
         if(!state.pdfBytes){
-          showError("No PDF loaded.\nGo back and upload a PDF or start blank.");
+          showError("No PDF loaded.\nGo back and upload a PDF or generate a template.");
           return;
         }
 
@@ -955,8 +1511,9 @@
         docHint.textContent = "Loading PDF…";
 
         await loadPdf(state.pdfBytes);
-        setActiveTool("signature");
-        docHint.style.display = "none";
+
+        docHint.style.display = "flex";
+        docHint.textContent = "Select a tool, configure it, then tap on the document to place.";
       }catch(err){
         showError("Failed to load PDF viewer:\n" + (err?.message || String(err)));
       }
@@ -967,12 +1524,6 @@
       showView("dashboard");
     });
 
-    // Explore pricing scroll
-    document.getElementById("exploreBtn").addEventListener("click", () => {
-      document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
-    });
-
-    // Start in landing
     showView("landing");
   </script>
 </body>
