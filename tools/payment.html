@@ -3,33 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PalmWeb — Lead Intake Tool</title>
-  <meta name="description" content="Smart lead intake tool with conditional fields, validation, and print-ready output." />
+  <title>PalmWeb — Payment Portal (Tool Demo)</title>
+  <meta name="description" content="A clean, client-friendly payment portal demo: invoice lookup, payment breakdown, and receipt-ready confirmation. No backend required." />
   <meta name="theme-color" content="#ffffff" />
 
   <style>
     :root{
-      --bg:#f6fbff;
+      --bg:#f6f8ff;
       --card:#ffffff;
       --text:#0b1220;
       --muted:#556173;
-      --hair: rgba(15,23,42,.10);
+      --hair: rgba(15,23,42,.08);
+      --border: rgba(15,23,42,.12);
 
       --blue:#1d79c6;
       --green:#2cab4b;
       --ink:#0b1220;
 
-      --shadow: 0 18px 55px rgba(15,23,42,.10);
-      --shadow2: 0 10px 28px rgba(15,23,42,.08);
+      --good:#16a34a;
+      --warn:#b45309;
+      --danger:#ef4444;
 
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
+      --shadow2: 0 10px 30px rgba(15,23,42,.08);
       --radius: 22px;
       --max: 1180px;
     }
 
     *{ box-sizing:border-box; }
     html,body{
-      margin:0;
-      padding:0;
+      margin:0;padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color: var(--text);
       line-height: 1.55;
@@ -38,51 +41,70 @@
         radial-gradient(1100px 560px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
         var(--bg);
     }
-    a{ color:inherit; }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
+
+    a{ color: inherit; text-decoration:none; }
 
     header{
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(246,251,255,.86);
+      background: rgba(246,248,255,.82);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--hair);
     }
+
+    .container{ max-width: var(--max); margin:0 auto; padding: 0 18px; }
+
     .nav{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      padding: 12px 0;
+      gap: 14px;
+      padding: 14px 0;
     }
+
     .brand{
-      display:flex; align-items:center; gap: 12px;
-      text-decoration:none;
-      white-space: nowrap;
+      display:flex;
+      align-items:center;
+      gap: 12px;
       min-width:0;
     }
-    .logo{
-      width: 40px; height: 40px;
+
+    .mark{
+      width: 40px;
+      height: 40px;
       border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.80);
+      border: 1px solid var(--hair);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-weight: 950;
-      letter-spacing: .2px;
-      flex: 0 0 auto;
+      letter-spacing: .4px;
+      background: rgba(29,121,198,.10);
     }
-    .brand strong{ font-weight: 950; font-size: 13.5px; }
-    .brand span{
-      display:block;
+
+    .brand-title{
+      display:flex;
+      flex-direction:column;
+      gap: 1px;
+      min-width:0;
+    }
+    .brand-title strong{
+      font-weight: 950;
+      font-size: 13.5px;
+      letter-spacing: .2px;
+    }
+    .brand-title span{
+      font-weight: 750;
       font-size: 12px;
-      font-weight: 800;
-      color: rgba(11,18,32,.62);
+      color: var(--muted);
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
       max-width: 520px;
     }
+
+    .row{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
 
     .btn{
       display:inline-flex;
@@ -92,61 +114,179 @@
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid transparent;
-      text-decoration:none;
       font-weight: 950;
       cursor:pointer;
       user-select:none;
       white-space: nowrap;
       transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+      background: transparent;
     }
     .btn:active{ transform: translateY(1px); }
+
     .btn-primary{
       color:#fff;
       background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 16px 36px rgba(29,121,198,.18);
+      box-shadow: 0 18px 44px rgba(29,121,198,.20);
     }
+    .btn-primary:hover{ box-shadow: 0 22px 60px rgba(29,121,198,.24); }
+
     .btn-outline{
       background: rgba(255,255,255,.82);
       border-color: var(--hair);
       color: rgba(11,18,32,.92);
     }
-    .btn-outline:hover{ background:#fff; border-color: rgba(15,23,42,.14); }
+    .btn-outline:hover{
+      background:#fff;
+      border-color: rgba(15,23,42,.14);
+    }
+
     .btn-ink{
       background: var(--ink);
-      color: #fff;
-      box-shadow: 0 16px 36px rgba(11,18,32,.18);
+      color:#fff;
+      box-shadow: 0 18px 44px rgba(11,18,32,.14);
     }
-    .row{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
+
+    .badge{
+      display:inline-flex;
       align-items:center;
-    }
-
-    main{ padding: 22px 0 48px; }
-
-    .shell{
-      background: rgba(255,255,255,.72);
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      background: rgba(255,255,255,.70);
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(11,18,32,.86);
+      width: fit-content;
     }
 
-    .head{
-      padding: 18px 18px 0;
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
     }
+
+    .hero{
+      padding: 38px 0 8px;
+    }
+
     h1{
-      margin: 0 0 8px;
-      font-size: clamp(28px, 3.6vw, 42px);
-      line-height: 1.05;
+      margin: 10px 0 8px;
+      font-size: clamp(30px, 3.6vw, 44px);
       letter-spacing: -0.9px;
+      line-height: 1.05;
+      font-weight: 950;
     }
+
     .lead{
-      margin: 0 0 14px;
+      margin: 0;
       color: rgba(11,18,32,.70);
       font-weight: 750;
-      max-width: 92ch;
+      max-width: 82ch;
+      font-size: 14.5px;
+    }
+
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items:start;
+      padding-bottom: 34px;
+    }
+
+    .card{
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position: relative;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 260px at 12% 15%, rgba(29,121,198,.10), transparent 70%),
+        radial-gradient(420px 260px at 92% 0%, rgba(44,171,75,.08), transparent 70%);
+      pointer-events:none;
+    }
+    .card > *{ position: relative; }
+
+    .card-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.55);
+    }
+
+    .card-head strong{
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing: -0.2px;
+    }
+
+    .card-body{ padding: 16px; }
+
+    .section-title{
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(11,18,32,.60);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(11,18,32,.84);
+    }
+
+    input, select{
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: #fff;
+      font-size: 14px;
+      outline:none;
+      color: var(--text);
+      width:100%;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .full{ grid-column: 1 / -1; }
+
+    .muted{
+      color: rgba(11,18,32,.62);
+      font-weight: 750;
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .pillbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 12px;
     }
 
     .pill{
@@ -154,860 +294,434 @@
       align-items:center;
       gap: 8px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(15,23,42,.03);
+      background: rgba(255,255,255,.70);
       padding: 8px 10px;
       border-radius: 999px;
       font-weight: 900;
       font-size: 12px;
-      color: rgba(11,18,32,.70);
-      white-space: nowrap;
+      color: rgba(11,18,32,.82);
     }
 
-    .grid{
+    .summary{
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      gap: 10px;
+    }
+
+    .summary .line{
+      display:flex;
+      justify-content:space-between;
       gap: 12px;
-      padding: 18px;
-      align-items:start;
-    }
-
-    .card{
-      background: #fff;
+      padding: 10px 12px;
+      border-radius: 16px;
       border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-      position: relative;
-      overflow:hidden;
+      background: rgba(255,255,255,.70);
+      font-weight: 850;
+      font-size: 13px;
+      color: rgba(11,18,32,.86);
     }
-    .card:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(320px 180px at 15% 20%, rgba(29,121,198,.10), transparent 70%),
-        radial-gradient(320px 180px at 90% 0%, rgba(44,171,75,.08), transparent 70%);
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
 
-    .card h2{
-      margin:0 0 10px;
-      font-size: 14px;
+    .summary .line span:first-child{
+      color: rgba(11,18,32,.62);
+      font-weight: 900;
+    }
+
+    .grand{
+      border-top: 2px solid rgba(11,18,32,.85);
+      background: #fff;
+    }
+    .grand span:last-child{
+      font-size: 18px;
       font-weight: 950;
       letter-spacing: -0.2px;
-      color: rgba(11,18,32,.92);
+      color:#111;
     }
 
-    .mini{
-      font-size: 12px;
-      color: rgba(11,18,32,.55);
-      font-weight: 800;
-    }
-
-    .form{
+    .methods{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 12px;
+      margin-top: 12px;
     }
-    .full{ grid-column: 1 / -1; }
 
-    label{
+    .method{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
+      border-radius: 18px;
+      padding: 12px;
       display:flex;
       flex-direction:column;
-      gap: 6px;
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(11,18,32,.92);
-    }
-    input, select, textarea{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.12);
-      background:#fff;
-      font-size: 14px;
-      font-weight: 750;
-      outline:none;
-    }
-    input:focus, select:focus, textarea:focus{
-      border-color: rgba(29,121,198,.55);
-      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
-    }
-    textarea{ resize: vertical; min-height: 110px; }
-
-    .sep{
-      margin: 12px 0;
-      border-top: 1px solid rgba(15,23,42,.10);
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .chip{
-      display:inline-flex;
-      align-items:center;
       gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background:#fff;
-      font-weight: 850;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      white-space: nowrap;
-    }
-    .chip input{ accent-color: var(--blue); }
-
-    .warn{
-      border: 1px solid rgba(255, 153, 0, .35);
-      background: rgba(255, 153, 0, .10);
-      color: rgba(120, 70, 0, .95);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 850;
-      font-size: 13px;
-      margin-top: 10px;
-      display:none;
-    }
-    .ok{
-      border: 1px solid rgba(44,171,75,.28);
-      background: rgba(44,171,75,.10);
-      color: rgba(10, 80, 25, .95);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 850;
-      font-size: 13px;
-      margin-top: 10px;
-      display:none;
     }
 
-    .kv{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      border-radius: 14px;
-      font-size: 13.5px;
-      font-weight: 800;
-      margin-top: 8px;
+    .method strong{
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing: -.2px;
     }
-    .kv span:first-child{ color: rgba(11,18,32,.60); font-weight: 850; }
-    .kv strong{ font-weight: 950; color: rgba(11,18,32,.92); }
 
-    .box{
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
-      border-radius: 16px;
-      padding: 12px;
-      margin-top: 10px;
+    .method .small{
+      font-size: 12px;
+      color: rgba(11,18,32,.66);
+      font-weight: 750;
     }
-    .box h3{
-      margin:0 0 6px;
-      font-size: 13.5px;
+
+    .hint{
+      border: 1px solid rgba(29,121,198,.18);
+      background: rgba(29,121,198,.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(11,18,32,.88);
+      font-weight: 850;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .receipt{
+      border: 1px solid rgba(15,23,42,.10);
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .receipt h2{
+      margin:0 0 4px;
+      font-size: 15px;
+      letter-spacing: -.2px;
       font-weight: 950;
     }
-    .box p{
+
+    .receipt p{
       margin:0;
+      font-size: 12.5px;
       color: rgba(11,18,32,.70);
-      font-size: 13px;
       font-weight: 750;
     }
 
-    .file{
-      border: 1px dashed rgba(15,23,42,.22);
-      background: rgba(15,23,42,.03);
-      border-radius: 16px;
-      padding: 12px;
-      margin-top: 10px;
-    }
-    .file strong{ font-weight: 950; }
-    .file .mini{ margin-top: 6px; }
-
-    .file-list{
-      margin-top: 8px;
-      display:grid;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 800;
-      color: rgba(11,18,32,.72);
-    }
-    .file-item{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
+    .hr{
+      height:1px;
+      background: rgba(15,23,42,.10);
+      margin: 12px 0;
+      border: none;
     }
 
-    .actions{
-      margin-top: 12px;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-
-    .muted-note{
-      margin-top: 10px;
-      font-size: 12px;
-      font-weight: 800;
+    .footer{
       color: rgba(11,18,32,.55);
+      font-weight: 850;
+      font-size: 12px;
+      text-align:center;
+      padding: 14px 0 26px;
     }
 
-    /* Print */
+    /* Print receipt only */
+    @page{ size: letter; margin: 0.55in; }
     @media print{
       header, .no-print{ display:none !important; }
-      body{ background:#fff; }
-      main{ padding:0; }
-      .shell{ box-shadow:none; border:none; background:#fff; }
-      .grid{ grid-template-columns: 1fr; padding: 0; }
-      .card{ box-shadow:none; border: 1px solid #e5e7eb; }
+      html, body{ background:#fff !important; }
+      .container{ max-width: 100% !important; padding:0 !important; }
+      .grid{ grid-template-columns: 1fr !important; gap: 0 !important; }
+      .card{ box-shadow:none !important; border:none !important; background:#fff !important; }
+      .card::before{ display:none !important; }
+      .receipt{ border: 1px solid #e5e7eb !important; }
     }
 
     @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
-      .form{ grid-template-columns: 1fr; }
+      .methods{ grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <header>
+  <header class="no-print">
     <div class="container nav">
-      <a class="brand" href="../index.html">
-        <div class="logo">PW</div>
-        <div>
+      <div class="brand">
+        <div class="mark">PW</div>
+        <div class="brand-title">
           <strong>PalmWeb</strong>
-          <span>Lead Intake Tool (Demo)</span>
+          <span>Tool Demo • Payment Portal</span>
         </div>
-      </a>
+        <span class="badge"><span class="dot"></span> Client-friendly</span>
+      </div>
 
-      <div class="row no-print">
-        <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
-        <button class="btn btn-primary" id="printBtn" type="button">Print / Save PDF</button>
+      <div class="row">
+        <a class="btn btn-outline" href="/index.html">Back to Site</a>
+        <a class="btn btn-outline" href="/tools/index.html">More Tools</a>
       </div>
     </div>
   </header>
 
-  <main>
-    <div class="container">
-      <div class="shell">
-        <div class="head">
-          <div class="row" style="justify-content:space-between;">
-            <div>
-              <h1>Lead Intake</h1>
-              <p class="lead">
-                Smart intake form with conditional fields, validation, attachments, and a routing-style summary that’s print-ready.
-                Demo only (front-end) — can connect to email/CRM later.
-              </p>
-            </div>
-            <div class="row no-print" style="justify-content:flex-end;">
-              <span class="pill">Conditional Fields</span>
-              <span class="pill">Validation</span>
-              <span class="pill">Print Output</span>
-            </div>
+  <main class="container hero">
+    <div class="badge"><span class="dot"></span> Payment link demo • No backend</div>
+    <h1>Payment Portal</h1>
+    <p class="lead">
+      A clean payment experience you can share with clients: enter an invoice, see totals, choose a method, and generate a receipt-ready confirmation.
+      This demo is front-end only — in production it can connect to Stripe, Square, QuickBooks, or a CRM.
+    </p>
+  </main>
+
+  <section class="container">
+    <div class="grid">
+
+      <!-- LEFT: Payment Form -->
+      <div class="card no-print" aria-label="Payment details">
+        <div class="card-head">
+          <strong>Pay an Invoice</strong>
+          <div class="row">
+            <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
+            <button class="btn btn-ink" id="printReceiptBtn" type="button">Print Receipt</button>
           </div>
         </div>
 
-        <div class="grid">
-          <!-- Left: Intake Form -->
-          <section class="card">
-            <h2>Intake Form</h2>
-            <div class="mini">Complete the form and click “Generate Summary”.</div>
+        <div class="card-body">
+          <div class="section-title">Invoice lookup</div>
 
-            <div id="warn" class="warn"></div>
-            <div id="ok" class="ok"></div>
+          <div class="form-grid">
+            <label class="full">Invoice #
+              <input id="invoiceNumber" placeholder="INV-20260121-101" />
+            </label>
 
-            <div class="form">
-              <label class="full">
-                Service Type*
-                <select id="serviceType" required>
-                  <option value="">Select…</option>
-                  <option value="website">Website (New / Redesign)</option>
-                  <option value="maintenance">Website Maintenance</option>
-                  <option value="automation">Automation / Integration</option>
-                  <option value="domain">Domain / Email Migration</option>
-                  <option value="consulting">Consulting</option>
-                </select>
-              </label>
+            <label>Amount due
+              <input id="amount" type="number" min="0" step="0.01" placeholder="0.00" />
+            </label>
 
-              <label>
-                Business Name*
-                <input id="biz" placeholder="Example: Smith & Sons Plumbing" />
-              </label>
+            <label>Deposit
+              <input id="deposit" type="number" min="0" step="0.01" placeholder="0.00" />
+            </label>
 
-              <label>
-                Contact Name*
-                <input id="name" placeholder="Full name" />
-              </label>
+            <label>Payment method
+              <select id="method">
+                <option value="card" selected>Card (Stripe / Square)</option>
+                <option value="ach">Bank transfer (ACH)</option>
+                <option value="check">Check</option>
+              </select>
+            </label>
 
-              <label>
-                Email*
-                <input id="email" type="email" placeholder="you@company.com" />
-              </label>
+            <label>Client email (receipt)
+              <input id="email" type="email" placeholder="client@email.com" />
+            </label>
 
-              <label>
-                Phone*
-                <input id="phone" type="tel" placeholder="(401) 555-1234" />
-              </label>
+            <label class="full">Memo (optional)
+              <input id="memo" placeholder="e.g., Website build deposit" />
+            </label>
+          </div>
 
-              <label class="full">
-                Location (city/state)
-                <input id="location" placeholder="Example: Warwick, RI" />
-              </label>
+          <div class="pillbar">
+            <button class="btn btn-primary" id="generateBtn" type="button">Generate Payment Summary</button>
+            <span class="pill">Demo: links below are placeholders</span>
+          </div>
 
-              <label class="full">
-                Preferred Contact Method
-                <select id="preferred">
-                  <option value="">Select…</option>
-                  <option>Email</option>
-                  <option>Phone</option>
-                  <option>Text</option>
-                </select>
-              </label>
+          <div class="methods" style="margin-top:14px;">
+            <div class="method">
+              <strong>Card</strong>
+              <div class="small">Fastest option. In production: Stripe Checkout link.</div>
+              <button class="btn btn-outline" id="copyCardBtn" type="button">Copy card payment link</button>
             </div>
-
-            <div class="sep"></div>
-
-            <h2 style="margin-top:0;">Project Needs</h2>
-
-            <div class="chips">
-              <label class="chip"><input id="needUrgent" type="checkbox" /> Urgent timeline</label>
-              <label class="chip"><input id="needBudget" type="checkbox" /> Has budget range</label>
-              <label class="chip"><input id="needDecision" type="checkbox" /> Decision maker</label>
-              <label class="chip"><input id="needExisting" type="checkbox" /> Has existing site</label>
-              <label class="chip"><input id="needAssets" type="checkbox" /> Has logo/photos</label>
+            <div class="method">
+              <strong>ACH</strong>
+              <div class="small">Lower fees. In production: Plaid / Stripe ACH instructions.</div>
+              <button class="btn btn-outline" id="copyAchBtn" type="button">Copy ACH instructions</button>
             </div>
+          </div>
 
-            <div class="form">
-              <label class="full">
-                Goal / What’s the main outcome?*
-                <select id="goal">
-                  <option value="">Select…</option>
-                  <option>More calls / leads</option>
-                  <option>Bookings / appointments</option>
-                  <option>Professional credibility</option>
-                  <option>Show services + pricing</option>
-                  <option>Sell products online</option>
-                  <option>Other</option>
-                </select>
-              </label>
+          <div class="hint">
+            In production this page can: validate invoice status, prevent overpayments, send receipts automatically, and update your pipeline/CRM.
+          </div>
 
-              <label class="full">
-                Notes / Details
-                <textarea id="notes" placeholder="Any context, requirements, examples, pages needed, etc."></textarea>
-              </label>
-            </div>
-
-            <!-- Conditional blocks -->
-            <div id="blockWebsite" style="display:none;">
-              <div class="sep"></div>
-              <h2 style="margin-top:0;">Website Details</h2>
-
-              <div class="form">
-                <label class="full">
-                  Current website URL (if any)
-                  <input id="currentUrl" placeholder="https://yourwebsite.com" />
-                </label>
-
-                <label>
-                  Pages needed
-                  <select id="pages">
-                    <option value="">Select…</option>
-                    <option>1–3 pages</option>
-                    <option>4–6 pages</option>
-                    <option>7–10 pages</option>
-                    <option>10+ pages</option>
-                    <option>Not sure</option>
-                  </select>
-                </label>
-
-                <label>
-                  Platform preference
-                  <select id="platform">
-                    <option value="">Select…</option>
-                    <option>Static HTML (fast + simple)</option>
-                    <option>WordPress</option>
-                    <option>Shopify</option>
-                    <option>Wix/Squarespace</option>
-                    <option>Not sure</option>
-                  </select>
-                </label>
-
-                <label class="full">
-                  Style references (optional)
-                  <input id="refs" placeholder="Links to sites you like" />
-                </label>
-              </div>
-            </div>
-
-            <div id="blockMaintenance" style="display:none;">
-              <div class="sep"></div>
-              <h2 style="margin-top:0;">Maintenance Details</h2>
-
-              <div class="form">
-                <label class="full">
-                  Website URL*
-                  <input id="maintUrl" placeholder="https://yourwebsite.com" />
-                </label>
-
-                <label class="full">
-                  What needs updating?
-                  <textarea id="maintNeeds" placeholder="Example: change homepage text, update hours, add a new service, fix a bug..."></textarea>
-                </label>
-              </div>
-            </div>
-
-            <div id="blockAutomation" style="display:none;">
-              <div class="sep"></div>
-              <h2 style="margin-top:0;">Automation Details</h2>
-
-              <div class="form">
-                <label class="full">
-                  Current tools
-                  <input id="tools" placeholder="Example: Outlook, Excel, SharePoint, QuickBooks, HubSpot..." />
-                </label>
-
-                <label class="full">
-                  What should happen automatically?*
-                  <textarea id="autoGoal" placeholder="Example: form submission → create record → email confirmation → generate PDF..."></textarea>
-                </label>
-
-                <label class="full">
-                  Data source (optional)
-                  <input id="dataSource" placeholder="Example: shared Excel workbook, SharePoint list, CRM..." />
-                </label>
-              </div>
-            </div>
-
-            <div id="blockDomain" style="display:none;">
-              <div class="sep"></div>
-              <h2 style="margin-top:0;">Domain / Email Migration</h2>
-
-              <div class="form">
-                <label class="full">
-                  Domain name*
-                  <input id="domain" placeholder="example.com" />
-                </label>
-
-                <label class="full">
-                  What are you moving?
-                  <select id="moving">
-                    <option value="">Select…</option>
-                    <option>Domain only</option>
-                    <option>Email only</option>
-                    <option>Website hosting</option>
-                    <option>All of the above</option>
-                  </select>
-                </label>
-
-                <label class="full">
-                  Current provider (optional)
-                  <input id="provider" placeholder="Example: GoDaddy, Google Domains, Namecheap..." />
-                </label>
-              </div>
-            </div>
-
-            <div id="blockConsulting" style="display:none;">
-              <div class="sep"></div>
-              <h2 style="margin-top:0;">Consulting</h2>
-
-              <div class="form">
-                <label class="full">
-                  What do you want help deciding?*
-                  <textarea id="consultTopic" placeholder="Example: what platform to use, what pages matter, how to set up intake..."></textarea>
-                </label>
-              </div>
-            </div>
-
-            <!-- Attachments -->
-            <div class="sep"></div>
-            <h2 style="margin-top:0;">Attachments (optional)</h2>
-
-            <div class="file no-print">
-              <div class="row" style="justify-content:space-between;">
-                <div>
-                  <strong>Upload files</strong>
-                  <div class="mini">Demo only (front-end). In production, files would upload to storage and link in CRM/email.</div>
-                </div>
-                <label class="btn btn-outline" style="cursor:pointer;">
-                  Choose files
-                  <input id="files" type="file" multiple style="display:none;" />
-                </label>
-              </div>
-
-              <div id="fileList" class="file-list" style="display:none;"></div>
-            </div>
-
-            <div class="actions no-print">
-              <div class="row">
-                <button class="btn btn-ink" id="generateBtn" type="button">Generate Summary</button>
-                <button class="btn btn-outline" id="fillDemoBtn" type="button">Fill Demo</button>
-                <button class="btn btn-outline" id="resetBtn" type="button">Reset</button>
-              </div>
-              <div class="mini">Tip: After generating, print the summary as a PDF.</div>
-            </div>
-
-            <div class="muted-note no-print">
-              Routing idea: send summary to email/CRM, create a lead record, attach files, assign owner, and set status automatically.
-            </div>
-          </section>
-
-          <!-- Right: Routing Summary -->
-          <aside class="card">
-            <h2>Routing Summary</h2>
-            <div class="mini">This panel becomes your “handoff” view for email/CRM.</div>
-
-            <div class="kv"><span>Status</span><strong id="sumStatus">Awaiting input</strong></div>
-            <div class="kv"><span>Service Type</span><strong id="sumType">—</strong></div>
-            <div class="kv"><span>Priority</span><strong id="sumPriority">—</strong></div>
-
-            <div class="sep"></div>
-
-            <div class="kv"><span>Business</span><strong id="sumBiz">—</strong></div>
-            <div class="kv"><span>Contact</span><strong id="sumContact">—</strong></div>
-            <div class="kv"><span>Email</span><strong id="sumEmail">—</strong></div>
-            <div class="kv"><span>Phone</span><strong id="sumPhone">—</strong></div>
-            <div class="kv"><span>Location</span><strong id="sumLocation">—</strong></div>
-            <div class="kv"><span>Preferred</span><strong id="sumPreferred">—</strong></div>
-
-            <div class="sep"></div>
-
-            <div class="box">
-              <h3>Goal</h3>
-              <p id="sumGoal">—</p>
-            </div>
-
-            <div class="box">
-              <h3>Key Notes</h3>
-              <p id="sumNotes">—</p>
-            </div>
-
-            <div class="box">
-              <h3>Conditional Details</h3>
-              <p id="sumDetails">—</p>
-            </div>
-
-            <div class="box">
-              <h3>Attachments</h3>
-              <p id="sumFiles">—</p>
-            </div>
-
-            <div class="row no-print" style="margin-top:12px; justify-content:space-between;">
-              <button class="btn btn-primary" id="printBtn2" type="button">Print / Save PDF</button>
-              <a class="btn btn-outline" href="../tools/payment.html">Payment Portal</a>
-            </div>
-          </aside>
+          <div class="footer">© <span id="year"></span> PalmWeb — payment portal demo.</div>
         </div>
       </div>
+
+      <!-- RIGHT: Receipt / Summary -->
+      <div class="card" aria-label="Payment summary">
+        <div class="card-head no-print">
+          <strong>Summary</strong>
+          <span class="badge" style="background:rgba(22,163,74,.10);border-color:rgba(22,163,74,.18);"><span class="dot"></span> Receipt-ready</span>
+        </div>
+
+        <div class="card-body">
+          <div class="receipt" id="receipt">
+            <h2>Payment Summary</h2>
+            <p id="receiptSub">Generate a summary to preview what the client sees.</p>
+
+            <hr class="hr" />
+
+            <div class="summary" aria-label="Calculated totals">
+              <div class="line"><span>Invoice #</span><span id="pInvoice">—</span></div>
+              <div class="line"><span>Amount due</span><span id="pAmount">$0.00</span></div>
+              <div class="line"><span>Deposit</span><span id="pDeposit">$0.00</span></div>
+              <div class="line"><span>Remaining</span><span id="pRemaining">$0.00</span></div>
+              <div class="line"><span>Method</span><span id="pMethod">—</span></div>
+              <div class="line"><span>Receipt email</span><span id="pEmail">—</span></div>
+              <div class="line"><span>Memo</span><span id="pMemo">—</span></div>
+              <div class="line grand"><span>Total to collect now</span><span id="pCollect">$0.00</span></div>
+            </div>
+
+            <hr class="hr" />
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;" class="no-print">
+              <button class="btn btn-primary" id="markPaidBtn" type="button">Mark as Paid (Demo)</button>
+              <button class="btn btn-outline" id="copyReceiptBtn" type="button">Copy receipt text</button>
+            </div>
+
+            <p class="muted" style="margin-top:12px;">
+              Print tip: “Save as PDF” produces a clean receipt page.
+            </p>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </main>
+  </section>
 
   <script>
     const $ = (id) => document.getElementById(id);
 
-    const warn = $("warn");
-    const ok = $("ok");
-
-    const serviceType = $("serviceType");
-
-    const blocks = {
-      website: $("blockWebsite"),
-      maintenance: $("blockMaintenance"),
-      automation: $("blockAutomation"),
-      domain: $("blockDomain"),
-      consulting: $("blockConsulting"),
-    };
-
-    function showMsg(el, msg){
-      el.style.display = "";
-      el.textContent = msg;
-    }
-    function hideMsg(el){
-      el.style.display = "none";
-      el.textContent = "";
+    function money(n){
+      const v = Number(n || 0);
+      return v.toLocaleString(undefined, { style:"currency", currency:"USD" });
     }
 
-    function setBlocks(type){
-      Object.values(blocks).forEach(b => b.style.display = "none");
-      if(blocks[type]) blocks[type].style.display = "";
-    }
+    function clean(v){ return String(v || "").trim(); }
 
-    function normalizePhone(p){
-      return p.replace(/[^\d]/g,"");
-    }
-
-    function isValidEmail(email){
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    }
-
-    function required(id, label){
-      const v = $(id).value.trim();
-      if(!v) return `${label} is required.`;
-      return null;
-    }
-
-    function validate(){
-      hideMsg(warn);
-      hideMsg(ok);
-
-      const errs = [];
-      const type = serviceType.value;
-
-      const biz = $("biz").value.trim();
-      const name = $("name").value.trim();
-      const email = $("email").value.trim();
-      const phone = $("phone").value.trim();
-      const goal = $("goal").value.trim();
-
-      if(!type) errs.push("Service Type is required.");
-      if(!biz) errs.push("Business Name is required.");
-      if(!name) errs.push("Contact Name is required.");
-      if(!email) errs.push("Email is required.");
-      if(email && !isValidEmail(email)) errs.push("Email format looks incorrect.");
-      if(!phone) errs.push("Phone is required.");
-      if(phone && normalizePhone(phone).length < 10) errs.push("Phone should have at least 10 digits.");
-      if(!goal) errs.push("Goal is required.");
-
-      // Conditional required fields
-      if(type === "maintenance"){
-        const e = required("maintUrl","Website URL");
-        if(e) errs.push(e);
-      }
-      if(type === "automation"){
-        const e = required("autoGoal","What should happen automatically");
-        if(e) errs.push(e);
-      }
-      if(type === "domain"){
-        const e = required("domain","Domain name");
-        if(e) errs.push(e);
-      }
-      if(type === "consulting"){
-        const e = required("consultTopic","Consulting topic");
-        if(e) errs.push(e);
-      }
-
-      if(errs.length){
-        showMsg(warn, errs[0]);
-        return false;
-      }
-
-      showMsg(ok, "Looks good. Summary generated below.");
-      return true;
-    }
-
-    function typeLabel(val){
-      const map = {
-        website: "Website (New / Redesign)",
-        maintenance: "Website Maintenance",
-        automation: "Automation / Integration",
-        domain: "Domain / Email Migration",
-        consulting: "Consulting",
-      };
-      return map[val] || "—";
-    }
-
-    function priority(){
-      // Simple demo scoring
-      const score =
-        ($("needUrgent").checked ? 2 : 0) +
-        ($("needDecision").checked ? 1 : 0) +
-        ($("needBudget").checked ? 1 : 0);
-
-      if(score >= 3) return "High";
-      if(score === 2) return "Medium";
-      return "Normal";
-    }
-
-    function detailsSummary(type){
-      if(type === "website"){
-        const parts = [];
-        const url = $("currentUrl").value.trim();
-        const pages = $("pages").value.trim();
-        const platform = $("platform").value.trim();
-        const refs = $("refs").value.trim();
-
-        if(url) parts.push(`Current site: ${url}`);
-        if(pages) parts.push(`Pages: ${pages}`);
-        if(platform) parts.push(`Platform: ${platform}`);
-        if(refs) parts.push(`References: ${refs}`);
-        return parts.length ? parts.join(" • ") : "—";
-      }
-
-      if(type === "maintenance"){
-        const url = $("maintUrl").value.trim();
-        const needs = $("maintNeeds").value.trim();
-        const parts = [];
-        if(url) parts.push(`Site: ${url}`);
-        if(needs) parts.push(`Needs: ${needs}`);
-        return parts.length ? parts.join(" • ") : "—";
-      }
-
-      if(type === "automation"){
-        const tools = $("tools").value.trim();
-        const autoGoal = $("autoGoal").value.trim();
-        const ds = $("dataSource").value.trim();
-        const parts = [];
-        if(tools) parts.push(`Tools: ${tools}`);
-        if(autoGoal) parts.push(`Automation: ${autoGoal}`);
-        if(ds) parts.push(`Data: ${ds}`);
-        return parts.length ? parts.join(" • ") : "—";
-      }
-
-      if(type === "domain"){
-        const dom = $("domain").value.trim();
-        const moving = $("moving").value.trim();
-        const provider = $("provider").value.trim();
-        const parts = [];
-        if(dom) parts.push(`Domain: ${dom}`);
-        if(moving) parts.push(`Move: ${moving}`);
-        if(provider) parts.push(`Provider: ${provider}`);
-        return parts.length ? parts.join(" • ") : "—";
-      }
-
-      if(type === "consulting"){
-        const topic = $("consultTopic").value.trim();
-        return topic ? topic : "—";
-      }
-
+    function methodLabel(v){
+      if(v === "card") return "Card";
+      if(v === "ach") return "ACH";
+      if(v === "check") return "Check";
       return "—";
     }
 
-    function fileNames(){
-      const input = $("files");
-      const files = Array.from(input.files || []);
-      if(!files.length) return [];
-      return files.map(f => f.name);
+    function calc(){
+      const inv = clean($("invoiceNumber").value) || "—";
+      const amt = Math.max(0, Number($("amount").value || 0));
+      const dep = Math.max(0, Number($("deposit").value || 0));
+      const remaining = Math.max(0, amt - dep);
+
+      const m = $("method").value;
+      const email = clean($("email").value) || "—";
+      const memo = clean($("memo").value) || "—";
+
+      // In this demo: if deposit > 0, we collect deposit now; otherwise collect full amount now.
+      const collect = (dep > 0) ? dep : amt;
+
+      $("pInvoice").textContent = inv;
+      $("pAmount").textContent = money(amt);
+      $("pDeposit").textContent = money(dep);
+      $("pRemaining").textContent = money(remaining);
+      $("pMethod").textContent = methodLabel(m);
+      $("pEmail").textContent = email;
+      $("pMemo").textContent = memo;
+      $("pCollect").textContent = money(collect);
+
+      $("receiptSub").textContent = "Generated on " + new Date().toLocaleString();
     }
 
-    function renderFiles(){
-      const list = $("fileList");
-      const names = fileNames();
+    function seed(){
+      $("invoiceNumber").value = "INV-" + new Date().getFullYear() + "-" + String(Math.floor(1000 + Math.random()*9000));
+      $("amount").value = "1500";
+      $("deposit").value = "500";
+      $("method").value = "card";
+      $("email").value = "";
+      $("memo").value = "Project deposit";
+      calc();
+    }
 
-      if(!names.length){
-        list.style.display = "none";
-        list.innerHTML = "";
-        return;
+    async function copyText(txt){
+      try{
+        await navigator.clipboard.writeText(txt);
+        return true;
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        return true;
       }
-
-      list.style.display = "";
-      list.innerHTML = names.map(n => `
-        <div class="file-item">
-          <div>${n}</div>
-          <div class="mini">Selected</div>
-        </div>
-      `).join("");
     }
 
-    function generateSummary(){
-      if(!validate()) return;
-
-      const type = serviceType.value;
-
-      $("sumStatus").textContent = "Ready for routing";
-      $("sumType").textContent = typeLabel(type);
-      $("sumPriority").textContent = priority();
-
-      $("sumBiz").textContent = $("biz").value.trim() || "—";
-      $("sumContact").textContent = $("name").value.trim() || "—";
-      $("sumEmail").textContent = $("email").value.trim() || "—";
-      $("sumPhone").textContent = $("phone").value.trim() || "—";
-      $("sumLocation").textContent = $("location").value.trim() || "—";
-      $("sumPreferred").textContent = $("preferred").value.trim() || "—";
-
-      $("sumGoal").textContent = $("goal").value.trim() || "—";
-      $("sumNotes").textContent = ($("notes").value.trim() || "—");
-      $("sumDetails").textContent = detailsSummary(type);
-
-      const names = fileNames();
-      $("sumFiles").textContent = names.length ? names.join(", ") : "—";
+    function makeCardLink(){
+      // Placeholder — in production you’d generate a Stripe Checkout URL on the server.
+      const inv = encodeURIComponent(clean($("invoiceNumber").value) || "invoice");
+      const amt = encodeURIComponent(String(Number($("deposit").value || $("amount").value || 0)));
+      return `https://example.com/pay?method=card&invoice=${inv}&amount=${amt}`;
     }
 
-    function resetAll(){
-      hideMsg(warn);
-      hideMsg(ok);
-
-      // Clear inputs
-      document.querySelectorAll("input, textarea, select").forEach(el => {
-        if(el.type === "checkbox") el.checked = false;
-        else if(el.type === "file") el.value = "";
-        else el.value = "";
-      });
-
-      // Reset blocks
-      setBlocks("");
-
-      // Reset summary
-      $("sumStatus").textContent = "Awaiting input";
-      $("sumType").textContent = "—";
-      $("sumPriority").textContent = "—";
-      $("sumBiz").textContent = "—";
-      $("sumContact").textContent = "—";
-      $("sumEmail").textContent = "—";
-      $("sumPhone").textContent = "—";
-      $("sumLocation").textContent = "—";
-      $("sumPreferred").textContent = "—";
-      $("sumGoal").textContent = "—";
-      $("sumNotes").textContent = "—";
-      $("sumDetails").textContent = "—";
-      $("sumFiles").textContent = "—";
-
-      renderFiles();
+    function makeAchInstructions(){
+      const inv = clean($("invoiceNumber").value) || "—";
+      const amt = Number($("deposit").value || $("amount").value || 0);
+      return [
+        "ACH / Bank Transfer (Demo Instructions)",
+        "Bank: YOUR BANK NAME",
+        "Routing: 000000000",
+        "Account: 000000000",
+        `Memo: ${inv}`,
+        `Amount: ${money(amt)}`,
+        "",
+        "Note: These are demo instructions. In production, this can be generated per-invoice and logged automatically."
+      ].join("\n");
     }
 
-    function fillDemo(){
-      resetAll();
-
-      serviceType.value = "automation";
-      setBlocks("automation");
-
-      $("biz").value = "Smith & Sons Plumbing";
-      $("name").value = "Jordan Smith";
-      $("email").value = "jordan@smithsonsplumbing.com";
-      $("phone").value = "(401) 555-1234";
-      $("location").value = "Warwick, RI";
-      $("preferred").value = "Email";
-
-      $("needUrgent").checked = true;
-      $("needDecision").checked = true;
-      $("needBudget").checked = true;
-
-      $("goal").value = "More calls / leads";
-      $("notes").value = "Need a simple intake → auto-email summary → spreadsheet log. Also want a PDF quote generated from line items.";
-
-      $("tools").value = "Outlook, Excel, SharePoint";
-      $("autoGoal").value = "When a lead form is submitted, create a SharePoint list item, send an email confirmation, and generate a PDF summary.";
-      $("dataSource").value = "Shared Excel workbook + SharePoint list";
-
-      generateSummary();
+    function receiptText(){
+      return [
+        "Payment Receipt (Demo)",
+        `Invoice: ${$("pInvoice").textContent}`,
+        `Amount due: ${$("pAmount").textContent}`,
+        `Deposit: ${$("pDeposit").textContent}`,
+        `Remaining: ${$("pRemaining").textContent}`,
+        `Collect now: ${$("pCollect").textContent}`,
+        `Method: ${$("pMethod").textContent}`,
+        `Email: ${$("pEmail").textContent}`,
+        `Memo: ${$("pMemo").textContent}`,
+        `Generated: ${new Date().toLocaleString()}`
+      ].join("\n");
     }
 
-    // Events
-    serviceType.addEventListener("change", () => setBlocks(serviceType.value));
-    $("files").addEventListener("change", renderFiles);
+    $("generateBtn").addEventListener("click", calc);
 
-    $("generateBtn").addEventListener("click", generateSummary);
-    $("resetBtn").addEventListener("click", resetAll);
-    $("fillDemoBtn").addEventListener("click", fillDemo);
+    ["invoiceNumber","amount","deposit","method","email","memo"].forEach(id => {
+      $(id).addEventListener("input", calc);
+      $(id).addEventListener("change", calc);
+    });
 
-    $("printBtn").addEventListener("click", () => window.print());
-    $("printBtn2").addEventListener("click", () => window.print());
+    $("copyCardBtn").addEventListener("click", async () => {
+      calc();
+      await copyText(makeCardLink());
+      alert("Copied demo card payment link.");
+    });
 
-    // Init
-    setBlocks("");
-    renderFiles();
+    $("copyAchBtn").addEventListener("click", async () => {
+      calc();
+      await copyText(makeAchInstructions());
+      alert("Copied demo ACH instructions.");
+    });
+
+    $("copyReceiptBtn").addEventListener("click", async () => {
+      calc();
+      await copyText(receiptText());
+      alert("Copied receipt text.");
+    });
+
+    $("markPaidBtn").addEventListener("click", () => {
+      calc();
+      alert("Demo action: marked as paid.\n\nIn production this can update your CRM, notify you, and send the receipt automatically.");
+    });
+
+    $("printReceiptBtn").addEventListener("click", () => {
+      calc();
+      window.print();
+    });
+
+    $("resetBtn").addEventListener("click", () => {
+      if(confirm("Reset the payment portal demo to defaults?")){
+        seed();
+      }
+    });
+
+    $("year").textContent = new Date().getFullYear();
+    seed();
   </script>
 </body>
 </html>
