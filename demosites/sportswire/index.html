@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SportsWire — Live Scores & News</title>
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="description" content="Live scores, top headlines, and a quick witty recap." />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="NFL headline + live scores + top headlines." />
 
   <style>
     :root{
       --bg:#0b1220;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.06);
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(0,0,0,.22);
       --stroke: rgba(255,255,255,.12);
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.62);
@@ -22,6 +22,7 @@
       --max: 1180px;
       --blue:#3aa0ff;
       --green:#35d07f;
+      --accent: linear-gradient(135deg, rgba(58,160,255,.95), rgba(53,208,127,.95));
     }
 
     *{ box-sizing:border-box; }
@@ -58,7 +59,8 @@
       display:grid; place-items:center;
       font-weight: 950;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, rgba(58,160,255,.9), rgba(53,208,127,.9));
+      background: var(--accent);
+      color: #051018;
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
     .brand-text{ display:flex; flex-direction:column; min-width:0; }
@@ -84,47 +86,149 @@
     .btn:hover{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.20); }
     .btn-primary{
       border-color: transparent;
-      background: linear-gradient(135deg, rgba(58,160,255,.95), rgba(53,208,127,.95));
+      background: var(--accent);
       color: #051018;
     }
 
-    /* Page */
-    .hero{ padding: 26px 0 10px; }
-    h1{
-      margin: 8px 0 6px;
-      font-size: clamp(30px, 3.4vw, 44px);
-      letter-spacing: -1px;
+    /* Hero */
+    .hero{ padding: 22px 0 12px; }
+    .kicker{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      font-size: 12px;
+      width: fit-content;
+    }
+    .kdot{
+      width: 7px; height: 7px; border-radius: 999px;
+      background: rgba(53,208,127,.95);
+    }
+
+    .heroCard{
+      margin-top: 12px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(800px 280px at 20% 10%, rgba(58,160,255,.18), transparent 60%),
+        radial-gradient(800px 280px at 90% 0%, rgba(53,208,127,.12), transparent 60%),
+        rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .heroInner{
+      padding: 16px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .heroTitle{
+      margin: 0;
+      font-size: clamp(26px, 3.0vw, 40px);
       line-height: 1.05;
+      letter-spacing: -1px;
       font-weight: 980;
     }
-    .sub{
-      margin: 0;
-      color: var(--muted);
+    .heroMeta{
+      color: var(--muted2);
+      font-weight: 850;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      padding-top: 6px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .heroBody{
+      padding: 14px 16px 16px;
+      display:flex;
+      gap: 12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .heroLink{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.88);
+      font-weight: 950;
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .heroLink:hover{
+      background: rgba(0,0,0,.24);
+      border-color: rgba(255,255,255,.18);
+    }
+    .heroSub{
+      margin:0;
+      color: rgba(255,255,255,.70);
       font-weight: 850;
       font-size: 13.5px;
-      max-width: 80ch;
+      max-width: 78ch;
     }
 
     /* Controls */
     .controls{
-      margin-top: 16px;
+      margin-top: 14px;
       display:flex;
       gap: 10px;
       flex-wrap:wrap;
       align-items:center;
       justify-content:flex-start;
     }
+
+    /* FIX: visible dropdown */
     .select{
       appearance:none;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.92);
+      padding: 11px 42px 11px 14px;
       font-weight: 950;
       outline:none;
+      position: relative;
     }
-    .meta{
+    .selectWrap{
+      position: relative;
+      display:inline-flex;
+      align-items:center;
+    }
+    .selectWrap::after{
+      content:"▾";
+      position:absolute;
+      right: 14px;
+      pointer-events:none;
+      color: rgba(255,255,255,.70);
+      font-weight: 950;
+      font-size: 14px;
+    }
+    .select option{
+      background: #0b1220;
+      color: rgba(255,255,255,.92);
+    }
+
+    .metaLine{
       color: var(--muted2);
       font-weight: 850;
       font-size: 12px;
@@ -133,7 +237,6 @@
       gap: 8px;
       padding: 10px 0;
     }
-    .dot{ width: 7px; height: 7px; border-radius: 999px; background: rgba(53,208,127,.95); }
 
     /* Layout */
     .grid{
@@ -144,6 +247,7 @@
     }
     @media (max-width: 980px){
       .grid{ grid-template-columns: 1fr; }
+      .heroBody{ justify-content:flex-start; }
     }
 
     /* Cards */
@@ -169,16 +273,6 @@
       font-weight: 980;
       color: rgba(255,255,255,.82);
     }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.70);
-      font-weight: 900;
-      font-size: 12px;
-    }
 
     /* Score list */
     .list{ padding: 10px; display:flex; flex-direction:column; gap: 10px; }
@@ -202,42 +296,13 @@
       white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
       max-width: 46ch;
     }
-    .score{
-      font-weight: 980;
-      letter-spacing: -0.3px;
-    }
+    .score{ font-weight: 980; letter-spacing: -0.3px; }
     .status{
       color: var(--muted2);
       font-weight: 900;
       font-size: 12px;
       text-align:right;
       white-space: nowrap;
-    }
-
-    /* Big story */
-    .story{
-      padding: 14px;
-    }
-    .story h3{
-      margin: 0 0 6px;
-      font-size: 18px;
-      letter-spacing: -0.4px;
-      font-weight: 980;
-    }
-    .story p{
-      margin: 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 850;
-      font-size: 13.5px;
-      line-height: 1.55;
-    }
-    .story-foot{
-      margin-top: 12px;
-      display:flex; gap: 10px; flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted2);
-      font-weight: 850;
-      font-size: 12px;
     }
 
     /* Headlines */
@@ -252,11 +317,7 @@
       background: rgba(0,0,0,.24);
       border-color: rgba(255,255,255,.16);
     }
-    .headline .t{
-      margin: 0;
-      font-weight: 980;
-      letter-spacing: -0.2px;
-    }
+    .headline .t{ margin: 0; font-weight: 980; letter-spacing: -0.2px; }
     .headline .small{
       margin: 6px 0 0;
       color: var(--muted2);
@@ -288,7 +349,7 @@
         <div class="logo">SW</div>
         <div class="brand-text">
           <strong>SportsWire</strong>
-          <span>Scores + headlines + a quick witty recap</span>
+          <span>Scores + headlines</span>
         </div>
       </a>
 
@@ -300,51 +361,57 @@
   </header>
 
   <main class="container hero">
-    <h1>Scores & News</h1>
-    <p class="sub">Pick a league. Get the essentials. No essay required.</p>
+    <div class="kicker"><span class="kdot"></span> Top story always from NFL</div>
 
+    <!-- TOP OF SITE: NFL BIG STORY (always) -->
+    <div class="heroCard" aria-live="polite">
+      <div class="heroInner">
+        <div style="min-width:0;">
+          <p style="margin:0; color: var(--muted2); font-weight: 950; font-size: 12px; letter-spacing:.2px; text-transform: uppercase;">Top Story</p>
+          <h1 id="topTitle" class="heroTitle">Loading…</h1>
+          <div class="heroMeta">
+            <span id="topTime">—</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <span class="pill">NFL</span>
+          <a id="topLink" class="heroLink" href="#" target="_blank" rel="noopener">Open</a>
+        </div>
+      </div>
+      <div class="heroBody">
+        <p id="topOneLiner" class="heroSub">Fetching the latest NFL headline.</p>
+      </div>
+    </div>
+
+    <!-- Controls for scoreboard league -->
     <div class="controls">
-      <select id="leagueSelect" class="select" aria-label="Select league"></select>
+      <span class="selectWrap">
+        <select id="leagueSelect" class="select" aria-label="Select scoreboard league"></select>
+      </span>
       <button id="refreshBtn" class="btn btn-primary" type="button">Refresh</button>
-      <button id="toggleAuto" class="btn" type="button" aria-pressed="false">Auto: Off</button>
-      <div id="lastUpdated" class="meta"><span class="dot"></span><span>—</span></div>
+      <button id="toggleAuto” class="btn" type="button" aria-pressed="false">Auto: Off</button>
+      <div id="lastUpdated" class="metaLine"><span class="kdot"></span><span>—</span></div>
     </div>
   </main>
 
   <section class="container grid">
-    <!-- Scores -->
+    <!-- Scores (selected league) -->
     <div class="card">
       <div class="card-head">
         <h2>Scoreboard</h2>
-        <span id="scoreboardMeta" class="chip">—</span>
+        <span id="scoreboardMeta" class="pill">—</span>
       </div>
       <div id="scores" class="list">
         <div class="empty">Loading…</div>
       </div>
     </div>
 
-    <!-- News -->
+    <!-- Headlines (selected league) -->
     <div class="card">
       <div class="card-head">
-        <h2>Big Story</h2>
-        <span class="chip">Witty recap</span>
-      </div>
-
-      <div id="bigStory" class="story">
-        <h3>Loading…</h3>
-        <p>Fetching the latest story.</p>
-        <div class="story-foot">
-          <span id="storyTime">—</span>
-          <span>•</span>
-          <a id="storyLink" href="#" target="_blank" rel="noopener">Open</a>
-        </div>
-      </div>
-
-      <div class="card-head" style="border-top: 1px solid rgba(255,255,255,.10);">
         <h2>Headlines</h2>
-        <span class="chip">Latest</span>
+        <span class="pill">Latest</span>
       </div>
-
       <div id="news" class="list">
         <div class="empty">Loading…</div>
       </div>
@@ -368,11 +435,14 @@
     const toggleAuto = document.getElementById("toggleAuto");
     const scoresEl = document.getElementById("scores");
     const newsEl = document.getElementById("news");
-    const bigStoryEl = document.getElementById("bigStory");
     const scoreboardMetaEl = document.getElementById("scoreboardMeta");
     const lastUpdatedEl = document.getElementById("lastUpdated");
-    const storyTimeEl = () => document.getElementById("storyTime");
-    const storyLinkEl = () => document.getElementById("storyLink");
+
+    // NFL Top Story elements
+    const topTitleEl = document.getElementById("topTitle");
+    const topTimeEl = document.getElementById("topTime");
+    const topLinkEl = document.getElementById("topLink");
+    const topOneLinerEl = document.getElementById("topOneLiner");
 
     // Dropdown
     const stored = localStorage.getItem("sportswire_league") || "0";
@@ -403,27 +473,19 @@
       }catch(e){ return "—"; }
     }
 
-    // Keep it short and readable.
-    function wittyRecap(headline){
+    // Short, simple: one line.
+    function oneLiner(headline){
       const h = (headline || "").trim();
-      const openers = [
-        "Tonight’s main character:",
-        "In the latest episode of Sports™:",
-        "Headline of the moment:",
-        "The league said “peace” and then:",
-        "Breaking (emotionally):"
+      if(!h) return "No headline found.";
+      const tails = [
+        "That’s the headline. That’s the post.",
+        "More details inside.",
+        "Expect opinions immediately.",
+        "This will be discussed.",
+        "Keep an eye on this one."
       ];
-      const closers = [
-        "Expect takes. Many takes.",
-        "Refresh responsibly.",
-        "Nobody stay calm.",
-        "The group chat is typing.",
-        "This will be debated for 48 hours minimum."
-      ];
-      const o = openers[Math.floor(Math.random() * openers.length)];
-      const c = closers[Math.floor(Math.random() * closers.length)];
-      if(!h) return "Nothing dramatic found. Suspicious.";
-      return `${o} ${escapeHtml(h)}. ${c}`;
+      const t = tails[Math.floor(Math.random() * tails.length)];
+      return `${escapeHtml(h)}. ${t}`;
     }
 
     function pickLink(links){
@@ -443,16 +505,40 @@
       scoresEl.innerHTML = `<div class="empty">Loading…</div>`;
       newsEl.innerHTML = `<div class="empty">Loading…</div>`;
       scoreboardMetaEl.textContent = "—";
-      lastUpdatedEl.innerHTML = `<span class="dot"></span><span>—</span>`;
-      bigStoryEl.innerHTML = `
-        <h3>Loading…</h3>
-        <p>Fetching the latest story.</p>
-        <div class="story-foot">
-          <span id="storyTime">—</span>
-          <span>•</span>
-          <a id="storyLink" href="#" target="_blank" rel="noopener">Open</a>
-        </div>
-      `;
+      lastUpdatedEl.innerHTML = `<span class="kdot"></span><span>—</span>`;
+    }
+
+    async function loadNFLTopStory(){
+      // NFL is always the hero story
+      const nfl = { sport: "football", league: "nfl" };
+      const url = `${baseUrl(nfl)}/news`;
+
+      try{
+        const news = await safeFetchJson(url);
+        const items = (news && (news.articles || news.headlines)) ? (news.articles || news.headlines) : [];
+        if(!items.length){
+          topTitleEl.textContent = "No NFL headlines right now";
+          topTimeEl.textContent = "—";
+          topLinkEl.href = "#";
+          topOneLinerEl.textContent = "Check back soon.";
+          return;
+        }
+
+        const top = items[0] || {};
+        const title = top.headline || top.title || "Top story";
+        const href = pickLink(top.links) || top.link || "#";
+        const when = top.published ? fmtShort(top.published) : (top.lastModified ? fmtShort(top.lastModified) : "—");
+
+        topTitleEl.textContent = title;
+        topTimeEl.textContent = when;
+        topLinkEl.href = href;
+        topOneLinerEl.textContent = oneLiner(title);
+      }catch(e){
+        topTitleEl.textContent = "NFL feed error";
+        topTimeEl.textContent = "—";
+        topLinkEl.href = "#";
+        topOneLinerEl.textContent = "Try refresh.";
+      }
     }
 
     function renderScores(scoreboard){
@@ -467,7 +553,7 @@
       }
 
       scoresEl.innerHTML = "";
-      events.slice(0, 12).forEach(ev => {
+      events.slice(0, 10).forEach(ev => {
         const comp = ev.competitions && ev.competitions[0] ? ev.competitions[0] : null;
         const status = comp && comp.status ? comp.status : (ev.status || null);
         const short = status && status.type ? (status.type.shortDetail || status.type.detail || "") : "";
@@ -505,27 +591,9 @@
 
       if(!items.length){
         newsEl.innerHTML = `<div class="empty">No headlines right now.</div>`;
-        bigStoryEl.querySelector("h3").textContent = "Quiet day";
-        bigStoryEl.querySelector("p").textContent = "Nothing big is screaming for attention. Yet.";
         return;
       }
 
-      const top = items[0] || {};
-      const topTitle = top.headline || top.title || "Top story";
-      const topLink = pickLink(top.links) || top.link || "#";
-      const topTime = top.published ? fmtShort(top.published) : (top.lastModified ? fmtShort(top.lastModified) : "—");
-
-      bigStoryEl.innerHTML = `
-        <h3>${escapeHtml(topTitle)}</h3>
-        <p>${wittyRecap(topTitle)}</p>
-        <div class="story-foot">
-          <span id="storyTime">${escapeHtml(topTime)}</span>
-          <span>•</span>
-          <a id="storyLink" href="${escapeHtml(topLink)}" target="_blank" rel="noopener">Open</a>
-        </div>
-      `;
-
-      // Headlines: title + tiny time (no summaries)
       newsEl.innerHTML = "";
       items.slice(0, 8).forEach(it => {
         const t = it.headline || it.title || "Story";
@@ -544,9 +612,7 @@
       });
     }
 
-    async function load(){
-      setLoading();
-
+    async function loadSelectedLeague(){
       const idx = Number(leagueSelect.value || "0");
       const chosen = LEAGUES[idx] || LEAGUES[0];
       localStorage.setItem("sportswire_league", String(idx));
@@ -560,30 +626,27 @@
           safeFetchJson(scoreboardUrl),
           safeFetchJson(newsUrl)
         ]);
-
         renderScores(scoreboard);
         renderNews(news);
-
-        const now = new Date();
-        lastUpdatedEl.innerHTML = `<span class="dot"></span><span>Updated ${now.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })}</span>`;
       }catch(err){
         scoresEl.innerHTML = `<div class="err">Couldn’t load scores.</div>`;
-        newsEl.innerHTML = `<div class="err">Couldn’t load news.</div>`;
-        bigStoryEl.innerHTML = `
-          <h3>Feed error</h3>
-          <p>Try refresh. If it keeps failing, it’s usually CORS/network or an endpoint change.</p>
-          <div class="story-foot">
-            <span id="storyTime">—</span>
-            <span>•</span>
-            <a id="storyLink" href="#" target="_blank" rel="noopener">—</a>
-          </div>
-        `;
+        newsEl.innerHTML = `<div class="err">Couldn’t load headlines.</div>`;
       }
     }
 
-    // Events
-    refreshBtn.addEventListener("click", load);
-    leagueSelect.addEventListener("change", load);
+    async function loadAll(){
+      setLoading();
+      await Promise.all([
+        loadNFLTopStory(),
+        loadSelectedLeague()
+      ]);
+
+      const now = new Date();
+      lastUpdatedEl.innerHTML = `<span class="kdot"></span><span>Updated ${now.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })}</span>`;
+    }
+
+    refreshBtn.addEventListener("click", loadAll);
+    leagueSelect.addEventListener("change", loadAll);
 
     toggleAuto.addEventListener("click", () => {
       const on = Boolean(autoTimer);
@@ -594,12 +657,12 @@
         toggleAuto.setAttribute("aria-pressed", "false");
         return;
       }
-      autoTimer = setInterval(load, 60 * 1000);
+      autoTimer = setInterval(loadAll, 60 * 1000);
       toggleAuto.textContent = "Auto: On";
       toggleAuto.setAttribute("aria-pressed", "true");
     });
 
-    load();
+    loadAll();
   </script>
 </body>
 </html>
