@@ -5,318 +5,278 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SportsWire — Live Scores & News</title>
   <meta name="theme-color" content="#ffffff" />
-  <meta name="description" content="Live scoreboards, top sports news, and a quick witty recap of the biggest story." />
+  <meta name="description" content="Live scores, top headlines, and a quick witty recap." />
+
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#0b1220;
-      --muted:#556173;
-      --hair: rgba(15,23,42,.08);
-      --border: rgba(15,23,42,.12);
-      --panel: rgba(255,255,255,.78);
-      --blue:#1d79c6;
-      --green:#2cab4b;
-      --shadow: 0 18px 55px rgba(15,23,42,.10);
-      --shadow2: 0 10px 30px rgba(15,23,42,.08);
-      --radius: 22px;
-      --max: 1160px;
+      --bg:#0b1220;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.62);
+      --muted2: rgba(255,255,255,.48);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1180px;
+      --blue:#3aa0ff;
+      --green:#35d07f;
     }
-    *{ box-sizing:border-box; }
-    html,body{
-      margin:0; padding:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.16), transparent 60%),
-        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
-        linear-gradient(180deg, rgba(15,23,42,.03), transparent 55%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    a{ color: inherit; text-decoration:none; }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
 
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body{
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(58,160,255,.22), transparent 60%),
+        radial-gradient(1200px 600px at 90% 0%, rgba(53,208,127,.14), transparent 60%),
+        radial-gradient(900px 500px at 50% 110%, rgba(255,255,255,.06), transparent 60%),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    a{ color: inherit; text-decoration:none; }
+    .container{ max-width: var(--max); margin:0 auto; padding: 0 18px; }
+
+    /* Top bar */
     header{
       position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.86);
+      background: rgba(11,18,32,.72);
       backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--hair);
+      border-bottom: 1px solid rgba(255,255,255,.10);
     }
     .nav{
       display:flex; align-items:center; justify-content:space-between;
-      gap: 14px; padding: 14px 0;
+      gap: 14px;
+      padding: 14px 0;
     }
-    .brand{ display:flex; align-items:center; gap: 12px; min-width:0; }
+    .brand{ display:flex; align-items:center; gap: 10px; min-width:0; }
     .logo{
-      width: 38px; height: 38px; border-radius: 14px;
-      border: 1px solid var(--hair);
-      background: rgba(15,23,42,.02);
-      padding: 6px; display:grid; place-items:center;
+      width: 36px; height: 36px;
+      border-radius: 14px;
+      display:grid; place-items:center;
       font-weight: 950;
       letter-spacing: -0.5px;
+      background: linear-gradient(135deg, rgba(58,160,255,.9), rgba(53,208,127,.9));
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .brand-title{ display:flex; flex-direction:column; gap: 1px; min-width:0; }
-    .brand-title strong{ font-weight: 950; font-size: 13.5px; letter-spacing: .2px; }
-    .brand-title span{
-      font-weight: 750; font-size: 12px; color: var(--muted);
-      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
-      max-width: 520px;
+    .brand-text{ display:flex; flex-direction:column; min-width:0; }
+    .brand-text strong{ font-weight: 950; font-size: 13.5px; letter-spacing: .2px; }
+    .brand-text span{
+      font-weight: 800; font-size: 12px; color: var(--muted2);
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width: 560px;
     }
 
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid transparent;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
       font-weight: 950;
-      cursor:pointer;
+      cursor: pointer;
       user-select:none;
-      white-space: nowrap;
-      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
-      background:#fff;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
     }
     .btn:active{ transform: translateY(1px); }
+    .btn:hover{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.20); }
     .btn-primary{
-      color:#fff;
-      background: linear-gradient(135deg, var(--blue), var(--green));
-      box-shadow: 0 18px 44px rgba(29,121,198,.20);
-    }
-    .btn-primary:hover{ box-shadow: 0 22px 60px rgba(29,121,198,.24); }
-    .btn-outline{
-      background:#fff;
-      border-color: var(--hair);
-      color: rgba(11,18,32,.92);
-    }
-    .btn-outline:hover{
-      background: rgba(15,23,42,.02);
-      border-color: rgba(15,23,42,.14);
+      border-color: transparent;
+      background: linear-gradient(135deg, rgba(58,160,255,.95), rgba(53,208,127,.95));
+      color: #051018;
     }
 
-    .hero{ padding: 42px 0 10px; }
-    .kicker{
-      display:inline-flex; align-items:center; gap: 8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.65);
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(11,18,32,.86);
-      width: fit-content;
-    }
-    .dot{ width: 8px; height: 8px; border-radius: 999px; background: linear-gradient(135deg, var(--blue), var(--green)); }
+    /* Page */
+    .hero{ padding: 26px 0 10px; }
     h1{
-      margin: 14px 0 8px;
-      font-size: clamp(30px, 3.6vw, 46px);
-      letter-spacing: -0.9px;
+      margin: 8px 0 6px;
+      font-size: clamp(30px, 3.4vw, 44px);
+      letter-spacing: -1px;
       line-height: 1.05;
-      font-weight: 950;
+      font-weight: 980;
     }
-    .lead{
+    .sub{
       margin: 0;
-      color: rgba(11,18,32,.70);
-      font-weight: 750;
-      max-width: 90ch;
-      font-size: 14.5px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13.5px;
+      max-width: 80ch;
     }
 
-    .toolbar{
+    /* Controls */
+    .controls{
       margin-top: 16px;
-      display:flex; gap: 10px; flex-wrap:wrap;
-      align-items:center; justify-content:flex-start;
-    }
-    .select, .toggle{
-      border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.12);
-      background: rgba(255,255,255,.78);
-      padding: 10px 12px;
-      font-weight: 900;
-      color: rgba(11,18,32,.88);
-      outline:none;
-    }
-    .toggle{
-      display:inline-flex; align-items:center; gap:10px;
-      padding: 10px 14px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .toggle input{ width: 16px; height: 16px; }
-
-    .layout{
-      margin-top: 16px;
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
-      padding: 18px 0 56px;
-    }
-    .card{
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow2);
-      padding: 18px;
-      position: relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(360px 220px at 15% 20%, rgba(29,121,198,.10), transparent 70%),
-        radial-gradient(360px 220px at 92% 0%, rgba(44,171,75,.08), transparent 70%);
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
-
-    .card h2{
-      margin: 0 0 10px;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-      color: rgba(11,18,32,.92);
-      display:flex; align-items:center; justify-content:space-between;
+      display:flex;
       gap: 10px;
       flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
     }
-    .subtle{
-      color: rgba(11,18,32,.58);
+    .select{
+      appearance:none;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 11px 14px;
+      font-weight: 950;
+      outline:none;
+    }
+    .meta{
+      color: var(--muted2);
       font-weight: 850;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 0;
+    }
+    .dot{ width: 7px; height: 7px; border-radius: 999px; background: rgba(53,208,127,.95); }
+
+    /* Layout */
+    .grid{
+      padding: 14px 0 54px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Cards */
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-head{
+      padding: 14px 14px 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px; flex-wrap:wrap;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .card-head h2{
+      margin:0;
+      font-size: 13px;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+      font-weight: 980;
+      color: rgba(255,255,255,.82);
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.70);
+      font-weight: 900;
       font-size: 12px;
     }
 
-    .big-story{
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
+    /* Score list */
+    .list{ padding: 10px; display:flex; flex-direction:column; gap: 10px; }
+    .game{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items:center;
+    }
+    .teams{ display:flex; flex-direction:column; gap: 8px; min-width:0; }
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      min-width:0;
+    }
+    .name{
+      font-weight: 950;
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      max-width: 46ch;
+    }
+    .score{
+      font-weight: 980;
+      letter-spacing: -0.3px;
+    }
+    .status{
+      color: var(--muted2);
+      font-weight: 900;
+      font-size: 12px;
+      text-align:right;
+      white-space: nowrap;
+    }
+
+    /* Big story */
+    .story{
       padding: 14px;
     }
-    .big-story .headline{
+    .story h3{
       margin: 0 0 6px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
+      font-size: 18px;
+      letter-spacing: -0.4px;
+      font-weight: 980;
     }
-    .big-story .recap{
+    .story p{
       margin: 0;
-      color: rgba(11,18,32,.72);
-      font-weight: 800;
+      color: rgba(255,255,255,.72);
+      font-weight: 850;
       font-size: 13.5px;
       line-height: 1.55;
     }
-    .big-story .src{
-      margin-top: 10px;
+    .story-foot{
+      margin-top: 12px;
       display:flex; gap: 10px; flex-wrap:wrap;
-      align-items:center; justify-content:flex-start;
-      font-size: 12px;
-      color: rgba(11,18,32,.58);
+      align-items:center;
+      color: var(--muted2);
       font-weight: 850;
+      font-size: 12px;
     }
 
-    .scores{
-      display:flex; flex-direction:column; gap: 10px;
-    }
-    .game{
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
+    /* Headlines */
+    .headline{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
       padding: 12px;
-      display:flex; flex-direction:column; gap: 8px;
+      transition: background .15s ease, border-color .15s ease;
     }
-    .game-top{
-      display:flex; justify-content:space-between; gap: 10px; flex-wrap:wrap;
-      align-items:center;
-      font-weight: 900;
+    .headline:hover{
+      background: rgba(0,0,0,.24);
+      border-color: rgba(255,255,255,.16);
     }
-    .status{
-      font-size: 12px;
-      color: rgba(11,18,32,.62);
-      font-weight: 900;
-    }
-    .teams{
-      display:grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 10px;
-      align-items:center;
-    }
-    .team{
-      display:flex; gap: 10px; align-items:center;
-      min-width:0;
-    }
-    .team .name{
-      font-weight: 950;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .team .score{
-      margin-left:auto;
-      font-weight: 950;
-      font-size: 16px;
-      letter-spacing: -0.2px;
-    }
-    .vs{
-      display:grid; place-items:center;
-      font-size: 12px;
-      color: rgba(11,18,32,.56);
-      font-weight: 900;
-    }
-
-    .news{
-      display:flex; flex-direction:column; gap: 10px;
-    }
-    .story{
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
-      padding: 12px;
-    }
-    .story a{ display:block; }
-    .story .t{
-      margin: 0 0 6px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .story .d{
+    .headline .t{
       margin: 0;
-      color: rgba(11,18,32,.70);
-      font-weight: 800;
-      font-size: 13px;
-      line-height: 1.5;
+      font-weight: 980;
+      letter-spacing: -0.2px;
     }
-
-    .notice{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(11,18,32,.56);
+    .headline .small{
+      margin: 6px 0 0;
+      color: var(--muted2);
       font-weight: 850;
-      line-height: 1.5;
+      font-size: 12px;
     }
 
     .empty, .err{
-      border-radius: 18px;
-      border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
       padding: 12px;
-      color: rgba(11,18,32,.70);
+      color: rgba(255,255,255,.75);
       font-weight: 850;
       font-size: 13px;
-      line-height: 1.5;
     }
     .err{
-      border-color: rgba(220,38,38,.25);
-      background: rgba(220,38,38,.06);
-      color: rgba(153,27,27,.95);
-    }
-
-    footer{
-      border-top: 1px solid var(--hair);
-      padding: 18px 0 28px;
-      color: rgba(11,18,32,.55);
-      font-size: 12px;
-      text-align:center;
-    }
-
-    @media (max-width: 980px){
-      .layout{ grid-template-columns: 1fr; }
+      border-color: rgba(255,120,120,.28);
+      background: rgba(255,60,60,.10);
+      color: rgba(255,220,220,.95);
     }
   </style>
 </head>
@@ -326,208 +286,193 @@
     <div class="container nav">
       <a class="brand" href="../../demos.html">
         <div class="logo">SW</div>
-        <div class="brand-title">
+        <div class="brand-text">
           <strong>SportsWire</strong>
-          <span>Live scores, top headlines, and a quick witty recap</span>
+          <span>Scores + headlines + a quick witty recap</span>
         </div>
       </a>
+
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
-        <a class="btn btn-outline" href="../../index.html">Back to Site</a>
+        <a class="btn" href="../../demos.html">Back to Demos</a>
+        <a class="btn" href="../../index.html">Back to Site</a>
       </div>
     </div>
   </header>
 
   <main class="container hero">
-    <div class="kicker"><span class="dot"></span> Live feed • Updates on refresh (and optional auto-refresh)</div>
     <h1>Scores & News</h1>
-    <p class="lead">
-      Pick a league for live scoreboards + the latest headlines. The “Big Story” recap is intentionally a little witty (sports are serious… except when they aren’t).
-    </p>
+    <p class="sub">Pick a league. Get the essentials. No essay required.</p>
 
-    <div class="toolbar">
+    <div class="controls">
       <select id="leagueSelect" class="select" aria-label="Select league"></select>
       <button id="refreshBtn" class="btn btn-primary" type="button">Refresh</button>
-      <label class="toggle" title="Refresh every 60 seconds">
-        <input id="autoRefresh" type="checkbox" />
-        Auto-refresh (60s)
-      </label>
-      <span id="lastUpdated" class="subtle"></span>
-    </div>
-
-    <div class="notice">
-      Data source: ESPN “site API” endpoints (public, unofficial). If a fetch fails, it’s usually CORS/network or endpoint changes.
+      <button id="toggleAuto" class="btn" type="button" aria-pressed="false">Auto: Off</button>
+      <div id="lastUpdated" class="meta"><span class="dot"></span><span>—</span></div>
     </div>
   </main>
 
-  <section class="container layout">
-    <!-- Left: Scores -->
+  <section class="container grid">
+    <!-- Scores -->
     <div class="card">
-      <h2>
-        <span>Scoreboard</span>
-        <span id="scoreboardMeta" class="subtle"></span>
-      </h2>
-      <div id="scores" class="scores">
-        <div class="empty">Loading scores…</div>
+      <div class="card-head">
+        <h2>Scoreboard</h2>
+        <span id="scoreboardMeta" class="chip">—</span>
+      </div>
+      <div id="scores" class="list">
+        <div class="empty">Loading…</div>
       </div>
     </div>
 
-    <!-- Right: News + Big Story -->
+    <!-- News -->
     <div class="card">
-      <h2>
-        <span>Big Story</span>
-        <span class="subtle">Witty recap</span>
-      </h2>
-      <div id="bigStory" class="big-story">
-        <p class="headline">Loading headline…</p>
-        <p class="recap">Fetching the latest story so we can pretend we’re calm about it.</p>
-        <div class="src">
+      <div class="card-head">
+        <h2>Big Story</h2>
+        <span class="chip">Witty recap</span>
+      </div>
+
+      <div id="bigStory" class="story">
+        <h3>Loading…</h3>
+        <p>Fetching the latest story.</p>
+        <div class="story-foot">
           <span id="storyTime">—</span>
           <span>•</span>
-          <a id="storyLink" href="#" target="_blank" rel="noopener">Open source</a>
+          <a id="storyLink" href="#" target="_blank" rel="noopener">Open</a>
         </div>
       </div>
 
-      <div style="height:12px"></div>
+      <div class="card-head" style="border-top: 1px solid rgba(255,255,255,.10);">
+        <h2>Headlines</h2>
+        <span class="chip">Latest</span>
+      </div>
 
-      <h2>
-        <span>Top Headlines</span>
-        <span class="subtle">Latest</span>
-      </h2>
-      <div id="news" class="news">
-        <div class="empty">Loading news…</div>
+      <div id="news" class="list">
+        <div class="empty">Loading…</div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <div class="container">© <span id="year"></span> SportsWire. Demo site.</div>
-  </footer>
-
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // League definitions (ESPN site API paths)
-    // NOTE: These are commonly used public endpoints, but unofficial.
+    // ESPN site API endpoints are public but unofficial; they can change.
     const LEAGUES = [
-      { label: "NFL (Football)", sport: "football", league: "nfl" },
-      { label: "NBA (Basketball)", sport: "basketball", league: "nba" },
-      { label: "MLB (Baseball)", sport: "baseball", league: "mlb" },
-      { label: "NHL (Hockey)", sport: "hockey", league: "nhl" },
-      { label: "College Football (NCAAF)", sport: "football", league: "college-football" },
-      { label: "College Basketball (NCAAM)", sport: "basketball", league: "mens-college-basketball" },
-      { label: "Soccer (EPL)", sport: "soccer", league: "eng.1" }
+      { label: "NFL", sport: "football", league: "nfl" },
+      { label: "NBA", sport: "basketball", league: "nba" },
+      { label: "MLB", sport: "baseball", league: "mlb" },
+      { label: "NHL", sport: "hockey", league: "nhl" },
+      { label: "NCAAF", sport: "football", league: "college-football" },
+      { label: "NCAAM", sport: "basketball", league: "mens-college-basketball" },
+      { label: "EPL", sport: "soccer", league: "eng.1" }
     ];
 
     const leagueSelect = document.getElementById("leagueSelect");
     const refreshBtn = document.getElementById("refreshBtn");
-    const autoRefresh = document.getElementById("autoRefresh");
+    const toggleAuto = document.getElementById("toggleAuto");
     const scoresEl = document.getElementById("scores");
     const newsEl = document.getElementById("news");
     const bigStoryEl = document.getElementById("bigStory");
     const scoreboardMetaEl = document.getElementById("scoreboardMeta");
     const lastUpdatedEl = document.getElementById("lastUpdated");
+    const storyTimeEl = () => document.getElementById("storyTime");
+    const storyLinkEl = () => document.getElementById("storyLink");
 
-    // Fill dropdown
-    const storedLeague = localStorage.getItem("sportswire_league") || "";
-    LEAGUES.forEach((l, idx) => {
+    // Dropdown
+    const stored = localStorage.getItem("sportswire_league") || "0";
+    LEAGUES.forEach((l, i) => {
       const opt = document.createElement("option");
-      opt.value = String(idx);
+      opt.value = String(i);
       opt.textContent = l.label;
       leagueSelect.appendChild(opt);
     });
-    leagueSelect.value = storedLeague && !isNaN(Number(storedLeague)) ? storedLeague : "0";
+    leagueSelect.value = (!isNaN(Number(stored)) ? stored : "0");
 
-    let timer = null;
+    let autoTimer = null;
 
     function baseUrl({sport, league}){
       return `https://site.api.espn.com/apis/site/v2/sports/${encodeURIComponent(sport)}/${encodeURIComponent(league)}`;
     }
-    function fmtTime(iso){
-      try{
-        const d = new Date(iso);
-        return d.toLocaleString(undefined, { weekday:"short", month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" });
-      }catch(e){ return "—"; }
-    }
+
     function escapeHtml(s){
-      return (s || "").replace(/[&<>"']/g, (c) => ({
+      return (s || "").replace(/[&<>"']/g, c => ({
         "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
       }[c]));
     }
 
-    // Lightly satirical recap generator (rules-based; no external AI)
-    function satiricalRecap(headline, description){
-      const h = (headline || "").trim();
-      const d = (description || "").trim();
+    function fmtShort(iso){
+      try{
+        const d = new Date(iso);
+        return d.toLocaleString(undefined, { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" });
+      }catch(e){ return "—"; }
+    }
 
+    // Keep it short and readable.
+    function wittyRecap(headline){
+      const h = (headline || "").trim();
       const openers = [
-        "In today’s episode of “Sports Are Normal, Actually,”",
-        "Breaking: gravity still works, and somehow so does this league—because",
-        "In a surprise to absolutely no one (except maybe the group chat),",
-        "The scoreboard blinked twice, the fans screamed once, and",
-        "Somewhere, a coach is staring at the ceiling tiles—because"
-      ];
-      const spice = [
-        "a bold choice was made",
-        "a plot twist arrived uninvited",
-        "someone chose chaos over peace",
-        "the vibes went from immaculate to unhinged",
-        "the headline writers earned their paycheck"
+        "Tonight’s main character:",
+        "In the latest episode of Sports™:",
+        "Headline of the moment:",
+        "The league said “peace” and then:",
+        "Breaking (emotionally):"
       ];
       const closers = [
-        "Anyway, hydrate and prepare your hot takes.",
-        "No one panic. Or do—either way, refresh is free.",
-        "This is why we can’t have quiet weekends.",
-        "File this under: “we’ll be talking about it tomorrow too.”",
-        "Consider this your official invitation to overreact responsibly."
+        "Expect takes. Many takes.",
+        "Refresh responsibly.",
+        "Nobody stay calm.",
+        "The group chat is typing.",
+        "This will be debated for 48 hours minimum."
       ];
-
       const o = openers[Math.floor(Math.random() * openers.length)];
-      const s = spice[Math.floor(Math.random() * spice.length)];
       const c = closers[Math.floor(Math.random() * closers.length)];
+      if(!h) return "Nothing dramatic found. Suspicious.";
+      return `${o} ${escapeHtml(h)}. ${c}`;
+    }
 
-      // Keep it one paragraph, quick, and not mean.
-      const core = h ? ` ${escapeHtml(h)}.` : " the universe has presented another storyline.";
-      const context = d ? ` Context: ${escapeHtml(d)}` : "";
-      return `${o}${core} Also: ${s}.${context} ${c}`;
+    function pickLink(links){
+      if(!links) return "";
+      const web = links.web && links.web.href ? links.web.href : "";
+      const api = links.api && links.api.news && links.api.news.href ? links.api.news.href : "";
+      return web || api || "";
+    }
+
+    async function safeFetchJson(url){
+      const res = await fetch(url, { method:"GET" });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
     }
 
     function setLoading(){
-      scoresEl.innerHTML = `<div class="empty">Loading scores…</div>`;
-      newsEl.innerHTML = `<div class="empty">Loading news…</div>`;
-      scoreboardMetaEl.textContent = "";
-      lastUpdatedEl.textContent = "";
+      scoresEl.innerHTML = `<div class="empty">Loading…</div>`;
+      newsEl.innerHTML = `<div class="empty">Loading…</div>`;
+      scoreboardMetaEl.textContent = "—";
+      lastUpdatedEl.innerHTML = `<span class="dot"></span><span>—</span>`;
       bigStoryEl.innerHTML = `
-        <p class="headline">Loading headline…</p>
-        <p class="recap">Fetching the latest story so we can pretend we’re calm about it.</p>
-        <div class="src">
+        <h3>Loading…</h3>
+        <p>Fetching the latest story.</p>
+        <div class="story-foot">
           <span id="storyTime">—</span>
           <span>•</span>
-          <a id="storyLink" href="#" target="_blank" rel="noopener">Open source</a>
+          <a id="storyLink" href="#" target="_blank" rel="noopener">Open</a>
         </div>
       `;
     }
 
-    function renderScores(scoreboardJson){
-      // ESPN scoreboard typically contains events[]
-      const events = (scoreboardJson && scoreboardJson.events) ? scoreboardJson.events : [];
-      const leagues = (scoreboardJson && scoreboardJson.leagues) ? scoreboardJson.leagues : [];
+    function renderScores(scoreboard){
+      const events = (scoreboard && scoreboard.events) ? scoreboard.events : [];
+      const leagues = (scoreboard && scoreboard.leagues) ? scoreboard.leagues : [];
       const leagueName = leagues[0] && leagues[0].name ? leagues[0].name : "";
-      const day = scoreboardJson && scoreboardJson.day ? scoreboardJson.day : "";
-      scoreboardMetaEl.textContent = leagueName ? `${leagueName}${day ? " • " + day : ""}` : (day || "");
+      scoreboardMetaEl.textContent = leagueName || "—";
 
       if(!events.length){
-        scoresEl.innerHTML = `<div class="empty">No games found right now (or the feed is taking a nap).</div>`;
+        scoresEl.innerHTML = `<div class="empty">No games right now.</div>`;
         return;
       }
 
       scoresEl.innerHTML = "";
-      events.slice(0, 20).forEach(ev => {
+      events.slice(0, 12).forEach(ev => {
         const comp = ev.competitions && ev.competitions[0] ? ev.competitions[0] : null;
         const status = comp && comp.status ? comp.status : (ev.status || null);
         const short = status && status.type ? (status.type.shortDetail || status.type.detail || "") : "";
-        const state = status && status.type ? (status.type.state || "") : "";
         const competitors = comp && comp.competitors ? comp.competitors : [];
+
         const home = competitors.find(c => c.homeAway === "home") || competitors[0] || {};
         const away = competitors.find(c => c.homeAway === "away") || competitors[1] || {};
 
@@ -536,88 +481,67 @@
         const homeScore = (home.score != null) ? String(home.score) : "—";
         const awayScore = (away.score != null) ? String(away.score) : "—";
 
-        const startTime = ev.date ? fmtTime(ev.date) : "";
-        const label = short || startTime || state || "";
-
-        const card = document.createElement("div");
-        card.className = "game";
-        card.innerHTML = `
-          <div class="game-top">
-            <div>${escapeHtml(ev.name || `${awayName} vs ${homeName}`)}</div>
-            <div class="status">${escapeHtml(label)}</div>
-          </div>
+        const g = document.createElement("div");
+        g.className = "game";
+        g.innerHTML = `
           <div class="teams">
-            <div class="team">
+            <div class="row">
               <div class="name">${escapeHtml(awayName)}</div>
               <div class="score">${escapeHtml(awayScore)}</div>
             </div>
-            <div class="vs">VS</div>
-            <div class="team">
+            <div class="row">
               <div class="name">${escapeHtml(homeName)}</div>
               <div class="score">${escapeHtml(homeScore)}</div>
             </div>
           </div>
+          <div class="status">${escapeHtml(short || (ev.date ? fmtShort(ev.date) : ""))}</div>
         `;
-        scoresEl.appendChild(card);
+        scoresEl.appendChild(g);
       });
     }
 
-    function pickBestLink(links){
-      // ESPN news items often include links.api.news.href or links.web.href
-      if(!links) return "";
-      const web = links.web && links.web.href ? links.web.href : "";
-      const api = links.api && links.api.news && links.api.news.href ? links.api.news.href : "";
-      const href = web || api || "";
-      return href;
-    }
+    function renderNews(news){
+      const items = (news && (news.articles || news.headlines)) ? (news.articles || news.headlines) : [];
 
-    function renderNews(newsJson){
-      // ESPN news typically has articles[] or headlines[]
-      const items = (newsJson && (newsJson.articles || newsJson.headlines)) ? (newsJson.articles || newsJson.headlines) : [];
       if(!items.length){
-        newsEl.innerHTML = `<div class="empty">No headlines found (which means the sport is having a suspiciously peaceful day).</div>`;
+        newsEl.innerHTML = `<div class="empty">No headlines right now.</div>`;
+        bigStoryEl.querySelector("h3").textContent = "Quiet day";
+        bigStoryEl.querySelector("p").textContent = "Nothing big is screaming for attention. Yet.";
         return;
       }
 
-      // Big story uses first item
       const top = items[0] || {};
-      const topHeadline = top.headline || top.title || "Top story";
-      const topDesc = top.description || top.summary || "";
-      const topLink = pickBestLink(top.links) || (top.link ? top.link : "#");
-      const topTime = top.published ? fmtTime(top.published) : (top.lastModified ? fmtTime(top.lastModified) : "—");
+      const topTitle = top.headline || top.title || "Top story";
+      const topLink = pickLink(top.links) || top.link || "#";
+      const topTime = top.published ? fmtShort(top.published) : (top.lastModified ? fmtShort(top.lastModified) : "—");
 
       bigStoryEl.innerHTML = `
-        <p class="headline">${escapeHtml(topHeadline)}</p>
-        <p class="recap">${satiricalRecap(topHeadline, topDesc)}</p>
-        <div class="src">
+        <h3>${escapeHtml(topTitle)}</h3>
+        <p>${wittyRecap(topTitle)}</p>
+        <div class="story-foot">
           <span id="storyTime">${escapeHtml(topTime)}</span>
           <span>•</span>
-          <a id="storyLink" href="${escapeHtml(topLink || "#")}" target="_blank" rel="noopener">Open source</a>
+          <a id="storyLink" href="${escapeHtml(topLink)}" target="_blank" rel="noopener">Open</a>
         </div>
       `;
 
-      // List headlines
+      // Headlines: title + tiny time (no summaries)
       newsEl.innerHTML = "";
-      items.slice(0, 10).forEach(it => {
+      items.slice(0, 8).forEach(it => {
         const t = it.headline || it.title || "Story";
-        const d = it.description || it.summary || "";
-        const href = pickBestLink(it.links) || (it.link ? it.link : "#");
-        const div = document.createElement("div");
-        div.className = "story";
+        const href = pickLink(it.links) || it.link || "#";
+        const when = it.published ? fmtShort(it.published) : (it.lastModified ? fmtShort(it.lastModified) : "");
+        const div = document.createElement("a");
+        div.className = "headline";
+        div.href = href;
+        div.target = "_blank";
+        div.rel = "noopener";
         div.innerHTML = `
-          <a href="${escapeHtml(href)}" target="_blank" rel="noopener">
-            <p class="t">${escapeHtml(t)}</p>
-            <p class="d">${escapeHtml(d)}</p>
-          </a>
+          <p class="t">${escapeHtml(t)}</p>
+          ${when ? `<p class="small">${escapeHtml(when)}</p>` : ``}
         `;
         newsEl.appendChild(div);
       });
-    }
-
-    async function safeFetchJson(url){
-      const res = await fetch(url, { method:"GET" });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
     }
 
     async function load(){
@@ -641,14 +565,14 @@
         renderNews(news);
 
         const now = new Date();
-        lastUpdatedEl.textContent = `Last updated: ${now.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })}`;
+        lastUpdatedEl.innerHTML = `<span class="dot"></span><span>Updated ${now.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" })}</span>`;
       }catch(err){
-        scoresEl.innerHTML = `<div class="err">Couldn’t load scores. (${escapeHtml(String(err))})</div>`;
-        newsEl.innerHTML = `<div class="err">Couldn’t load news. (${escapeHtml(String(err))})</div>`;
+        scoresEl.innerHTML = `<div class="err">Couldn’t load scores.</div>`;
+        newsEl.innerHTML = `<div class="err">Couldn’t load news.</div>`;
         bigStoryEl.innerHTML = `
-          <p class="headline">Feed error</p>
-          <p class="recap">The data feed tripped over its shoelaces. Try refresh—if that fails, it’s probably CORS/network or an endpoint change.</p>
-          <div class="src">
+          <h3>Feed error</h3>
+          <p>Try refresh. If it keeps failing, it’s usually CORS/network or an endpoint change.</p>
+          <div class="story-foot">
             <span id="storyTime">—</span>
             <span>•</span>
             <a id="storyLink" href="#" target="_blank" rel="noopener">—</a>
@@ -657,17 +581,24 @@
       }
     }
 
+    // Events
     refreshBtn.addEventListener("click", load);
     leagueSelect.addEventListener("change", load);
 
-    autoRefresh.addEventListener("change", () => {
-      if(timer){ clearInterval(timer); timer = null; }
-      if(autoRefresh.checked){
-        timer = setInterval(load, 60 * 1000);
+    toggleAuto.addEventListener("click", () => {
+      const on = Boolean(autoTimer);
+      if(on){
+        clearInterval(autoTimer);
+        autoTimer = null;
+        toggleAuto.textContent = "Auto: Off";
+        toggleAuto.setAttribute("aria-pressed", "false");
+        return;
       }
+      autoTimer = setInterval(load, 60 * 1000);
+      toggleAuto.textContent = "Auto: On";
+      toggleAuto.setAttribute("aria-pressed", "true");
     });
 
-    // Kick off
     load();
   </script>
 </body>
