@@ -1,1 +1,699 @@
-.
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NEMSDoc — Prefill & Download</title>
+  <meta name="theme-color" content="#363639" />
+
+  <!-- pdf-lib -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <style>
+    :root{
+      --ink:#363639;
+      --muted:#467082;
+      --accent:#7092A5;
+      --accent2:#467082;
+      --paper:#E7E2D8;
+
+      --bg: #0f1418;
+      --panel: rgba(255,255,255,.06);
+      --border: rgba(231,226,216,.16);
+      --hair: rgba(231,226,216,.10);
+
+      --radius: 18px;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --max: 1040px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0; padding:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(900px 520px at 15% -10%, rgba(112,146,165,.22), transparent 62%),
+        radial-gradient(900px 520px at 90% 0%, rgba(70,112,130,.18), transparent 62%),
+        linear-gradient(180deg, rgba(231,226,216,.06), transparent 55%),
+        var(--bg);
+      color: var(--paper);
+      line-height: 1.45;
+    }
+
+    a{ color: inherit; text-decoration:none; }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
+
+    header{
+      position: sticky; top:0; z-index:30;
+      background: rgba(15,20,24,.78);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--hair);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 12px; min-width:0;
+    }
+    .brand img{
+      width: 44px; height: 44px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: rgba(231,226,216,.06);
+      border: 1px solid var(--hair);
+      padding: 8px;
+    }
+    .brand-title{ display:flex; flex-direction:column; gap: 2px; min-width:0; }
+    .brand-title strong{
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 13.5px;
+      color: var(--paper);
+    }
+    .brand-title span{
+      font-weight: 800;
+      font-size: 12px;
+      color: rgba(231,226,216,.72);
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor:pointer;
+      font-weight: 950;
+      user-select:none;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #0b0f12;
+      box-shadow: 0 14px 40px rgba(112,146,165,.22);
+    }
+    .btn-primary:hover{ box-shadow: 0 18px 55px rgba(112,146,165,.26); }
+    .btn-outline{
+      background: rgba(231,226,216,.06);
+      color: var(--paper);
+      border-color: var(--hair);
+    }
+    .btn-outline:hover{
+      background: rgba(231,226,216,.09);
+      border-color: rgba(231,226,216,.18);
+    }
+
+    main{ padding: 26px 0 54px; }
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:start;
+    }
+    .card{
+      background: rgba(231,226,216,.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      overflow:hidden;
+      position: relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 220px at 12% 10%, rgba(112,146,165,.20), transparent 65%),
+        radial-gradient(520px 220px at 92% 0%, rgba(70,112,130,.18), transparent 65%);
+      pointer-events:none;
+      opacity: .9;
+    }
+    .card > *{ position:relative; }
+
+    h1{
+      margin: 0 0 8px;
+      font-size: clamp(22px, 3.4vw, 34px);
+      line-height: 1.05;
+      letter-spacing: -0.6px;
+      font-weight: 980;
+    }
+    .lead{
+      margin: 0;
+      color: rgba(231,226,216,.78);
+      font-weight: 800;
+      font-size: 13.5px;
+      max-width: 80ch;
+    }
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(231,226,216,.06);
+      border: 1px solid var(--hair);
+      color: rgba(231,226,216,.86);
+      font-weight: 900;
+      font-size: 12px;
+      width: fit-content;
+      margin-bottom: 12px;
+    }
+    .dot{
+      width: 9px; height: 9px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+
+    .formGrid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .field label{
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      color: rgba(231,226,216,.86);
+    }
+    .input, select{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(231,226,216,.18);
+      background: rgba(12,16,19,.55);
+      color: var(--paper);
+      outline:none;
+      font-weight: 800;
+      font-size: 13.5px;
+    }
+    .input:focus, select:focus{
+      border-color: rgba(112,146,165,.60);
+      box-shadow: 0 0 0 4px rgba(112,146,165,.14);
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      margin-top: 14px;
+    }
+
+    .help{
+      margin-top: 10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.04);
+      color: rgba(231,226,216,.74);
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+
+    .rightCol .mini{
+      border-radius: 16px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.04);
+      padding: 12px;
+    }
+    .mini h3{
+      margin: 0 0 8px;
+      font-size: 13.5px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .mini p{
+      margin: 0;
+      color: rgba(231,226,216,.74);
+      font-weight: 800;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .status{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(112,146,165,.28);
+      background: rgba(112,146,165,.10);
+      color: rgba(231,226,216,.88);
+      font-weight: 900;
+      font-size: 12.5px;
+      display:none;
+    }
+    .status.show{ display:block; }
+
+    footer{
+      border-top: 1px solid var(--hair);
+      padding: 18px 0 26px;
+      color: rgba(231,226,216,.60);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
+      .formGrid{ grid-template-columns: 1fr; }
+      .actions{ justify-content:flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <img src="assets/NEMS Logo Transparent.png" alt="NEMS Logo" />
+        <div class="brand-title">
+          <strong>NEMSDoc</strong>
+          <span>Prefill a document • Download a filled PDF</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero">
+
+      <div class="card">
+        <div class="kicker"><span class="dot"></span> Simple, client-friendly document prefill</div>
+        <h1>Select a document, fill the form, download the PDF</h1>
+        <p class="lead">
+          Pick a document below. The form will update to match that document. Click <b>Generate & Download</b> to save a filled copy.
+        </p>
+
+        <div class="formGrid" style="margin-top:16px;">
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="docSelect">Document</label>
+            <select id="docSelect">
+              <option value="rpa">NEMS Patient Rental-Purchase Agreement</option>
+              <option value="rpa_sam">NEMS Patient Rental-Purchase Agreement (SAM)</option>
+              <option value="nems_dt">NEMS DT (Delivery Ticket)</option>
+              <option value="ortho_dt">Ortho NE DT</option>
+              <option value="pbo_dt">PBO DT</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="dynamicFields" class="formGrid"></div>
+
+        <div class="actions">
+          <button class="btn btn-outline" id="clearBtn" type="button">Clear</button>
+          <button class="btn btn-primary" id="genBtn" type="button">Generate & Download</button>
+        </div>
+
+        <div class="help">
+          Notes:
+          <ul style="margin:8px 0 0; padding-left: 18px;">
+            <li>This is a simple overlay fill (typed text drawn onto the PDF).</li>
+            <li>If you want perfect box alignment later, we can fine-tune coordinates per field.</li>
+          </ul>
+        </div>
+
+        <div id="status" class="status"></div>
+      </div>
+
+      <div class="rightCol">
+        <div class="mini">
+          <h3>Theme</h3>
+          <p>
+            Colors used: <b>#363639</b>, <b>#7092A5</b>, <b>#467082</b>, <b>#E7E2D8</b>.
+          </p>
+        </div>
+        <div style="height:12px"></div>
+        <div class="mini">
+          <h3>Output</h3>
+          <p>
+            The generated file downloads locally (nothing is uploaded anywhere).
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> New England Medical Solutions • NEMSDoc
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    // ---- Documents (paths relative to demosites/NEMSDoc/index.html) ----
+    const DOCS = {
+      rpa: {
+        label: "NEMS Patient Rental-Purchase Agreement",
+        file: "assets/NEMS Patient Rental-Purchase Agreement.pdf",
+        fields: [
+          { key:"firstName", label:"First Name" },
+          { key:"lastName", label:"Last Name" },
+          { key:"dob", label:"DOB (MM/DD/YYYY)" },
+          { key:"phone", label:"Phone" },
+          { key:"email", label:"Email" },
+          { key:"street", label:"Street Address" },
+          { key:"city", label:"City" },
+          { key:"state", label:"State" },
+          { key:"zip", label:"Zip" },
+          { key:"shipStreet", label:"Shipping Street Address" },
+          { key:"shipCity", label:"Shipping City" },
+          { key:"shipState", label:"Shipping State" },
+          { key:"shipZip", label:"Shipping Zip" },
+          { key:"physician", label:"Prescribing Physician" },
+          { key:"npi", label:"NPI" },
+          { key:"surgDate", label:"Surgical Date (if applicable)" },
+          { key:"primaryCarrier", label:"Primary Insurance Carrier" },
+          { key:"primaryId", label:"Primary Insurance ID #" },
+          { key:"primaryGroup", label:"Primary Insurance Group #" },
+          { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
+          { key:"secondaryId", label:"Secondary Insurance ID #" },
+          { key:"secondaryGroup", label:"Secondary Insurance Group #" }
+        ],
+        // Simple overlay coordinates for PAGE 1 (Letter). Tweak later if desired.
+        // PDF-lib uses bottom-left origin.
+        placements: (v) => ([
+          // Top row
+          { page:0, x: 155, y: 594, text: v.firstName },
+          { page:0, x: 340, y: 594, text: v.lastName },
+          { page:0, x: 510, y: 594, text: v.dob },
+
+          { page:0, x: 155, y: 572, text: v.phone },
+          { page:0, x: 340, y: 572, text: v.email },
+
+          // Street/City/State/Zip
+          { page:0, x: 155, y: 520, text: v.street },
+          { page:0, x: 155, y: 497, text: v.city },
+          { page:0, x: 360, y: 497, text: v.state },
+          { page:0, x: 470, y: 497, text: v.zip },
+
+          // Shipping
+          { page:0, x: 155, y: 444, text: v.shipStreet },
+          { page:0, x: 155, y: 421, text: v.shipCity },
+          { page:0, x: 360, y: 421, text: v.shipState },
+          { page:0, x: 470, y: 421, text: v.shipZip },
+
+          // Physician / NPI / Surg date
+          { page:0, x: 220, y: 371, text: v.physician },
+          { page:0, x: 475, y: 371, text: v.npi },
+          { page:0, x: 250, y: 332, text: v.surgDate },
+
+          // Insurance table
+          { page:0, x: 250, y: 246, text: v.primaryCarrier },
+          { page:0, x: 250, y: 223, text: v.primaryId },
+          { page:0, x: 250, y: 200, text: v.primaryGroup },
+          { page:0, x: 250, y: 177, text: v.secondaryCarrier },
+          { page:0, x: 250, y: 154, text: v.secondaryId },
+          { page:0, x: 250, y: 131, text: v.secondaryGroup }
+        ])
+      },
+
+      rpa_sam: {
+        label: "NEMS Patient Rental-Purchase Agreement (SAM)",
+        file: "assets/NEMS Patient Rental-Purchase Agreement_SAM.pdf",
+        fields: [
+          { key:"firstName", label:"First Name" },
+          { key:"lastName", label:"Last Name" },
+          { key:"dob", label:"DOB (MM/DD/YYYY)" },
+          { key:"phone", label:"Phone" },
+          { key:"email", label:"Email" },
+          { key:"street", label:"Street Address" },
+          { key:"city", label:"City" },
+          { key:"state", label:"State" },
+          { key:"zip", label:"Zip" },
+          { key:"shipStreet", label:"Shipping Street Address" },
+          { key:"shipCity", label:"Shipping City" },
+          { key:"shipState", label:"Shipping State" },
+          { key:"shipZip", label:"Shipping Zip" },
+          { key:"physician", label:"Prescribing Physician" },
+          { key:"npi", label:"NPI" },
+          { key:"surgDate", label:"Surgical Date (if applicable)" },
+          { key:"primaryCarrier", label:"Primary Insurance Carrier" },
+          { key:"primaryId", label:"Primary Insurance ID #" },
+          { key:"primaryGroup", label:"Primary Insurance Group #" },
+          { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
+          { key:"secondaryId", label:"Secondary Insurance ID #" },
+          { key:"secondaryGroup", label:"Secondary Insurance Group #" }
+        ],
+        placements: (v) => ([
+          // Same layout as rpa page 1
+          { page:0, x: 155, y: 594, text: v.firstName },
+          { page:0, x: 340, y: 594, text: v.lastName },
+          { page:0, x: 510, y: 594, text: v.dob },
+          { page:0, x: 155, y: 572, text: v.phone },
+          { page:0, x: 340, y: 572, text: v.email },
+          { page:0, x: 155, y: 520, text: v.street },
+          { page:0, x: 155, y: 497, text: v.city },
+          { page:0, x: 360, y: 497, text: v.state },
+          { page:0, x: 470, y: 497, text: v.zip },
+          { page:0, x: 155, y: 444, text: v.shipStreet },
+          { page:0, x: 155, y: 421, text: v.shipCity },
+          { page:0, x: 360, y: 421, text: v.shipState },
+          { page:0, x: 470, y: 421, text: v.shipZip },
+          { page:0, x: 220, y: 371, text: v.physician },
+          { page:0, x: 475, y: 371, text: v.npi },
+          { page:0, x: 250, y: 332, text: v.surgDate },
+          { page:0, x: 250, y: 246, text: v.primaryCarrier },
+          { page:0, x: 250, y: 223, text: v.primaryId },
+          { page:0, x: 250, y: 200, text: v.primaryGroup },
+          { page:0, x: 250, y: 177, text: v.secondaryCarrier },
+          { page:0, x: 250, y: 154, text: v.secondaryId },
+          { page:0, x: 250, y: 131, text: v.secondaryGroup }
+        ])
+      },
+
+      nems_dt: {
+        label: "NEMS DT (Delivery Ticket)",
+        file: "assets/NEMS DT.pdf",
+        fields: [
+          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
+          { key:"patientName", label:"Patient Name" },
+          { key:"dob", label:"DOB (MM/DD/YYYY)" },
+          { key:"deliveryAddress", label:"Delivery Address" },
+          { key:"product", label:"Product Description" },
+          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
+          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
+          { key:"serial", label:"Serial Number" },
+          { key:"patientSigDate", label:"Patient Signature Date" }
+        ],
+        placements: (v) => ([
+          // approximate placements based on typical layout
+          { page:0, x: 115, y: 660, text: v.dos },
+          { page:0, x: 250, y: 660, text: v.patientName },
+          { page:0, x: 470, y: 660, text: v.dob },
+
+          { page:0, x: 150, y: 620, text: v.deliveryAddress },
+          { page:0, x: 165, y: 582, text: v.product },
+
+          { page:0, x: 150, y: 545, text: v.startDate },
+          { page:0, x: 330, y: 545, text: v.stopDate },
+
+          { page:0, x: 170, y: 510, text: v.serial },
+
+          { page:0, x: 160, y: 120, text: v.patientSigDate }
+        ])
+      },
+
+      ortho_dt: {
+        label: "Ortho NE DT",
+        file: "assets/Ortho NE DT.pdf",
+        fields: [
+          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
+          { key:"patientName", label:"Patient Name" },
+          { key:"dob", label:"DOB (MM/DD/YYYY)" },
+          { key:"deliveryAddress", label:"Delivery Address" },
+          { key:"product", label:"Product Description" },
+          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
+          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
+          { key:"serial", label:"Serial Number" },
+          { key:"patientSigDate", label:"Patient Signature Date" }
+        ],
+        placements: (v) => ([
+          { page:0, x: 115, y: 660, text: v.dos },
+          { page:0, x: 250, y: 660, text: v.patientName },
+          { page:0, x: 470, y: 660, text: v.dob },
+          { page:0, x: 150, y: 620, text: v.deliveryAddress },
+          { page:0, x: 165, y: 582, text: v.product },
+          { page:0, x: 150, y: 545, text: v.startDate },
+          { page:0, x: 330, y: 545, text: v.stopDate },
+          { page:0, x: 170, y: 510, text: v.serial },
+          { page:0, x: 160, y: 120, text: v.patientSigDate }
+        ])
+      },
+
+      pbo_dt: {
+        label: "PBO DT",
+        file: "assets/PBO DT.pdf",
+        fields: [
+          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
+          { key:"patientName", label:"Patient Name" },
+          { key:"dob", label:"DOB (MM/DD/YYYY)" },
+          { key:"deliveryAddress", label:"Delivery Address" },
+          { key:"product", label:"Product Description" },
+          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
+          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
+          { key:"serial", label:"Serial Number" },
+          { key:"patientSigDate", label:"Patient Signature Date" }
+        ],
+        placements: (v) => ([
+          { page:0, x: 115, y: 660, text: v.dos },
+          { page:0, x: 250, y: 660, text: v.patientName },
+          { page:0, x: 470, y: 660, text: v.dob },
+          { page:0, x: 150, y: 620, text: v.deliveryAddress },
+          { page:0, x: 165, y: 582, text: v.product },
+          { page:0, x: 150, y: 545, text: v.startDate },
+          { page:0, x: 330, y: 545, text: v.stopDate },
+          { page:0, x: 170, y: 510, text: v.serial },
+          { page:0, x: 160, y: 120, text: v.patientSigDate }
+        ])
+      }
+    };
+
+    // ---- UI helpers ----
+    const docSelect = document.getElementById("docSelect");
+    const dynamicFields = document.getElementById("dynamicFields");
+    const clearBtn = document.getElementById("clearBtn");
+    const genBtn = document.getElementById("genBtn");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(msg, isError=false){
+      statusEl.textContent = msg;
+      statusEl.classList.add("show");
+      statusEl.style.borderColor = isError ? "rgba(220,38,38,.35)" : "rgba(112,146,165,.28)";
+      statusEl.style.background = isError ? "rgba(220,38,38,.10)" : "rgba(112,146,165,.10)";
+    }
+    function clearStatus(){ statusEl.classList.remove("show"); statusEl.textContent = ""; }
+
+    function renderFields(){
+      clearStatus();
+      const d = DOCS[docSelect.value];
+      dynamicFields.innerHTML = "";
+      d.fields.forEach(f => {
+        const wrap = document.createElement("div");
+        wrap.className = "field";
+
+        const lab = document.createElement("label");
+        lab.textContent = f.label;
+        lab.setAttribute("for", f.key);
+
+        const inp = document.createElement("input");
+        inp.className = "input";
+        inp.id = f.key;
+        inp.placeholder = f.label;
+
+        wrap.appendChild(lab);
+        wrap.appendChild(inp);
+        dynamicFields.appendChild(wrap);
+      });
+    }
+
+    function getValues(){
+      const d = DOCS[docSelect.value];
+      const out = {};
+      d.fields.forEach(f => {
+        const el = document.getElementById(f.key);
+        out[f.key] = (el && el.value ? el.value.trim() : "");
+      });
+      return out;
+    }
+
+    function clearValues(){
+      const d = DOCS[docSelect.value];
+      d.fields.forEach(f => {
+        const el = document.getElementById(f.key);
+        if(el) el.value = "";
+      });
+      clearStatus();
+    }
+
+    async function generate(){
+      clearStatus();
+      const docKey = docSelect.value;
+      const d = DOCS[docKey];
+      const values = getValues();
+
+      setStatus("Generating…");
+
+      try{
+        const pdfBytes = await fetch(d.file).then(r => {
+          if(!r.ok) throw new Error("Could not load PDF file.");
+          return r.arrayBuffer();
+        });
+
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        const pages = pdfDoc.getPages();
+
+        const textColor = rgb(0.08, 0.08, 0.09); // dark ink
+        const fontSize = 9.5;
+
+        const placements = d.placements(values);
+
+        placements.forEach(p => {
+          if(!p.text) return;
+          const page = pages[p.page];
+          if(!page) return;
+
+          // Keep it safe/clean: single line, trimmed.
+          const t = String(p.text).replace(/\s+/g, " ").trim();
+          if(!t) return;
+
+          page.drawText(t, {
+            x: p.x,
+            y: p.y,
+            size: fontSize,
+            font,
+            color: textColor
+          });
+        });
+
+        const outBytes = await pdfDoc.save();
+
+        const blob = new Blob([outBytes], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+
+        const ts = new Date();
+        const stamp =
+          ts.getFullYear() + "-" +
+          String(ts.getMonth()+1).padStart(2,"0") + "-" +
+          String(ts.getDate()).padStart(2,"0") + "_" +
+          String(ts.getHours()).padStart(2,"0") +
+          String(ts.getMinutes()).padStart(2,"0");
+
+        const safeName = d.label.replace(/[^\w\-]+/g, "_");
+        const filename = `${safeName}_FILLED_${stamp}.pdf`;
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        setStatus("Done — your filled PDF should be downloaded.");
+      }catch(err){
+        console.error(err);
+        setStatus("Error: " + (err?.message || "Failed to generate PDF."), true);
+      }
+    }
+
+    // init
+    renderFields();
+    docSelect.addEventListener("change", renderFields);
+    clearBtn.addEventListener("click", clearValues);
+    genBtn.addEventListener("click", generate);
+  </script>
+</body>
+</html>
