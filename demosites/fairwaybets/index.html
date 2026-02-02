@@ -1,1 +1,1853 @@
-.
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fairway Bets — Golf Side Bets</title>
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="On-course golf app to keep score, track side bets, and explore match formats. Offline-ready." />
+
+  <style>
+    :root{
+      /* Match PalmWeb premium vibe */
+      --bg:#ffffff;
+      --text:#0b1220;
+      --muted:#556173;
+      --hair: rgba(15,23,42,.08);
+      --border: rgba(15,23,42,.12);
+      --panel: rgba(255,255,255,.78);
+      --blue:#1d79c6;
+      --green:#2cab4b;
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
+      --shadow2: 0 10px 30px rgba(15,23,42,.08);
+      --radius: 22px;
+      --max: 1160px;
+
+      /* App accents */
+      --warn:#f59e0b;
+      --danger:#dc2626;
+      --ok:#16a34a;
+      --soft: rgba(15,23,42,.02);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0; padding:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.16), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.12), transparent 60%),
+        linear-gradient(180deg, rgba(15,23,42,.03), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a{ color: inherit; text-decoration:none; }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    header{
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--hair);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 14px; padding: 14px 0;
+    }
+    .brand{ display:flex; align-items:center; gap: 12px; min-width:0; }
+    .brand-badge{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      border: 1px solid var(--hair);
+      background:
+        radial-gradient(14px 14px at 30% 35%, rgba(29,121,198,.28), transparent 70%),
+        radial-gradient(14px 14px at 68% 58%, rgba(44,171,75,.25), transparent 70%),
+        rgba(15,23,42,.02);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .brand-title{ display:flex; flex-direction:column; gap: 1px; min-width:0; }
+    .brand-title strong{ font-weight: 950; font-size: 13.5px; letter-spacing: .2px; }
+    .brand-title span{
+      font-weight: 750; font-size: 12px; color: var(--muted);
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      max-width: 520px;
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 950;
+      cursor:pointer;
+      user-select:none;
+      white-space: nowrap;
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      box-shadow: 0 18px 44px rgba(29,121,198,.20);
+    }
+    .btn-primary:hover{ box-shadow: 0 22px 60px rgba(29,121,198,.24); }
+    .btn-outline{
+      background:#fff;
+      border-color: var(--hair);
+      color: rgba(11,18,32,.92);
+    }
+    .btn-outline:hover{
+      background: rgba(15,23,42,.02);
+      border-color: rgba(15,23,42,.14);
+    }
+    .btn-warn{
+      background: rgba(245,158,11,.12);
+      border-color: rgba(245,158,11,.35);
+      color: rgba(120,53,15,.95);
+    }
+    .btn-warn:hover{ background: rgba(245,158,11,.18); }
+    .btn-danger{
+      background: rgba(220,38,38,.10);
+      border-color: rgba(220,38,38,.30);
+      color: rgba(127,29,29,.95);
+    }
+    .btn-danger:hover{ background: rgba(220,38,38,.14); }
+
+    .hero{ padding: 34px 0 14px; }
+    .kicker{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.65);
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(11,18,32,.86);
+      width: fit-content;
+    }
+    .dot{ width: 8px; height: 8px; border-radius: 999px; background: linear-gradient(135deg, var(--blue), var(--green)); }
+    h1{
+      margin: 12px 0 8px;
+      font-size: clamp(28px, 3.6vw, 44px);
+      letter-spacing: -0.9px;
+      line-height: 1.05;
+      font-weight: 950;
+    }
+    .lead{
+      margin: 0;
+      color: rgba(11,18,32,.70);
+      font-weight: 800;
+      max-width: 92ch;
+      font-size: 14.5px;
+    }
+
+    .panel{
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(15,23,42,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      position: relative;
+      overflow:hidden;
+    }
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 260px at 10% 15%, rgba(29,121,198,.08), transparent 72%),
+        radial-gradient(420px 260px at 98% 0%, rgba(44,171,75,.06), transparent 72%);
+      pointer-events:none;
+    }
+    .panel > *{ position: relative; }
+
+    section{ padding: 12px 0 50px; }
+
+    .tabs{
+      display:flex; flex-wrap:wrap; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .tab{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
+      font-weight: 950;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .tab:hover{ background: rgba(15,23,42,.03); }
+    .tab.active{
+      border-color: rgba(29,121,198,.30);
+      background: linear-gradient(135deg, rgba(29,121,198,.10), rgba(44,171,75,.08));
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 980px){
+      .two{ grid-template-columns: 1fr; }
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      margin: 10px 0;
+    }
+    .label{
+      font-weight: 950;
+      color: rgba(11,18,32,.82);
+      font-size: 12px;
+      letter-spacing: .2px;
+    }
+    .hint{
+      font-weight: 800;
+      color: rgba(11,18,32,.58);
+      font-size: 12px;
+      margin-top: -2px;
+    }
+    .input, .select{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: #fff;
+      color: rgba(11,18,32,.92);
+      outline:none;
+      font-weight: 850;
+      font-size: 14px;
+    }
+    .input:focus, .select:focus{
+      border-color: rgba(29,121,198,.55);
+      box-shadow: 0 0 0 4px rgba(29,121,198,.10);
+    }
+
+    .hr{
+      height: 1px;
+      background: rgba(15,23,42,.08);
+      margin: 12px 0;
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(11,18,32,.70);
+    }
+
+    .callout{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.70);
+      border-radius: 18px;
+      padding: 12px;
+      color: rgba(11,18,32,.82);
+      font-weight: 850;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* Players */
+    .players{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 620px){
+      .players{ grid-template-columns: 1fr; }
+    }
+    .player-card{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.72);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .player-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .player-name{
+      font-weight: 950;
+      letter-spacing:-0.2px;
+    }
+    .player-sub{
+      font-weight: 800;
+      color: rgba(11,18,32,.60);
+      font-size: 12px;
+    }
+    .mini-row{
+      display:flex; flex-wrap:wrap; gap: 8px; align-items:center;
+    }
+    .mini{
+      flex: 1 1 140px;
+      min-width: 140px;
+    }
+
+    /* Scoreboard */
+    .scoreboard{
+      width:100%;
+      overflow:auto;
+      border-radius: 18px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.72);
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      text-align:center;
+      font-weight: 850;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    th{
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,.95);
+      z-index: 1;
+      font-weight: 950;
+      color: rgba(11,18,32,.80);
+    }
+    td.name{
+      text-align:left;
+      font-weight: 950;
+      letter-spacing:-0.2px;
+      position: sticky;
+      left: 0;
+      background: rgba(255,255,255,.95);
+      z-index: 1;
+    }
+    td.total{
+      font-weight: 950;
+      background: rgba(15,23,42,.02);
+      position: sticky;
+      right: 0;
+      z-index: 1;
+    }
+
+    .hole-chip{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.80);
+      font-weight: 950;
+      font-size: 12px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .hole-chip.active{
+      border-color: rgba(29,121,198,.35);
+      background: linear-gradient(135deg, rgba(29,121,198,.12), rgba(44,171,75,.10));
+    }
+
+    /* Bets */
+    .bets-list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .bet-card{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.72);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .bet-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .bet-title{
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .bet-meta{
+      color: rgba(11,18,32,.62);
+      font-weight: 850;
+      font-size: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.74);
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(11,18,32,.80);
+    }
+    .tag.ok{ border-color: rgba(22,163,74,.25); background: rgba(22,163,74,.08); color: rgba(20,83,45,.95); }
+    .tag.warn{ border-color: rgba(245,158,11,.28); background: rgba(245,158,11,.10); color: rgba(120,53,15,.95); }
+    .tag.danger{ border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.08); color: rgba(127,29,29,.95); }
+
+    /* Formats */
+    .formats{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 980px){
+      .formats{ grid-template-columns: 1fr; }
+    }
+    .format{
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.72);
+      border-radius: 18px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .format h3{
+      margin: 0;
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing:-0.2px;
+    }
+    .format p{
+      margin: 0;
+      color: rgba(11,18,32,.70);
+      font-weight: 850;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .format ul{
+      margin: 6px 0 0;
+      padding-left: 16px;
+      color: rgba(11,18,32,.76);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    footer{
+      border-top: 1px solid var(--hair);
+      padding: 18px 0 28px;
+      color: rgba(11,18,32,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: min(640px, calc(100% - 24px));
+      z-index: 2000;
+      display:none;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 18px 55px rgba(15,23,42,.18);
+      color: rgba(11,18,32,.90);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .toast.show{ display:block; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="../../index.html" aria-label="Back to PalmWeb">
+        <div class="brand-badge">⛳</div>
+        <div class="brand-title">
+          <strong>Fairway Bets</strong>
+          <span>Score + side bets • built for the course</span>
+        </div>
+      </a>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
+        <button class="btn btn-outline" id="copySummary" type="button">Copy Summary</button>
+        <button class="btn btn-warn" id="newRound" type="button">New Round</button>
+        <button class="btn btn-danger" id="resetAll" type="button">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container hero">
+    <div class="kicker"><span class="dot"></span> Offline-ready • autosaves on this device</div>
+    <h1>Fairway Bets</h1>
+    <p class="lead">
+      Keep score fast, track side bets, and settle up cleanly. Designed for quick taps, bright outdoor use, and 2–4 players.
+    </p>
+  </main>
+
+  <section class="container">
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Fairway Bets tabs">
+        <div class="tab active" data-tab="setup" role="tab" aria-selected="true">Setup</div>
+        <div class="tab" data-tab="score" role="tab" aria-selected="false">Score</div>
+        <div class="tab" data-tab="bets" role="tab" aria-selected="false">Side Bets</div>
+        <div class="tab" data-tab="formats" role="tab" aria-selected="false">Formats</div>
+      </div>
+
+      <!-- SETUP -->
+      <div class="tab-pane" id="tab-setup">
+        <div class="grid">
+          <div>
+            <div class="field">
+              <div class="label">Round name</div>
+              <input class="input" id="roundName" placeholder="e.g., Sunday skins @ Pine Hills" />
+              <div class="hint">Saved locally on this device so you can come back later.</div>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <div class="label">Holes</div>
+                <select class="select" id="holes">
+                  <option value="9">9</option>
+                  <option value="18" selected>18</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="label">Scoring</div>
+                <select class="select" id="scoringMode">
+                  <option value="strokes" selected>Stroke play (sum strokes)</option>
+                  <option value="stableford">Stableford (points)</option>
+                </select>
+                <div class="hint">Stableford uses: Bogey=1, Par=2, Birdie=3, Eagle=4, Albatross=5, Double+ = 0</div>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="field">
+              <div class="label">Players</div>
+              <div class="hint">Add 2–4 players. Handicaps optional (used in net bets & suggestions).</div>
+            </div>
+
+            <div class="players" id="players"></div>
+
+            <div class="mini-row" style="margin-top:10px;">
+              <button class="btn btn-outline" id="addPlayer" type="button">Add Player</button>
+              <button class="btn btn-primary" id="goScore" type="button">Go to Score</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="callout">
+              <strong>How it works:</strong><br/>
+              • Enter strokes per hole (or Stableford points). Totals update instantly.<br/>
+              • Add side bets (Skins / Nassau / Presses / Junk / CTP).<br/>
+              • Copy a clean settlement summary at the end.
+            </div>
+          </div>
+
+          <div>
+            <div class="callout" id="suggestedMatch">
+              Add players to see suggestions.
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="two">
+              <div class="field">
+                <div class="label">Course par (per hole)</div>
+                <div class="hint">Only used for Stableford conversion. Comma-separated.</div>
+                <input class="input" id="parString" placeholder="18 numbers, e.g., 4,4,3,5,4,4,3,5,4,4,5,3,4,4,3,5,4,4" />
+              </div>
+              <div class="field">
+                <div class="label">Teams (optional 2v2)</div>
+                <div class="hint">Enables best-ball helper + team suggestions.</div>
+                <select class="select" id="teams">
+                  <option value="none" selected>No teams</option>
+                  <option value="12v34">P1+P2 vs P3+P4</option>
+                  <option value="13v24">P1+P3 vs P2+P4</option>
+                  <option value="14v23">P1+P4 vs P2+P3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="callout" id="bestBallBox">
+              Select teams to see best-ball totals (optional).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCORE -->
+      <div class="tab-pane" id="tab-score" style="display:none;">
+        <div class="mini-row" style="margin-top:0;">
+          <div class="pill">Hole:</div>
+          <div class="mini-row" id="holeChips"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid">
+          <div>
+            <div class="scoreboard" aria-label="Scoreboard">
+              <table id="table">
+                <thead id="thead"></thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="mini-row" style="margin-top:12px;">
+              <button class="btn btn-outline" id="prevHole" type="button">◀ Prev</button>
+              <button class="btn btn-outline" id="nextHole" type="button">Next ▶</button>
+              <button class="btn btn-primary" id="copyTotals" type="button">Copy Totals</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="callout">
+              <strong>Fast entry:</strong><br/>
+              Tap a hole chip, then type strokes in the table. The active hole is highlighted.<br/><br/>
+              <strong>Tip:</strong> If you’re playing Stableford, enter strokes — points are calculated automatically from par.
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="callout" id="settlementBox">
+              Add side bets to see settlement totals (who owes who).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BETS -->
+      <div class="tab-pane" id="tab-bets" style="display:none;">
+        <div class="grid">
+          <div>
+            <div class="two">
+              <div class="field">
+                <div class="label">Add side bet</div>
+                <select class="select" id="betType">
+                  <option value="skins" selected>Skins (low score per hole)</option>
+                  <option value="nassau">Nassau (front/back/overall)</option>
+                  <option value="match">Match play (by holes)</option>
+                  <option value="press">Press (manual)</option>
+                  <option value="junk">Junk (birdies, sandies, etc.)</option>
+                  <option value="ctp">Closest to the pin (notes)</option>
+                  <option value="custom">Custom (manual)</option>
+                </select>
+                <div class="hint">Skins / Nassau / Match can auto-calc from scores.</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Unit / amount</div>
+                <input class="input" id="betAmount" type="number" min="0" step="0.01" placeholder="e.g., 5" />
+                <div class="hint">Skins: $/skin • Nassau: $/segment • Junk: $/point</div>
+              </div>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <div class="label">Gross or Net</div>
+                <select class="select" id="betNet">
+                  <option value="gross" selected>Gross</option>
+                  <option value="net">Net (uses handicaps)</option>
+                </select>
+                <div class="hint">Net uses a simple even stroke allocation (no stroke index).</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Participants</div>
+                <select class="select" id="betParticipants"></select>
+                <div class="hint">Choose “All players” or a head-to-head matchup.</div>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="label">Notes (optional)</div>
+              <input class="input" id="betNotes" placeholder="e.g., auto press every 2 down • or 'CTP on #7'" />
+            </div>
+
+            <div class="mini-row">
+              <button class="btn btn-primary" id="addBet" type="button">Add Bet</button>
+              <button class="btn btn-outline" id="recalcBets" type="button">Recalculate</button>
+              <button class="btn btn-outline" id="copySettlement" type="button">Copy Settlement</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="callout">
+              <strong>Junk tip:</strong> Track birdies/sandies/greenies as “points” in the notes. This demo keeps junk settlement manual (fast + flexible).
+            </div>
+          </div>
+
+          <div>
+            <div class="field">
+              <div class="label">Active bets</div>
+              <div class="hint">Stored locally. Delete any bet.</div>
+            </div>
+            <div class="bets-list" id="betsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMATS -->
+      <div class="tab-pane" id="tab-formats" style="display:none;">
+        <div class="callout" style="margin-bottom:12px;">
+          Pick a format based on your vibe: fast & simple, chaotic & fun, or “serious money game.”
+          Mix formats (e.g., Nassau + Skins + CTP) — just keep stakes small so friendships survive.
+        </div>
+
+        <div class="formats">
+          <div class="format">
+            <h3>Nassau (front / back / overall)</h3>
+            <p>Three matches in one. Great default for 2v2 or 1v1.</p>
+            <ul>
+              <li>Set $ per segment (e.g., $5/$5/$5)</li>
+              <li>Optional presses (manual or “every 2 down”)</li>
+              <li>Works as gross or net</li>
+            </ul>
+          </div>
+
+          <div class="format">
+            <h3>Skins</h3>
+            <p>Win a hole outright, win the skin. Ties carry over.</p>
+            <ul>
+              <li>Best for 3–4 players</li>
+              <li>Set small $ per skin (e.g., $1–$5)</li>
+              <li>Use net if handicaps vary a lot</li>
+            </ul>
+          </div>
+
+          <div class="format">
+            <h3>Wolf</h3>
+            <p>Rotating “Wolf” chooses partner or goes solo. Chaos in a good way.</p>
+            <ul>
+              <li>4 players ideal</li>
+              <li>Points per win (1–3) or $ per hole</li>
+              <li>Add “Lone Wolf” bonus</li>
+            </ul>
+          </div>
+
+          <div class="format">
+            <h3>Stableford</h3>
+            <p>Points-based. Encourages aggressive play and speeds up casual rounds.</p>
+            <ul>
+              <li>Par=2 points, Birdie=3, Eagle=4</li>
+              <li>Double+ = 0 points</li>
+              <li>Great for mixed-skill groups</li>
+            </ul>
+          </div>
+
+          <div class="format">
+            <h3>Scramble / Best Ball</h3>
+            <p>Team formats that keep everyone involved.</p>
+            <ul>
+              <li>Scramble: everyone hits, choose best ball</li>
+              <li>Best ball: each plays own, take best score per hole</li>
+              <li>Great for 2v2</li>
+            </ul>
+          </div>
+
+          <div class="format">
+            <h3>Quota (points target)</h3>
+            <p>Everyone has a points quota. Beat it and you win.</p>
+            <ul>
+              <li>Set quota from handicap (simple: 36 − handicap)</li>
+              <li>Use Stableford points</li>
+              <li>Awesome for big handicap spreads</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Fairway Bets. Offline-ready demo.</div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* =========================
+       Fairway Bets — single-file app
+       Offline-ready via localStorage
+       ========================= */
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const APP_KEY = "fairwaybets_state_v1";
+    const MAX_PLAYERS = 4;
+
+    const toastEl = document.getElementById("toast");
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 2200);
+    }
+
+    function uid(){
+      return Math.random().toString(16).slice(2) + Date.now().toString(16);
+    }
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function defaultState(){
+      return {
+        roundName: "",
+        holes: 18,
+        scoringMode: "strokes", // strokes | stableford
+        par: Array(18).fill(4),
+        teams: "none",
+        activeHole: 1,
+        players: [
+          { id: uid(), name:"Player 1", hcp: 0, scores: Array(18).fill(null) },
+          { id: uid(), name:"Player 2", hcp: 0, scores: Array(18).fill(null) },
+          { id: uid(), name:"Player 3", hcp: 0, scores: Array(18).fill(null) },
+          { id: uid(), name:"Player 4", hcp: 0, scores: Array(18).fill(null) },
+        ],
+        bets: []
+      };
+    }
+
+    let state = null;
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(APP_KEY);
+        return raw ? JSON.parse(raw) : null;
+      }catch{
+        return null;
+      }
+    }
+    function save(){
+      localStorage.setItem(APP_KEY, JSON.stringify(state));
+    }
+
+    function normalizeToHoles(arr, holes){
+      const out = Array(holes).fill(null);
+      for(let i=0;i<holes;i++){
+        out[i] = (i < arr.length) ? arr[i] : null;
+      }
+      return out;
+    }
+    function normalizePar(parArr, holes){
+      const out = Array(holes).fill(4);
+      for(let i=0;i<holes;i++){
+        const v = Number(parArr[i]);
+        out[i] = Number.isFinite(v) && v >= 3 && v <= 6 ? v : 4;
+      }
+      return out;
+    }
+
+    function ensureState(){
+      const st = load();
+      state = st || defaultState();
+
+      state.holes = (Number(state.holes) === 9) ? 9 : 18;
+      state.scoringMode = (state.scoringMode === "stableford") ? "stableford" : "strokes";
+      state.activeHole = clamp(Number(state.activeHole)||1, 1, state.holes);
+      state.teams = state.teams || "none";
+
+      state.par = normalizePar(state.par || [], state.holes);
+
+      state.players = (state.players || []).slice(0, MAX_PLAYERS).map((p, idx) => ({
+        id: p.id || uid(),
+        name: (p.name || `Player ${idx+1}`).slice(0, 24),
+        hcp: Number(p.hcp) || 0,
+        scores: normalizeToHoles(p.scores || [], state.holes),
+      }));
+
+      while(state.players.length < 2){
+        state.players.push({ id: uid(), name:`Player ${state.players.length+1}`, hcp:0, scores:Array(state.holes).fill(null) });
+      }
+
+      save();
+    }
+
+    /* =========================
+       Elements
+       ========================= */
+    const $ = (id) => document.getElementById(id);
+
+    const elRoundName = $("roundName");
+    const elHoles = $("holes");
+    const elScoringMode = $("scoringMode");
+    const elPlayers = $("players");
+    const elAddPlayer = $("addPlayer");
+    const elGoScore = $("goScore");
+    const elSuggested = $("suggestedMatch");
+
+    const elParString = $("parString");
+    const elTeams = $("teams");
+    const elBestBallBox = $("bestBallBox");
+
+    const elHoleChips = $("holeChips");
+    const elThead = $("thead");
+    const elTbody = $("tbody");
+    const elPrevHole = $("prevHole");
+    const elNextHole = $("nextHole");
+
+    const elSettlementBox = $("settlementBox");
+
+    const elBetType = $("betType");
+    const elBetAmount = $("betAmount");
+    const elBetNet = $("betNet");
+    const elBetParticipants = $("betParticipants");
+    const elBetNotes = $("betNotes");
+    const elAddBet = $("addBet");
+    const elRecalcBets = $("recalcBets");
+    const elCopySettlement = $("copySettlement");
+    const elBetsList = $("betsList");
+
+    const elCopySummary = $("copySummary");
+    const elCopyTotals = $("copyTotals");
+    const elNewRound = $("newRound");
+    const elResetAll = $("resetAll");
+
+    /* Tabs */
+    document.querySelectorAll(".tab").forEach(t => {
+      t.addEventListener("click", () => setTab(t.getAttribute("data-tab")));
+    });
+    function setTab(name){
+      document.querySelectorAll(".tab").forEach(t => {
+        const on = (t.getAttribute("data-tab") === name);
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      ["setup","score","bets","formats"].forEach(x => {
+        $("tab-"+x).style.display = (x === name) ? "block" : "none";
+      });
+      if(name === "setup"){ renderSetup(); renderSuggested(); renderBestBall(); }
+      if(name === "score"){ renderScore(); renderSettlement(); }
+      if(name === "bets"){ renderBets(); renderSettlement(); }
+    }
+
+    /* =========================
+       Rendering
+       ========================= */
+    function escapeHtml(s){
+      return String(s||"")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+    function escapeAttr(s){
+      return escapeHtml(s).replaceAll("\n"," ");
+    }
+
+    function render(){
+      elRoundName.value = state.roundName || "";
+      elHoles.value = String(state.holes);
+      elScoringMode.value = state.scoringMode;
+
+      elParString.value = state.par.join(",");
+      elTeams.value = state.teams || "none";
+
+      // Participants select depends on players
+      renderParticipantsSelect();
+
+      renderSetup();
+      renderSuggested();
+      renderBestBall();
+      renderScore();
+      renderBets();
+      renderSettlement();
+    }
+
+    function renderSetup(){
+      elPlayers.innerHTML = "";
+
+      state.players.forEach((p, idx) => {
+        const card = document.createElement("div");
+        card.className = "player-card";
+        card.innerHTML = `
+          <div class="player-top">
+            <div>
+              <div class="player-name">P${idx+1}: <span style="color:rgba(11,18,32,.92)">${escapeHtml(p.name)}</span></div>
+              <div class="player-sub">Handicap: <strong>${Number(p.hcp)||0}</strong></div>
+            </div>
+            <button class="btn btn-danger" data-remove="${escapeAttr(p.id)}" type="button" style="padding:8px 10px;">Remove</button>
+          </div>
+
+          <div class="mini-row">
+            <div class="mini">
+              <div class="label">Name</div>
+              <input class="input" data-pname="${escapeAttr(p.id)}" value="${escapeAttr(p.name)}" placeholder="Name" />
+            </div>
+            <div class="mini">
+              <div class="label">Handicap</div>
+              <input class="input" data-phcp="${escapeAttr(p.id)}" type="number" step="1" value="${Number(p.hcp)||0}" />
+            </div>
+          </div>
+        `;
+        elPlayers.appendChild(card);
+      });
+
+      // Remove buttons (min 2)
+      elPlayers.querySelectorAll("[data-remove]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if(state.players.length <= 2){
+            toast("Need at least 2 players.");
+            return;
+          }
+          const id = btn.getAttribute("data-remove");
+          state.players = state.players.filter(x => x.id !== id);
+          save();
+          renderParticipantsSelect();
+          render();
+          toast("Player removed.");
+        });
+      });
+
+      // Name edits
+      elPlayers.querySelectorAll("[data-pname]").forEach(inp => {
+        inp.addEventListener("input", () => {
+          const id = inp.getAttribute("data-pname");
+          const p = state.players.find(x => x.id === id);
+          if(!p) return;
+          p.name = ((inp.value || "").slice(0,24) || "Player");
+          save();
+          renderParticipantsSelect();
+          renderSuggested();
+          renderBestBall();
+          renderScore();
+          renderBets();
+        });
+      });
+
+      // HCP edits
+      elPlayers.querySelectorAll("[data-phcp]").forEach(inp => {
+        inp.addEventListener("input", () => {
+          const id = inp.getAttribute("data-phcp");
+          const p = state.players.find(x => x.id === id);
+          if(!p) return;
+          p.hcp = Number(inp.value)||0;
+          save();
+          renderSuggested();
+          renderBets();
+          renderSettlement();
+        });
+      });
+    }
+
+    function renderSuggested(){
+      const names = state.players.map(p => p.name);
+      const hcps = state.players.map(p => Number(p.hcp)||0);
+      const spread = Math.max(...hcps) - Math.min(...hcps);
+      const n = state.players.length;
+
+      let suggestion = "";
+      if(n === 2){
+        suggestion = (spread >= 8)
+          ? "Play Net Match Play + Nassau ($ per side). Big handicap spread → net keeps it fair."
+          : "Play Gross Match Play + Nassau. Add a small CTP on par 3s if you want spice.";
+      }else if(n === 3){
+        suggestion = "Try Skins (net if handicaps vary) + optional Nassau between two players. Or Stableford points for faster vibes.";
+      }else{
+        suggestion = (spread >= 10)
+          ? "4 players + big handicap spread → Net Skins + Best Ball (2v2). Keep stakes small per hole."
+          : "4 players → Nassau (2v2) + optional Skins. Add CTP on 2–4 holes for fun.";
+      }
+
+      elSuggested.innerHTML =
+        `<strong>Group:</strong> ${escapeHtml(names.join(", "))}<br/>` +
+        `<strong>Handicap spread:</strong> ${spread}<br/>` +
+        `<strong>Suggestion:</strong> ${escapeHtml(suggestion)}`;
+    }
+
+    function renderParticipantsSelect(){
+      const ps = state.players;
+      const opts = [];
+      opts.push({value:"all", label:"All players"});
+
+      if(ps.length >= 2){
+        for(let i=0;i<ps.length;i++){
+          for(let j=i+1;j<ps.length;j++){
+            opts.push({value:`h2h:${ps[i].id}:${ps[j].id}`, label:`${ps[i].name} vs ${ps[j].name}`});
+          }
+        }
+      }
+      elBetParticipants.innerHTML = opts.map(o => `<option value="${escapeAttr(o.value)}">${escapeHtml(o.label)}</option>`).join("");
+    }
+
+    function renderScore(){
+      renderHoleChips();
+      renderTable();
+    }
+
+    function renderHoleChips(){
+      elHoleChips.innerHTML = "";
+      for(let h=1; h<=state.holes; h++){
+        const chip = document.createElement("div");
+        chip.className = "hole-chip" + (h === state.activeHole ? " active" : "");
+        chip.textContent = `#${h}`;
+        chip.addEventListener("click", () => {
+          state.activeHole = h;
+          save();
+          renderHoleChips();
+          renderTable(); // update highlight
+        });
+        elHoleChips.appendChild(chip);
+      }
+    }
+
+    function stablefordPoints(strokes, par){
+      const diff = (Number(strokes)||0) - (Number(par)||4);
+      if(diff <= -3) return 5;
+      if(diff === -2) return 4;
+      if(diff === -1) return 3;
+      if(diff === 0) return 2;
+      if(diff === 1) return 1;
+      return 0;
+    }
+
+    function totalForPlayer(p){
+      if(state.scoringMode === "stableford"){
+        let pts = 0;
+        for(let i=0;i<state.holes;i++){
+          const s = p.scores[i];
+          if(s === null || s === undefined) continue;
+          pts += stablefordPoints(s, state.par[i] || 4);
+        }
+        return pts;
+      }
+
+      let sum = 0;
+      let any = false;
+      for(let i=0;i<state.holes;i++){
+        const s = p.scores[i];
+        if(s === null || s === undefined) continue;
+        any = true;
+        sum += Number(s)||0;
+      }
+      return any ? sum : 0;
+    }
+
+    function renderTable(){
+      elThead.innerHTML = "";
+      elTbody.innerHTML = "";
+
+      const trh = document.createElement("tr");
+      const thName = document.createElement("th");
+      thName.textContent = "Player";
+      trh.appendChild(thName);
+
+      for(let i=1;i<=state.holes;i++){
+        const th = document.createElement("th");
+        th.textContent = i;
+        trh.appendChild(th);
+      }
+
+      const thTot = document.createElement("th");
+      thTot.textContent = (state.scoringMode === "stableford") ? "Pts" : "Total";
+      trh.appendChild(thTot);
+      elThead.appendChild(trh);
+
+      state.players.forEach((p) => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.className = "name";
+        tdName.innerHTML = `${escapeHtml(p.name)}<div style="font-weight:800; color:rgba(11,18,32,.55); font-size:11px;">HCP ${Number(p.hcp)||0}</div>`;
+        tr.appendChild(tdName);
+
+        let tdTotal = null;
+
+        for(let hi=0; hi<state.holes; hi++){
+          const td = document.createElement("td");
+          const input = document.createElement("input");
+          input.className = "input";
+          input.style.padding = "8px 10px";
+          input.style.borderRadius = "12px";
+          input.style.textAlign = "center";
+          input.style.fontWeight = "950";
+          input.style.width = "74px";
+          input.style.maxWidth = "74px";
+
+          const v = p.scores[hi];
+          input.value = (v === null || v === undefined) ? "" : String(v);
+
+          input.setAttribute("inputmode", "numeric");
+          input.setAttribute("pattern", "[0-9]*");
+
+          if(hi+1 === state.activeHole){
+            input.style.borderColor = "rgba(29,121,198,.45)";
+            input.style.boxShadow = "0 0 0 4px rgba(29,121,198,.08)";
+          }
+
+          input.addEventListener("input", () => {
+            const raw = (input.value || "").trim();
+            if(raw === ""){
+              p.scores[hi] = null;
+            }else{
+              const n = Number(raw);
+              p.scores[hi] = Number.isFinite(n) ? clamp(Math.round(n), 0, 30) : null;
+            }
+            save();
+            tdTotal.textContent = String(totalForPlayer(p));
+            renderSettlement();
+          });
+
+          td.appendChild(input);
+          tr.appendChild(td);
+        }
+
+        tdTotal = document.createElement("td");
+        tdTotal.className = "total";
+        tdTotal.textContent = String(totalForPlayer(p));
+        tr.appendChild(tdTotal);
+
+        elTbody.appendChild(tr);
+      });
+    }
+
+    function renderBets(){
+      renderParticipantsSelect();
+
+      elBetsList.innerHTML = "";
+      if(!state.bets.length){
+        elBetsList.innerHTML = `<div class="callout">No bets yet. Add one on the left.</div>`;
+        return;
+      }
+
+      state.bets.forEach((b) => {
+        const card = document.createElement("div");
+        card.className = "bet-card";
+
+        const calc = calcBet(b);
+        const statusTag = calc.ok
+          ? `<span class="tag ok">Calculated</span>`
+          : `<span class="tag warn">Needs scores</span>`;
+
+        card.innerHTML = `
+          <div class="bet-head">
+            <div>
+              <div class="bet-title">${escapeHtml(b.label)}</div>
+              <div class="bet-meta">
+                <span class="tag">${escapeHtml(b.type.toUpperCase())}</span>
+                <span class="tag">${escapeHtml(b.net.toUpperCase())}</span>
+                <span class="tag">$${Number(b.amount||0).toFixed(2)}</span>
+                ${statusTag}
+              </div>
+            </div>
+            <button class="btn btn-danger" data-del="${escapeAttr(b.id)}" type="button" style="padding:8px 10px;">Delete</button>
+          </div>
+          <div style="color:rgba(11,18,32,.72); font-weight:850; font-size:13px;">
+            ${escapeHtml(b.notes || "—")}
+          </div>
+          <div class="callout" style="margin-top:6px;">
+            ${escapeHtml(calc.summary)}
+          </div>
+        `;
+
+        elBetsList.appendChild(card);
+      });
+
+      elBetsList.querySelectorAll("[data-del]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-del");
+          state.bets = state.bets.filter(x => x.id !== id);
+          save();
+          renderBets();
+          renderSettlement();
+          toast("Bet deleted.");
+        });
+      });
+    }
+
+    function prettyBetLabel(type, participants){
+      const t = ({
+        skins:"Skins",
+        nassau:"Nassau",
+        match:"Match Play",
+        press:"Press",
+        junk:"Junk",
+        ctp:"Closest to Pin",
+        custom:"Custom"
+      })[type] || "Bet";
+
+      if(participants === "all") return `${t} — Everyone`;
+      if(participants.startsWith("h2h:")){
+        const [_, a, b] = participants.split(":");
+        const pa = state.players.find(x => x.id === a);
+        const pb = state.players.find(x => x.id === b);
+        return `${t} — ${pa?pa.name:"P1"} vs ${pb?pb.name:"P2"}`;
+      }
+      return t;
+    }
+
+    // Simple net allocation: distribute handicap strokes across holes evenly (no stroke index).
+    function netScoreForHole(player, holeIndex){
+      const gross = player.scores[holeIndex];
+      if(gross === null || gross === undefined) return null;
+
+      const hcp = Number(player.hcp)||0;
+      const holes = state.holes;
+      const base = Math.floor(hcp / holes);
+      const rem = hcp % holes;
+      const extra = (holeIndex < rem) ? 1 : 0;
+      const strokes = base + extra;
+      const net = Number(gross) - strokes;
+      return clamp(net, 0, 30);
+    }
+
+    function calcMatchHoles(a, b, start, end, netMode){
+      let aUp = 0;
+      let holesPlayed = 0;
+
+      for(let i=start;i<=end;i++){
+        const as = (netMode==="net") ? netScoreForHole(a,i) : a.scores[i];
+        const bs = (netMode==="net") ? netScoreForHole(b,i) : b.scores[i];
+        if(as === null || bs === null || as === undefined || bs === undefined) continue;
+
+        holesPlayed++;
+        if(as < bs) aUp++;
+        else if(as > bs) aUp--;
+      }
+
+      if(holesPlayed < 3){
+        return { ok:false, winnerId:null, status:"Not enough holes scored" };
+      }
+
+      const lead = Math.abs(aUp);
+      const leader = aUp > 0 ? a.id : (aUp < 0 ? b.id : null);
+
+      let status = "All Square";
+      if(aUp > 0) status = `${a.name} up ${lead}`;
+      if(aUp < 0) status = `${b.name} up ${lead}`;
+
+      return { ok:true, winnerId: leader, status };
+    }
+
+    function calcSkinsAll(netMode){
+      const holes = state.holes;
+      const ps = state.players;
+      let skins = [];
+      let carry = 1;
+
+      for(let i=0;i<holes;i++){
+        const vals = ps.map(p => {
+          const v = (netMode === "net") ? netScoreForHole(p,i) : p.scores[i];
+          return (v === null || v === undefined) ? null : Number(v);
+        });
+
+        const present = vals.filter(v => v !== null);
+        if(present.length < 2) continue;
+
+        const min = Math.min(...present);
+        const winnersIdx = vals.map((v, idx) => (v === min ? idx : -1)).filter(x => x !== -1);
+
+        if(winnersIdx.length === 1){
+          skins.push({ hole:i+1, winnerId: ps[winnersIdx[0]].id, carry });
+          carry = 1;
+        }else{
+          carry += 1;
+        }
+      }
+
+      if(!skins.length){
+        return { ok:false, summary:"Enter hole scores to compute skins.", transfers: [] };
+      }
+
+      const winners = [];
+      skins.forEach(s => { for(let k=0;k<s.carry;k++) winners.push(s.winnerId); });
+
+      const counts = {};
+      winners.forEach(id => counts[id] = (counts[id]||0)+1);
+
+      const winnerText = Object.entries(counts)
+        .sort((a,b) => b[1]-a[1])
+        .map(([id,c]) => `${(state.players.find(p=>p.id===id)||{name:"?"}).name} (${c})`)
+        .join(", ");
+
+      return { ok:true, skins, winners, winnerText };
+    }
+
+    function round2(n){ return Math.round((Number(n)||0) * 100) / 100; }
+
+    function balancesToTransfers(netMap){
+      const receivers = [];
+      const payers = [];
+
+      Object.entries(netMap).forEach(([id,amt]) => {
+        const v = round2(amt);
+        if(v > 0) receivers.push({id, amt:v});
+        if(v < 0) payers.push({id, amt:-v});
+      });
+
+      receivers.sort((a,b)=>b.amt-a.amt);
+      payers.sort((a,b)=>b.amt-a.amt);
+
+      const transfers = [];
+      let i=0,j=0;
+      while(i<receivers.length && j<payers.length){
+        const r = receivers[i], p = payers[j];
+        const x = Math.min(r.amt, p.amt);
+        transfers.push({ fromId: p.id, toId: r.id, amount: round2(x) });
+        r.amt = round2(r.amt - x);
+        p.amt = round2(p.amt - x);
+        if(r.amt <= 0.001) i++;
+        if(p.amt <= 0.001) j++;
+      }
+      return transfers;
+    }
+
+    function settlePotSplit(winnerIds, totalPot){
+      const ps = state.players;
+      const n = ps.length;
+      if(n < 2) return [];
+
+      const buyIn = totalPot / n;
+
+      const counts = {};
+      winnerIds.forEach(id => counts[id] = (counts[id]||0)+1);
+
+      const totalWins = winnerIds.length;
+      const payouts = {};
+      Object.entries(counts).forEach(([id,count]) => {
+        payouts[id] = totalPot * (count / totalWins);
+      });
+
+      const net = {};
+      ps.forEach(p => { net[p.id] = (payouts[p.id]||0) - buyIn; });
+
+      return balancesToTransfers(net);
+    }
+
+    function calcBet(bet){
+      const type = bet.type;
+      const amt = Number(bet.amount)||0;
+      const net = bet.net;
+
+      // Manual bet types
+      if(type === "press" || type === "junk" || type === "ctp" || type === "custom"){
+        return { ok:true, summary:"Manual bet. Use notes and settle by agreement.", transfers: [] };
+      }
+
+      if(type === "skins"){
+        if(bet.participants !== "all"){
+          return { ok:true, summary:"Skins auto-calc works best with All players. Head-to-head skins ≈ match play.", transfers: [] };
+        }
+        const res = calcSkinsAll(net);
+        if(!res.ok) return { ok:false, summary:res.summary, transfers: [] };
+        const totalPot = res.winners.length * amt;
+        const summary = `${res.winners.length} skins • Pot $${totalPot.toFixed(2)} • Winners: ${res.winnerText}`;
+        const transfers = settlePotSplit(res.winners, totalPot);
+        return { ok:true, summary, transfers };
+      }
+
+      if(type === "nassau"){
+        if(!bet.participants.startsWith("h2h:")){
+          return { ok:true, summary:"For auto Nassau, pick a head-to-head matchup.", transfers: [] };
+        }
+        const [_, aId, bId] = bet.participants.split(":");
+        const a = state.players.find(x => x.id === aId);
+        const b = state.players.find(x => x.id === bId);
+        if(!a || !b) return { ok:false, summary:"Participants missing.", transfers: [] };
+
+        const holes = state.holes;
+        const frontEnd = Math.min(9, holes);
+        const backStart = holes > 9 ? 9 : null;
+
+        const front = calcMatchHoles(a, b, 0, frontEnd-1, net);
+        const overall = calcMatchHoles(a, b, 0, holes-1, net);
+        let back = null;
+        if(backStart !== null){
+          back = calcMatchHoles(a, b, 9, holes-1, net);
+        }
+
+        if(!front.ok && !overall.ok && !(back && back.ok)){
+          return { ok:false, summary:"Enter more hole scores to calculate Nassau.", transfers: [] };
+        }
+
+        const segs = [];
+        segs.push({name:"Front", w: front.winnerId, ok: front.ok});
+        if(backStart !== null) segs.push({name:"Back", w: back.winnerId, ok: back.ok});
+        segs.push({name:"Overall", w: overall.winnerId, ok: overall.ok});
+
+        let transfers = [];
+        let wonA = 0, wonB = 0, ties = 0, pending = 0;
+
+        segs.forEach(s => {
+          if(!s.ok){ pending++; return; }
+          if(!s.w){ ties++; return; }
+          if(s.w === a.id) wonA++;
+          if(s.w === b.id) wonB++;
+        });
+
+        for(let i=0;i<wonA;i++) transfers.push({ fromId: b.id, toId: a.id, amount: amt });
+        for(let i=0;i<wonB;i++) transfers.push({ fromId: a.id, toId: b.id, amount: amt });
+
+        const summary =
+          `Nassau: ${a.name} won ${wonA}, ${b.name} won ${wonB}, ties ${ties}` +
+          (pending ? ` • pending ${pending} segment(s)` : "") +
+          ` • stake $${amt.toFixed(2)} each`;
+
+        return { ok:true, summary, transfers };
+      }
+
+      if(type === "match"){
+        if(!bet.participants.startsWith("h2h:")){
+          return { ok:true, summary:"For auto Match Play, pick a head-to-head matchup.", transfers: [] };
+        }
+        const [_, aId, bId] = bet.participants.split(":");
+        const a = state.players.find(x => x.id === aId);
+        const b = state.players.find(x => x.id === bId);
+        if(!a || !b) return { ok:false, summary:"Participants missing.", transfers: [] };
+
+        const m = calcMatchHoles(a, b, 0, state.holes-1, net);
+        if(!m.ok) return { ok:false, summary:"Enter more hole scores to calculate match play.", transfers: [] };
+
+        if(!m.winnerId){
+          return { ok:true, summary:`Match is tied (${m.status}).`, transfers: [] };
+        }
+
+        const winner = state.players.find(x => x.id === m.winnerId);
+        const loser = (winner.id === a.id) ? b : a;
+
+        const transfers = [{ fromId: loser.id, toId: winner.id, amount: amt }];
+        const summary = `${winner.name} wins (${m.status}) • stake $${amt.toFixed(2)}`;
+        return { ok:true, summary, transfers };
+      }
+
+      return { ok:true, summary:"Bet supported.", transfers: [] };
+    }
+
+    function computeSettlement(){
+      const allTransfers = [];
+      state.bets.forEach(b => {
+        const r = calcBet(b);
+        (r.transfers||[]).forEach(t => allTransfers.push(t));
+      });
+
+      if(!allTransfers.length){
+        return { html: "No auto-settlement yet. Add Skins / Nassau / Match bets (and enter scores).", text: "No settlement yet." };
+      }
+
+      const net = {};
+      state.players.forEach(p => net[p.id] = 0);
+
+      allTransfers.forEach(t => {
+        net[t.fromId] -= Number(t.amount)||0;
+        net[t.toId] += Number(t.amount)||0;
+      });
+
+      const transfers = balancesToTransfers(net);
+
+      const lines = transfers.map(t => {
+        const from = state.players.find(p=>p.id===t.fromId)?.name || "Someone";
+        const to = state.players.find(p=>p.id===t.toId)?.name || "Someone";
+        return `${from} → ${to}: $${Number(t.amount).toFixed(2)}`;
+      });
+
+      const html =
+        `<strong>Settlement (auto bets):</strong><br/>` +
+        lines.map(l => `• ${escapeHtml(l)}`).join("<br/>") +
+        `<div style="margin-top:8px; color:rgba(11,18,32,.60); font-weight:850;">Manual bets (Press/Junk/CTP/Custom) are not auto-settled.</div>`;
+
+      const text =
+        `Settlement (auto bets)\n` +
+        lines.map(l => `- ${l}`).join("\n") +
+        `\n\nManual bets are not auto-settled.`;
+
+      return { html, text };
+    }
+
+    function renderSettlement(){
+      const settlement = computeSettlement();
+      elSettlementBox.innerHTML = settlement.html;
+    }
+
+    function renderBestBall(){
+      const t = state.teams || "none";
+      if(t === "none" || state.players.length < 4){
+        elBestBallBox.textContent = "Select teams to see best-ball totals (optional).";
+        return;
+      }
+      const idx = { "12v34":[0,1,2,3], "13v24":[0,2,1,3], "14v23":[0,3,1,2] }[t];
+      if(!idx){ elBestBallBox.textContent = "Select teams to see best-ball totals (optional)."; return; }
+
+      const a1 = state.players[idx[0]];
+      const a2 = state.players[idx[1]];
+      const b1 = state.players[idx[2]];
+      const b2 = state.players[idx[3]];
+
+      let aTot = 0, bTot = 0, aAny=false, bAny=false;
+
+      for(let i=0;i<state.holes;i++){
+        const as = bestOfTwo(a1.scores[i], a2.scores[i]);
+        const bs = bestOfTwo(b1.scores[i], b2.scores[i]);
+        if(as !== null){ aAny=true; aTot += (state.scoringMode==="stableford") ? stablefordPoints(as, state.par[i]) : as; }
+        if(bs !== null){ bAny=true; bTot += (state.scoringMode==="stableford") ? stablefordPoints(bs, state.par[i]) : bs; }
+      }
+
+      const labelA = `${a1.name} + ${a2.name}`;
+      const labelB = `${b1.name} + ${b2.name}`;
+      const unit = (state.scoringMode==="stableford") ? "pts" : "strokes";
+
+      const lead = (!aAny && !bAny) ? "Enter some scores to compute." :
+        (aTot === bTot ? "Tied." : (aTot < bTot ? `${labelA} leads by ${Math.abs(aTot-bTot)} ${unit}.` : `${labelB} leads by ${Math.abs(aTot-bTot)} ${unit}.`));
+
+      elBestBallBox.innerHTML =
+        `<strong>Best Ball Totals</strong><br/>` +
+        `${escapeHtml(labelA)}: <strong>${aTot}</strong> • ${escapeHtml(labelB)}: <strong>${bTot}</strong><br/>` +
+        `<span style="color:rgba(11,18,32,.65); font-weight:850;">${escapeHtml(lead)}</span>`;
+    }
+
+    function bestOfTwo(a,b){
+      const aa = (a===null||a===undefined) ? null : Number(a);
+      const bb = (b===null||b===undefined) ? null : Number(b);
+      if(aa===null && bb===null) return null;
+      if(aa===null) return bb;
+      if(bb===null) return aa;
+      return Math.min(aa, bb);
+    }
+
+    /* =========================
+       Actions / bindings
+       ========================= */
+    elRoundName.addEventListener("input", () => {
+      state.roundName = (elRoundName.value||"").slice(0,60);
+      save();
+    });
+
+    elHoles.addEventListener("change", () => {
+      const holes = (elHoles.value === "9") ? 9 : 18;
+      state.holes = holes;
+      state.par = normalizePar(state.par || [], holes);
+      state.players = state.players.map(p => ({...p, scores: normalizeToHoles(p.scores||[], holes)}));
+      state.activeHole = clamp(state.activeHole, 1, holes);
+      save();
+      renderParticipantsSelect();
+      render();
+      toast(`Set to ${holes} holes.`);
+    });
+
+    elScoringMode.addEventListener("change", () => {
+      state.scoringMode = (elScoringMode.value === "stableford") ? "stableford" : "strokes";
+      save();
+      renderScore();
+      renderBestBall();
+      renderBets();
+      renderSettlement();
+      toast(`Scoring: ${state.scoringMode === "stableford" ? "Stableford" : "Strokes"}`);
+    });
+
+    elParString.addEventListener("change", () => {
+      const parts = (elParString.value || "").split(",").map(s => Number(String(s).trim()));
+      state.par = normalizePar(parts, state.holes);
+      elParString.value = state.par.join(",");
+      save();
+      renderScore();
+      renderBestBall();
+      toast("Par updated.");
+    });
+
+    elTeams.addEventListener("change", () => {
+      state.teams = elTeams.value || "none";
+      save();
+      renderBestBall();
+      renderSuggested();
+    });
+
+    elAddPlayer.addEventListener("click", () => {
+      if(state.players.length >= MAX_PLAYERS){
+        toast("Max 4 players.");
+        return;
+      }
+      state.players.push({ id: uid(), name:`Player ${state.players.length+1}`, hcp:0, scores:Array(state.holes).fill(null) });
+      save();
+      renderParticipantsSelect();
+      render();
+      toast("Player added.");
+    });
+
+    elGoScore.addEventListener("click", () => setTab("score"));
+
+    elPrevHole.addEventListener("click", () => {
+      state.activeHole = clamp(state.activeHole - 1, 1, state.holes);
+      save();
+      renderHoleChips();
+      renderTable();
+      toast(`Hole ${state.activeHole}`);
+    });
+
+    elNextHole.addEventListener("click", () => {
+      state.activeHole = clamp(state.activeHole + 1, 1, state.holes);
+      save();
+      renderHoleChips();
+      renderTable();
+      toast(`Hole ${state.activeHole}`);
+    });
+
+    elAddBet.addEventListener("click", () => {
+      const type = elBetType.value;
+      const amount = Number(elBetAmount.value || 0);
+      const net = elBetNet.value;
+      const participants = elBetParticipants.value;
+      const notes = (elBetNotes.value || "").slice(0,120);
+
+      if(!amount || amount < 0){
+        toast("Enter an amount (e.g., 5).");
+        return;
+      }
+
+      const bet = {
+        id: uid(),
+        type,
+        amount,
+        net,
+        participants,
+        notes,
+        label: prettyBetLabel(type, participants),
+        createdAt: Date.now()
+      };
+
+      state.bets.unshift(bet);
+      save();
+      elBetNotes.value = "";
+      renderBets();
+      renderSettlement();
+      toast("Bet added.");
+    });
+
+    elRecalcBets.addEventListener("click", () => {
+      renderBets();
+      renderSettlement();
+      toast("Recalculated.");
+    });
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+      }catch{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+    }
+
+    function buildTotalsOnly(){
+      const title = state.roundName ? `Fairway Bets — ${state.roundName}` : "Fairway Bets — Totals";
+      const unit = (state.scoringMode === "stableford") ? "pts" : "strokes";
+      const lines = state.players.map(p => `${p.name}: ${totalForPlayer(p)} ${unit}`);
+      return `${title}\n` + lines.join("\n");
+    }
+
+    function buildSummary(includeBets){
+      const unit = (state.scoringMode === "stableford") ? "pts" : "strokes";
+      const title = state.roundName ? `Fairway Bets — ${state.roundName}` : "Fairway Bets — Round";
+      const holes = state.holes;
+
+      const totals = state.players
+        .map(p => ({name:p.name, total: totalForPlayer(p), hcp:Number(p.hcp)||0}))
+        .sort((a,b)=> (state.scoringMode==="stableford" ? (b.total-a.total) : (a.total-b.total)));
+
+      const leaderLine = totals.length ? `Leader: ${totals[0].name} (${totals[0].total} ${unit})` : "Leader: —";
+
+      let s = `${title}\nHoles: ${holes} • Mode: ${state.scoringMode === "stableford" ? "Stableford" : "Strokes"}\n${leaderLine}\n\nTotals:\n`;
+      totals.forEach(t => { s += `- ${t.name}: ${t.total} ${unit} (HCP ${t.hcp})\n`; });
+
+      if(includeBets){
+        s += `\nBets:\n`;
+        if(!state.bets.length){
+          s += `- (none)\n`;
+        }else{
+          state.bets.forEach(b => {
+            const r = calcBet(b);
+            s += `- ${b.label} • $${Number(b.amount||0).toFixed(2)} • ${b.net.toUpperCase()} • ${r.summary}\n`;
+          });
+        }
+        const settlement = computeSettlement();
+        s += `\n${settlement.text}\n`;
+      }
+
+      return s.trim();
+    }
+
+    elCopyTotals.addEventListener("click", async () => {
+      await copyText(buildTotalsOnly());
+      toast("Totals copied.");
+    });
+
+    elCopySettlement.addEventListener("click", async () => {
+      const settlement = computeSettlement();
+      await copyText(settlement.text);
+      toast("Settlement copied.");
+    });
+
+    elCopySummary.addEventListener("click", async () => {
+      await copyText(buildSummary(true));
+      toast("Summary copied.");
+    });
+
+    elNewRound.addEventListener("click", () => {
+      // keep players, reset scores + bets
+      state.players = state.players.map(p => ({...p, scores: Array(state.holes).fill(null)}));
+      state.bets = [];
+      state.activeHole = 1;
+      state.roundName = "";
+      save();
+      render();
+      setTab("setup");
+      toast("New round started.");
+    });
+
+    elResetAll.addEventListener("click", () => {
+      localStorage.removeItem(APP_KEY);
+      ensureState();
+      render();
+      setTab("setup");
+      toast("Reset complete.");
+    });
+
+    /* Boot */
+    ensureState();
+    render();
+    setTab("setup");
+  </script>
+</body>
+</html>
