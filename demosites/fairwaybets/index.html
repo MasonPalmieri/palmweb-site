@@ -14,48 +14,53 @@
       --muted:#556173;
       --hair: rgba(15,23,42,.08);
       --border: rgba(15,23,42,.12);
-      --panel: rgba(255,255,255,.80);
+      --panel: rgba(255,255,255,.86);
       --blue:#1d79c6;
       --green:#2cab4b;
       --danger:#dc2626;
       --warn:#f59e0b;
+      --shadow: 0 18px 55px rgba(15,23,42,.10);
       --shadow2: 0 10px 30px rgba(15,23,42,.08);
-      --radius: 20px;
-      --max: 860px;
+      --radius: 18px;
+      --max: 720px;
     }
 
     *{ box-sizing:border-box; }
     html,body{
       margin:0; padding:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      line-height: 1.35;
       background:
         radial-gradient(1200px 520px at 20% -10%, rgba(29,121,198,.14), transparent 60%),
         radial-gradient(1200px 520px at 90% 0%, rgba(44,171,75,.10), transparent 60%),
         linear-gradient(180deg, rgba(15,23,42,.03), transparent 55%),
         var(--bg);
-      color: var(--text);
-      line-height: 1.4;
+      min-height: 100vh;
     }
 
     a{ color:inherit; text-decoration:none; }
-    .container{ max-width: var(--max); margin:0 auto; padding: 0 16px; }
+    .container{ max-width: var(--max); margin:0 auto; padding: 0 14px; }
 
     header{
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.88);
+      position: sticky; top:0; z-index:50;
+      background: rgba(255,255,255,.90);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--hair);
     }
+
     .nav{
       display:flex; align-items:center; justify-content:space-between;
-      gap: 10px; padding: 12px 0;
+      gap: 10px;
+      padding: 10px 0;
     }
+
     .brand{
       display:flex; align-items:center; gap:10px;
       min-width:0;
     }
     .badge{
-      width: 36px; height: 36px;
+      width: 34px; height: 34px;
       border-radius: 14px;
       border: 1px solid var(--hair);
       background:
@@ -66,11 +71,11 @@
       font-weight: 950;
     }
     .brand-title{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-    .brand-title strong{ font-weight: 950; font-size: 13.5px; letter-spacing: .1px; }
+    .brand-title strong{ font-weight: 950; font-size: 13px; letter-spacing: .1px; }
     .brand-title span{
-      font-weight: 800; font-size: 12px; color: var(--muted);
+      font-weight: 800; font-size: 11.5px; color: var(--muted);
       white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
-      max-width: 380px;
+      max-width: 260px;
     }
 
     .btn{
@@ -79,13 +84,14 @@
       padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.92);
       font-weight: 950;
       cursor:pointer;
       user-select:none;
-      transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
       white-space: nowrap;
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
       font-size: 13px;
+      min-height: 42px;
     }
     .btn:active{ transform: translateY(1px); }
     .btn-primary{
@@ -94,6 +100,8 @@
       background: linear-gradient(135deg, var(--blue), var(--green));
       box-shadow: 0 18px 44px rgba(29,121,198,.18);
     }
+    .btn-primary:hover{ box-shadow: 0 22px 60px rgba(29,121,198,.22); }
+
     .btn-danger{
       background: rgba(220,38,38,.10);
       border-color: rgba(220,38,38,.30);
@@ -105,7 +113,7 @@
       color: rgba(120,53,15,.95);
     }
 
-    main{ padding: 16px 0 32px; }
+    main{ padding: 14px 0 24px; }
 
     .panel{
       background: var(--panel);
@@ -113,8 +121,8 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow2);
       padding: 14px;
-      overflow:hidden;
       position: relative;
+      overflow:hidden;
     }
     .panel::before{
       content:"";
@@ -132,7 +140,7 @@
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.70);
+      background: rgba(255,255,255,.78);
       font-size: 12px;
       font-weight: 900;
       color: rgba(11,18,32,.86);
@@ -145,9 +153,9 @@
 
     h1{
       margin: 10px 0 6px;
-      font-size: 24px;
-      letter-spacing: -0.6px;
-      line-height: 1.05;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+      line-height: 1.08;
       font-weight: 950;
     }
     .lead{
@@ -163,11 +171,12 @@
 
     .stack{ display:flex; flex-direction:column; gap: 10px; }
     .row{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
-    .row.stretch > *{ flex: 1 1 180px; }
+    .row.stretch > *{ flex: 1 1 160px; }
 
     .field{ display:flex; flex-direction:column; gap: 6px; }
     .label{ font-weight: 950; font-size: 12px; color: rgba(11,18,32,.82); }
     .hint{ font-weight: 800; font-size: 12px; color: rgba(11,18,32,.60); margin-top: -2px; }
+
     .input, .select{
       width:100%;
       padding: 13px 12px;
@@ -178,23 +187,24 @@
       outline:none;
       font-weight: 900;
       font-size: 15px;
+      min-height: 44px;
     }
     .input:focus, .select:focus{
       border-color: rgba(29,121,198,.55);
       box-shadow: 0 0 0 4px rgba(29,121,198,.10);
     }
 
-    .hr{ height:1px; background: rgba(15,23,42,.08); margin: 6px 0; }
+    .hr{ height:1px; background: rgba(15,23,42,.08); margin: 10px 0; }
 
     .card{
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.80);
+      background: rgba(255,255,255,.86);
       border-radius: 16px;
       padding: 12px;
     }
 
     .big-num{
-      font-size: 44px;
+      font-size: 40px;
       font-weight: 950;
       letter-spacing: -1px;
       line-height: 1;
@@ -208,18 +218,14 @@
     }
 
     /* Leaderboard */
-    .lb{
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
+    .lb{ display:flex; flex-direction:column; gap: 10px; }
     .lb-item{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       gap: 10px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.90);
       border-radius: 16px;
       padding: 12px;
     }
@@ -228,10 +234,10 @@
       font-weight: 950;
       letter-spacing: -0.2px;
       white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
-      max-width: 52vw;
+      max-width: 58vw;
     }
     .lb-meta{
-      margin-top: 4px;
+      margin-top: 6px;
       font-weight: 850;
       color: rgba(11,18,32,.62);
       font-size: 12px;
@@ -244,7 +250,7 @@
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.78);
+      background: rgba(255,255,255,.86);
       font-weight: 900;
       font-size: 12px;
       color: rgba(11,18,32,.78);
@@ -278,7 +284,7 @@
       padding: 12px 14px;
       border-radius: 16px;
       border: 1px solid rgba(15,23,42,.12);
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.95);
       box-shadow: 0 18px 55px rgba(15,23,42,.18);
       color: rgba(11,18,32,.90);
       font-weight: 900;
@@ -324,7 +330,8 @@
 
         <div class="card">
           <div class="label">Real-time mode</div>
-          <div class="hint" id="rtStatus">Checking…</div>
+          <div class="hint" id="rtStatus">Initializing…</div>
+          <div class="hint" id="rtHint"></div>
         </div>
       </div>
     </div>
@@ -364,7 +371,7 @@
         <div class="field">
           <div class="label">Optional: course par (comma-separated)</div>
           <input class="input" id="c_par" placeholder="18 numbers (optional). Example: 4,4,3,5,..." />
-          <div class="hint">If you include par, leaderboard can show “to par”. Leave blank if not needed.</div>
+          <div class="hint">If you include par, leaderboard can show “to par”.</div>
         </div>
 
         <div class="card">
@@ -424,7 +431,6 @@
         <div class="field">
           <div class="label">Captain name (for audit)</div>
           <input class="input" id="j_captainName" placeholder="e.g., Mason" />
-          <div class="hint">Shows on last-updated audit line.</div>
         </div>
 
         <button class="btn btn-primary" id="j_unlock" type="button">Unlock Score Entry</button>
@@ -434,13 +440,12 @@
           <div class="label">Anti-cheat basics</div>
           <div class="hint">
             Scores require the captain PIN. Each submission records timestamp + captain name + device label.
-            If someone keeps “editing” holes, the update timestamps make it obvious.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SCORE ENTRY (one hole) -->
+    <!-- SCORE ENTRY -->
     <div class="screen" id="screen-score">
       <div class="kicker"><span class="dot"></span> One hole at a time</div>
       <h1 id="s_title">Score Entry</h1>
@@ -452,7 +457,7 @@
         <div class="card">
           <div class="label">Current hole</div>
           <div class="big-num" id="s_hole">1</div>
-          <div class="sub" id="s_holeMeta">Starting hole: —</div>
+          <div class="sub" id="s_holeMeta">—</div>
         </div>
 
         <div class="field">
@@ -464,11 +469,11 @@
         <button class="btn btn-primary" id="s_submit" type="button">Submit Hole Score</button>
 
         <div class="row">
-          <button class="btn" id="s_prev" type="button">◀ Prev hole</button>
-          <button class="btn" id="s_next" type="button">Next hole ▶</button>
+          <button class="btn" id="s_prev" type="button">◀ Prev</button>
+          <button class="btn" id="s_next" type="button">Next ▶</button>
         </div>
 
-        <div class="card" id="s_auditCard">
+        <div class="card">
           <div class="label">Last update</div>
           <div class="hint" id="s_audit">—</div>
         </div>
@@ -493,7 +498,7 @@
           <div class="label">Tournament code</div>
           <input class="input" id="lb_code" placeholder="Enter code (e.g., A7K2Q9)" />
           <div class="row">
-            <button class="btn btn-primary" id="lb_load" type="button">Load Leaderboard</button>
+            <button class="btn btn-primary" id="lb_load" type="button">Load (Live)</button>
             <button class="btn" id="lb_refresh" type="button">Refresh</button>
           </div>
           <div class="hint" id="lb_status">—</div>
@@ -512,954 +517,726 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Firebase (optional) -->
-<script type="module">
-  /* ==========================================================
-     Charity Tournament App — Captain scoring + live leaderboard
-     - One thing per screen
-     - Shotgun start support (team starting hole)
-     - Real-time via Firebase Realtime Database (optional)
-     ========================================================== */
+<script>
+/* ==========================================================
+   Charity Tournament App (NO modules)
+   - Works on mobile Safari + static hosting
+   - Firebase optional (compat scripts)
+   ========================================================== */
 
-  // ========= TO ENABLE REAL-TIME =========
-  // 1) Create Firebase project
-  // 2) Enable Realtime Database
-  // 3) Paste your config below
-  // 4) Set RULES (example in comment near the bottom)
-  //
-  // If you leave FIREBASE_CONFIG null, app runs in local demo mode
-  // (single device only).
+/* ========= OPTIONAL: Enable Firebase Realtime =========
+   Paste your Firebase config into FIREBASE_CONFIG below.
 
-  const FIREBASE_CONFIG = null;
-  // Example:
-  // const FIREBASE_CONFIG = {
-  //   apiKey: "…",
-  //   authDomain: "…",
-  //   databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com",
-  //   projectId: "…",
-  //   storageBucket: "…",
-  //   messagingSenderId: "…",
-  //   appId: "…",
-  // };
+   Example:
+   const FIREBASE_CONFIG = {
+     apiKey: "…",
+     authDomain: "…",
+     databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com",
+     projectId: "…",
+     storageBucket: "…",
+     messagingSenderId: "…",
+     appId: "…",
+   };
+*/
+const FIREBASE_CONFIG = null;
 
-  // ========= Imports only if config exists =========
-  let fb = { enabled:false };
-  if(FIREBASE_CONFIG){
-    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js");
-    const {
-      getDatabase, ref, set, get, onValue, update, push, child, off
-    } = await import("https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js");
+/* ========= Helpers ========= */
+const $ = (id) => document.getElementById(id);
 
-    const app = initializeApp(FIREBASE_CONFIG);
-    const db = getDatabase(app);
+function toast(msg){
+  const el = $("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
 
-    fb = { enabled:true, db, ref, set, get, onValue, update, push, child, off };
+function show(screenId){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
+  $(screenId).classList.add("show");
+}
+
+function uid(len=6){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function nowISO(){ return new Date().toISOString(); }
+function safeInt(v){
+  const n = Number(String(v||"").trim());
+  return Number.isFinite(n) ? Math.round(n) : null;
+}
+async function sha256Hex(str){
+  const enc = new TextEncoder().encode(String(str));
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  const arr = Array.from(new Uint8Array(buf));
+  return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function escapeHtml(s){
+  return String(s||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function escapeAttr(s){ return escapeHtml(s).replaceAll("\n"," "); }
+
+function deviceLabel(){
+  const key = "ct_device_label_v1";
+  let v = localStorage.getItem(key);
+  if(!v){
+    v = "Device-" + uid(4);
+    localStorage.setItem(key, v);
+  }
+  return v;
+}
+
+/* ========= Local storage fallback ========= */
+const LOCAL_KEY = "ct_local_state_v2";
+function localLoad(){
+  try{
+    const raw = localStorage.getItem(LOCAL_KEY);
+    return raw ? JSON.parse(raw) : { tournaments:{} };
+  }catch{
+    return { tournaments:{} };
+  }
+}
+function localSave(obj){
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(obj));
+}
+
+/* ========= Firebase loader (compat) ========= */
+let fb = { enabled:false, db:null };
+
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.async = true;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function initFirebaseIfConfigured(){
+  const status = $("rtStatus");
+  const hint = $("rtHint");
+
+  if(!FIREBASE_CONFIG){
+    fb.enabled = false;
+    status.textContent = "Local demo mode (single device)";
+    hint.textContent = "Add Firebase config in index.html to enable real-time leaderboard.";
+    return;
   }
 
-  // ========= Helpers =========
-  const $ = (id) => document.getElementById(id);
-  const toastEl = $("toast");
-  function toast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add("show");
-    setTimeout(() => toastEl.classList.remove("show"), 2200);
+  try{
+    status.textContent = "Loading Firebase…";
+    hint.textContent = "";
+
+    await loadScript("https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js");
+    await loadScript("https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js");
+
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fb.db = firebase.database();
+    fb.enabled = true;
+
+    status.textContent = "Real-time enabled (Firebase)";
+    hint.textContent = "Leaderboard will update live.";
+  }catch(err){
+    console.error(err);
+    fb.enabled = false;
+    status.textContent = "Firebase failed to load";
+    hint.textContent = "Check console. Using local demo mode.";
   }
+}
 
-  function show(screenId){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
-    $(screenId).classList.add("show");
+/* ========= App state ========= */
+const SESSION_KEY = "ct_session_v2";
+let activeTournament = null;
+let activeCode = "";
+let captain = { code:"", teamId:"", captainName:"", unlocked:false };
+let scoreCursor = { hole: 1 };
+
+function saveSession(){
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ activeCode, captain, scoreCursor }));
+}
+function loadSession(){
+  try{
+    const raw = localStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch{ return null; }
+}
+
+function defaultTournament(code){
+  return {
+    code,
+    name:"",
+    holes:18,
+    shotgun:"yes",
+    par:[],
+    createdAt: nowISO(),
+    teams:[],
+    scores:{},
+    audit:{}
+  };
+}
+
+function parseParString(str, holes){
+  const cleaned = (str||"").trim();
+  if(!cleaned) return [];
+  const parts = cleaned.split(",").map(x => Number(String(x).trim()));
+  const out = [];
+  for(let i=0;i<holes;i++){
+    const v = parts[i];
+    if(Number.isFinite(v) && v>=3 && v<=6) out.push(v);
+    else out.push(4);
   }
+  return out;
+}
 
-  function uid(len=6){
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let out = "";
-    for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
-    return out;
-  }
+/* ========= Storage adapters ========= */
+async function loadTournament(code){
+  const clean = (code||"").trim().toUpperCase();
+  if(!clean) return null;
 
-  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-
-  function nowISO(){
-    return new Date().toISOString();
-  }
-
-  function safeInt(v){
-    const n = Number(String(v||"").trim());
-    return Number.isFinite(n) ? Math.round(n) : null;
-  }
-
-  async function sha256Hex(str){
-    const enc = new TextEncoder().encode(String(str));
-    const buf = await crypto.subtle.digest("SHA-256", enc);
-    const arr = Array.from(new Uint8Array(buf));
-    return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
-  }
-
-  function deviceLabel(){
-    const key = "ct_device_label_v1";
-    let v = localStorage.getItem(key);
-    if(!v){
-      v = "Device-" + uid(4);
-      localStorage.setItem(key, v);
-    }
-    return v;
-  }
-
-  // ========= Local fallback storage =========
-  const LOCAL_KEY = "ct_local_state_v1";
-  function localLoad(){
-    function localLoad(){
-    try{
-      const raw = localStorage.getItem(LOCAL_KEY);
-      return raw ? JSON.parse(raw) : { tournaments:{} };
-    }catch{
-      return { tournaments:{} };
-    }
-  }
-  function localSave(data){
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
-  }
-
-  function localGetTournament(code){
-    const data = localLoad();
-    return data.tournaments?.[code] || null;
-  }
-  function localSetTournament(code, t){
-    const data = localLoad();
-    data.tournaments = data.tournaments || {};
-    data.tournaments[code] = t;
-    localSave(data);
-  }
-
-  // ========= Tournament model =========
-  function blankTournament({ name, holes, shotgun, par, code }){
-    const holesN = (Number(holes)===9) ? 9 : 18;
-    const parArr = (par && par.length) ? par.slice(0, holesN) : Array(holesN).fill(null);
-
-    return {
-      meta:{
-        code,
-        name: name || "Charity Tournament",
-        holes: holesN,
-        shotgun: shotgun === "yes",
-        par: parArr, // can be nulls
-        createdAt: nowISO(),
-        updatedAt: nowISO(),
-        mode: fb.enabled ? "realtime" : "local"
-      },
-      teams: [],   // {id, name, startHole, pinHash}
-      scores: {},  // teamId -> { holeNumber: strokesInt }
-      audit: {}    // teamId -> { updatedAt, captainName, device, hole }
-    };
-  }
-
-  function teamTemplate(){
-    return { id:"t_"+uid(8), name:"Team", startHole:1, pin:"" };
-  }
-
-  // ========= Firebase paths =========
-  function tPath(code){ return `tournaments/${code}`; }
-
-  async function dbWriteTournament(code, t){
-    if(!fb.enabled){
-      localSetTournament(code, t);
-      return;
-    }
-    const r = fb.ref(fb.db, tPath(code));
-    await fb.set(r, t);
-  }
-
-  async function dbReadTournament(code){
-    if(!fb.enabled){
-      return localGetTournament(code);
-    }
-    const snap = await fb.get(fb.ref(fb.db, tPath(code)));
+  if(fb.enabled){
+    const snap = await fb.db.ref(`tournaments/${clean}`).get();
     return snap.exists() ? snap.val() : null;
+  }else{
+    const local = localLoad();
+    return local.tournaments[clean] || null;
   }
+}
 
-  async function dbPatch(path, obj){
-    if(!fb.enabled){
-      // local patch: path like tournaments/CODE/scores/teamId/3
-      const parts = path.split("/");
-      // parts: ["tournaments", code, ...]
-      const code = parts[1];
-      let t = localGetTournament(code);
+async function saveTournament(code, tour){
+  const clean = String(code||"").trim().toUpperCase();
+  if(!clean) throw new Error("Missing code");
+
+  if(fb.enabled){
+    await fb.db.ref(`tournaments/${clean}`).set(tour);
+  }else{
+    const local = localLoad();
+    local.tournaments[clean] = tour;
+    localSave(local);
+  }
+}
+
+/* ========= UI: Create ========= */
+let createDraft = null;
+
+function newTeam(){
+  return { id:"T"+uid(5), name:"", startHole:1, pin:"" };
+}
+
+function prepCreate(){
+  createDraft = {
+    code: uid(6),
+    name:"",
+    holes:18,
+    shotgun:"yes",
+    par:[],
+    teams:[ newTeam(), newTeam() ]
+  };
+
+  $("c_name").value = "";
+  $("c_holes").value = "18";
+  $("c_shotgun").value = "yes";
+  $("c_par").value = "";
+  $("c_publishHint").textContent = "";
+
+  $("c_code").textContent = createDraft.code;
+  renderCreateTeams();
+}
+
+function renderCreateTeams(){
+  const wrap = $("c_teams");
+  wrap.innerHTML = "";
+
+  createDraft.teams.forEach((t, idx) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="stack">
+        <div class="field">
+          <div class="label">Team ${idx+1} name</div>
+          <input class="input" data-tn="${escapeAttr(t.id)}" placeholder="e.g., The Mulligans" value="${escapeAttr(t.name)}" />
+        </div>
+
+        <div class="row stretch">
+          <div class="field">
+            <div class="label">Starting hole</div>
+            <input class="input" data-sh="${escapeAttr(t.id)}" inputmode="numeric" placeholder="1-${createDraft.holes}" value="${escapeAttr(String(t.startHole))}" />
+            <div class="hint">${createDraft.shotgun==="yes" ? "Shotgun: any hole" : "Non-shotgun: forced to 1"}</div>
+          </div>
+          <div class="field">
+            <div class="label">Captain PIN</div>
+            <input class="input" data-pin="${escapeAttr(t.id)}" inputmode="numeric" placeholder="4–8 digits" value="${escapeAttr(t.pin||"")}" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-danger" data-del="${escapeAttr(t.id)}" type="button">Remove team</button>
+        </div>
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+
+  wrap.querySelectorAll("[data-tn]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const id = inp.getAttribute("data-tn");
+      const t = createDraft.teams.find(x => x.id === id);
+      if(t) t.name = (inp.value||"").slice(0, 40);
+    });
+  });
+
+  wrap.querySelectorAll("[data-sh]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const id = inp.getAttribute("data-sh");
+      const t = createDraft.teams.find(x => x.id === id);
       if(!t) return;
+      let v = safeInt(inp.value);
+      if(createDraft.shotgun !== "yes") v = 1;
+      t.startHole = clamp(v || 1, 1, createDraft.holes);
+    });
+  });
 
-      // walk and assign
-      let cur = t;
-      for(let i=2;i<parts.length-1;i++){
-        const k = parts[i];
-        if(cur[k] === undefined) cur[k] = {};
-        cur = cur[k];
-      }
-      cur[parts[parts.length-1]] = obj;
-      t.meta.updatedAt = nowISO();
-      localSetTournament(code, t);
-      return;
-    }
-
-    const r = fb.ref(fb.db, path);
-    await fb.set(r, obj);
-  }
-
-  async function dbUpdate(path, obj){
-    if(!fb.enabled){
-      // local deep update (merge)
-      const parts = path.split("/");
-      const code = parts[1];
-      let t = localGetTournament(code);
+  wrap.querySelectorAll("[data-pin]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const id = inp.getAttribute("data-pin");
+      const t = createDraft.teams.find(x => x.id === id);
       if(!t) return;
+      t.pin = (inp.value||"").replace(/\D/g,"").slice(0,8);
+    });
+  });
 
-      let cur = t;
-      for(let i=2;i<parts.length;i++){
-        const k = parts[i];
-        if(cur[k] === undefined) cur[k] = {};
-        cur = cur[k];
-      }
-      Object.keys(obj).forEach(k => { cur[k] = obj[k]; });
-      t.meta.updatedAt = nowISO();
-      localSetTournament(code, t);
-      return;
+  wrap.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-del");
+      createDraft.teams = createDraft.teams.filter(x => x.id !== id);
+      renderCreateTeams();
+    });
+  });
+}
+
+async function publishTournament(){
+  const name = ($("c_name").value||"").trim();
+  const holes = $("c_holes").value === "9" ? 9 : 18;
+  const shotgun = $("c_shotgun").value;
+  const code = ($("c_code").textContent||"").trim().toUpperCase();
+  const par = parseParString($("c_par").value, holes);
+
+  if(!name){ $("c_publishHint").textContent = "Tournament name required."; toast("Add a tournament name."); return; }
+
+  // normalize teams
+  const teams = createDraft.teams
+    .map(t => ({
+      id: t.id,
+      name: (t.name||"").trim(),
+      startHole: shotgun==="yes" ? clamp(Number(t.startHole)||1, 1, holes) : 1,
+      pin: (t.pin||"").replace(/\D/g,"")
+    }))
+    .filter(t => t.name.length > 0);
+
+  if(teams.length < 2){ $("c_publishHint").textContent = "Add at least 2 teams with names."; toast("Need at least 2 teams."); return; }
+  for(const t of teams){
+    if(t.pin.length < 4){ $("c_publishHint").textContent = `PIN must be 4–8 digits for ${t.name}`; toast("Fix captain PINs."); return; }
+  }
+
+  const tour = defaultTournament(code);
+  tour.name = name;
+  tour.holes = holes;
+  tour.shotgun = shotgun;
+  tour.par = par;
+  tour.createdAt = nowISO();
+
+  // hash pin per team (simple client-side check)
+  for(const t of teams){
+    const pinHash = await sha256Hex(code + ":" + t.id + ":" + t.pin);
+    tour.teams.push({ id:t.id, name:t.name, startHole:t.startHole, pinHash, createdAt: nowISO() });
+    tour.scores[t.id] = {};
+    tour.audit[t.id] = {};
+  }
+
+  await saveTournament(code, tour);
+
+  activeTournament = tour;
+  activeCode = code;
+  saveSession();
+
+  $("c_publishHint").textContent = fb.enabled ? "Published (real-time ON). Share the code!" : "Saved locally (real-time OFF).";
+  $("lb_code").value = code;
+  $("j_code").value = code;
+
+  toast("Tournament published.");
+}
+
+/* ========= UI: Captain ========= */
+function fillTeamsSelect(tour){
+  const opts = tour.teams
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name))
+    .map(t => `<option value="${escapeAttr(t.id)}">${escapeHtml(t.name)} (Start H${t.startHole})</option>`)
+    .join("");
+  $("j_team").innerHTML = `<option value="">Select team</option>` + opts;
+}
+
+async function captainLoadCode(){
+  const code = ($("j_code").value||"").trim().toUpperCase();
+  const tour = await loadTournament(code);
+  if(!tour){ toast("Tournament not found."); $("j_team").innerHTML = `<option value="">Load tournament first</option>`; return; }
+  activeTournament = tour;
+  activeCode = code;
+  fillTeamsSelect(tour);
+  saveSession();
+  toast("Tournament loaded.");
+}
+
+async function captainUnlock(){
+  const code = ($("j_code").value||"").trim().toUpperCase();
+  const teamId = $("j_team").value;
+  const pin = ($("j_pin").value||"").replace(/\D/g,"");
+  const cname = ($("j_captainName").value||"").trim().slice(0, 30);
+
+  if(!code || !teamId || pin.length < 4){ toast("Enter code, team, and PIN."); return; }
+
+  const tour = await loadTournament(code);
+  if(!tour){ toast("Tournament not found."); return; }
+
+  const team = tour.teams.find(t => t.id === teamId);
+  if(!team){ toast("Team not found."); return; }
+
+  const hash = await sha256Hex(code + ":" + teamId + ":" + pin);
+  if(hash !== team.pinHash){ toast("Incorrect PIN."); return; }
+
+  captain = { code, teamId, captainName: cname || "Captain", unlocked:true };
+  activeTournament = tour;
+  activeCode = code;
+  scoreCursor.hole = clamp(Number(team.startHole)||1, 1, tour.holes);
+  saveSession();
+
+  toast("Unlocked.");
+  await renderScoreScreen();
+  show("screen-score");
+}
+
+/* ========= Score screen ========= */
+function latestAuditForHole(tour, teamId, hole){
+  return tour.audit?.[teamId]?.[hole] || null;
+}
+
+async function renderScoreScreen(){
+  const tour = await loadTournament(captain.code);
+  if(!tour){ toast("Tournament not found."); show("screen-captain-join"); return; }
+  activeTournament = tour;
+
+  const team = tour.teams.find(t => t.id === captain.teamId);
+  if(!team){ toast("Team not found."); show("screen-captain-join"); return; }
+
+  const hole = clamp(scoreCursor.hole, 1, tour.holes);
+  scoreCursor.hole = hole;
+
+  $("s_title").textContent = team.name;
+  $("s_sub").textContent = `${tour.name} • Code ${tour.code}`;
+  $("s_hole").textContent = String(hole);
+  $("s_holeMeta").textContent = `Start H${team.startHole} • Holes ${tour.holes} • Shotgun ${tour.shotgun==="yes" ? "Yes" : "No"} • ${deviceLabel()}`;
+
+  const existing = tour.scores?.[team.id]?.[hole];
+  $("s_score").value = (existing === undefined || existing === null) ? "" : String(existing);
+
+  const aud = latestAuditForHole(tour, team.id, hole);
+  $("s_audit").textContent = aud
+    ? `${aud.by} • ${aud.device} • ${new Date(aud.at).toLocaleString()}`
+    : "No submission yet for this hole.";
+}
+
+async function submitHoleScore(){
+  if(!captain.unlocked){ toast("Locked."); return; }
+  const strokes = safeInt($("s_score").value);
+  if(strokes === null || strokes < 1 || strokes > 30){ toast("Enter a valid score (1–30)."); return; }
+
+  const code = captain.code;
+  const teamId = captain.teamId;
+  const hole = scoreCursor.hole;
+
+  const tour = await loadTournament(code);
+  if(!tour){ toast("Tournament not found."); return; }
+
+  tour.scores[teamId] = tour.scores[teamId] || {};
+  tour.audit[teamId] = tour.audit[teamId] || {};
+
+  tour.scores[teamId][hole] = strokes;
+  tour.audit[teamId][hole] = {
+    by: captain.captainName,
+    device: deviceLabel(),
+    at: nowISO()
+  };
+
+  await saveTournament(code, tour);
+  activeTournament = tour;
+
+  toast(`Saved hole ${hole}.`);
+  await renderScoreScreen();
+}
+
+/* ========= Leaderboard ========= */
+let lbUnsub = null;
+
+function sumScores(tour, teamId){
+  const scores = tour.scores?.[teamId] || {};
+  let sum = 0, thru = 0;
+  for(let h=1; h<=tour.holes; h++){
+    const v = scores[h];
+    if(v === undefined || v === null) continue;
+    sum += Number(v) || 0;
+    thru++;
+  }
+  return { sum, thru };
+}
+
+function toPar(tour, teamId){
+  if(!tour.par || !tour.par.length) return null;
+  const scores = tour.scores?.[teamId] || {};
+  let sum = 0, parSum = 0, thru = 0;
+  for(let h=1; h<=tour.holes; h++){
+    const v = scores[h];
+    if(v === undefined || v === null) continue;
+    sum += Number(v) || 0;
+    parSum += Number(tour.par[h-1] || 4);
+    thru++;
+  }
+  return { diff: sum - parSum, thru };
+}
+
+function fmtToPar(diff){
+  if(diff === 0) return "E";
+  return diff > 0 ? `+${diff}` : `${diff}`;
+}
+
+function latestAuditLine(tour, teamId){
+  const aud = tour.audit?.[teamId] || {};
+  let latest = null;
+  Object.entries(aud).forEach(([holeStr, rec]) => {
+    if(!rec || !rec.at) return;
+    const t = new Date(rec.at).getTime();
+    if(!latest || t > latest.t){
+      latest = { t, hole: holeStr, by: rec.by || "Captain", device: rec.device || "Device", at: rec.at };
     }
+  });
+  if(!latest) return "No updates yet";
+  return `Updated H${latest.hole} • ${latest.by} • ${new Date(latest.at).toLocaleTimeString()}`;
+}
 
-    const r = fb.ref(fb.db, path);
-    await fb.update(r, obj);
+function renderLeaderboard(tour){
+  $("lb_title").textContent = "Leaderboard";
+  $("lb_sub").textContent = `${tour.name} • Code ${tour.code} • Holes ${tour.holes} • ${tour.shotgun==="yes" ? "Shotgun" : "Start H1"}`;
+
+  const rows = tour.teams.map(team => {
+    const totals = sumScores(tour, team.id);
+    const tp = toPar(tour, team.id);
+    return {
+      team,
+      sum: totals.sum,
+      thru: totals.thru,
+      toPar: tp ? tp.diff : null,
+      audit: latestAuditLine(tour, team.id)
+    };
+  });
+
+  rows.sort((a,b) => {
+    if(a.thru===0 && b.thru===0) return a.team.name.localeCompare(b.team.name);
+    if(a.thru===0) return 1;
+    if(b.thru===0) return -1;
+    if(a.sum!==b.sum) return a.sum-b.sum;
+    if(a.thru!==b.thru) return b.thru-a.thru;
+    return a.team.name.localeCompare(b.team.name);
+  });
+
+  const list = $("lb_list");
+  list.innerHTML = "";
+  rows.forEach((r, idx) => {
+    const div = document.createElement("div");
+    div.className = "lb-item";
+    div.innerHTML = `
+      <div class="lb-left">
+        <div class="lb-team">${idx+1}. ${escapeHtml(r.team.name)}</div>
+        <div class="lb-meta">
+          <span class="pill">Start H${r.team.startHole}</span>
+          <span class="pill">Thru ${r.thru}/${tour.holes}</span>
+          ${r.toPar===null ? "" : `<span class="pill">To Par ${escapeHtml(fmtToPar(r.toPar))}</span>`}
+        </div>
+        <div class="hint" style="margin-top:6px;">${escapeHtml(r.audit)}</div>
+      </div>
+      <div class="scorebox">
+        <div class="score">${r.thru===0 ? "—" : String(r.sum)}</div>
+        <div class="small">${r.thru===0 ? "No scores" : "Total strokes"}</div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+async function loadLeaderboardOnce(code){
+  const c = (code||"").trim().toUpperCase();
+  if(!c){ toast("Enter a code."); return; }
+  const tour = await loadTournament(c);
+  if(!tour){ $("lb_status").textContent = "Tournament not found."; toast("Tournament not found."); return; }
+  $("lb_status").textContent = fb.enabled ? "Live available. Tap Load (Live) to subscribe." : "Local demo mode (not live).";
+  renderLeaderboard(tour);
+}
+
+function startLiveLeaderboard(code){
+  if(!fb.enabled) return;
+  if(lbUnsub){ try{ lbUnsub(); }catch{} lbUnsub = null; }
+
+  const ref = fb.db.ref(`tournaments/${code}`);
+  const cb = (snap) => {
+    if(!snap.exists()) return;
+    renderLeaderboard(snap.val());
+    $("lb_status").textContent = "Live updates ON.";
+  };
+  ref.on("value", cb);
+  lbUnsub = () => ref.off("value", cb);
+}
+
+/* ========= Clipboard ========= */
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
   }
+}
 
-  // ========= App state =========
-  const sessionKey = "ct_session_v1";
-  function sessLoad(){
-    try{
-      const raw = localStorage.getItem(sessionKey);
-      return raw ? JSON.parse(raw) : {};
-    }catch{
-      return {};
-    }
-  }
-  function sessSave(s){
-    localStorage.setItem(sessionKey, JSON.stringify(s));
-  }
-
-  let session = sessLoad(); // { code, teamId, captainName, unlocked:true/false, hole }
-  let liveUnsub = null;
-
-  function setRTStatus(){
-    $("rtStatus").textContent = fb.enabled
-      ? "Real-time enabled (Firebase). Leaderboard updates automatically."
-      : "Local demo mode (single device). Add Firebase config for live updates.";
-  }
-
-  // ========= Screen wiring =========
+/* ========= Wire events ========= */
+function wireUI(){
+  // nav
   $("btnHome").addEventListener("click", () => show("screen-home"));
-  $("goCreate").addEventListener("click", () => show("screen-create"));
-  $("goCaptain").addEventListener("click", () => show("screen-captain-join"));
-  $("goLeaderboard").addEventListener("click", () => show("screen-leaderboard"));
+  $("goCreate").addEventListener("click", () => { prepCreate(); show("screen-create"); });
+  $("goCaptain").addEventListener("click", () => { show("screen-captain-join"); });
+  $("goLeaderboard").addEventListener("click", () => { show("screen-leaderboard"); });
 
   $("backFromCreate").addEventListener("click", () => show("screen-home"));
   $("goLeaderboardFromCreate").addEventListener("click", () => show("screen-leaderboard"));
-
   $("backFromJoin").addEventListener("click", () => show("screen-home"));
   $("backFromLB").addEventListener("click", () => show("screen-home"));
+  $("s_toLB").addEventListener("click", () => show("screen-leaderboard"));
 
+  // reset
   $("btnResetLocal").addEventListener("click", () => {
     localStorage.removeItem(LOCAL_KEY);
-    localStorage.removeItem(sessionKey);
-    session = {};
-    toast("Local cache reset.");
-    setRTStatus();
+    localStorage.removeItem(SESSION_KEY);
+    toast("Local reset done.");
+    activeTournament = null;
+    activeCode = "";
+    captain = { code:"", teamId:"", captainName:"", unlocked:false };
+    scoreCursor = { hole: 1 };
+    $("rtStatus").textContent = "Initialized…";
+    $("rtHint").textContent = "";
     show("screen-home");
+    location.reload(); // simplest clean reset
   });
 
-  // ========= Create Tournament =========
-  function parsePar(input, holes){
-    const raw = (input || "").trim();
-    if(!raw) return Array(holes).fill(null);
-    const parts = raw.split(",").map(s => Number(String(s).trim()));
-    const out = Array(holes).fill(null);
-    for(let i=0;i<holes;i++){
-      const v = parts[i];
-      out[i] = Number.isFinite(v) ? Math.round(v) : null;
-    }
-    return out;
-  }
-
-  function regenCode(){
-    $("c_code").textContent = uid(6);
-  }
-  regenCode();
-
-  $("c_regen").addEventListener("click", regenCode);
-  $("c_copycode").addEventListener("click", async () => {
-    await copyText($("c_code").textContent.trim());
-    toast("Code copied.");
+  // create
+  $("c_regen").addEventListener("click", () => { $("c_code").textContent = uid(6); toast("New code generated."); });
+  $("c_copycode").addEventListener("click", async () => { await copyText($("c_code").textContent.trim()); toast("Code copied."); });
+  $("c_addteam").addEventListener("click", () => { createDraft.teams.push(newTeam()); renderCreateTeams(); toast("Team added."); });
+  $("c_holes").addEventListener("change", () => {
+    createDraft.holes = $("c_holes").value === "9" ? 9 : 18;
+    createDraft.teams.forEach(t => t.startHole = clamp(t.startHole||1,1,createDraft.holes));
+    renderCreateTeams();
   });
-
-  function renderCreateTeams(list){
-    const wrap = $("c_teams");
-    wrap.innerHTML = "";
-
-    list.forEach((t, idx) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="stack">
-          <div class="row stretch">
-            <div class="field">
-              <div class="label">Team name</div>
-              <input class="input" data-tn="${t.id}" value="${escapeAttr(t.name)}" placeholder="Team name" />
-            </div>
-          </div>
-
-          <div class="row stretch">
-            <div class="field">
-              <div class="label">Starting hole</div>
-              <input class="input" data-ts="${t.id}" inputmode="numeric" value="${t.startHole}" placeholder="1" />
-              <div class="hint">Shotgun: teams can start anywhere.</div>
-            </div>
-            <div class="field">
-              <div class="label">Captain PIN</div>
-              <input class="input" data-tp="${t.id}" inputmode="numeric" value="${escapeAttr(t.pin)}" placeholder="4–8 digits" />
-              <div class="hint">This is hashed when you publish.</div>
-            </div>
-          </div>
-
-          <div class="row">
-            <button class="btn btn-danger" data-del="${t.id}" type="button">Remove team</button>
-          </div>
-        </div>
-      `;
-      wrap.appendChild(card);
-    });
-
-    // bind edits
-    wrap.querySelectorAll("[data-tn]").forEach(inp => {
-      inp.addEventListener("input", () => {
-        const id = inp.getAttribute("data-tn");
-        const t = list.find(x => x.id === id);
-        if(!t) return;
-        t.name = (inp.value || "Team").slice(0,40);
-      });
-    });
-
-    wrap.querySelectorAll("[data-ts]").forEach(inp => {
-      inp.addEventListener("input", () => {
-        const id = inp.getAttribute("data-ts");
-        const t = list.find(x => x.id === id);
-        if(!t) return;
-        const n = safeInt(inp.value);
-        t.startHole = clamp(n || 1, 1, Number($("c_holes").value)===9 ? 9 : 18);
-      });
-    });
-
-    wrap.querySelectorAll("[data-tp]").forEach(inp => {
-      inp.addEventListener("input", () => {
-        const id = inp.getAttribute("data-tp");
-        const t = list.find(x => x.id === id);
-        if(!t) return;
-        t.pin = (inp.value || "").replace(/\D/g,"").slice(0,8);
-      });
-    });
-
-    wrap.querySelectorAll("[data-del]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-del");
-        const idx = list.findIndex(x => x.id === id);
-        if(idx >= 0) list.splice(idx, 1);
-        renderCreateTeams(list);
-      });
-    });
-  }
-
-  // initial create list
-  let createTeams = [teamTemplate(), teamTemplate(), teamTemplate(), teamTemplate()];
-  createTeams[0].name = "Team 1";
-  createTeams[1].name = "Team 2";
-  createTeams[2].name = "Team 3";
-  createTeams[3].name = "Team 4";
-  renderCreateTeams(createTeams);
-
-  $("c_addteam").addEventListener("click", () => {
-    createTeams.push(teamTemplate());
-    createTeams[createTeams.length-1].name = `Team ${createTeams.length}`;
-    renderCreateTeams(createTeams);
+  $("c_shotgun").addEventListener("change", () => {
+    createDraft.shotgun = $("c_shotgun").value;
+    if(createDraft.shotgun !== "yes") createDraft.teams.forEach(t => t.startHole = 1);
+    renderCreateTeams();
   });
-
-  $("c_publish").addEventListener("click", async () => {
-    $("c_publishHint").textContent = "";
-
-    const code = $("c_code").textContent.trim().toUpperCase();
-    const name = ($("c_name").value || "").trim();
-    const holes = (Number($("c_holes").value)===9) ? 9 : 18;
-    const shotgun = $("c_shotgun").value;
-
-    // Validate teams
-    const teamsClean = createTeams
-      .map(t => ({
-        id: t.id,
-        name: (t.name || "Team").trim(),
-        startHole: clamp(safeInt(t.startHole)||1, 1, holes),
-        pin: String(t.pin||"").replace(/\D/g,"")
-      }))
-      .filter(t => t.name.length > 0);
-
-    if(teamsClean.length < 2){
-      toast("Add at least 2 teams.");
-      return;
-    }
-    for(const t of teamsClean){
-      if(t.pin.length < 4){
-        toast(`PIN too short for ${t.name} (min 4 digits).`);
-        return;
-      }
-    }
-
-    // Hash pins
-    const teamsHashed = [];
-    for(const t of teamsClean){
-      const pinHash = await sha256Hex(`${code}:${t.id}:${t.pin}`);
-      teamsHashed.push({
-        id: t.id,
-        name: t.name,
-        startHole: (shotgun === "yes") ? t.startHole : 1,
-        pinHash
-      });
-    }
-
-    const par = parsePar($("c_par").value, holes);
-    const tourney = blankTournament({ name, holes, shotgun, par, code });
-    tourney.teams = teamsHashed;
-
-    // Precreate score objects
-    tourney.teams.forEach(tm => {
-      tourney.scores[tm.id] = {};
-      tourney.audit[tm.id] = { updatedAt: null, captainName: null, device: null, hole: null };
-    });
-
-    await dbWriteTournament(code, tourney);
-    toast("Tournament published.");
-    $("c_publishHint").textContent = fb.enabled
-      ? "Published to Firebase. Share the code with captains and participants."
-      : "Saved locally (single device). Add Firebase config for true live scoring.";
-
-    // Store last used code
-    session.code = code;
-    sessSave(session);
-
-    // Prefill leaderboard/captain code boxes
-    $("j_code").value = code;
-    $("lb_code").value = code;
-
-    await loadTournamentToJoin(code);
-    await loadLeaderboard(code, true);
-  });
-
-  // ========= Captain Join =========
-  async function loadTournamentToJoin(code){
-    const c = String(code||"").trim().toUpperCase();
-    if(!c) return;
-    const t = await dbReadTournament(c);
-    const sel = $("j_team");
-    sel.innerHTML = "";
-    if(!t){
-      sel.innerHTML = `<option value="">Tournament not found</option>`;
-      return;
-    }
-    t.teams.forEach(team => {
-      const opt = document.createElement("option");
-      opt.value = team.id;
-      opt.textContent = team.name;
-      sel.appendChild(opt);
-    });
-    toast("Tournament loaded.");
-  }
-
-  $("j_code").addEventListener("change", async () => {
-    await loadTournamentToJoin($("j_code").value);
-  });
-
-  $("j_unlock").addEventListener("click", async () => {
-    const code = String($("j_code").value||"").trim().toUpperCase();
-    const teamId = $("j_team").value;
-    const pin = String($("j_pin").value||"").replace(/\D/g,"");
-    const captainName = String($("j_captainName").value||"").trim().slice(0,28) || "Captain";
-
-    if(!code || code.length < 4){
-      toast("Enter a tournament code.");
-      return;
-    }
-    if(!teamId){
-      toast("Pick your team.");
-      return;
-    }
-    if(pin.length < 4){
-      toast("Enter your captain PIN.");
-      return;
-    }
-
-    const t = await dbReadTournament(code);
-    if(!t){
-      toast("Tournament not found.");
-      return;
-    }
-    const team = t.teams.find(x => x.id === teamId);
-    if(!team){
-      toast("Team not found.");
-      return;
-    }
-
-    const hash = await sha256Hex(`${code}:${teamId}:${pin}`);
-    if(hash !== team.pinHash){
-      toast("Incorrect PIN.");
-      return;
-    }
-
-    session = {
-      code,
-      teamId,
-      captainName,
-      unlocked: true,
-      hole: clamp(Number(session.hole)||team.startHole||1, 1, Number(t.meta?.holes)||18)
-    };
-    sessSave(session);
-
-    // Initialize hole to starting hole if none set
-    if(!session.hole) session.hole = team.startHole || 1;
-
-    await openScoreEntry(code, teamId);
-    toast("Unlocked.");
-  });
-
-  // ========= Score entry =========
-  async function openScoreEntry(code, teamId){
-    const t = await dbReadTournament(code);
-    if(!t){ toast("Tournament not found."); return; }
-
-    const team = t.teams.find(x => x.id === teamId);
-    if(!team){ toast("Team not found."); return; }
-
-    // Determine current hole
-    const holes = Number(t.meta.holes)||18;
-    session.hole = clamp(Number(session.hole)||team.startHole||1, 1, holes);
-    sessSave(session);
-
-    $("s_title").textContent = team.name;
-    $("s_sub").textContent = `${t.meta.name} • ${holes} holes • ${t.meta.shotgun ? "Shotgun start" : "Start on 1"}`;
-
-    $("s_hole").textContent = String(session.hole);
-    $("s_holeMeta").textContent = `Starting hole: ${team.startHole || 1} • Team ID: ${teamId.slice(0,6)}…`;
-
-    const existing = t.scores?.[teamId]?.[String(session.hole)];
-    $("s_score").value = (existing === undefined || existing === null) ? "" : String(existing);
-
-    const audit = t.audit?.[teamId];
-    renderAuditLine(audit);
-
-    show("screen-score");
-  }
-
-  function renderAuditLine(a){
-    if(!a || !a.updatedAt){
-      $("s_audit").textContent = "No submissions yet.";
-      return;
-    }
-    const line = `Updated ${a.updatedAt} • Hole ${a.hole} • ${a.captainName || "Captain"} • ${a.device || "Device"}`;
-    $("s_audit").textContent = line;
-  }
-
-  $("s_prev").addEventListener("click", async () => {
-    const code = session.code;
-    if(!code || !session.teamId) return;
-    const t = await dbReadTournament(code);
-    if(!t) return;
-    const holes = Number(t.meta.holes)||18;
-    session.hole = clamp((Number(session.hole)||1) - 1, 1, holes);
-    sessSave(session);
-    await openScoreEntry(code, session.teamId);
-  });
-
-  $("s_next").addEventListener("click", async () => {
-    const code = session.code;
-    if(!code || !session.teamId) return;
-    const t = await dbReadTournament(code);
-    if(!t) return;
-    const holes = Number(t.meta.holes)||18;
-    session.hole = clamp((Number(session.hole)||1) + 1, 1, holes);
-    sessSave(session);
-    await openScoreEntry(code, session.teamId);
-  });
-
-  $("s_submit").addEventListener("click", async () => {
-    if(!session.unlocked){
-      toast("Locked. Sign in again.");
-      show("screen-captain-join");
-      return;
-    }
-
-    const code = session.code;
-    const teamId = session.teamId;
-
-    const strokes = safeInt($("s_score").value);
-    if(strokes === null || strokes < 0 || strokes > 30){
-      toast("Enter a valid hole score (0–30).");
-      return;
-    }
-
-    // Write score
-    const hole = Number(session.hole)||1;
-
-    if(fb.enabled){
-      await fb.set(fb.ref(fb.db, `${tPath(code)}/scores/${teamId}/${hole}`), strokes);
-      await fb.set(fb.ref(fb.db, `${tPath(code)}/audit/${teamId}`), {
-        updatedAt: nowISO(),
-        captainName: session.captainName || "Captain",
-        device: deviceLabel(),
-        hole
-      });
-      await fb.update(fb.ref(fb.db, `${tPath(code)}/meta`), { updatedAt: nowISO() });
-    }else{
-      const t = localGetTournament(code);
-      if(!t){ toast("Tournament not found."); return; }
-      t.scores = t.scores || {};
-      t.scores[teamId] = t.scores[teamId] || {};
-      t.scores[teamId][String(hole)] = strokes;
-      t.audit = t.audit || {};
-      t.audit[teamId] = { updatedAt: nowISO(), captainName: session.captainName||"Captain", device: deviceLabel(), hole };
-      t.meta.updatedAt = nowISO();
-      localSetTournament(code, t);
-    }
-
-    toast("Submitted.");
-    await openScoreEntry(code, teamId);
-    await loadLeaderboard(code, false);
-  });
-
-  $("s_toLB").addEventListener("click", async () => {
-    $("lb_code").value = session.code || $("lb_code").value;
-    await loadLeaderboard($("lb_code").value, true);
-    show("screen-leaderboard");
-  });
-
-  $("s_lock").addEventListener("click", () => {
-    session.unlocked = false;
-    session.teamId = null;
-    sessSave(session);
-    toast("Locked.");
-    show("screen-captain-join");
-  });
-
-  // ========= Leaderboard =========
-  function sumTeamScore(t, teamId){
-    const holes = Number(t.meta?.holes)||18;
-    const obj = t.scores?.[teamId] || {};
-    let sum = 0;
-    let played = 0;
-    for(let h=1; h<=holes; h++){
-      const v = obj[String(h)];
-      if(v === undefined || v === null) continue;
-      played++;
-      sum += Number(v)||0;
-    }
-    return { sum, played, holes };
-  }
-
-  function sumTeamToPar(t, teamId){
-    const par = t.meta?.par || [];
-    const obj = t.scores?.[teamId] || {};
-    let diff = 0;
-    let played = 0;
-    for(let h=1; h<=Number(t.meta.holes||18); h++){
-      const v = obj[String(h)];
-      if(v === undefined || v === null) continue;
-      const p = Number(par[h-1]);
-      if(!Number.isFinite(p)) { played++; continue; }
-      diff += (Number(v)||0) - p;
-      played++;
-    }
-    return { diff, played };
-  }
-
-  function fmtToPar(n){
-    if(n === 0) return "E";
-    return n > 0 ? `+${n}` : `${n}`;
-  }
-
-  function escapeHtml(s){
-    return String(s||"")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-  function escapeAttr(s){
-    return String(s||"")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;")
-      .replaceAll("\n"," ");
-  }
-
-  async function loadLeaderboard(code, auto){
-    const c = String(code||"").trim().toUpperCase();
-    if(!c){
-      $("lb_status").textContent = "Enter a tournament code.";
-      return;
-    }
-    $("lb_status").textContent = "Loading…";
-
-    const t = await dbReadTournament(c);
-    if(!t){
-      $("lb_status").textContent = "Tournament not found.";
-      $("lb_list").innerHTML = "";
-      return;
-    }
-
-    $("lb_title").textContent = t.meta?.name || "Leaderboard";
-    $("lb_sub").textContent =
-      `${t.meta?.holes || 18} holes • ${t.meta?.shotgun ? "Shotgun start" : "Start on 1"} • Updated ${t.meta?.updatedAt || "—"}`;
-
-    // Build entries
-    const rows = t.teams.map(team => {
-      const tot = sumTeamScore(t, team.id);
-      const hasPar = (t.meta?.par || []).some(x => Number.isFinite(Number(x)));
-      const toPar = hasPar ? sumTeamToPar(t, team.id) : null;
-      const audit = t.audit?.[team.id] || {};
-      return {
-        teamId: team.id,
-        name: team.name,
-        startHole: team.startHole || 1,
-        sum: tot.sum,
-        played: tot.played,
-        holes: tot.holes,
-        toPar: toPar ? toPar.diff : null,
-        audit
-      };
-    });
-
-    // Sort: lowest strokes first (classic). Ties broken by more holes played (so complete scores rise).
-    rows.sort((a,b) => {
-      if(a.sum !== b.sum) return a.sum - b.sum;
-      return b.played - a.played;
-    });
-
-    // Render
-    const list = $("lb_list");
-    list.innerHTML = "";
-    rows.forEach((r, idx) => {
-      const div = document.createElement("div");
-      div.className = "lb-item";
-
-      const toParText = (r.toPar === null) ? "" : ` • To par: ${fmtToPar(r.toPar)}`;
-      const auditText = r.audit?.updatedAt
-        ? `Last: ${r.audit.updatedAt} • Hole ${r.audit.hole} • ${r.audit.captainName || "Captain"}`
-        : "No submissions yet";
-
-      div.innerHTML = `
-        <div class="lb-left">
-          <div class="lb-team">${idx+1}. ${escapeHtml(r.name)}</div>
-          <div class="lb-meta">
-            <span class="pill">Start: ${r.startHole}</span>
-            <span class="pill">Played: ${r.played}/${r.holes}</span>
-            ${r.toPar === null ? "" : `<span class="pill">To par: ${escapeHtml(fmtToPar(r.toPar))}</span>`}
-          </div>
-          <div class="hint" style="margin-top:8px;">${escapeHtml(auditText)}</div>
-        </div>
-        <div class="scorebox">
-          <div class="score">${r.sum}</div>
-          <div class="small">${r.played ? "gross strokes" : "—"}</div>
-        </div>
-      `;
-      list.appendChild(div);
-    });
-
-    $("lb_status").textContent = fb.enabled
-      ? (auto ? "Live updates enabled." : "Updated.")
-      : "Local demo mode (no live network).";
-
-    // Live subscribe (Firebase only)
-    if(fb.enabled){
-      subscribeLeaderboard(c);
-    }
-  }
-
-  function subscribeLeaderboard(code){
-    if(!fb.enabled) return;
-
-    // Unsubscribe existing
-    if(liveUnsub){
-      try{ liveUnsub(); }catch{}
-      liveUnsub = null;
-    }
-
-    const r = fb.ref(fb.db, tPath(code));
-    const handler = (snap) => {
-      if(!snap.exists()) return;
-      const t = snap.val();
-      // Re-render quickly without re-subscribing
-      renderLeaderboardFromTournament(t);
-    };
-
-    fb.onValue(r, handler);
-    liveUnsub = () => fb.off(r, "value", handler);
-  }
-
-  function renderLeaderboardFromTournament(t){
-    $("lb_title").textContent = t.meta?.name || "Leaderboard";
-    $("lb_sub").textContent =
-      `${t.meta?.holes || 18} holes • ${t.meta?.shotgun ? "Shotgun start" : "Start on 1"} • Updated ${t.meta?.updatedAt || "—"}`;
-
-    const rows = t.teams.map(team => {
-      const tot = sumTeamScore(t, team.id);
-      const hasPar = (t.meta?.par || []).some(x => Number.isFinite(Number(x)));
-      const toPar = hasPar ? sumTeamToPar(t, team.id) : null;
-      const audit = t.audit?.[team.id] || {};
-      return {
-        teamId: team.id,
-        name: team.name,
-        startHole: team.startHole || 1,
-        sum: tot.sum,
-        played: tot.played,
-        holes: tot.holes,
-        toPar: toPar ? toPar.diff : null,
-        audit
-      };
-    });
-
-    rows.sort((a,b) => {
-      if(a.sum !== b.sum) return a.sum - b.sum;
-      return b.played - a.played;
-    });
-
-    const list = $("lb_list");
-    list.innerHTML = "";
-    rows.forEach((r, idx) => {
-      const div = document.createElement("div");
-      div.className = "lb-item";
-      const auditText = r.audit?.updatedAt
-        ? `Last: ${r.audit.updatedAt} • Hole ${r.audit.hole} • ${r.audit.captainName || "Captain"}`
-        : "No submissions yet";
-
-      div.innerHTML = `
-        <div class="lb-left">
-          <div class="lb-team">${idx+1}. ${escapeHtml(r.name)}</div>
-          <div class="lb-meta">
-            <span class="pill">Start: ${r.startHole}</span>
-            <span class="pill">Played: ${r.played}/${r.holes}</span>
-            ${r.toPar === null ? "" : `<span class="pill">To par: ${escapeHtml(fmtToPar(r.toPar))}</span>`}
-          </div>
-          <div class="hint" style="margin-top:8px;">${escapeHtml(auditText)}</div>
-        </div>
-        <div class="scorebox">
-          <div class="score">${r.sum}</div>
-          <div class="small">${r.played ? "gross strokes" : "—"}</div>
-        </div>
-      `;
-      list.appendChild(div);
-    });
-
-    $("lb_status").textContent = "Live updating…";
-  }
-
+  $("c_publish").addEventListener("click", () => publishTournament().catch(e => { console.error(e); toast("Publish failed."); }));
+
+  // captain
+  $("j_code").addEventListener("change", () => captainLoadCode());
+  $("j_unlock").addEventListener("click", () => captainUnlock().catch(e => { console.error(e); toast("Unlock failed."); }));
+
+  // score
+  $("s_prev").addEventListener("click", async () => { scoreCursor.hole = clamp(scoreCursor.hole-1,1,(activeTournament?.holes||18)); saveSession(); await renderScoreScreen(); });
+  $("s_next").addEventListener("click", async () => { scoreCursor.hole = clamp(scoreCursor.hole+1,1,(activeTournament?.holes||18)); saveSession(); await renderScoreScreen(); });
+  $("s_submit").addEventListener("click", () => submitHoleScore().catch(e => { console.error(e); toast("Submit failed."); }));
+  $("s_lock").addEventListener("click", () => { captain = { code:"", teamId:"", captainName:"", unlocked:false }; saveSession(); toast("Locked."); show("screen-captain-join"); });
+
+  // leaderboard
   $("lb_load").addEventListener("click", async () => {
-    const code = $("lb_code").value;
-    session.code = String(code||"").trim().toUpperCase();
-    sessSave(session);
-    await loadLeaderboard(code, true);
+    const code = ($("lb_code").value||"").trim().toUpperCase();
+    await loadLeaderboardOnce(code);
+    if(fb.enabled && code){
+      startLiveLeaderboard(code);
+      $("lb_status").textContent = "Live updates ON.";
+    }
   });
-
   $("lb_refresh").addEventListener("click", async () => {
-    await loadLeaderboard($("lb_code").value, false);
+    const code = ($("lb_code").value||"").trim().toUpperCase();
+    await loadLeaderboardOnce(code);
     toast("Refreshed.");
   });
-
-  // ========= Copy helpers =========
-  async function copyText(text){
-    const t = String(text||"");
-    try{
-      await navigator.clipboard.writeText(t);
-    }catch{
-      const ta = document.createElement("textarea");
-      ta.value = t;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
-  }
-
   $("copyLB").addEventListener("click", async () => {
-    const cards = Array.from(document.querySelectorAll("#lb_list .lb-item"));
-    const lines = cards.map(c => c.innerText.replace(/\n+/g," • ").trim());
-    const title = $("lb_title").textContent || "Leaderboard";
-    const sub = $("lb_sub").textContent || "";
-    await copyText(`${title}\n${sub}\n\n` + lines.join("\n"));
-    toast("Leaderboard copied.");
+    const code = ($("lb_code").value||"").trim().toUpperCase();
+    const tour = await loadTournament(code);
+    if(!tour){ toast("Load a tournament first."); return; }
+    const rows = tour.teams.map(team => {
+      const totals = sumScores(tour, team.id);
+      const tp = toPar(tour, team.id);
+      return { name: team.name, start: team.startHole, thru: totals.thru, total: totals.thru===0 ? "—" : String(totals.sum), toPar: tp ? fmtToPar(tp.diff) : "" };
+    }).sort((a,b) => (a.total==="—") - (b.total==="—") || (Number(a.total||999999) - Number(b.total||999999)));
+
+    let text = `${tour.name}\nCode: ${tour.code}\n\n`;
+    rows.forEach((r,i) => {
+      text += `${i+1}. ${r.name} • Start H${r.start} • Thru ${r.thru}/${tour.holes} • Total ${r.total}${r.toPar ? " ("+r.toPar+")" : ""}\n`;
+    });
+    await copyText(text.trim());
+    toast("Copied.");
   });
+}
 
-  // ========= Small utilities =========
-  function escapeTextForStatus(s){ return String(s||"").slice(0,160); }
+/* ========= Boot ========= */
+(async function boot(){
+  // Make sure JS is definitely running (this fixes your “Checking…” issue)
+  $("rtStatus").textContent = "Booting…";
 
-  // ========= Auto-load last code (if any) =========
-  setRTStatus();
+  wireUI();
+  await initFirebaseIfConfigured();
 
-  if(session.code){
-    $("lb_code").value = session.code;
-    $("j_code").value = session.code;
-    // preload team list for captain join
-    await loadTournamentToJoin(session.code);
+  // restore session
+  const sess = loadSession();
+  if(sess){
+    activeCode = (sess.activeCode||"").toUpperCase();
+    captain = sess.captain || captain;
+    scoreCursor = sess.scoreCursor || { hole: 1 };
+
+    if(activeCode){
+      $("lb_code").value = activeCode;
+      $("j_code").value = activeCode;
+    }
+
+    if(captain?.unlocked && captain.code && captain.teamId){
+      await renderScoreScreen();
+      show("screen-score");
+      return;
+    }
   }
 
-  // ========= Home buttons =========
-  // Let captain enter scores quickly if already unlocked
-  $("goCaptain").addEventListener("click", async () => {
-    if(session.unlocked && session.code && session.teamId){
-      await openScoreEntry(session.code, session.teamId);
-    }else{
-      show("screen-captain-join");
-    }
-  });
-
-  // ========= Leaderboard default screen info =========
-  $("lb_status").textContent = fb.enabled
-    ? "Enter a code to view live leaderboard."
-    : "Local demo mode. Enter a code saved on this device.";
-
-  // ========= Create screen default hints =========
-  $("c_publishHint").textContent = fb.enabled
-    ? "Publish writes to Firebase so everyone sees updates."
-    : "Local demo mode stores tournament only on this device.";
-
-  // ========= Firebase Rules (example) =========
-  // IMPORTANT: Real security requires auth. This demo uses PIN-hash checks on the client,
-  // which deters casual tampering but is not bulletproof against a determined attacker.
-  //
-  // Recommended: Add Firebase Auth (anonymous) + Cloud Functions to validate PIN on server.
-  //
-  // Minimal RTDB rules for a public leaderboard (read-only) + write for scores/audit:
-  //
-  // {
-  //   "rules": {
-  //     "tournaments": {
-  //       "$code": {
-  //         ".read": true,
-  //         "meta": { ".write": true },
-  //         "teams": { ".write": true },
-  //         "scores": { ".write": true },
-  //         "audit": { ".write": true }
-  //       }
-  //     }
-  //   }
-  // }
-  //
-  // If you want to reduce cheating further without auth:
-  // - Make ".write": false globally
-  // - Use a small admin-only scoring device with service credentials (Cloud Function endpoint)
-  // - Captains submit via a HTTPS endpoint that validates PIN server-side.
+  // default create draft so Create screen works immediately
+  prepCreate();
+  show("screen-home");
+})();
 </script>
 </body>
 </html>
