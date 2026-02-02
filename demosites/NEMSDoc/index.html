@@ -6,8 +6,11 @@
   <title>NEMSDoc — Prefill & Download</title>
   <meta name="theme-color" content="#363639" />
 
-  <!-- pdf-lib -->
+  <!-- pdf-lib (for writing output PDF) -->
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <!-- pdf.js (for preview + click-to-calibrate) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     :root{
@@ -24,7 +27,7 @@
 
       --radius: 18px;
       --shadow: 0 18px 60px rgba(0,0,0,.35);
-      --max: 1040px;
+      --max: 1180px;
     }
 
     *{ box-sizing:border-box; }
@@ -106,14 +109,22 @@
       background: rgba(231,226,216,.09);
       border-color: rgba(231,226,216,.18);
     }
+    .btn-danger{
+      background: rgba(220,38,38,.10);
+      border-color: rgba(220,38,38,.35);
+      color: rgba(231,226,216,.92);
+    }
+    .btn-danger:hover{ background: rgba(220,38,38,.14); }
 
-    main{ padding: 26px 0 54px; }
-    .hero{
+    main{ padding: 20px 0 54px; }
+
+    .layout{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1fr 1fr;
       gap: 14px;
       align-items:start;
     }
+
     .card{
       background: rgba(231,226,216,.05);
       border: 1px solid var(--border);
@@ -137,7 +148,7 @@
 
     h1{
       margin: 0 0 8px;
-      font-size: clamp(22px, 3.4vw, 34px);
+      font-size: clamp(20px, 3vw, 30px);
       line-height: 1.05;
       letter-spacing: -0.6px;
       font-weight: 980;
@@ -149,6 +160,7 @@
       font-size: 13.5px;
       max-width: 80ch;
     }
+
     .kicker{
       display:inline-flex; gap:8px; align-items:center;
       padding: 8px 10px;
@@ -199,6 +211,14 @@
       box-shadow: 0 0 0 4px rgba(112,146,165,.14);
     }
 
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: 12px;
+    }
     .actions{
       display:flex;
       gap: 10px;
@@ -218,25 +238,6 @@
       font-size: 12.5px;
     }
 
-    .rightCol .mini{
-      border-radius: 16px;
-      border: 1px solid rgba(231,226,216,.14);
-      background: rgba(231,226,216,.04);
-      padding: 12px;
-    }
-    .mini h3{
-      margin: 0 0 8px;
-      font-size: 13.5px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .mini p{
-      margin: 0;
-      color: rgba(231,226,216,.74);
-      font-weight: 800;
-      font-size: 12.5px;
-      line-height: 1.5;
-    }
     .status{
       margin-top: 10px;
       padding: 10px 12px;
@@ -250,6 +251,78 @@
     }
     .status.show{ display:block; }
 
+    /* Preview */
+    .previewTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.04);
+      color: rgba(231,226,216,.86);
+      font-weight: 900;
+      font-size: 12.5px;
+    }
+    .toggle input{ transform: scale(1.15); }
+
+    .previewWrap{
+      border-radius: 16px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(12,16,19,.45);
+      padding: 10px;
+      overflow:auto;
+      max-height: 72vh;
+    }
+
+    canvas{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 10px;
+    }
+
+    .calibHud{
+      margin-top: 10px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-weight: 800;
+      font-size: 11.5px;
+      color: rgba(231,226,216,.78);
+      overflow:auto;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.04);
+      max-height: 170px;
+      white-space: pre;
+    }
+
+    .hint{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.04);
+      color: rgba(231,226,216,.75);
+      font-weight: 850;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
     footer{
       border-top: 1px solid var(--hair);
       padding: 18px 0 26px;
@@ -259,9 +332,10 @@
     }
 
     @media (max-width: 980px){
-      .hero{ grid-template-columns: 1fr; }
+      .layout{ grid-template-columns: 1fr; }
       .formGrid{ grid-template-columns: 1fr; }
       .actions{ justify-content:flex-start; }
+      .calibHud{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -283,13 +357,14 @@
   </header>
 
   <main class="container">
-    <div class="hero">
+    <div class="layout">
 
+      <!-- Left: Form -->
       <div class="card">
-        <div class="kicker"><span class="dot"></span> Simple, client-friendly document prefill</div>
+        <div class="kicker"><span class="dot"></span> Fill fields • Generate PDF</div>
         <h1>Select a document, fill the form, download the PDF</h1>
         <p class="lead">
-          Pick a document below. The form will update to match that document. Click <b>Generate & Download</b> to save a filled copy.
+          Calibration mode lets you click exactly where each field should land (page 1 starting now).
         </p>
 
         <div class="formGrid" style="margin-top:16px;">
@@ -313,29 +388,61 @@
         </div>
 
         <div class="help">
-          Notes:
-          <ul style="margin:8px 0 0; padding-left: 18px;">
-            <li>This is a simple overlay fill (typed text drawn onto the PDF).</li>
-            <li>If you want perfect box alignment later, we can fine-tune coordinates per field.</li>
-          </ul>
+          Quick use:
+          <ol style="margin:8px 0 0; padding-left: 18px;">
+            <li>Turn on <b>Calibration Mode</b> (right panel).</li>
+            <li>Select a <b>field</b> to calibrate.</li>
+            <li>Click the exact spot on the PDF where that value should print.</li>
+            <li>Repeat for other fields. Then generate.</li>
+          </ol>
         </div>
 
         <div id="status" class="status"></div>
       </div>
 
-      <div class="rightCol">
-        <div class="mini">
-          <h3>Theme</h3>
-          <p>
-            Colors used: <b>#363639</b>, <b>#7092A5</b>, <b>#467082</b>, <b>#E7E2D8</b>.
-          </p>
+      <!-- Right: Preview + Calibration -->
+      <div class="card">
+        <div class="previewTop">
+          <div class="kicker" style="margin:0;"><span class="dot"></span> PDF preview</div>
+
+          <div class="toggle">
+            <input id="calibToggle" type="checkbox" />
+            <label for="calibToggle" style="cursor:pointer;">Calibration Mode</label>
+          </div>
         </div>
-        <div style="height:12px"></div>
-        <div class="mini">
-          <h3>Output</h3>
-          <p>
-            The generated file downloads locally (nothing is uploaded anywhere).
-          </p>
+
+        <div class="formGrid" style="margin-top:0;">
+          <div class="field">
+            <label for="pageSelect">Preview Page</label>
+            <select id="pageSelect"></select>
+          </div>
+          <div class="field">
+            <label for="calibFieldSelect">Field to calibrate</label>
+            <select id="calibFieldSelect"></select>
+          </div>
+        </div>
+
+        <div class="previewWrap" id="previewWrap">
+          <canvas id="pdfCanvas"></canvas>
+        </div>
+
+        <div class="hint" id="hintBox">
+          Calibration OFF. Toggle ON to click-to-place coordinates.
+        </div>
+
+        <div class="calibHud">
+          <div class="mono" id="lastClickBox">Last click: (none)</div>
+          <div class="mono" id="mapBox">Mapping: (loading…)</div>
+        </div>
+
+        <div class="row">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-outline" id="copyMapBtn" type="button">Copy mapping JSON</button>
+            <button class="btn btn-danger" id="resetMapBtn" type="button">Reset mapping</button>
+          </div>
+          <div style="color:rgba(231,226,216,.68); font-weight:900; font-size:12px;">
+            Tip: calibrate RPA page 1 first
+          </div>
         </div>
       </div>
 
@@ -349,9 +456,13 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // pdf.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
 
-    // ---- Documents (paths relative to demosites/NEMSDoc/index.html) ----
+    // ---------- DOC CONFIG ----------
     const DOCS = {
       rpa: {
         label: "NEMS Patient Rental-Purchase Agreement",
@@ -379,45 +490,8 @@
           { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
           { key:"secondaryId", label:"Secondary Insurance ID #" },
           { key:"secondaryGroup", label:"Secondary Insurance Group #" }
-        ],
-        // Simple overlay coordinates for PAGE 1 (Letter). Tweak later if desired.
-        // PDF-lib uses bottom-left origin.
-        placements: (v) => ([
-          // Top row
-          { page:0, x: 155, y: 594, text: v.firstName },
-          { page:0, x: 340, y: 594, text: v.lastName },
-          { page:0, x: 510, y: 594, text: v.dob },
-
-          { page:0, x: 155, y: 572, text: v.phone },
-          { page:0, x: 340, y: 572, text: v.email },
-
-          // Street/City/State/Zip
-          { page:0, x: 155, y: 520, text: v.street },
-          { page:0, x: 155, y: 497, text: v.city },
-          { page:0, x: 360, y: 497, text: v.state },
-          { page:0, x: 470, y: 497, text: v.zip },
-
-          // Shipping
-          { page:0, x: 155, y: 444, text: v.shipStreet },
-          { page:0, x: 155, y: 421, text: v.shipCity },
-          { page:0, x: 360, y: 421, text: v.shipState },
-          { page:0, x: 470, y: 421, text: v.shipZip },
-
-          // Physician / NPI / Surg date
-          { page:0, x: 220, y: 371, text: v.physician },
-          { page:0, x: 475, y: 371, text: v.npi },
-          { page:0, x: 250, y: 332, text: v.surgDate },
-
-          // Insurance table
-          { page:0, x: 250, y: 246, text: v.primaryCarrier },
-          { page:0, x: 250, y: 223, text: v.primaryId },
-          { page:0, x: 250, y: 200, text: v.primaryGroup },
-          { page:0, x: 250, y: 177, text: v.secondaryCarrier },
-          { page:0, x: 250, y: 154, text: v.secondaryId },
-          { page:0, x: 250, y: 131, text: v.secondaryGroup }
-        ])
+        ]
       },
-
       rpa_sam: {
         label: "NEMS Patient Rental-Purchase Agreement (SAM)",
         file: "assets/NEMS Patient Rental-Purchase Agreement_SAM.pdf",
@@ -444,34 +518,8 @@
           { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
           { key:"secondaryId", label:"Secondary Insurance ID #" },
           { key:"secondaryGroup", label:"Secondary Insurance Group #" }
-        ],
-        placements: (v) => ([
-          // Same layout as rpa page 1
-          { page:0, x: 155, y: 594, text: v.firstName },
-          { page:0, x: 340, y: 594, text: v.lastName },
-          { page:0, x: 510, y: 594, text: v.dob },
-          { page:0, x: 155, y: 572, text: v.phone },
-          { page:0, x: 340, y: 572, text: v.email },
-          { page:0, x: 155, y: 520, text: v.street },
-          { page:0, x: 155, y: 497, text: v.city },
-          { page:0, x: 360, y: 497, text: v.state },
-          { page:0, x: 470, y: 497, text: v.zip },
-          { page:0, x: 155, y: 444, text: v.shipStreet },
-          { page:0, x: 155, y: 421, text: v.shipCity },
-          { page:0, x: 360, y: 421, text: v.shipState },
-          { page:0, x: 470, y: 421, text: v.shipZip },
-          { page:0, x: 220, y: 371, text: v.physician },
-          { page:0, x: 475, y: 371, text: v.npi },
-          { page:0, x: 250, y: 332, text: v.surgDate },
-          { page:0, x: 250, y: 246, text: v.primaryCarrier },
-          { page:0, x: 250, y: 223, text: v.primaryId },
-          { page:0, x: 250, y: 200, text: v.primaryGroup },
-          { page:0, x: 250, y: 177, text: v.secondaryCarrier },
-          { page:0, x: 250, y: 154, text: v.secondaryId },
-          { page:0, x: 250, y: 131, text: v.secondaryGroup }
-        ])
+        ]
       },
-
       nems_dt: {
         label: "NEMS DT (Delivery Ticket)",
         file: "assets/NEMS DT.pdf",
@@ -485,25 +533,8 @@
           { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
           { key:"serial", label:"Serial Number" },
           { key:"patientSigDate", label:"Patient Signature Date" }
-        ],
-        placements: (v) => ([
-          // approximate placements based on typical layout
-          { page:0, x: 115, y: 660, text: v.dos },
-          { page:0, x: 250, y: 660, text: v.patientName },
-          { page:0, x: 470, y: 660, text: v.dob },
-
-          { page:0, x: 150, y: 620, text: v.deliveryAddress },
-          { page:0, x: 165, y: 582, text: v.product },
-
-          { page:0, x: 150, y: 545, text: v.startDate },
-          { page:0, x: 330, y: 545, text: v.stopDate },
-
-          { page:0, x: 170, y: 510, text: v.serial },
-
-          { page:0, x: 160, y: 120, text: v.patientSigDate }
-        ])
+        ]
       },
-
       ortho_dt: {
         label: "Ortho NE DT",
         file: "assets/Ortho NE DT.pdf",
@@ -517,20 +548,8 @@
           { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
           { key:"serial", label:"Serial Number" },
           { key:"patientSigDate", label:"Patient Signature Date" }
-        ],
-        placements: (v) => ([
-          { page:0, x: 115, y: 660, text: v.dos },
-          { page:0, x: 250, y: 660, text: v.patientName },
-          { page:0, x: 470, y: 660, text: v.dob },
-          { page:0, x: 150, y: 620, text: v.deliveryAddress },
-          { page:0, x: 165, y: 582, text: v.product },
-          { page:0, x: 150, y: 545, text: v.startDate },
-          { page:0, x: 330, y: 545, text: v.stopDate },
-          { page:0, x: 170, y: 510, text: v.serial },
-          { page:0, x: 160, y: 120, text: v.patientSigDate }
-        ])
+        ]
       },
-
       pbo_dt: {
         label: "PBO DT",
         file: "assets/PBO DT.pdf",
@@ -544,27 +563,53 @@
           { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
           { key:"serial", label:"Serial Number" },
           { key:"patientSigDate", label:"Patient Signature Date" }
-        ],
-        placements: (v) => ([
-          { page:0, x: 115, y: 660, text: v.dos },
-          { page:0, x: 250, y: 660, text: v.patientName },
-          { page:0, x: 470, y: 660, text: v.dob },
-          { page:0, x: 150, y: 620, text: v.deliveryAddress },
-          { page:0, x: 165, y: 582, text: v.product },
-          { page:0, x: 150, y: 545, text: v.startDate },
-          { page:0, x: 330, y: 545, text: v.stopDate },
-          { page:0, x: 170, y: 510, text: v.serial },
-          { page:0, x: 160, y: 120, text: v.patientSigDate }
-        ])
+        ]
       }
     };
 
-    // ---- UI helpers ----
+    // ---------- UI ----------
     const docSelect = document.getElementById("docSelect");
     const dynamicFields = document.getElementById("dynamicFields");
     const clearBtn = document.getElementById("clearBtn");
     const genBtn = document.getElementById("genBtn");
     const statusEl = document.getElementById("status");
+
+    const calibToggle = document.getElementById("calibToggle");
+    const pageSelect = document.getElementById("pageSelect");
+    const calibFieldSelect = document.getElementById("calibFieldSelect");
+    const hintBox = document.getElementById("hintBox");
+    const lastClickBox = document.getElementById("lastClickBox");
+    const mapBox = document.getElementById("mapBox");
+    const copyMapBtn = document.getElementById("copyMapBtn");
+    const resetMapBtn = document.getElementById("resetMapBtn");
+
+    const canvas = document.getElementById("pdfCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // ---------- STORAGE KEY ----------
+    function mapStorageKey(docKey){ return `nemsdoc_map_${docKey}`; }
+
+    // mapping format:
+    // {
+    //   "pageCount": N,
+    //   "placements": { "fieldKey": { "page": 0, "x": 123.4, "y": 456.7 } }
+    // }
+    function loadMapping(docKey){
+      const raw = localStorage.getItem(mapStorageKey(docKey));
+      if(!raw) return { pageCount: 0, placements: {} };
+      try{
+        const parsed = JSON.parse(raw);
+        if(!parsed || typeof parsed !== "object") return { pageCount: 0, placements: {} };
+        parsed.placements = parsed.placements || {};
+        parsed.pageCount = Number(parsed.pageCount || 0);
+        return parsed;
+      }catch{
+        return { pageCount: 0, placements: {} };
+      }
+    }
+    function saveMapping(docKey, mapping){
+      localStorage.setItem(mapStorageKey(docKey), JSON.stringify(mapping, null, 2));
+    }
 
     function setStatus(msg, isError=false){
       statusEl.textContent = msg;
@@ -597,6 +642,17 @@
       });
     }
 
+    function fillCalibFieldList(){
+      const d = DOCS[docSelect.value];
+      calibFieldSelect.innerHTML = "";
+      d.fields.forEach(f => {
+        const opt = document.createElement("option");
+        opt.value = f.key;
+        opt.textContent = f.label;
+        calibFieldSelect.appendChild(opt);
+      });
+    }
+
     function getValues(){
       const d = DOCS[docSelect.value];
       const out = {};
@@ -616,11 +672,171 @@
       clearStatus();
     }
 
+    // ---------- PDF PREVIEW (pdf.js) ----------
+    let pdfJsDoc = null;
+    let currentViewport = null;
+    let currentScale = 1;
+    let currentPageNumber = 1; // pdf.js is 1-based
+    let currentPageHeightPts = 0; // in PDF points (for coordinate conversion)
+
+    async function loadPreview(){
+      const docKey = docSelect.value;
+      const d = DOCS[docKey];
+      setStatus("Loading preview…");
+
+      try{
+        const loadingTask = pdfjsLib.getDocument(d.file);
+        pdfJsDoc = await loadingTask.promise;
+
+        // populate pageSelect
+        pageSelect.innerHTML = "";
+        for(let i=1; i<=pdfJsDoc.numPages; i++){
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = `Page ${i}`;
+          pageSelect.appendChild(opt);
+        }
+        pageSelect.value = "1";
+        currentPageNumber = 1;
+
+        // update mapping pageCount
+        const mapping = loadMapping(docKey);
+        mapping.pageCount = pdfJsDoc.numPages;
+        saveMapping(docKey, mapping);
+
+        await renderPage(1);
+
+        setStatus("Preview loaded.");
+        setTimeout(clearStatus, 900);
+      }catch(err){
+        console.error(err);
+        setStatus("Error loading preview: " + (err?.message || "failed"), true);
+      }
+    }
+
+    async function renderPage(pageNum){
+      if(!pdfJsDoc) return;
+
+      const page = await pdfJsDoc.getPage(pageNum);
+
+      // Determine scale based on container width
+      const wrap = document.getElementById("previewWrap");
+      const targetWidth = Math.min(wrap.clientWidth - 24, 880); // small padding
+      const unscaledViewport = page.getViewport({ scale: 1 });
+
+      currentScale = targetWidth / unscaledViewport.width;
+      currentViewport = page.getViewport({ scale: currentScale });
+
+      // store PDF page height in points (unscaled viewport height == points @ scale 1)
+      currentPageHeightPts = unscaledViewport.height;
+
+      canvas.width = Math.floor(currentViewport.width);
+      canvas.height = Math.floor(currentViewport.height);
+
+      const renderContext = { canvasContext: ctx, viewport: currentViewport };
+      await page.render(renderContext).promise;
+
+      // draw mapping dots (optional visual)
+      drawMappingMarkers();
+
+      // update mapping box
+      updateMapBox();
+
+      currentPageNumber = pageNum;
+    }
+
+    function drawMappingMarkers(){
+      const docKey = docSelect.value;
+      const mapping = loadMapping(docKey);
+      const placements = mapping.placements || {};
+
+      // redraw page content already rendered; we only draw small markers on top
+      // We'll just overlay markers without clearing, since page render just happened.
+      ctx.save();
+
+      Object.entries(placements).forEach(([fieldKey, p]) => {
+        if(!p || (p.page !== (currentPageNumber - 1))) return;
+
+        // convert pdf-lib coords (bottom-left origin) -> canvas coords (top-left origin)
+        const pdfX = p.x;
+        const pdfYbottom = p.y;
+        const pdfYtop = currentPageHeightPts - pdfYbottom;
+
+        const cx = pdfX * currentScale;
+        const cy = pdfYtop * currentScale;
+
+        // marker
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(112,146,165,.85)";
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(231,226,216,.85)";
+        ctx.stroke();
+      });
+
+      ctx.restore();
+    }
+
+    // ---------- CALIBRATION CLICK ----------
+    function updateHint(){
+      if(calibToggle.checked){
+        hintBox.textContent = "Calibration ON: select a field, then click where the text should print on the PDF.";
+      }else{
+        hintBox.textContent = "Calibration OFF. Toggle ON to click-to-place coordinates.";
+      }
+    }
+
+    function updateMapBox(){
+      const docKey = docSelect.value;
+      const mapping = loadMapping(docKey);
+      mapBox.textContent = JSON.stringify(mapping, null, 2);
+    }
+
+    canvas.addEventListener("click", (e) => {
+      if(!calibToggle.checked) return;
+      if(!currentViewport) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;  // canvas CSS pixels
+      const clickY = e.clientY - rect.top;
+
+      // convert to PDF points:
+      // pdfX_pts = clickX / scale
+      // pdfY_top_pts = clickY / scale
+      // pdfY_bottom_pts = pageHeightPts - pdfY_top_pts
+      const pdfX = clickX / currentScale;
+      const pdfYtop = clickY / currentScale;
+      const pdfYbottom = currentPageHeightPts - pdfYtop;
+
+      const fieldKey = calibFieldSelect.value;
+      const docKey = docSelect.value;
+      const mapping = loadMapping(docKey);
+
+      mapping.placements = mapping.placements || {};
+      mapping.placements[fieldKey] = {
+        page: currentPageNumber - 1,
+        x: round2(pdfX),
+        y: round2(pdfYbottom)
+      };
+      saveMapping(docKey, mapping);
+
+      lastClickBox.textContent =
+        `Last click:\nfield="${fieldKey}"\npage=${currentPageNumber - 1}\nx=${round2(pdfX)}\ny=${round2(pdfYbottom)}`;
+
+      // re-render current page to refresh markers cleanly
+      renderPage(currentPageNumber);
+    });
+
+    function round2(n){ return Math.round(n * 100) / 100; }
+
+    // ---------- GENERATE OUTPUT (pdf-lib) ----------
     async function generate(){
       clearStatus();
       const docKey = docSelect.value;
       const d = DOCS[docKey];
       const values = getValues();
+      const mapping = loadMapping(docKey);
 
       setStatus("Generating…");
 
@@ -635,19 +851,19 @@
 
         const pages = pdfDoc.getPages();
 
-        const textColor = rgb(0.08, 0.08, 0.09); // dark ink
+        const textColor = rgb(0.08, 0.08, 0.09);
         const fontSize = 9.5;
 
-        const placements = d.placements(values);
+        const placements = mapping.placements || {};
 
-        placements.forEach(p => {
-          if(!p.text) return;
+        Object.entries(values).forEach(([fieldKey, text]) => {
+          const p = placements[fieldKey];
+          if(!p) return;
+          const t = String(text || "").replace(/\s+/g, " ").trim();
+          if(!t) return;
+
           const page = pages[p.page];
           if(!page) return;
-
-          // Keep it safe/clean: single line, trimmed.
-          const t = String(p.text).replace(/\s+/g, " ").trim();
-          if(!t) return;
 
           page.drawText(t, {
             x: p.x,
@@ -689,11 +905,57 @@
       }
     }
 
-    // init
-    renderFields();
-    docSelect.addEventListener("change", renderFields);
+    // ---------- BUTTONS ----------
+    copyMapBtn.addEventListener("click", async () => {
+      const mapping = loadMapping(docSelect.value);
+      const txt = JSON.stringify(mapping, null, 2);
+      try{
+        await navigator.clipboard.writeText(txt);
+        setStatus("Mapping JSON copied to clipboard.");
+        setTimeout(clearStatus, 900);
+      }catch{
+        setStatus("Could not copy (clipboard blocked).", true);
+      }
+    });
+
+    resetMapBtn.addEventListener("click", () => {
+      const docKey = docSelect.value;
+      localStorage.removeItem(mapStorageKey(docKey));
+      updateMapBox();
+      lastClickBox.textContent = "Last click: (none)";
+      renderPage(currentPageNumber);
+      setStatus("Mapping reset for this document.");
+      setTimeout(clearStatus, 900);
+    });
+
+    // ---------- EVENTS ----------
+    calibToggle.addEventListener("change", () => {
+      updateHint();
+    });
+
+    pageSelect.addEventListener("change", () => {
+      const n = Number(pageSelect.value || "1");
+      renderPage(n);
+    });
+
+    docSelect.addEventListener("change", async () => {
+      renderFields();
+      fillCalibFieldList();
+      await loadPreview();
+      updateHint();
+      updateMapBox();
+      lastClickBox.textContent = "Last click: (none)";
+    });
+
     clearBtn.addEventListener("click", clearValues);
     genBtn.addEventListener("click", generate);
+
+    // ---------- INIT ----------
+    renderFields();
+    fillCalibFieldList();
+    updateHint();
+    updateMapBox();
+    loadPreview();
   </script>
 </body>
 </html>
