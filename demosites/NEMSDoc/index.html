@@ -3,51 +3,59 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NEMSDoc — Prefill & Download</title>
-  <meta name="theme-color" content="#363639" />
+  <title>New England Medical Solutions — Therm-X Cold Therapy</title>
+  <meta name="description" content="A full-service DME provider, revenue cycle management, and consulting agency. Therm-X cold therapy continuum of care for post-op recovery." />
+  <meta name="theme-color" content="#0f1418" />
 
-  <!-- pdf-lib (for writing output PDF) -->
-  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-
-  <!-- pdf.js (for preview + click-to-calibrate) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Basic OG -->
+  <meta property="og:title" content="New England Medical Solutions" />
+  <meta property="og:description" content="Technology that heals. Solutions that last." />
+  <meta property="og:type" content="website" />
 
   <style>
     :root{
-      --ink:#363639;
-      --muted:#467082;
+      --bg:#0f1418;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(231,226,216,.06);
+      --hair:rgba(231,226,216,.12);
+      --border:rgba(231,226,216,.16);
+
+      --paper:#E7E2D8;
+      --muted:rgba(231,226,216,.78);
+
       --accent:#7092A5;
       --accent2:#467082;
-      --paper:#E7E2D8;
 
-      --bg: #0f1418;
-      --panel: rgba(255,255,255,.06);
-      --border: rgba(231,226,216,.16);
-      --hair: rgba(231,226,216,.10);
+      --danger:#dc2626;
 
-      --radius: 18px;
+      --radius:18px;
       --shadow: 0 18px 60px rgba(0,0,0,.35);
-      --max: 1180px;
+
+      --max: 1140px;
     }
 
     *{ box-sizing:border-box; }
-    html,body{
-      margin:0; padding:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:
-        radial-gradient(900px 520px at 15% -10%, rgba(112,146,165,.22), transparent 62%),
+        radial-gradient(900px 520px at 15% -10%, rgba(112,146,165,.24), transparent 62%),
         radial-gradient(900px 520px at 90% 0%, rgba(70,112,130,.18), transparent 62%),
         linear-gradient(180deg, rgba(231,226,216,.06), transparent 55%),
         var(--bg);
       color: var(--paper);
       line-height: 1.45;
+      overflow-x:hidden;
     }
 
-    a{ color: inherit; text-decoration:none; }
+    a{ color:inherit; text-decoration:none; }
+    img{ max-width:100%; display:block; }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
 
+    /* Header */
     header{
-      position: sticky; top:0; z-index:30;
+      position:sticky; top:0; z-index:50;
       background: rgba(15,20,24,.78);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--hair);
@@ -55,31 +63,56 @@
     .nav{
       display:flex; align-items:center; justify-content:space-between;
       gap: 14px;
-      padding: 14px 0;
+      padding: 12px 0;
     }
-    .brand{
-      display:flex; align-items:center; gap: 12px; min-width:0;
-    }
+    .brand{ display:flex; align-items:center; gap: 12px; min-width:0; }
     .brand img{
-      width: 44px; height: 44px;
+      width: 42px; height: 42px;
       object-fit: contain;
       border-radius: 14px;
       background: rgba(231,226,216,.06);
       border: 1px solid var(--hair);
       padding: 8px;
     }
-    .brand-title{ display:flex; flex-direction:column; gap: 2px; min-width:0; }
+    .brand-title{ display:flex; flex-direction:column; gap:2px; min-width:0; }
     .brand-title strong{
       font-weight: 950;
       letter-spacing: .2px;
       font-size: 13.5px;
-      color: var(--paper);
     }
     .brand-title span{
       font-weight: 800;
       font-size: 12px;
-      color: rgba(231,226,216,.72);
-      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      color: rgba(231,226,216,.70);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 56vw;
+    }
+
+    .navlinks{
+      display:flex; align-items:center; gap: 12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .navlinks a{
+      font-weight: 900;
+      font-size: 12.5px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: rgba(231,226,216,.86);
+      transition: background .2s ease, border-color .2s ease, transform .08s ease;
+      white-space:nowrap;
+    }
+    .navlinks a:hover{
+      background: rgba(231,226,216,.06);
+      border-color: rgba(231,226,216,.12);
+    }
+    .navlinks a.active{
+      background: rgba(112,146,165,.16);
+      border-color: rgba(112,146,165,.38);
+      color: rgba(231,226,216,.95);
     }
 
     .btn{
@@ -103,28 +136,125 @@
     .btn-outline{
       background: rgba(231,226,216,.06);
       color: var(--paper);
-      border-color: var(--hair);
+      border-color: rgba(231,226,216,.14);
     }
     .btn-outline:hover{
       background: rgba(231,226,216,.09);
       border-color: rgba(231,226,216,.18);
     }
-    .btn-danger{
-      background: rgba(220,38,38,.10);
-      border-color: rgba(220,38,38,.35);
-      color: rgba(231,226,216,.92);
+    .btn-ghost{
+      background: transparent;
+      border-color: rgba(231,226,216,.12);
+      color: rgba(231,226,216,.90);
     }
-    .btn-danger:hover{ background: rgba(220,38,38,.14); }
+    .btn-ghost:hover{ background: rgba(231,226,216,.06); }
 
-    main{ padding: 20px 0 54px; }
+    .menuBtn{ display:none; }
 
-    .layout{
+    /* Hero */
+    main{ padding: 18px 0 56px; }
+    section{ scroll-margin-top: 86px; }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(15,20,24,.10), rgba(15,20,24,.74)),
+        url("assets/BackPanel_b.png");
+      background-size: cover;
+      background-position: center;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(680px 280px at 12% 10%, rgba(112,146,165,.26), transparent 66%),
+        radial-gradient(680px 280px at 92% 0%, rgba(70,112,130,.22), transparent 66%);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      padding: 54px 22px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items:center;
+    }
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(231,226,216,.06);
+      border: 1px solid rgba(231,226,216,.12);
+      color: rgba(231,226,216,.86);
+      font-weight: 900;
+      font-size: 12px;
+      width: fit-content;
+      margin-bottom: 12px;
+    }
+    .dot{
+      width: 9px; height: 9px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4.2vw, 44px);
+      line-height: 1.02;
+      letter-spacing: -0.9px;
+      font-weight: 980;
+    }
+    .lead{
+      margin: 0 0 18px;
+      color: rgba(231,226,216,.82);
+      font-weight: 850;
+      font-size: 14px;
+      max-width: 72ch;
+    }
+    .hero-actions{ display:flex; gap: 10px; flex-wrap:wrap; align-items:center; }
+    .hero-card{
+      background: rgba(231,226,216,.06);
+      border: 1px solid rgba(231,226,216,.16);
+      border-radius: 22px;
+      padding: 16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 220px at 20% 10%, rgba(112,146,165,.22), transparent 65%),
+        radial-gradient(520px 220px at 90% 0%, rgba(70,112,130,.18), transparent 65%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .hero-card > *{ position:relative; }
+    .statGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .stat{
+      border-radius: 16px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(12,16,19,.45);
+      padding: 12px;
+    }
+    .stat strong{ display:block; font-weight: 980; font-size: 13px; }
+    .stat span{ display:block; color: rgba(231,226,216,.72); font-weight: 850; font-size: 12px; margin-top: 2px; }
+
+    /* Cards / layout */
+    .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
-      align-items:start;
+      margin-top: 14px;
     }
-
     .card{
       background: rgba(231,226,216,.05);
       border: 1px solid var(--border);
@@ -142,60 +272,192 @@
         radial-gradient(520px 220px at 12% 10%, rgba(112,146,165,.20), transparent 65%),
         radial-gradient(520px 220px at 92% 0%, rgba(70,112,130,.18), transparent 65%);
       pointer-events:none;
-      opacity: .9;
+      opacity: .8;
     }
     .card > *{ position:relative; }
 
-    h1{
-      margin: 0 0 8px;
-      font-size: clamp(20px, 3vw, 30px);
-      line-height: 1.05;
-      letter-spacing: -0.6px;
+    .sectionTitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap: 12px;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .sectionTitle h2{
+      margin:0;
+      font-size: 20px;
+      letter-spacing: -0.3px;
       font-weight: 980;
     }
-    .lead{
-      margin: 0;
-      color: rgba(231,226,216,.78);
-      font-weight: 800;
-      font-size: 13.5px;
-      max-width: 80ch;
+    .sectionTitle p{
+      margin:0;
+      color: rgba(231,226,216,.70);
+      font-weight: 850;
+      font-size: 12.5px;
+      max-width: 68ch;
     }
 
-    .kicker{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(231,226,216,.06);
-      border: 1px solid var(--hair);
-      color: rgba(231,226,216,.86);
+    .pillrow{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
+    .pill{
       font-weight: 900;
       font-size: 12px;
-      width: fit-content;
-      margin-bottom: 12px;
-    }
-    .dot{
-      width: 9px; height: 9px; border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: rgba(231,226,216,.82);
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(231,226,216,.05);
+      padding: 8px 10px;
+      border-radius: 999px;
     }
 
+    .split{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    .media{
+      border-radius: 18px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(12,16,19,.45);
+      overflow:hidden;
+    }
+    .media .imgWrap{
+      aspect-ratio: 16 / 10;
+      background:
+        radial-gradient(900px 520px at 15% -10%, rgba(112,146,165,.20), transparent 62%),
+        rgba(12,16,19,.45);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 14px;
+    }
+    .media img{ width: 100%; height: 100%; object-fit: contain; }
+
+    ul.clean{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(231,226,216,.82);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    ul.clean li{ margin: 8px 0; }
+
+    /* Product cards */
+    .productGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .productCard{
+      border-radius: 18px;
+      border: 1px solid rgba(231,226,216,.16);
+      background: rgba(12,16,19,.45);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 100%;
+    }
+    .productTop{
+      padding: 14px 14px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .productTop strong{
+      font-weight: 980;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+      display:block;
+    }
+    .productTop span{
+      display:block;
+      margin-top: 4px;
+      color: rgba(231,226,216,.70);
+      font-weight: 850;
+      font-size: 12.5px;
+    }
+    .tag{
+      font-weight: 950;
+      font-size: 11.5px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(112,146,165,.40);
+      background: rgba(112,146,165,.12);
+      white-space:nowrap;
+    }
+    .productImg{
+      aspect-ratio: 16/9;
+      padding: 12px 14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(520px 220px at 12% 10%, rgba(112,146,165,.18), transparent 65%),
+        radial-gradient(520px 220px at 92% 0%, rgba(70,112,130,.14), transparent 65%),
+        rgba(12,16,19,.30);
+      border-top: 1px solid rgba(231,226,216,.10);
+      border-bottom: 1px solid rgba(231,226,216,.10);
+    }
+    .productImg img{ width: 100%; height: 100%; object-fit: contain; }
+    .productBody{ padding: 12px 14px 14px; }
+    .productBody p{
+      margin: 0 0 10px;
+      color: rgba(231,226,216,.82);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .productBody .actions{ display:flex; gap: 10px; flex-wrap:wrap; }
+
+    /* FAQ */
+    .faq{
+      border-radius: 16px;
+      border: 1px solid rgba(231,226,216,.14);
+      background: rgba(12,16,19,.45);
+      overflow:hidden;
+    }
+    details{
+      border-top: 1px solid rgba(231,226,216,.10);
+      padding: 12px 14px;
+    }
+    details:first-child{ border-top:0; }
+    summary{
+      cursor:pointer;
+      font-weight: 950;
+      font-size: 13.5px;
+      color: rgba(231,226,216,.92);
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    summary:after{
+      content:"+";
+      float:right;
+      color: rgba(231,226,216,.70);
+      font-weight: 980;
+    }
+    details[open] summary:after{ content:"–"; }
+    .faq p{
+      margin: 10px 0 0;
+      color: rgba(231,226,216,.78);
+      font-weight: 850;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* Contact */
     .formGrid{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 10px;
     }
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
+    .field{ display:flex; flex-direction:column; gap: 6px; }
     .field label{
       font-size: 12px;
       font-weight: 900;
       letter-spacing: .2px;
       color: rgba(231,226,216,.86);
     }
-    .input, select{
+    .input, select, textarea{
       width:100%;
       padding: 11px 12px;
       border-radius: 14px;
@@ -205,39 +467,24 @@
       outline:none;
       font-weight: 800;
       font-size: 13.5px;
+      resize: vertical;
     }
-    .input:focus, select:focus{
+    textarea{ min-height: 120px; }
+    .input:focus, select:focus, textarea:focus{
       border-color: rgba(112,146,165,.60);
       box-shadow: 0 0 0 4px rgba(112,146,165,.14);
     }
-
-    .row{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      margin-top: 12px;
-    }
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      margin-top: 14px;
-    }
-
     .help{
       margin-top: 10px;
-      padding: 12px 12px;
+      padding: 12px;
       border-radius: 14px;
       border: 1px solid rgba(231,226,216,.14);
       background: rgba(231,226,216,.04);
       color: rgba(231,226,216,.74);
-      font-weight: 800;
+      font-weight: 850;
       font-size: 12.5px;
+      line-height: 1.55;
     }
-
     .status{
       margin-top: 10px;
       padding: 10px 12px;
@@ -250,92 +497,62 @@
       display:none;
     }
     .status.show{ display:block; }
-
-    /* Preview */
-    .previewTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-bottom: 10px;
+    .status.error{
+      border-color: rgba(220,38,38,.35);
+      background: rgba(220,38,38,.10);
     }
 
-    .toggle{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(231,226,216,.14);
-      background: rgba(231,226,216,.04);
-      color: rgba(231,226,216,.86);
-      font-weight: 900;
-      font-size: 12.5px;
-    }
-    .toggle input{ transform: scale(1.15); }
-
-    .previewWrap{
-      border-radius: 16px;
-      border: 1px solid rgba(231,226,216,.14);
-      background: rgba(12,16,19,.45);
-      padding: 10px;
-      overflow:auto;
-      max-height: 72vh;
-    }
-
-    canvas{
-      width: 100%;
-      height: auto;
-      display:block;
-      border-radius: 10px;
-    }
-
-    .calibHud{
-      margin-top: 10px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-weight: 800;
-      font-size: 11.5px;
-      color: rgba(231,226,216,.78);
-      overflow:auto;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(231,226,216,.14);
-      background: rgba(231,226,216,.04);
-      max-height: 170px;
-      white-space: pre;
-    }
-
-    .hint{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(231,226,216,.14);
-      background: rgba(231,226,216,.04);
-      color: rgba(231,226,216,.75);
-      font-weight: 850;
-      font-size: 12.5px;
-      line-height: 1.5;
-    }
-
+    /* Footer */
     footer{
       border-top: 1px solid var(--hair);
       padding: 18px 0 26px;
       color: rgba(231,226,216,.60);
       font-size: 12px;
       text-align:center;
+      margin-top: 26px;
+    }
+    .footlinks{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+      margin-top: 10px;
+      color: rgba(231,226,216,.70);
+      font-weight: 900;
+    }
+    .footlinks a{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(231,226,216,.10);
+      background: rgba(231,226,216,.04);
+    }
+    .footlinks a:hover{
+      border-color: rgba(231,226,216,.16);
+      background: rgba(231,226,216,.06);
     }
 
+    /* Mobile */
     @media (max-width: 980px){
-      .layout{ grid-template-columns: 1fr; }
+      .hero-inner{ grid-template-columns: 1fr; padding: 38px 16px; }
+      .split{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .productGrid{ grid-template-columns: 1fr; }
       .formGrid{ grid-template-columns: 1fr; }
-      .actions{ justify-content:flex-start; }
-      .calibHud{ grid-template-columns: 1fr; }
+      .brand-title span{ max-width: 72vw; }
+
+      .menuBtn{ display:inline-flex; }
+      .navlinks{
+        position: fixed;
+        top: 66px;
+        right: 14px;
+        left: 14px;
+        z-index: 60;
+        display:none;
+        padding: 12px;
+        border-radius: 18px;
+        border: 1px solid rgba(231,226,216,.16);
+        background: rgba(15,20,24,.92);
+        box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      }
+      .navlinks.open{ display:flex; }
+      .navlinks a{ flex: 1 1 auto; text-align:center; }
     }
   </style>
 </head>
@@ -343,619 +560,766 @@
 <body>
   <header>
     <div class="container nav">
-      <div class="brand">
+      <a class="brand" href="#home" aria-label="New England Medical Solutions Home">
         <img src="assets/NEMS Logo Transparent.png" alt="NEMS Logo" />
         <div class="brand-title">
-          <strong>NEMSDoc</strong>
-          <span>Prefill a document • Download a filled PDF</span>
+          <strong>New England Medical Solutions</strong>
+          <span>Technology That Heals. Solutions That Last.</span>
         </div>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-outline" href="../../demos.html">Back to Demos</a>
+      </a>
+
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button class="btn btn-ghost menuBtn" id="menuBtn" type="button" aria-label="Open menu">Menu</button>
+        <nav class="navlinks" id="navLinks" aria-label="Primary">
+          <a href="#home" data-link>Home</a>
+          <a href="#about" data-link>About</a>
+          <a href="#faqs" data-link>FAQs</a>
+          <a href="#products" data-link>Products</a>
+          <a href="#contact" data-link>Contact</a>
+          <a href="#privacy" data-link>Privacy Policy</a>
+          <a class="btn btn-outline" href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Store</a>
+          <a href="#login" data-link title="Placeholder">Login</a>
+        </nav>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <div class="layout">
+    <!-- HERO -->
+    <section id="home" class="hero" aria-label="Home">
+      <div class="hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Full-Service DME • RCM • Consulting</div>
+          <h1>A full-service DME provider, Revenue Cycle Management, &amp; Consulting agency.</h1>
+          <p class="lead">
+            New England Medical Solutions has one outcome in mind: yours.
+            From post-anesthesia care to home recovery to physical therapy, Therm-X supports
+            a continuum of care with cold therapy and compression — a drug-free, simple,
+            and effective way to get you back on your feet, fast.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#products">Explore Therm-X</a>
+            <a class="btn btn-outline" href="#contact">Contact Us</a>
+            <a class="btn btn-outline" href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Marketplace</a>
+          </div>
 
-      <!-- Left: Form -->
-      <div class="card">
-        <div class="kicker"><span class="dot"></span> Fill fields • Generate PDF</div>
-        <h1>Select a document, fill the form, download the PDF</h1>
-        <p class="lead">
-          Calibration mode lets you click exactly where each field should land (page 1 starting now).
-        </p>
-
-        <div class="formGrid" style="margin-top:16px;">
-          <div class="field" style="grid-column: 1 / -1;">
-            <label for="docSelect">Document</label>
-            <select id="docSelect">
-              <option value="rpa">NEMS Patient Rental-Purchase Agreement</option>
-              <option value="rpa_sam">NEMS Patient Rental-Purchase Agreement (SAM)</option>
-              <option value="nems_dt">NEMS DT (Delivery Ticket)</option>
-              <option value="ortho_dt">Ortho NE DT</option>
-              <option value="pbo_dt">PBO DT</option>
-            </select>
+          <div class="pillrow" aria-label="Highlights">
+            <div class="pill">Cold therapy + compression</div>
+            <div class="pill">Reduces inflammation &amp; swelling</div>
+            <div class="pill">Improves range of motion</div>
+            <div class="pill">Helps reduce opioid use</div>
           </div>
         </div>
 
-        <div id="dynamicFields" class="formGrid"></div>
+        <aside class="hero-card" aria-label="Quick info">
+          <div class="kicker" style="margin-bottom:10px;"><span class="dot"></span> Headquartered in New Hampshire</div>
+          <div style="font-weight:950; font-size:14px; margin-bottom:6px;">Therm-X continuum of care</div>
+          <div style="color:rgba(231,226,216,.78); font-weight:850; font-size:13px;">
+            Use through the entire recovery process — post anesthesia care, home use, and physical therapy.
+          </div>
 
-        <div class="actions">
-          <button class="btn btn-outline" id="clearBtn" type="button">Clear</button>
-          <button class="btn btn-primary" id="genBtn" type="button">Generate & Download</button>
-        </div>
+          <div class="statGrid" role="list" aria-label="Key benefits">
+            <div class="stat" role="listitem">
+              <strong>Inflammation control</strong>
+              <span>Pain, stiffness, swelling</span>
+            </div>
+            <div class="stat" role="listitem">
+              <strong>Better mobility</strong>
+              <span>Range of motion support</span>
+            </div>
+            <div class="stat" role="listitem">
+              <strong>Drug-free option</strong>
+              <span>Recovery support without opioids</span>
+            </div>
+            <div class="stat" role="listitem">
+              <strong>Simple setup</strong>
+              <span>Portable, patient friendly</span>
+            </div>
+          </div>
 
-        <div class="help">
-          Quick use:
-          <ol style="margin:8px 0 0; padding-left: 18px;">
-            <li>Turn on <b>Calibration Mode</b> (right panel).</li>
-            <li>Select a <b>field</b> to calibrate.</li>
-            <li>Click the exact spot on the PDF where that value should print.</li>
-            <li>Repeat for other fields. Then generate.</li>
-          </ol>
-        </div>
-
-        <div id="status" class="status"></div>
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#contact">Request Info</a>
+            <a class="btn btn-outline" href="#faqs">Read FAQs</a>
+          </div>
+        </aside>
       </div>
+    </section>
 
-      <!-- Right: Preview + Calibration -->
-      <div class="card">
-        <div class="previewTop">
-          <div class="kicker" style="margin:0;"><span class="dot"></span> PDF preview</div>
-
-          <div class="toggle">
-            <input id="calibToggle" type="checkbox" />
-            <label for="calibToggle" style="cursor:pointer;">Calibration Mode</label>
-          </div>
-        </div>
-
-        <div class="formGrid" style="margin-top:0;">
-          <div class="field">
-            <label for="pageSelect">Preview Page</label>
-            <select id="pageSelect"></select>
-          </div>
-          <div class="field">
-            <label for="calibFieldSelect">Field to calibrate</label>
-            <select id="calibFieldSelect"></select>
-          </div>
-        </div>
-
-        <div class="previewWrap" id="previewWrap">
-          <canvas id="pdfCanvas"></canvas>
-        </div>
-
-        <div class="hint" id="hintBox">
-          Calibration OFF. Toggle ON to click-to-place coordinates.
-        </div>
-
-        <div class="calibHud">
-          <div class="mono" id="lastClickBox">Last click: (none)</div>
-          <div class="mono" id="mapBox">Mapping: (loading…)</div>
-        </div>
-
-        <div class="row">
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn btn-outline" id="copyMapBtn" type="button">Copy mapping JSON</button>
-            <button class="btn btn-danger" id="resetMapBtn" type="button">Reset mapping</button>
-          </div>
-          <div style="color:rgba(231,226,216,.68); font-weight:900; font-size:12px;">
-            Tip: calibrate RPA page 1 first
-          </div>
+    <!-- ABOUT -->
+    <section id="about" aria-label="About">
+      <div class="sectionTitle">
+        <div>
+          <h2>About New England Medical Solutions</h2>
+          <p>
+            Founded in 2021, NEMS established itself as an optimal solution for healthcare providers’ cold therapy needs
+            while providing high-touch service for patients.
+          </p>
         </div>
       </div>
 
-    </div>
+      <div class="card">
+        <div class="split">
+          <div>
+            <div class="kicker"><span class="dot"></span> Our approach</div>
+            <p class="lead" style="margin:0;">
+              After injury or surgery, the body initiates a localized response commonly known as inflammation —
+              pain, redness, swelling, and loss of function. While inflammation signals healing, it can become chronic
+              and detrimental if therapeutic care is not initiated promptly.
+            </p>
+
+            <ul class="clean">
+              <li>Cold therapy + compression can reduce inflammation, pain, stiffness, and swelling.</li>
+              <li>Improved pain control increases the likelihood of independence from narcotic (opioid) use.</li>
+              <li>Therm-X supports recovery from PACU to home to physical therapy.</li>
+            </ul>
+
+            <div class="pillrow" style="margin-top:12px;">
+              <div class="pill">DME Provider</div>
+              <div class="pill">Revenue Cycle Management</div>
+              <div class="pill">Consulting</div>
+            </div>
+          </div>
+
+          <div class="media" aria-label="Therm-X imagery">
+            <div class="imgWrap">
+              <!-- If THERMXX.png is your main hero product image, this will show it. -->
+              <img src="assets/THERMXX.png" alt="Therm-X product image" />
+            </div>
+            <div style="padding:12px 14px; color:rgba(231,226,216,.72); font-weight:850; font-size:12.5px;">
+              Flagship distribution product: <b>Therm-X</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" aria-label="Products">
+      <div class="sectionTitle">
+        <div>
+          <h2>Products</h2>
+          <p>
+            Therm-X options for patients and clinicians. Need purchasing help or insurance ordering?
+            Use the buttons below or contact us.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="productGrid">
+          <!-- Therm-X Home -->
+          <div class="productCard">
+            <div class="productTop">
+              <div>
+                <strong>Therm-X Home</strong>
+                <span>For patients • Post-surgical, acute pain, and chronic pain</span>
+              </div>
+              <div class="tag">For Patients</div>
+            </div>
+
+            <div class="productImg" aria-label="Therm-X Home image">
+              <img src="assets/Main Unit_d_SILO.png" alt="Therm-X main unit" />
+            </div>
+
+            <div class="productBody">
+              <p>
+                Recommended for post-surgical use, acute pain, and chronic pain.
+              </p>
+              <ul class="clean" style="margin-top:0;">
+                <li>Controls pain and swelling</li>
+                <li>Increases range of motion</li>
+                <li>Reduces opioid consumption</li>
+                <li>DVT prophylaxis support by improving circulation</li>
+              </ul>
+
+              <div class="actions" style="margin-top:12px;">
+                <a class="btn btn-primary" href="#contact">How to Order Through Insurance</a>
+                <a class="btn btn-outline" href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Marketplace</a>
+              </div>
+
+              <div class="help" style="margin-top:12px;">
+                Tip: If you need a Therm-X brochure PDF added, place it in <code>assets/</code> and link it here.
+              </div>
+            </div>
+          </div>
+
+          <!-- Therm-X AT -->
+          <div class="productCard">
+            <div class="productTop">
+              <div>
+                <strong>Therm-X AT</strong>
+                <span>For clinicians • Portable cold, heat, contrast, and compression therapy</span>
+              </div>
+              <div class="tag">For Clinicians</div>
+            </div>
+
+            <div class="productImg" aria-label="Therm-X AT image">
+              <img src="assets/BackPanel_b.png" alt="Therm-X background panel" />
+            </div>
+
+            <div class="productBody">
+              <p>
+                Replace hot packs, cold packs, hot pack heaters, and ice machines with Therm-X AT.
+                One portable device combining cold, heat, contrast, and compression therapy.
+              </p>
+
+              <div class="actions">
+                <a class="btn btn-primary" href="#contact">How to Purchase for the Clinic</a>
+                <a class="btn btn-outline" href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Marketplace</a>
+              </div>
+
+              <div class="help" style="margin-top:12px;">
+                Clinic onboarding available — contact us for ordering workflows, delivery options, and support.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:14px;">
+          <div class="card" style="box-shadow:none;">
+            <div class="kicker"><span class="dot"></span> Common documents</div>
+            <p class="lead" style="margin:0;">
+              These are currently linked from your <code>assets/</code> folder. Add/replace PDFs as needed.
+            </p>
+            <div class="pillrow" style="margin-top:12px;">
+              <a class="pill" href="assets/NEMS Patient Rental-Purchase Agreement.pdf" target="_blank" rel="noopener">Patient Rental-Purchase Agreement</a>
+              <a class="pill" href="assets/NEMS Patient Rental-Purchase Agreement_SAM.pdf" target="_blank" rel="noopener">Patient RPA (SAM)</a>
+              <a class="pill" href="assets/NEMS DT.pdf" target="_blank" rel="noopener">NEMS Delivery Ticket</a>
+              <a class="pill" href="assets/Ortho NE DT.pdf" target="_blank" rel="noopener">Ortho NE DT</a>
+              <a class="pill" href="assets/PBO DT.pdf" target="_blank" rel="noopener">PBO DT</a>
+            </div>
+          </div>
+
+          <div class="card" style="box-shadow:none;">
+            <div class="kicker"><span class="dot"></span> Support</div>
+            <p class="lead" style="margin:0;">
+              Need help selecting a Therm-X option, delivery support, or clinic implementation?
+              We’ll route your request to the right team.
+            </p>
+            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn btn-primary" href="#contact">Contact Support</a>
+              <a class="btn btn-outline" href="#faqs">FAQ Library</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQs -->
+    <section id="faqs" aria-label="Frequently Asked Questions">
+      <div class="sectionTitle">
+        <div>
+          <h2>Frequently Asked Questions</h2>
+          <p>Answers to common Therm-X questions: insurance, delivery, setup, and usage.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="kicker"><span class="dot"></span> About the Therm-X</div>
+        <div class="faq" role="region" aria-label="FAQ list">
+          <details>
+            <summary>What is the Therm-X?</summary>
+            <p>
+              Therm-X is a cold therapy and compression system designed to help reduce inflammation, pain, stiffness, and swelling
+              after injury or surgery, while supporting range of motion throughout recovery.
+            </p>
+          </details>
+          <details>
+            <summary>Why do I need the Therm-X?</summary>
+            <p>
+              Inflammation is a natural healing response, but without timely therapeutic care it can become chronic and detrimental.
+              Cold therapy and compression can help manage symptoms and support a smoother recovery.
+            </p>
+          </details>
+        </div>
+
+        <div class="kicker" style="margin-top:14px;"><span class="dot"></span> Insurance</div>
+        <div class="faq">
+          <details>
+            <summary>Is the Therm-X covered by insurance?</summary>
+            <p>
+              Coverage depends on your plan and clinical documentation. Use the contact form below and select
+              “Order Through Insurance Inquiry” so we can guide you through the next steps.
+            </p>
+          </details>
+          <details>
+            <summary>Does the Therm-X cost me anything?</summary>
+            <p>
+              Patient responsibility varies by insurance plan. We can review options with you and outline any expected costs
+              before you commit.
+            </p>
+          </details>
+          <details>
+            <summary>How long can I keep the Therm-X, and what if I want to keep it longer?</summary>
+            <p>
+              Rental/purchase timelines vary by program and insurance. Contact us with your details and we’ll explain available
+              extensions or purchase options.
+            </p>
+          </details>
+        </div>
+
+        <div class="kicker" style="margin-top:14px;"><span class="dot"></span> What’s Next?</div>
+        <div class="faq">
+          <details>
+            <summary>What can I expect for scheduling and delivery of the Therm-X?</summary>
+            <p>
+              We coordinate delivery based on your location and clinical timeline. If in-person delivery isn’t possible,
+              we can ship with setup guidance and return instructions.
+            </p>
+          </details>
+          <details>
+            <summary>Where in my house should I set up the Therm-X?</summary>
+            <p>
+              Choose a stable surface near an outlet, with enough space to sit comfortably during sessions. We can provide
+              simple setup recommendations based on your home environment.
+            </p>
+          </details>
+          <details>
+            <summary>What if I don’t live close enough for in-person delivery; how do I get the Therm-X?</summary>
+            <p>
+              We can ship the Therm-X. You’ll receive instructions for setup and use. Contact us and we’ll confirm logistics.
+            </p>
+          </details>
+          <details>
+            <summary>What if I received the Therm-X by shipment. How do I return it?</summary>
+            <p>
+              Return steps depend on the program. Contact us and we’ll provide the correct return process for your situation.
+            </p>
+          </details>
+        </div>
+
+        <div class="kicker" style="margin-top:14px;"><span class="dot"></span> Use &amp; Troubleshooting</div>
+        <div class="faq">
+          <details>
+            <summary>How often should I use the Therm-X?</summary>
+            <p>
+              Follow your clinician’s guidance. If you need help aligning a schedule with your recovery plan, reach out and we’ll assist.
+            </p>
+          </details>
+          <details>
+            <summary>Can I use the Therm-X while I sleep?</summary>
+            <p>
+              Follow clinical instructions for safe usage timing and duration. If you have questions about overnight use, contact us.
+            </p>
+          </details>
+          <details>
+            <summary>Can the garment be applied directly on my skin?</summary>
+            <p>
+              Usage depends on garment type and clinical guidance. Contact us for best practices to prevent skin irritation.
+            </p>
+          </details>
+          <details>
+            <summary>Can I make the treatment colder or change the compression settings?</summary>
+            <p>
+              Settings vary by model and clinical recommendation. If you need help adjusting your device safely, we can walk you through it.
+            </p>
+          </details>
+          <details>
+            <summary>I just started using the Therm-X, but it doesn’t feel cold—what should I do?</summary>
+            <p>
+              Check setup and operating mode. If issues persist, contact us and we’ll troubleshoot with you.
+            </p>
+          </details>
+          <details>
+            <summary>Will I ever need to add coolant?</summary>
+            <p>
+              Device maintenance depends on the model and configuration. Contact us for the correct maintenance steps for your unit.
+            </p>
+          </details>
+          <details>
+            <summary>Who should I call if I have technical questions or trouble?</summary>
+            <p>
+              Use the contact section below (phone or email). We’ll route you to the right support resource quickly.
+            </p>
+          </details>
+          <details>
+            <summary>Can I move the Therm-X from one room to another?</summary>
+            <p>
+              Yes, it’s designed to be portable. Use care with tubing and power connections when relocating.
+            </p>
+          </details>
+          <details>
+            <summary>I’m going out of town next week; can I bring it with me?</summary>
+            <p>
+              In many cases, yes. Confirm packing and usage instructions with us so travel doesn’t disrupt therapy.
+            </p>
+          </details>
+          <details>
+            <summary>The hospital sent me home with an ice bucket; why do I need another device?</summary>
+            <p>
+              Therm-X provides controlled cold therapy with optional compression support to help manage inflammation and recovery more consistently.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" aria-label="Contact">
+      <div class="sectionTitle">
+        <div>
+          <h2>Contact</h2>
+          <p>Purchasing, insurance ordering, clinic onboarding, delivery, or support — message us and we’ll respond quickly.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="split">
+          <div>
+            <div class="kicker"><span class="dot"></span> Reach us directly</div>
+            <p class="lead" style="margin:0;">
+              If you need immediate assistance with your Therm-X, please call the number below.
+            </p>
+
+            <div style="margin-top:14px; padding:12px 14px; border-radius:16px; border:1px solid rgba(231,226,216,.14); background: rgba(12,16,19,.45);">
+              <div style="font-weight:980; font-size:13px;">New England Medical Solutions</div>
+              <div style="margin-top:8px; color:rgba(231,226,216,.82); font-weight:900;">
+                <div>Email: <a href="mailto:info@NewEnglandMedicalSolutions.com">info@NewEnglandMedicalSolutions.com</a></div>
+                <div>Phone: <a href="tel:+15082047042">(508) 204-7042</a></div>
+              </div>
+              <div style="margin-top:10px; color:rgba(231,226,216,.70); font-weight:850; font-size:12.5px;">
+                PO Box 10232<br/>
+                Bedford, New Hampshire 03110
+              </div>
+            </div>
+
+            <div class="help">
+              <b>Marketplace:</b> You can purchase directly via our Square link:
+              <a href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener" style="text-decoration:underline;">Open Marketplace</a>.
+            </div>
+          </div>
+
+          <div>
+            <div class="kicker"><span class="dot"></span> Send a message</div>
+            <form id="contactForm" novalidate>
+              <div class="formGrid">
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label for="subject">Subject (required)</label>
+                  <select id="subject" required>
+                    <option value="">Select…</option>
+                    <option>Purchasing Inquiry</option>
+                    <option>Order Through Insurance Inquiry</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="firstName">First Name (required)</label>
+                  <input class="input" id="firstName" autocomplete="given-name" required />
+                </div>
+                <div class="field">
+                  <label for="lastName">Last Name (required)</label>
+                  <input class="input" id="lastName" autocomplete="family-name" required />
+                </div>
+
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label for="phone">Phone</label>
+                  <input class="input" id="phone" autocomplete="tel" />
+                </div>
+
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label for="email">Email (required)</label>
+                  <input class="input" id="email" type="email" autocomplete="email" required />
+                </div>
+
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label for="message">Message (required)</label>
+                  <textarea id="message" required placeholder="How can we help?"></textarea>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:12px;">
+                <button class="btn btn-outline" id="clearContact" type="button">Clear</button>
+                <button class="btn btn-primary" type="submit">Send</button>
+              </div>
+
+              <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+
+              <div class="help">
+                This form opens your email client to send the message (no server required).
+                If you want the form to submit to a database/CRM instead, tell me what system you’re using and I’ll wire it up.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section id="privacy" aria-label="Privacy Policy">
+      <div class="sectionTitle">
+        <div>
+          <h2>Privacy Policy &amp; SMS Terms</h2>
+          <p>Effective Date: 8/26/2025</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="kicker"><span class="dot"></span> Privacy Policy</div>
+        <div style="color:rgba(231,226,216,.82); font-weight:850; font-size:13px;">
+          <p style="margin:0 0 10px;">
+            New England Medical Solutions respects your privacy and is committed to protecting your personal information.
+            This policy explains what we collect, how we use it, and how we protect it.
+          </p>
+
+          <p style="margin:10px 0 6px; font-weight:980;">1. Information We Collect</p>
+          <ul class="clean" style="margin-top:6px;">
+            <li><b>Contact Information:</b> Name, phone number, email address, mailing address.</li>
+            <li><b>Service Information:</b> Details about the services you request or receive from us.</li>
+            <li><b>Communication Preferences:</b> Your consent to receive communications, including SMS/text messages.</li>
+            <li><b>Technical Information:</b> IP address, browser type, and usage data when interacting with our website.</li>
+          </ul>
+
+          <p style="margin:12px 0 6px; font-weight:980;">2. How We Use Your Information</p>
+          <ul class="clean" style="margin-top:6px;">
+            <li>To provide and manage our services.</li>
+            <li>To communicate with you about appointments, updates, and offers.</li>
+            <li>To send SMS/text messages if you have opted in.</li>
+            <li>To improve our services and website.</li>
+            <li>To comply with legal and regulatory requirements.</li>
+          </ul>
+
+          <p style="margin:12px 0 6px; font-weight:980;">3. Sharing Your Information</p>
+          <ul class="clean" style="margin-top:6px;">
+            <li>We do not sell, rent, or trade your personal information.</li>
+            <li><b>Service Providers:</b> Third-party vendors who perform services on our behalf (e.g., IT support, payment processing).</li>
+            <li><b>Legal Authorities:</b> When required to comply with applicable laws or legal processes.</li>
+            <li><b>SMS consent is not shared</b> with third parties or affiliates.</li>
+          </ul>
+
+          <p style="margin:12px 0 6px; font-weight:980;">4. SMS/Text Messaging Policy</p>
+          <ul class="clean" style="margin-top:6px;">
+            <li>We will only use your phone number to send relevant messages about our services.</li>
+            <li>You may opt out at any time by replying <b>“STOP”</b> to any message.</li>
+            <li>Message and data rates may apply.</li>
+          </ul>
+
+          <p style="margin:12px 0 6px; font-weight:980;">5. Your Privacy Choices</p>
+          <p style="margin:6px 0;">
+            You may update preferences or request deletion by contacting:
+            <br/>📧 <a href="mailto:mason@newenglandmedicalsolutions.com" style="text-decoration:underline;">mason@newenglandmedicalsolutions.com</a>
+            <br/>📞 <a href="tel:+15082047042" style="text-decoration:underline;">(508) 204-7042</a>
+          </p>
+
+          <p style="margin:12px 0 6px; font-weight:980;">6. Data Security</p>
+          <p style="margin:6px 0;">
+            We use reasonable administrative, technical, and physical safeguards to protect your information against loss,
+            theft, unauthorized use, and disclosure.
+          </p>
+
+          <p style="margin:12px 0 6px; font-weight:980;">7. Changes to This Policy</p>
+          <p style="margin:6px 0 0;">
+            We may update this policy from time to time. Updates will be posted on this page with the revised effective date.
+          </p>
+        </div>
+
+        <div class="kicker" style="margin-top:16px;"><span class="dot"></span> Terms &amp; Conditions (SMS)</div>
+        <div style="color:rgba(231,226,216,.82); font-weight:850; font-size:13px;">
+          <p style="margin:0 0 10px;">
+            By providing your phone number and opting in to receive messages from New England Medical Solutions,
+            you agree to the following terms.
+          </p>
+
+          <p style="margin:10px 0 6px; font-weight:980;">1. Message Types</p>
+          <ul class="clean" style="margin-top:6px;">
+            <li>Appointment reminders and scheduling updates.</li>
+            <li>Order alerts and delivery notifications.</li>
+            <li>Account-related notifications.</li>
+            <li>Important service updates.</li>
+            <li>Special offers and promotions (if applicable).</li>
+          </ul>
+
+          <p style="margin:12px 0 6px; font-weight:980;">2. Messaging Frequency</p>
+          <p style="margin:6px 0;">Frequency may vary depending on your interactions and the services you request.</p>
+
+          <p style="margin:12px 0 6px; font-weight:980;">3. Message &amp; Data Rates</p>
+          <p style="margin:6px 0;">Message and data rates may apply based on your carrier plan.</p>
+
+          <p style="margin:12px 0 6px; font-weight:980;">4. Opt-Out Instructions</p>
+          <p style="margin:6px 0;">
+            Opt out any time by replying <b>STOP</b>. You will receive one final confirmation message,
+            and then no further messages will be sent unless you opt in again.
+          </p>
+
+          <p style="margin:12px 0 6px; font-weight:980;">5. Assistance</p>
+          <p style="margin:6px 0 0;">
+            For help, reply <b>HELP</b> to any message, or visit:
+            <a href="https://newenglandmedicalsolutions.us" style="text-decoration:underline;" target="_blank" rel="noopener">newenglandmedicalsolutions.us</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOGIN (placeholder) -->
+    <section id="login" aria-label="Login">
+      <div class="sectionTitle">
+        <div>
+          <h2>Login</h2>
+          <p>This is a placeholder. If you want a real login portal, tell me what platform you’re using (Square, WordPress, custom, etc.).</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="split">
+          <div>
+            <div class="kicker"><span class="dot"></span> Portal</div>
+            <p class="lead" style="margin:0;">
+              Common options:
+              (1) link out to an existing portal, (2) host a simple staff login, or (3) integrate with your store/customer accounts.
+            </p>
+            <div class="pillrow" style="margin-top:12px;">
+              <a class="pill" href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Store / Marketplace</a>
+              <a class="pill" href="#contact">Request a portal build</a>
+            </div>
+          </div>
+
+          <div style="border-radius:18px; border:1px solid rgba(231,226,216,.14); background: rgba(12,16,19,.45); padding:14px;">
+            <div style="font-weight:980; font-size:14px;">Coming soon</div>
+            <div style="margin-top:8px; color:rgba(231,226,216,.74); font-weight:850; font-size:12.5px; line-height:1.55;">
+              If you want this live, I can:
+              <ul class="clean">
+                <li>Add a dedicated <code>login.html</code> page</li>
+                <li>Connect to your auth provider</li>
+                <li>Restrict access to internal docs/tools</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> New England Medical Solutions
+      <div class="footlinks" aria-label="Footer links">
+        <a href="#about">About</a>
+        <a href="#products">Products</a>
+        <a href="#faqs">Instructions</a>
+        <a href="#faqs">Stories</a>
+        <a href="#contact">Contact</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="https://square.link/u/mQmzTTRI" target="_blank" rel="noopener">Marketplace</a>
+      </div>
+    </footer>
   </main>
 
-  <footer>
-    © <span id="year"></span> New England Medical Solutions • NEMSDoc
-  </footer>
-
   <script>
+    // Year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // pdf.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    // Mobile menu
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+    menuBtn?.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+    });
 
-    const { PDFDocument, StandardFonts, rgb } = PDFLib;
-
-    // ---------- DOC CONFIG ----------
-    const DOCS = {
-      rpa: {
-        label: "NEMS Patient Rental-Purchase Agreement",
-        file: "assets/NEMS Patient Rental-Purchase Agreement.pdf",
-        fields: [
-          { key:"firstName", label:"First Name" },
-          { key:"lastName", label:"Last Name" },
-          { key:"dob", label:"DOB (MM/DD/YYYY)" },
-          { key:"phone", label:"Phone" },
-          { key:"email", label:"Email" },
-          { key:"street", label:"Street Address" },
-          { key:"city", label:"City" },
-          { key:"state", label:"State" },
-          { key:"zip", label:"Zip" },
-          { key:"shipStreet", label:"Shipping Street Address" },
-          { key:"shipCity", label:"Shipping City" },
-          { key:"shipState", label:"Shipping State" },
-          { key:"shipZip", label:"Shipping Zip" },
-          { key:"physician", label:"Prescribing Physician" },
-          { key:"npi", label:"NPI" },
-          { key:"surgDate", label:"Surgical Date (if applicable)" },
-          { key:"primaryCarrier", label:"Primary Insurance Carrier" },
-          { key:"primaryId", label:"Primary Insurance ID #" },
-          { key:"primaryGroup", label:"Primary Insurance Group #" },
-          { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
-          { key:"secondaryId", label:"Secondary Insurance ID #" },
-          { key:"secondaryGroup", label:"Secondary Insurance Group #" }
-        ]
-      },
-      rpa_sam: {
-        label: "NEMS Patient Rental-Purchase Agreement (SAM)",
-        file: "assets/NEMS Patient Rental-Purchase Agreement_SAM.pdf",
-        fields: [
-          { key:"firstName", label:"First Name" },
-          { key:"lastName", label:"Last Name" },
-          { key:"dob", label:"DOB (MM/DD/YYYY)" },
-          { key:"phone", label:"Phone" },
-          { key:"email", label:"Email" },
-          { key:"street", label:"Street Address" },
-          { key:"city", label:"City" },
-          { key:"state", label:"State" },
-          { key:"zip", label:"Zip" },
-          { key:"shipStreet", label:"Shipping Street Address" },
-          { key:"shipCity", label:"Shipping City" },
-          { key:"shipState", label:"Shipping State" },
-          { key:"shipZip", label:"Shipping Zip" },
-          { key:"physician", label:"Prescribing Physician" },
-          { key:"npi", label:"NPI" },
-          { key:"surgDate", label:"Surgical Date (if applicable)" },
-          { key:"primaryCarrier", label:"Primary Insurance Carrier" },
-          { key:"primaryId", label:"Primary Insurance ID #" },
-          { key:"primaryGroup", label:"Primary Insurance Group #" },
-          { key:"secondaryCarrier", label:"Secondary Insurance Carrier" },
-          { key:"secondaryId", label:"Secondary Insurance ID #" },
-          { key:"secondaryGroup", label:"Secondary Insurance Group #" }
-        ]
-      },
-      nems_dt: {
-        label: "NEMS DT (Delivery Ticket)",
-        file: "assets/NEMS DT.pdf",
-        fields: [
-          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
-          { key:"patientName", label:"Patient Name" },
-          { key:"dob", label:"DOB (MM/DD/YYYY)" },
-          { key:"deliveryAddress", label:"Delivery Address" },
-          { key:"product", label:"Product Description" },
-          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
-          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
-          { key:"serial", label:"Serial Number" },
-          { key:"patientSigDate", label:"Patient Signature Date" }
-        ]
-      },
-      ortho_dt: {
-        label: "Ortho NE DT",
-        file: "assets/Ortho NE DT.pdf",
-        fields: [
-          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
-          { key:"patientName", label:"Patient Name" },
-          { key:"dob", label:"DOB (MM/DD/YYYY)" },
-          { key:"deliveryAddress", label:"Delivery Address" },
-          { key:"product", label:"Product Description" },
-          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
-          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
-          { key:"serial", label:"Serial Number" },
-          { key:"patientSigDate", label:"Patient Signature Date" }
-        ]
-      },
-      pbo_dt: {
-        label: "PBO DT",
-        file: "assets/PBO DT.pdf",
-        fields: [
-          { key:"dos", label:"Date of Service (MM/DD/YYYY)" },
-          { key:"patientName", label:"Patient Name" },
-          { key:"dob", label:"DOB (MM/DD/YYYY)" },
-          { key:"deliveryAddress", label:"Delivery Address" },
-          { key:"product", label:"Product Description" },
-          { key:"startDate", label:"Start Date (MM/DD/YYYY)" },
-          { key:"stopDate", label:"Stop Date (MM/DD/YYYY)" },
-          { key:"serial", label:"Serial Number" },
-          { key:"patientSigDate", label:"Patient Signature Date" }
-        ]
+    // Close menu when a link is clicked (mobile)
+    navLinks?.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      if (window.matchMedia("(max-width: 980px)").matches) {
+        navLinks.classList.remove("open");
       }
-    };
+    });
 
-    // ---------- UI ----------
-    const docSelect = document.getElementById("docSelect");
-    const dynamicFields = document.getElementById("dynamicFields");
-    const clearBtn = document.getElementById("clearBtn");
-    const genBtn = document.getElementById("genBtn");
-    const statusEl = document.getElementById("status");
+    // Active link highlighting on scroll
+    const linkEls = Array.from(document.querySelectorAll("[data-link]"));
+    const sections = linkEls
+      .map(a => document.querySelector(a.getAttribute("href")))
+      .filter(Boolean);
 
-    const calibToggle = document.getElementById("calibToggle");
-    const pageSelect = document.getElementById("pageSelect");
-    const calibFieldSelect = document.getElementById("calibFieldSelect");
-    const hintBox = document.getElementById("hintBox");
-    const lastClickBox = document.getElementById("lastClickBox");
-    const mapBox = document.getElementById("mapBox");
-    const copyMapBtn = document.getElementById("copyMapBtn");
-    const resetMapBtn = document.getElementById("resetMapBtn");
+    function setActiveByHash() {
+      const hash = window.location.hash || "#home";
+      linkEls.forEach(a => a.classList.toggle("active", a.getAttribute("href") === hash));
+    }
 
-    const canvas = document.getElementById("pdfCanvas");
-    const ctx = canvas.getContext("2d");
+    function setActiveByScroll() {
+      const y = window.scrollY + 120;
+      let current = "#home";
 
-    // ---------- STORAGE KEY ----------
-    function mapStorageKey(docKey){ return `nemsdoc_map_${docKey}`; }
-
-    // mapping format:
-    // {
-    //   "pageCount": N,
-    //   "placements": { "fieldKey": { "page": 0, "x": 123.4, "y": 456.7 } }
-    // }
-    function loadMapping(docKey){
-      const raw = localStorage.getItem(mapStorageKey(docKey));
-      if(!raw) return { pageCount: 0, placements: {} };
-      try{
-        const parsed = JSON.parse(raw);
-        if(!parsed || typeof parsed !== "object") return { pageCount: 0, placements: {} };
-        parsed.placements = parsed.placements || {};
-        parsed.pageCount = Number(parsed.pageCount || 0);
-        return parsed;
-      }catch{
-        return { pageCount: 0, placements: {} };
+      for (const sec of sections) {
+        const top = sec.offsetTop;
+        if (top <= y) current = "#" + sec.id;
       }
+      linkEls.forEach(a => a.classList.toggle("active", a.getAttribute("href") === current));
     }
-    function saveMapping(docKey, mapping){
-      localStorage.setItem(mapStorageKey(docKey), JSON.stringify(mapping, null, 2));
-    }
+
+    window.addEventListener("hashchange", setActiveByHash);
+    window.addEventListener("scroll", () => {
+      window.requestAnimationFrame(setActiveByScroll);
+    }, { passive: true });
+
+    setActiveByHash();
+    setActiveByScroll();
+
+    // Smooth scroll (native, but handle older browsers / reduce jumps)
+    document.documentElement.style.scrollBehavior = "smooth";
+
+    // Contact form -> mailto (no server required)
+    const form = document.getElementById("contactForm");
+    const clearBtn = document.getElementById("clearContact");
+    const statusEl = document.getElementById("formStatus");
 
     function setStatus(msg, isError=false){
       statusEl.textContent = msg;
       statusEl.classList.add("show");
-      statusEl.style.borderColor = isError ? "rgba(220,38,38,.35)" : "rgba(112,146,165,.28)";
-      statusEl.style.background = isError ? "rgba(220,38,38,.10)" : "rgba(112,146,165,.10)";
+      statusEl.classList.toggle("error", !!isError);
     }
-    function clearStatus(){ statusEl.classList.remove("show"); statusEl.textContent = ""; }
-
-    function renderFields(){
-      clearStatus();
-      const d = DOCS[docSelect.value];
-      dynamicFields.innerHTML = "";
-      d.fields.forEach(f => {
-        const wrap = document.createElement("div");
-        wrap.className = "field";
-
-        const lab = document.createElement("label");
-        lab.textContent = f.label;
-        lab.setAttribute("for", f.key);
-
-        const inp = document.createElement("input");
-        inp.className = "input";
-        inp.id = f.key;
-        inp.placeholder = f.label;
-
-        wrap.appendChild(lab);
-        wrap.appendChild(inp);
-        dynamicFields.appendChild(wrap);
-      });
+    function clearStatus(){
+      statusEl.textContent = "";
+      statusEl.classList.remove("show");
+      statusEl.classList.remove("error");
     }
 
-    function fillCalibFieldList(){
-      const d = DOCS[docSelect.value];
-      calibFieldSelect.innerHTML = "";
-      d.fields.forEach(f => {
-        const opt = document.createElement("option");
-        opt.value = f.key;
-        opt.textContent = f.label;
-        calibFieldSelect.appendChild(opt);
-      });
-    }
+    function val(id){ return (document.getElementById(id)?.value || "").trim(); }
 
-    function getValues(){
-      const d = DOCS[docSelect.value];
-      const out = {};
-      d.fields.forEach(f => {
-        const el = document.getElementById(f.key);
-        out[f.key] = (el && el.value ? el.value.trim() : "");
-      });
-      return out;
-    }
-
-    function clearValues(){
-      const d = DOCS[docSelect.value];
-      d.fields.forEach(f => {
-        const el = document.getElementById(f.key);
-        if(el) el.value = "";
+    clearBtn?.addEventListener("click", () => {
+      ["subject","firstName","lastName","phone","email","message"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
       });
       clearStatus();
-    }
-
-    // ---------- PDF PREVIEW (pdf.js) ----------
-    let pdfJsDoc = null;
-    let currentViewport = null;
-    let currentScale = 1;
-    let currentPageNumber = 1; // pdf.js is 1-based
-    let currentPageHeightPts = 0; // in PDF points (for coordinate conversion)
-
-    async function loadPreview(){
-      const docKey = docSelect.value;
-      const d = DOCS[docKey];
-      setStatus("Loading preview…");
-
-      try{
-        const loadingTask = pdfjsLib.getDocument(d.file);
-        pdfJsDoc = await loadingTask.promise;
-
-        // populate pageSelect
-        pageSelect.innerHTML = "";
-        for(let i=1; i<=pdfJsDoc.numPages; i++){
-          const opt = document.createElement("option");
-          opt.value = String(i);
-          opt.textContent = `Page ${i}`;
-          pageSelect.appendChild(opt);
-        }
-        pageSelect.value = "1";
-        currentPageNumber = 1;
-
-        // update mapping pageCount
-        const mapping = loadMapping(docKey);
-        mapping.pageCount = pdfJsDoc.numPages;
-        saveMapping(docKey, mapping);
-
-        await renderPage(1);
-
-        setStatus("Preview loaded.");
-        setTimeout(clearStatus, 900);
-      }catch(err){
-        console.error(err);
-        setStatus("Error loading preview: " + (err?.message || "failed"), true);
-      }
-    }
-
-    async function renderPage(pageNum){
-      if(!pdfJsDoc) return;
-
-      const page = await pdfJsDoc.getPage(pageNum);
-
-      // Determine scale based on container width
-      const wrap = document.getElementById("previewWrap");
-      const targetWidth = Math.min(wrap.clientWidth - 24, 880); // small padding
-      const unscaledViewport = page.getViewport({ scale: 1 });
-
-      currentScale = targetWidth / unscaledViewport.width;
-      currentViewport = page.getViewport({ scale: currentScale });
-
-      // store PDF page height in points (unscaled viewport height == points @ scale 1)
-      currentPageHeightPts = unscaledViewport.height;
-
-      canvas.width = Math.floor(currentViewport.width);
-      canvas.height = Math.floor(currentViewport.height);
-
-      const renderContext = { canvasContext: ctx, viewport: currentViewport };
-      await page.render(renderContext).promise;
-
-      // draw mapping dots (optional visual)
-      drawMappingMarkers();
-
-      // update mapping box
-      updateMapBox();
-
-      currentPageNumber = pageNum;
-    }
-
-    function drawMappingMarkers(){
-      const docKey = docSelect.value;
-      const mapping = loadMapping(docKey);
-      const placements = mapping.placements || {};
-
-      // redraw page content already rendered; we only draw small markers on top
-      // We'll just overlay markers without clearing, since page render just happened.
-      ctx.save();
-
-      Object.entries(placements).forEach(([fieldKey, p]) => {
-        if(!p || (p.page !== (currentPageNumber - 1))) return;
-
-        // convert pdf-lib coords (bottom-left origin) -> canvas coords (top-left origin)
-        const pdfX = p.x;
-        const pdfYbottom = p.y;
-        const pdfYtop = currentPageHeightPts - pdfYbottom;
-
-        const cx = pdfX * currentScale;
-        const cy = pdfYtop * currentScale;
-
-        // marker
-        ctx.beginPath();
-        ctx.arc(cx, cy, 4, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(112,146,165,.85)";
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "rgba(231,226,216,.85)";
-        ctx.stroke();
-      });
-
-      ctx.restore();
-    }
-
-    // ---------- CALIBRATION CLICK ----------
-    function updateHint(){
-      if(calibToggle.checked){
-        hintBox.textContent = "Calibration ON: select a field, then click where the text should print on the PDF.";
-      }else{
-        hintBox.textContent = "Calibration OFF. Toggle ON to click-to-place coordinates.";
-      }
-    }
-
-    function updateMapBox(){
-      const docKey = docSelect.value;
-      const mapping = loadMapping(docKey);
-      mapBox.textContent = JSON.stringify(mapping, null, 2);
-    }
-
-    canvas.addEventListener("click", (e) => {
-      if(!calibToggle.checked) return;
-      if(!currentViewport) return;
-
-      const rect = canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;  // canvas CSS pixels
-      const clickY = e.clientY - rect.top;
-
-      // convert to PDF points:
-      // pdfX_pts = clickX / scale
-      // pdfY_top_pts = clickY / scale
-      // pdfY_bottom_pts = pageHeightPts - pdfY_top_pts
-      const pdfX = clickX / currentScale;
-      const pdfYtop = clickY / currentScale;
-      const pdfYbottom = currentPageHeightPts - pdfYtop;
-
-      const fieldKey = calibFieldSelect.value;
-      const docKey = docSelect.value;
-      const mapping = loadMapping(docKey);
-
-      mapping.placements = mapping.placements || {};
-      mapping.placements[fieldKey] = {
-        page: currentPageNumber - 1,
-        x: round2(pdfX),
-        y: round2(pdfYbottom)
-      };
-      saveMapping(docKey, mapping);
-
-      lastClickBox.textContent =
-        `Last click:\nfield="${fieldKey}"\npage=${currentPageNumber - 1}\nx=${round2(pdfX)}\ny=${round2(pdfYbottom)}`;
-
-      // re-render current page to refresh markers cleanly
-      renderPage(currentPageNumber);
     });
 
-    function round2(n){ return Math.round(n * 100) / 100; }
-
-    // ---------- GENERATE OUTPUT (pdf-lib) ----------
-    async function generate(){
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
       clearStatus();
-      const docKey = docSelect.value;
-      const d = DOCS[docKey];
-      const values = getValues();
-      const mapping = loadMapping(docKey);
 
-      setStatus("Generating…");
+      const subject = val("subject");
+      const firstName = val("firstName");
+      const lastName = val("lastName");
+      const phone = val("phone");
+      const email = val("email");
+      const message = val("message");
 
-      try{
-        const pdfBytes = await fetch(d.file).then(r => {
-          if(!r.ok) throw new Error("Could not load PDF file.");
-          return r.arrayBuffer();
-        });
-
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        const pages = pdfDoc.getPages();
-
-        const textColor = rgb(0.08, 0.08, 0.09);
-        const fontSize = 9.5;
-
-        const placements = mapping.placements || {};
-
-        Object.entries(values).forEach(([fieldKey, text]) => {
-          const p = placements[fieldKey];
-          if(!p) return;
-          const t = String(text || "").replace(/\s+/g, " ").trim();
-          if(!t) return;
-
-          const page = pages[p.page];
-          if(!page) return;
-
-          page.drawText(t, {
-            x: p.x,
-            y: p.y,
-            size: fontSize,
-            font,
-            color: textColor
-          });
-        });
-
-        const outBytes = await pdfDoc.save();
-
-        const blob = new Blob([outBytes], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
-
-        const ts = new Date();
-        const stamp =
-          ts.getFullYear() + "-" +
-          String(ts.getMonth()+1).padStart(2,"0") + "-" +
-          String(ts.getDate()).padStart(2,"0") + "_" +
-          String(ts.getHours()).padStart(2,"0") +
-          String(ts.getMinutes()).padStart(2,"0");
-
-        const safeName = d.label.replace(/[^\w\-]+/g, "_");
-        const filename = `${safeName}_FILLED_${stamp}.pdf`;
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-
-        setStatus("Done — your filled PDF should be downloaded.");
-      }catch(err){
-        console.error(err);
-        setStatus("Error: " + (err?.message || "Failed to generate PDF."), true);
+      if (!subject || !firstName || !lastName || !email || !message) {
+        setStatus("Please fill all required fields (subject, name, email, message).", true);
+        return;
       }
-    }
 
-    // ---------- BUTTONS ----------
-    copyMapBtn.addEventListener("click", async () => {
-      const mapping = loadMapping(docSelect.value);
-      const txt = JSON.stringify(mapping, null, 2);
-      try{
-        await navigator.clipboard.writeText(txt);
-        setStatus("Mapping JSON copied to clipboard.");
-        setTimeout(clearStatus, 900);
-      }catch{
-        setStatus("Could not copy (clipboard blocked).", true);
-      }
+      // Build mailto
+      const to = "info@NewEnglandMedicalSolutions.com";
+      const mailSubject = `[${subject}] ${firstName} ${lastName}`;
+      const bodyLines = [
+        `Subject: ${subject}`,
+        `Name: ${firstName} ${lastName}`,
+        phone ? `Phone: ${phone}` : `Phone: (not provided)`,
+        `Email: ${email}`,
+        "",
+        "Message:",
+        message
+      ];
+
+      const mailto =
+        `mailto:${encodeURIComponent(to)}` +
+        `?subject=${encodeURIComponent(mailSubject)}` +
+        `&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+
+      // Open email client
+      window.location.href = mailto;
+
+      setStatus("Opening your email client… If it doesn’t open, email us directly at info@NewEnglandMedicalSolutions.com.");
     });
-
-    resetMapBtn.addEventListener("click", () => {
-      const docKey = docSelect.value;
-      localStorage.removeItem(mapStorageKey(docKey));
-      updateMapBox();
-      lastClickBox.textContent = "Last click: (none)";
-      renderPage(currentPageNumber);
-      setStatus("Mapping reset for this document.");
-      setTimeout(clearStatus, 900);
-    });
-
-    // ---------- EVENTS ----------
-    calibToggle.addEventListener("change", () => {
-      updateHint();
-    });
-
-    pageSelect.addEventListener("change", () => {
-      const n = Number(pageSelect.value || "1");
-      renderPage(n);
-    });
-
-    docSelect.addEventListener("change", async () => {
-      renderFields();
-      fillCalibFieldList();
-      await loadPreview();
-      updateHint();
-      updateMapBox();
-      lastClickBox.textContent = "Last click: (none)";
-    });
-
-    clearBtn.addEventListener("click", clearValues);
-    genBtn.addEventListener("click", generate);
-
-    // ---------- INIT ----------
-    renderFields();
-    fillCalibFieldList();
-    updateHint();
-    updateMapBox();
-    loadPreview();
   </script>
 </body>
 </html>
