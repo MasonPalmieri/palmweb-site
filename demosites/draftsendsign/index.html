@@ -4,1527 +4,1645 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DraftSendSign — Demo</title>
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#0b0f16" />
+  <meta name="description" content="DraftSendSign UI demo (static). Dashboard → Template Library → Document Editor." />
+
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
-      --btn:#111111;
-      --btnText:#ffffff;
-      --btnOutline:#ffffff;
-      --btnOutlineText:#111111;
-      --danger:#ef4444;
+      /* --- Core palette (dark premium) --- */
+      --bg0:#070a10;
+      --bg1:#0b0f16;
+      --panel:#0f1622;
+      --panel2:#101a28;
+      --panel3:#0c1320;
+      --border:rgba(255,255,255,.075);
+      --hair:rgba(255,255,255,.055);
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.72);
+      --muted2:rgba(234,240,255,.58);
+      --muted3:rgba(234,240,255,.46);
+
+      /* Accent (pink/red like screenshots) */
+      --accent:#ff2d5e;
+      --accent2:#ff4a76;
+      --accentGlow:rgba(255,45,94,.35);
+
+      /* Secondary accents for KPI icons */
+      --green:#24d18e;
+      --amber:#ffb020;
+      --purple:#9b6dff;
+
+      --radius:20px;
+      --radius2:26px;
+      --shadow: 0 30px 90px rgba(0,0,0,.55);
+      --shadow2: 0 18px 55px rgba(0,0,0,.45);
+      --shadow3: 0 10px 28px rgba(0,0,0,.34);
+
+      --max: 1240px;
     }
+
     *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
-      background:var(--bg);
+      background:
+        radial-gradient(1200px 560px at 22% -10%, rgba(255,45,94,.18), transparent 60%),
+        radial-gradient(1200px 560px at 85% -15%, rgba(155,109,255,.14), transparent 60%),
+        radial-gradient(1000px 520px at 60% 35%, rgba(36,209,142,.06), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%),
+        var(--bg0);
+      overflow-x:hidden;
     }
-    a{ color:inherit; text-decoration:none; }
-    button, input, select, textarea { font-family:inherit; }
 
+    a{ color:inherit; text-decoration:none; }
+    button{ font-family:inherit; }
+    .wrap{ min-height:100%; display:flex; flex-direction:column; }
+
+    /* ---------- Top Nav (like screenshots) ---------- */
     .topbar{
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:#fff;
-      border-bottom:1px solid var(--line);
+      position:sticky; top:0; z-index:50;
+      border-bottom:1px solid var(--hair);
+      background: rgba(9,12,18,.72);
+      backdrop-filter: blur(14px);
     }
     .topbar-inner{
-      max-width: 1100px;
+      max-width: var(--max);
       margin:0 auto;
-      padding:12px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      padding: 14px 18px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
     }
-    .brand{ font-weight:800; }
-    .nav{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      font-size:13px;
-      color:#111827;
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width:240px;
     }
-    .nav a{ color:#111827; opacity:.9; }
-    .nav a:hover{ opacity:1; text-decoration:underline; }
-    .nav-right{ display:flex; align-items:center; gap:10px; }
+    .brand .logo{
+      width:38px; height:38px;
+      border-radius:12px;
+      background:
+        radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,.22), transparent 65%),
+        linear-gradient(135deg, rgba(255,45,94,.95), rgba(255,74,118,.55));
+      box-shadow: 0 14px 40px rgba(255,45,94,.18);
+      border:1px solid rgba(255,255,255,.10);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+    }
+    .brand .logo svg{ width:18px; height:18px; opacity:.95; }
+    .brand .name{
+      font-weight:950;
+      letter-spacing:-.35px;
+      font-size:16px;
+      line-height:1.1;
+    }
 
-    .btn{
-      border:0;
-      border-radius:8px;
-      padding:9px 14px;
-      font-weight:800;
+    .crumbs{
+      display:flex; align-items:center; gap:10px;
+      flex:1 1 auto;
+      justify-content:center;
+      min-width: 280px;
+    }
+    .crumb{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:850;
+      font-size:13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .crumb svg{ width:16px; height:16px; opacity:.95; }
+    .crumb.active{
+      background: linear-gradient(180deg, rgba(255,45,94,.24), rgba(255,45,94,.10));
+      border-color: rgba(255,45,94,.30);
+      color:#fff;
+      box-shadow: 0 18px 45px rgba(255,45,94,.12);
+    }
+    .chev{
+      opacity:.40;
+      font-weight:900;
+      user-select:none;
+    }
+    .right-actions{
+      display:flex; align-items:center; justify-content:flex-end;
+      gap:10px;
+      min-width:240px;
+    }
+
+    .pillbtn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:900;
       font-size:13px;
       cursor:pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
-    .btn-primary{ background:var(--btn); color:var(--btnText); }
-    .btn-outline{ background:var(--btnOutline); color:var(--btnOutlineText); border:1px solid #111; }
-    .btn-muted{ background:#e5e7eb; color:#111827; border:1px solid #d1d5db; }
-    .btn-danger{ background: var(--danger); color:#fff; }
+    .pillbtn:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.11);
+    }
+    .pillbtn:active{ transform: translateY(1px); }
+    .pillbtn svg{ width:16px; height:16px; opacity:.95; }
+    .pillbtn.primary{
+      border-color: rgba(255,45,94,.35);
+      background: linear-gradient(180deg, rgba(255,45,94,.34), rgba(255,45,94,.14));
+      color:#fff;
+      box-shadow: 0 20px 55px rgba(255,45,94,.12);
+    }
 
-    .wrap{
-      max-width: 1100px;
+    /* ---------- Content container ---------- */
+    .page{
+      max-width: var(--max);
       margin:0 auto;
-      padding: 18px 16px 40px;
+      width:100%;
+      padding: 26px 18px 44px;
     }
 
+    /* ---------- Dashboard hero ---------- */
+    .hero h1{
+      margin: 18px 0 6px;
+      font-size: clamp(36px, 5vw, 56px);
+      letter-spacing: -1.2px;
+      line-height: 1.02;
+      font-weight: 980;
+    }
+    .hero p{
+      margin: 0;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 15px;
+    }
+
+    /* ---------- Stat cards row ---------- */
+    .stats{
+      margin-top: 22px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
+      border:1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow3);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(480px 240px at 20% 18%, rgba(255,45,94,.12), transparent 70%),
+        radial-gradient(440px 240px at 92% 0%, rgba(155,109,255,.10), transparent 72%);
+      pointer-events:none;
+      opacity:.8;
+    }
+    .card > *{ position:relative; }
+    .kpi-top{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:12px;
+      margin-bottom: 10px;
+    }
+    .kpi-icon{
+      width:44px; height:44px;
+      border-radius:16px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .kpi-icon svg{ width:18px; height:18px; opacity:.95; }
+
+    .kpi-delta{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight:900;
+      font-size:12px;
+      color: var(--muted2);
+      opacity:.95;
+      user-select:none;
+    }
+    .kpi-delta.up{ color: rgba(36,209,142,.92); }
+    .kpi-delta.down{ color: rgba(255,86,86,.92); }
+    .kpi-delta svg{ width:14px; height:14px; }
+
+    .kpi-value{
+      font-size: 44px;
+      letter-spacing: -1.2px;
+      font-weight: 980;
+      margin: 0;
+    }
+    .kpi-label{
+      margin: 0;
+      color: var(--muted2);
+      font-weight: 860;
+      font-size: 13px;
+    }
+    .kpi-sub{
+      margin: 6px 0 0;
+      color: var(--muted3);
+      font-weight: 820;
+      font-size: 12px;
+    }
+
+    /* ---------- Call to action panel ---------- */
+    .cta{
+      margin-top: 18px;
+      border-radius: var(--radius2);
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      box-shadow: var(--shadow3);
+      overflow:hidden;
+      position:relative;
+    }
+    .cta::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(720px 260px at 80% 0%, rgba(255,45,94,.12), transparent 70%),
+        radial-gradient(720px 260px at 10% 30%, rgba(36,209,142,.06), transparent 68%);
+      pointer-events:none;
+      opacity:.75;
+    }
+    .cta-inner{
+      position:relative;
+      padding: 20px 20px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .cta h3{
+      margin:0 0 4px;
+      font-size: 22px;
+      font-weight: 980;
+      letter-spacing:-.5px;
+    }
+    .cta p{
+      margin:0;
+      color: var(--muted);
+      font-weight: 760;
+      font-size: 13.5px;
+      max-width: 70ch;
+    }
+    .cta-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-weight: 950;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.12);
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn svg{ width:16px; height:16px; opacity:.95; }
+    .btn.primary{
+      border-color: rgba(255,45,94,.45);
+      background: linear-gradient(180deg, rgba(255,45,94,.90), rgba(255,45,94,.65));
+      box-shadow: 0 20px 55px rgba(255,45,94,.20);
+    }
+    .btn.primary:hover{ box-shadow: 0 26px 70px rgba(255,45,94,.24); }
+    .btn.ghost{
+      background: rgba(255,255,255,.02);
+    }
+
+    /* ---------- Template Library + Recent Docs section ---------- */
+    .two-col{
+      margin-top: 26px;
+      display:grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 16px;
+      align-items:start;
+    }
+    .section-title{
+      font-size: 34px;
+      font-weight: 980;
+      letter-spacing:-.7px;
+      margin: 0 0 12px;
+    }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.014));
+      border:1px solid var(--border);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow3);
+      overflow:hidden;
+      position:relative;
+    }
+    .panel::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(680px 260px at 12% 0%, rgba(255,45,94,.10), transparent 68%),
+        radial-gradient(680px 260px at 92% 18%, rgba(155,109,255,.08), transparent 70%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .panel > *{ position:relative; }
+
+    .panel-pad{ padding: 18px; }
+
+    .search{
+      display:flex; align-items:center; gap:10px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      border-radius: 999px;
+      padding: 10px 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .search svg{ width:16px; height:16px; opacity:.75; }
+    .search input{
+      width:100%;
+      border:0; outline:0;
+      background: transparent;
+      color: var(--text);
+      font-weight: 820;
+      font-size: 13px;
+    }
+    .search input::placeholder{ color: rgba(234,240,255,.40); font-weight:800; }
+
+    .tabs{
+      margin-top: 14px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .tab{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-weight: 920;
+      font-size: 13px;
+      cursor:pointer;
+      user-select:none;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .tab svg{ width:16px; height:16px; opacity:.85; }
+    .tab .count{
+      display:inline-grid; place-items:center;
+      min-width:22px; height:22px;
+      padding: 0 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.02);
+      color: rgba(234,240,255,.70);
+      font-size: 12px;
+      font-weight: 950;
+    }
+    .tab.active{
+      background: linear-gradient(180deg, rgba(255,45,94,.50), rgba(255,45,94,.16));
+      border-color: rgba(255,45,94,.35);
+      color:#fff;
+    }
+    .tab.active .count{
+      border-color: rgba(255,255,255,.14);
+      background: rgba(0,0,0,.10);
+      color:#fff;
+    }
+
+    .tiles{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .tile{
+      border-radius: 22px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      box-shadow: var(--shadow3);
+      cursor:pointer;
+      transition: transform .10s ease, border-color .2s ease, background .2s ease;
+      position:relative;
+    }
+    .tile:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+    }
+    .tile .img{
+      height: 230px;
+      background-size: cover;
+      background-position: center;
+      position:relative;
+    }
+    .tile .rating{
+      position:absolute;
+      top: 12px; right: 12px;
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      font-weight: 950;
+      font-size: 12px;
+      color:#fff;
+    }
+    .tile .rating svg{ width:14px; height:14px; color: rgba(255,210,84,.95); }
+    .tile .info{
+      padding: 14px 14px 16px;
+    }
+    .tile .t-title{
+      margin:0;
+      font-weight: 980;
+      letter-spacing:-.35px;
+      font-size: 15px;
+    }
+    .tile .t-sub{
+      margin:6px 0 0;
+      color: var(--muted2);
+      font-weight: 820;
+      font-size: 12.5px;
+    }
+
+    /* ---------- Recent documents cards ---------- */
+    .recent-wrap{ display:flex; flex-direction:column; gap: 14px; }
+    .doc-card{
+      padding: 16px;
+      border-radius: 22px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.16);
+      box-shadow: var(--shadow3);
+      position:relative;
+      overflow:hidden;
+    }
+    .doc-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 200px at 100% 0%, rgba(155,109,255,.10), transparent 70%),
+        radial-gradient(420px 200px at 10% 80%, rgba(255,45,94,.10), transparent 72%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .doc-card > *{ position:relative; }
+    .doc-top{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap: 10px;
+    }
+    .doc-title{
+      margin:0;
+      font-weight: 980;
+      letter-spacing:-.35px;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+    .status{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(234,240,255,.78);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .status.sent{
+      border-color: rgba(155,109,255,.30);
+      background: rgba(155,109,255,.10);
+      color: rgba(210,196,255,.96);
+    }
+    .status.completed{
+      border-color: rgba(36,209,142,.28);
+      background: rgba(36,209,142,.10);
+      color: rgba(172,255,224,.96);
+    }
+    .doc-meta{
+      margin-top: 10px;
+      display:flex; gap:12px; flex-wrap:wrap;
+      color: var(--muted3);
+      font-weight: 850;
+      font-size: 12px;
+    }
+    .doc-meta .m{
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .doc-meta svg{ width:14px; height:14px; opacity:.85; }
+
+    .doc-actions{
+      margin-top: 12px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .doc-actions .btn{
+      padding: 10px 14px;
+      font-size: 12.5px;
+    }
+    .doc-actions .btn.icon{
+      gap:10px;
+      min-width: 110px;
+    }
+
+    /* Floating Create New button (bottom right, like screenshot) */
+    .fab{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      display:none;
+    }
+    .fab .btn{
+      padding: 12px 16px;
+      box-shadow: var(--shadow2);
+    }
+
+    /* ---------- Editor page ---------- */
+    .editor-shell{
+      margin-top: 6px;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    .editor-left{
+      border-radius: var(--radius2);
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
+      box-shadow: var(--shadow3);
+      overflow:hidden;
+      position:relative;
+    }
+    .editor-left::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 240px at 10% 0%, rgba(255,45,94,.10), transparent 68%),
+        radial-gradient(520px 240px at 92% 25%, rgba(155,109,255,.08), transparent 72%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .editor-left > *{ position:relative; }
+
+    .editor-head{
+      padding: 16px 16px 8px;
+    }
+    .editor-head h2{
+      margin:0;
+      font-size: 22px;
+      font-weight: 980;
+      letter-spacing:-.5px;
+    }
+    .editor-head p{
+      margin:6px 0 0;
+      color: var(--muted2);
+      font-weight: 760;
+      font-size: 12.8px;
+    }
+
+    .accordion{
+      padding: 10px 10px 14px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    details.acc{
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    details.acc summary{
+      list-style:none;
+      cursor:pointer;
+      padding: 12px 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px;
+      user-select:none;
+    }
+    details.acc summary::-webkit-details-marker{ display:none; }
+    .sum-left{
+      display:flex; align-items:center; gap:10px;
+      min-width:0;
+    }
+    .sum-ico{
+      width:28px; height:28px;
+      border-radius: 10px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .sum-ico svg{ width:14px; height:14px; opacity:.9; }
+    .sum-txt{
+      min-width:0;
+      display:flex; flex-direction:column;
+      gap:2px;
+    }
+    .sum-txt b{
+      font-weight: 960;
+      letter-spacing:-.25px;
+      font-size: 13px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .sum-txt span{
+      color: var(--muted3);
+      font-weight: 820;
+      font-size: 11.5px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .caret{
+      opacity:.55;
+      transition: transform .18s ease;
+    }
+    details[open] .caret{ transform: rotate(180deg); }
+
+    .acc-body{
+      padding: 0 12px 12px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    label.lbl{
+      display:flex; flex-direction:column; gap:7px;
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(234,240,255,.80);
+    }
+    .inp, .sel, .txt{
+      width:100%;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      color: #fff;
+      outline:none;
+      padding: 10px 10px;
+      font-weight: 820;
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .txt{ min-height: 72px; resize: vertical; }
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+
+    .progress{
+      padding: 12px 12px 10px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .progress-top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px;
+      color: var(--muted2);
+      font-weight: 920;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .bar{
+      height: 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      overflow:hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width:33%;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(255,45,94,.95), rgba(255,74,118,.65));
+      box-shadow: 0 0 0 6px rgba(255,45,94,.10);
+    }
+    .progress-sub{
+      margin-top: 8px;
+      color: var(--muted3);
+      font-weight: 820;
+      font-size: 11.5px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: rgba(255,45,94,.95);
+      box-shadow: 0 0 0 4px rgba(255,45,94,.12);
+    }
+
+    .editor-right{
+      border-radius: var(--radius2);
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
+      box-shadow: var(--shadow3);
+      overflow:hidden;
+      position:relative;
+      min-height: 640px;
+    }
+    .editor-right::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(760px 320px at 70% 0%, rgba(255,45,94,.10), transparent 70%),
+        radial-gradient(760px 320px at 0% 100%, rgba(36,209,142,.05), transparent 70%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .editor-right > *{ position:relative; }
+    .preview-head{
+      padding: 14px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .preview-head b{
+      font-weight: 980;
+      letter-spacing:-.25px;
+      display:inline-flex; align-items:center; gap:10px;
+    }
+    .preview-head b svg{ width:16px; height:16px; opacity:.95; }
+    .live{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(36,209,142,.26);
+      background: rgba(36,209,142,.09);
+      color: rgba(180,255,228,.95);
+      font-weight: 950;
+      font-size: 12px;
+    }
+    .live i{
+      width:8px; height:8px; border-radius:999px;
+      background: rgba(36,209,142,.95);
+      box-shadow: 0 0 0 4px rgba(36,209,142,.14);
+      display:inline-block;
+    }
+
+    /* Fake PDF preview */
+    .paper-wrap{
+      padding: 18px;
+      display:flex; justify-content:center;
+    }
+    .paper{
+      width: min(740px, 100%);
+      background: #0a0e15;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      padding: 26px 26px 18px;
+    }
+    .paper .title{
+      text-align:center;
+      font-weight: 980;
+      letter-spacing:-.4px;
+      margin: 2px 0 4px;
+      font-size: 20px;
+    }
+    .paper .sub{
+      text-align:center;
+      color: rgba(234,240,255,.55);
+      font-weight: 850;
+      font-size: 12px;
+      margin: 0 0 18px;
+    }
+    .paper p{
+      margin: 10px 0;
+      color: rgba(234,240,255,.78);
+      font-weight: 760;
+      font-size: 12.8px;
+      line-height: 1.65;
+    }
+    .paper .hl{
+      color: rgba(255,45,94,.95);
+      text-decoration: underline;
+      text-decoration-color: rgba(255,45,94,.55);
+      font-weight: 900;
+    }
+    .paper .sec{
+      margin-top: 14px;
+      font-weight: 980;
+      letter-spacing:-.2px;
+      font-size: 13px;
+      color: rgba(234,240,255,.92);
+    }
+    .sigrow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 16px;
+      color: rgba(234,240,255,.68);
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .sig{
+      border-top: 1px solid rgba(255,255,255,.14);
+      padding-top: 10px;
+    }
+
+    /* ---------- Top editor mini actions row (like screenshot: Save Draft / Preview / Add Recipients) ---------- */
+    .mini-actions{
+      position:sticky;
+      top: 72px;
+      z-index: 40;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 12px 18px 0;
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .left-hint{
+      color: rgba(234,240,255,.58);
+      font-weight: 820;
+      font-size: 12px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .left-hint i{
+      width:8px; height:8px; border-radius:999px;
+      background: rgba(255,86,86,.95);
+      box-shadow: 0 0 0 4px rgba(255,86,86,.14);
+      display:inline-block;
+    }
+    .mini-actions .btn{
+      padding: 10px 14px;
+      font-size: 12.5px;
+    }
+
+    /* ---------- Page switching ---------- */
     .view{ display:none; }
     .view.active{ display:block; }
 
-    /* Landing */
-    .landing{ text-align:center; padding: 40px 0 10px; }
-    .landing h1{
-      font-size: clamp(30px, 4vw, 56px);
-      margin: 18px 0 8px;
-      letter-spacing: -1.2px;
-      font-weight: 900;
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1060px){
+      .crumbs{ justify-content:flex-start; }
+      .right-actions{ min-width: unset; }
+      .brand{ min-width: unset; }
+      .two-col{ grid-template-columns: 1fr; }
+      .fab{ display:block; }
     }
-    .landing p{
-      margin:0 auto 18px;
-      max-width: 640px;
-      color: var(--muted);
-      font-weight:600;
-      line-height:1.6;
-      font-size: 14px;
+    @media (max-width: 980px){
+      .stats{ grid-template-columns: 1fr; }
+      .tiles{ grid-template-columns: 1fr; }
+      .editor-shell{ grid-template-columns: 1fr; }
+      .mini-actions{ top: 66px; }
     }
-    .cta-row{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin: 16px 0 34px; }
-
-    .pricing{
-      background: #f5f5f7;
-      margin-top: 46px;
-      padding: 42px 0;
-    }
-    .pricing h2{ text-align:center; margin:0; font-size: 28px; font-weight:900; letter-spacing:-0.6px; }
-    .pricing p{ text-align:center; margin: 8px auto 26px; color: var(--muted); font-weight:650; max-width: 560px; }
-    .price-grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(260px, 360px));
-      gap: 18px;
-      justify-content:center;
-      padding: 0 16px;
-    }
-    .price-card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius: 14px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      text-align:center;
-    }
-    .price-card strong{ display:block; font-weight: 900; margin-bottom: 8px; }
-    .price{ font-size: 22px; font-weight: 950; margin: 6px 0 12px; }
-
-    /* Dashboard */
-    .center-title{ text-align:center; margin-top: 34px; }
-    .center-title h2{ margin: 0 0 6px; font-size: 34px; font-weight: 900; letter-spacing:-0.6px; }
-    .center-title p{ margin:0; color: var(--muted); font-weight:650; font-size: 13px; }
-
-    .card-grid{
-      margin: 26px auto 0;
-      display:grid;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
-      gap: 18px;
-      max-width: 900px;
-    }
-    @media (max-width: 860px){ .card-grid{ grid-template-columns:1fr; } }
-
-    .dash-card{
-      border: 1px solid #111;
-      border-radius: 12px;
-      padding: 18px;
-      background: #fff;
-      box-shadow: var(--shadow);
-      min-height: 135px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .dash-card h3{ margin:0; font-size: 14px; font-weight: 950; }
-    .dash-card p{
-      margin:0;
-      color: var(--muted);
-      font-size: 12.5px;
-      font-weight: 650;
-      line-height:1.5;
-      max-width: 66ch;
-    }
-    .dash-card .btn{ align-self:flex-start; }
-
-    /* Upload */
-    .upload{ display:flex; align-items:center; justify-content:center; min-height: 62vh; }
-    .upload-card{ width: min(560px, 100%); text-align:center; padding: 22px; }
-    .upload-card h2{ margin:0; font-size: 28px; font-weight: 900; }
-    .upload-card p{
-      margin: 8px auto 18px;
-      color: var(--muted);
-      font-weight:650;
-      font-size: 13px;
-      max-width: 420px;
-    }
-    .drop{
-      border: 2px dashed #d1d5db;
-      border-radius: 12px;
-      padding: 22px;
-      background: #fafafa;
-      color: #9ca3af;
-      font-weight: 750;
-      cursor:pointer;
-      user-select:none;
-    }
-    .drop strong{ color:#6b7280; }
-
-    /* Modal */
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 16px;
-      background: rgba(0,0,0,.55);
-      z-index: 999;
-    }
-    .modal.show{ display:flex; }
-    .modal-card{
-      width: min(720px, 100%);
-      background:#fff;
-      border-radius: 10px;
-      border:1px solid var(--line);
-      box-shadow: 0 18px 60px rgba(0,0,0,.22);
-      padding: 18px;
-    }
-    .modal-title{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .modal-title h2{ margin:0; font-weight: 950; font-size: 18px; }
-    .modal-close{
-      cursor:pointer;
-      font-weight:900;
-      color: var(--muted);
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background:#fff;
-    }
-
-    .row{ display:flex; gap: 10px; justify-content:center; flex-wrap:wrap; align-items:center; }
-    .field{
-      width: 180px;
-      padding: 9px 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 13px;
-    }
-    .link{ font-size: 12px; font-weight: 800; color: #2563eb; cursor:pointer; user-select:none; }
-    .link.danger{ color: var(--danger); }
-    .next-bar{
-      margin-top: 12px;
-      width:100%;
-      border-radius: 8px;
-      background:#111;
-      color:#fff;
-      padding: 10px 12px;
-      font-weight: 900;
-      cursor:pointer;
-      user-select:none;
-      text-align:center;
-    }
-
-    /* Tag view */
-    .tag-layout{
-      display:grid;
-      grid-template-columns: 280px 1fr;
-      gap: 0;
-      min-height: calc(100vh - 54px);
-    }
-    @media (max-width: 980px){ .tag-layout{ grid-template-columns: 1fr; } }
-
-    .side{ border-right: 1px solid var(--line); background: #f3f4f6; padding: 14px; }
-    .side h3{ margin: 4px 0 10px; font-size: 13px; font-weight: 900; }
-
-    .tool{
-      background:#fff;
-      border:1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 10px 10px;
-      font-weight: 900;
-      font-size: 12.5px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .tool.active{ outline: 2px solid #111; }
-
-    .assign{ margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,.08); }
-    .select{
-      width:100%;
-      padding: 10px 10px;
-      border:1px solid #cbd5e1;
-      border-radius:8px;
-      font-weight: 800;
-      font-size: 12.5px;
-      background:#fff;
-    }
-
-    .editor{
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(0,0,0,.08);
-    }
-    .editor .box{
-      background:#fff;
-      border:1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.05);
-    }
-    .editor .label{ font-size: 11px; font-weight: 900; color:#374151; margin: 10px 0 6px; }
-    .editor input, .editor select, .editor textarea{
-      width:100%;
-      padding: 9px 10px;
-      border:1px solid #cbd5e1;
-      border-radius: 8px;
-      font-weight: 750;
-      font-size: 12.5px;
-      background:#fff;
-    }
-    .editor textarea{ min-height: 74px; resize: vertical; }
-    .editor .actions{
-      display:flex;
-      gap:10px;
-      margin-top: 10px;
-      flex-wrap:wrap;
-    }
-    .pill{
-      display:inline-block;
-      font-size: 11px;
-      font-weight: 900;
-      background:#eef2ff;
-      border:1px solid #c7d2fe;
-      color:#3730a3;
-      padding: 6px 8px;
-      border-radius: 999px;
-      margin-top: 8px;
-    }
-
-    .canvas-wrap{ padding: 18px; background: #fff; }
-
-    .page{
-      width: min(740px, 100%);
-      margin: 0 auto;
-      border: 1px solid #d1d5db;
-      background: #fff;
-      box-shadow: 0 10px 28px rgba(0,0,0,.08);
-      position: relative;
-      overflow:hidden;
-    }
-
-    /* iOS dragging */
-    #docPage{ touch-action: none; }
-
-    .pdf-canvas{ display:block; width: 100%; height: auto; }
-
-    .page .hint{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#9ca3af;
-      font-weight: 800;
-      font-size: 12px;
-      pointer-events:none;
-      text-align:center;
-      padding: 18px;
-      white-space:pre-line;
-    }
-
-    .placed{
-      position:absolute;
-      border: 1px solid #111827;
-      background: rgba(255,255,255,.94);
-      padding: 6px 8px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: grab;
-      user-select:none;
-      min-width: 140px;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 6px 18px rgba(0,0,0,.08);
-    }
-    .placed:active{ cursor:grabbing; }
-    .placed small{
-      display:block;
-      font-size: 10px;
-      font-weight: 800;
-      color: #6b7280;
-      margin-top: 2px;
-      line-height:1.2;
-      max-width: 22ch;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space:nowrap;
-    }
-
-    .tag-actions{
-      max-width: 740px;
-      margin: 10px auto 0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .pager{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
-    .pager span{ color: var(--muted); font-weight: 800; font-size: 12px; }
-
-    .foot{
-      text-align:center;
-      color:#9ca3af;
-      font-size: 12px;
-      font-weight: 650;
-      margin-top: 26px;
-    }
-
-    .template-form{
-      margin-top: 12px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 760px){ .template-form{ grid-template-columns: 1fr; } }
-    .template-form label{
-      display:block;
-      font-size: 11px;
-      font-weight: 900;
-      color:#374151;
-      margin-bottom: 6px;
-    }
-    .template-form input, .template-form select, .template-form textarea{
-      width:100%;
-      padding: 10px 10px;
-      border:1px solid #cbd5e1;
-      border-radius: 10px;
-      font-weight: 750;
-      font-size: 13px;
-    }
-    .template-form textarea{ min-height: 92px; resize: vertical; grid-column: 1 / -1; }
-    .template-actions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
-    .note{
-      color: var(--muted);
-      font-weight: 650;
-      font-size: 12px;
-      margin-top: 6px;
-      line-height:1.4;
+    @media (max-width: 620px){
+      .crumbs{ display:none; }
+      .hero h1{ font-size: 40px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">DraftSendSign</div>
-
-      <div class="nav-right">
-        <div class="nav" id="navAuthed" style="display:none;">
-          <a href="#" data-nav="upload">Upload Document</a>
-          <a href="#" data-nav="docs">My Documents</a>
-          <a href="#" data-nav="account">Account</a>
-        </div>
-
-        <div class="nav" id="navPublic">
-          <a href="#" id="loginLink">Login</a>
-          <button class="btn btn-primary" id="signupBtn" type="button">Sign Up</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="wrap">
-    <!-- LANDING -->
-    <section class="view active" id="viewLanding">
-      <div class="landing">
-        <h1>A simpler way to draft, send,<br/>and sign documents.</h1>
-        <p>Professional-grade e-signature tools at a fraction of the cost.</p>
-        <div class="cta-row">
-          <button class="btn btn-primary" id="getStartedBtn" type="button">Get Started</button>
-          <button class="btn btn-outline" id="exploreBtn" type="button">Explore Features</button>
-        </div>
-      </div>
-
-      <div class="pricing" id="pricing">
-        <div class="wrap" style="padding-top:0; padding-bottom:0;">
-          <h2>Simple Pricing</h2>
-          <p>Unlimited documents. No limits. No contracts.</p>
-        </div>
-
-        <div class="price-grid">
-          <div class="price-card">
-            <strong>Monthly</strong>
-            <div class="price">$9.99/month</div>
-            <button class="btn btn-primary" type="button" id="chooseMonthly">Choose Plan</button>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#/dashboard" aria-label="DraftSendSign home">
+          <div class="logo" aria-hidden="true">
+            <!-- doc icon -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M8 3h6l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="white" stroke-opacity=".92" stroke-width="1.8"/>
+              <path d="M14 3v4h4" stroke="white" stroke-opacity=".92" stroke-width="1.8"/>
+              <path d="M9 12h6M9 16h6" stroke="white" stroke-opacity=".88" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
           </div>
-          <div class="price-card">
-            <strong>Annual</strong>
-            <div class="price">$99.99/year</div>
-            <button class="btn btn-primary" type="button" id="chooseAnnual">Choose Plan</button>
+          <div class="name">DraftSendSign</div>
+        </a>
+
+        <!-- breadcrumb-style nav -->
+        <nav class="crumbs" aria-label="Primary">
+          <a class="crumb active" id="navDash" href="#/dashboard">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 10.5 12 4l8 6.5V20a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2v-9.5Z" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+            Dashboard
+          </a>
+          <span class="chev">›</span>
+          <a class="crumb" id="navEdit" href="#/edit">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M13.5 6.5 17.5 10.5" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Edit Document
+          </a>
+          <span class="chev">›</span>
+          <span class="crumb" id="navRecipients" aria-disabled="true" style="opacity:.55; cursor:default;">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
+              <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            Add Recipients
+          </span>
+        </nav>
+
+        <div class="right-actions">
+          <button class="pillbtn" id="btnHelp" type="button" title="Demo-only">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="white" stroke-opacity=".88" stroke-width="1.8"/>
+              <path d="M9.8 9.2a2.4 2.4 0 1 1 4.4 1.4c-.8 1.2-2 1.4-2 2.9" stroke="white" stroke-opacity=".86" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M12 17.2h.01" stroke="white" stroke-opacity=".86" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            Help
+          </button>
+          <button class="pillbtn primary" id="btnCreate" type="button">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="white" stroke-opacity=".95" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Create New
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Editor mini-actions row -->
+    <div class="mini-actions" id="miniActions">
+      <div class="left-hint"><i></i> Not saved yet</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn ghost" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h9l7 7v7a2 2 0 0 1-2 2Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
+            <path d="M12 12v6M9 15h6" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Save Draft
+        </button>
+        <button class="btn ghost" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
+            <path d="M12 15a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" stroke="white" stroke-opacity=".85" stroke-width="1.8"/>
+          </svg>
+          Preview
+        </button>
+        <button class="btn primary" type="button" id="btnAddRecipients">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".96" stroke-width="1.8"/>
+            <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Add Recipients
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="page">
+
+      <!-- DASHBOARD VIEW -->
+      <section class="view active" id="viewDashboard" aria-label="Dashboard">
+        <div class="hero">
+          <h1>Welcome to DraftSendSign</h1>
+          <p>Create, customize, and send professional agreements in minutes</p>
+        </div>
+
+        <div class="stats" aria-label="KPIs">
+          <div class="card">
+            <div class="kpi-top">
+              <div class="kpi-icon" style="color:var(--accent);">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 2 11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="kpi-delta up">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                12%
+              </div>
+            </div>
+            <p class="kpi-value">24</p>
+            <p class="kpi-label">Documents Sent</p>
+            <p class="kpi-sub">This month</p>
+          </div>
+
+          <div class="card">
+            <div class="kpi-top">
+              <div class="kpi-icon" style="color:var(--green);">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 12.5 11 14.5 15.5 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="kpi-delta up">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                5%
+              </div>
+            </div>
+            <p class="kpi-value">89%</p>
+            <p class="kpi-label">Completion Rate</p>
+            <p class="kpi-sub">Last 30 days</p>
+          </div>
+
+          <div class="card">
+            <div class="kpi-top">
+              <div class="kpi-icon" style="color:var(--amber);">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="kpi-delta down">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 19V5M6 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                8%
+              </div>
+            </div>
+            <p class="kpi-value">3.2h</p>
+            <p class="kpi-label">Avg. Response Time</p>
+            <p class="kpi-sub">This week</p>
           </div>
         </div>
 
-        <div class="foot">© <span id="year"></span> DraftSendSign. All rights reserved.</div>
-      </div>
-    </section>
+        <div class="cta" aria-label="Get started">
+          <div class="cta-inner">
+            <div>
+              <h3>Ready to get started?</h3>
+              <p>Create a new document from scratch or upload your own template to begin the signing process.</p>
+            </div>
+            <div class="cta-actions">
+              <button class="btn primary" id="btnCreate2" type="button">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="white" stroke-opacity=".95" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Create New Document
+              </button>
+              <button class="btn" type="button">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 16V4" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M7 9l5-5 5 5" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4" stroke="white" stroke-opacity=".78" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Upload Template
+              </button>
+            </div>
+          </div>
+        </div>
 
-    <!-- DASHBOARD -->
-    <section class="view" id="viewDashboard">
-      <div class="center-title">
-        <h2>Welcome back</h2>
-        <p>Choose an action to get started.</p>
-      </div>
-
-      <div class="card-grid">
-        <div class="dash-card">
+        <div class="two-col" aria-label="Template Library and Recent Documents">
+          <!-- Template Library -->
           <div>
-            <h3>Upload New Document</h3>
-            <p>Start a new document and prepare it for signature.</p>
-          </div>
-          <button class="btn btn-primary" id="startUploadBtn" type="button">Start Upload</button>
-        </div>
+            <h2 class="section-title">Template Library</h2>
+            <div class="panel">
+              <div class="panel-pad">
+                <div class="search" role="search">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 21l-4.3-4.3" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="white" stroke-opacity=".75" stroke-width="2"/>
+                  </svg>
+                  <input id="tplSearch" placeholder="Search templates by name, category, or keyword..." />
+                </div>
 
-        <div class="dash-card">
+                <div class="tabs" role="tablist" aria-label="Template categories">
+                  <div class="tab active" data-tab="all" role="tab" aria-selected="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    All Templates <span class="count">8</span>
+                  </div>
+                  <div class="tab" data-tab="employment" role="tab" aria-selected="false">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="white" stroke-opacity=".8" stroke-width="2"/>
+                      <path d="M9 12h6" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Employment <span class="count">2</span>
+                  </div>
+                  <div class="tab" data-tab="contracts" role="tab" aria-selected="false">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M8 3h7l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/>
+                      <path d="M15 3v5h5" stroke="white" stroke-opacity=".75" stroke-width="2"/>
+                      <path d="M9 12h6M9 16h6" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Contracts <span class="count">2</span>
+                  </div>
+                  <div class="tab" data-tab="ndas" role="tab" aria-selected="false">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M12 22s8-4 8-10V6l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>
+                      <path d="M9.5 12l1.7 1.7L14.8 10" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    NDAs <span class="count">2</span>
+                  </div>
+                  <div class="tab" data-tab="service" role="tab" aria-selected="false">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M20 7h-9l-2-2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>
+                      <path d="M8 14h8" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Service Agreements <span class="count">2</span>
+                  </div>
+                </div>
+
+                <div class="tiles" id="tiles">
+                  <!-- IMPORTANT: Using random internet images (Unsplash) per your instruction -->
+                  <div class="tile" data-open-editor="1" data-category="employment">
+                    <div class="img" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80');">
+                      <div class="rating">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .5-5.4 4.6 1.7 7-6.3-3.8L6.4 21l1.7-7L2.7 9.5 9.7 9 12 2z"/></svg>
+                        4.8
+                      </div>
+                    </div>
+                    <div class="info">
+                      <p class="t-title">Employment Agreement</p>
+                      <p class="t-sub">Offer, terms, confidentiality, signatures</p>
+                    </div>
+                  </div>
+
+                  <div class="tile" data-open-editor="1" data-category="ndas">
+                    <div class="img" style="background-image:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80');">
+                      <div class="rating">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .5-5.4 4.6 1.7 7-6.3-3.8L6.4 21l1.7-7L2.7 9.5 9.7 9 12 2z"/></svg>
+                        4.9
+                      </div>
+                    </div>
+                    <div class="info">
+                      <p class="t-title">Non-Disclosure Agreement</p>
+                      <p class="t-sub">Mutual NDA with term duration</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Documents -->
           <div>
-            <h3>View Signed Documents</h3>
-            <p>Access documents you’ve drafted or sent.</p>
-          </div>
-          <button class="btn btn-primary" id="viewDocsBtn" type="button">View Documents</button>
-        </div>
-
-        <div class="dash-card">
-          <div>
-            <h3>Settings</h3>
-            <p>Update your profile, plan, or security options.</p>
-          </div>
-          <button class="btn btn-primary" id="settingsBtn" type="button">Account Settings</button>
-        </div>
-
-        <div class="dash-card">
-          <div>
-            <h3>Logout</h3>
-            <p>Sign out of your account securely.</p>
-          </div>
-          <button class="btn btn-primary" id="logoutBtn" type="button">Logout</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- UPLOAD -->
-    <section class="view" id="viewUpload">
-      <div class="upload">
-        <div class="upload-card">
-          <h2>Upload a Document</h2>
-          <p>Upload a PDF or generate an agreement from a smart template.</p>
-
-          <div class="drop" id="dropZone" role="button" tabindex="0">
-            <strong>Click</strong> to choose a PDF or <strong>drag</strong> it here
-          </div>
-
-          <input id="fileInput" type="file" accept=".pdf" style="display:none;" />
-
-          <div class="upload-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-            <button class="btn btn-muted" id="uploadNextBtn" type="button" disabled>Next</button>
-            <button class="btn btn-outline" id="blankPdfBtn" type="button">Start from Template</button>
-          </div>
-
-          <div style="margin-top:10px; color:#6b7280; font-weight:650; font-size:12px;">
-            Selected: <span id="fileName">(none)</span>
-          </div>
-
-          <div class="note">
-            Demo note: PDF viewing is client-side. (No backend used.)
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAG -->
-    <section class="view" id="viewTag">
-      <div class="tag-layout">
-        <aside class="side">
-          <div style="font-weight:900; margin:2px 0 10px;">DraftSendSign</div>
-
-          <h3>Fields (tap to select)</h3>
-          <div class="tool" data-tool="signature">Signature</div>
-          <div class="tool" data-tool="initials">Initials</div>
-          <div class="tool" data-tool="date">Date</div>
-          <div class="tool" data-tool="text">Text Input</div>
-
-          <div class="assign">
-            <h3 style="margin-top:0;">Assigning For:</h3>
-            <select class="select" id="assignSelect"></select>
-            <div class="note">This sets the default recipient for new fields.</div>
-          </div>
-
-          <!-- Field editor -->
-          <div class="editor">
-            <h3 style="margin:0 0 8px;">Field Editor</h3>
-            <div class="box">
-              <div id="editorEmpty" class="note">
-                Select a tool (left) to configure it, then tap on the document to place.
+            <h2 class="section-title">Recent Documents</h2>
+            <div class="recent-wrap">
+              <div class="doc-card">
+                <div class="doc-top">
+                  <h3 class="doc-title">Employment Agreement —<br/>John Smith</h3>
+                  <span class="status sent">
+                    <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;">
+                      <path d="M22 2 11 13" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    Sent
+                  </span>
+                </div>
+                <div class="doc-meta">
+                  <span class="m">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
+                    1 recipients
+                  </span>
+                  <span class="m">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
+                    02/15/2026
+                  </span>
+                </div>
+                <div class="doc-actions">
+                  <button class="btn icon" data-open-editor="1" type="button">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/></svg>
+                    Edit
+                  </button>
+                  <button class="btn icon" type="button">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 6a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm10 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M8 12l6-6M8 12l6 6" stroke="white" stroke-opacity=".72" stroke-width="2" stroke-linecap="round"/></svg>
+                    Share
+                  </button>
+                </div>
               </div>
 
-              <div id="editorBody" style="display:none;">
-                <div class="pill" id="editorModePill">New field</div>
-
-                <div class="label">Type</div>
-                <input id="edType" disabled />
-
-                <div class="label">Label (what signer sees)</div>
-                <input id="edLabel" placeholder="e.g., Signature" />
-
-                <div class="label">Assigned recipient</div>
-                <select id="edAssigned"></select>
-
-                <div id="edSignatureBlock" style="display:none;">
-                  <div class="label">Signature input</div>
-                  <select id="edSigMode">
-                    <option value="typed">Typed signature</option>
-                    <option value="drawn">Drawn signature (placeholder)</option>
-                  </select>
-
-                  <div class="label">Typed name</div>
-                  <input id="edSigName" placeholder="e.g., Alice Johnson" />
-
-                  <div class="note">This is a demo value shown inside the field box before “sending”.</div>
+              <div class="doc-card">
+                <div class="doc-top">
+                  <h3 class="doc-title">NDA — Tech Startup<br/>Partnership</h3>
+                  <span class="status completed">
+                    <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;">
+                      <path d="M9 12.5 11 14.5 15.5 10" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="white" stroke-opacity=".85" stroke-width="2"/>
+                    </svg>
+                    Completed
+                  </span>
                 </div>
-
-                <div id="edInitialsBlock" style="display:none;">
-                  <div class="label">Initials</div>
-                  <input id="edInitials" placeholder="e.g., AJ" />
+                <div class="doc-meta">
+                  <span class="m">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
+                    2 recipients
+                  </span>
+                  <span class="m">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
+                    02/14/2026
+                  </span>
                 </div>
-
-                <div id="edDateBlock" style="display:none;">
-                  <div class="label">Date source</div>
-                  <select id="edDateMode">
-                    <option value="auto">Auto (today)</option>
-                    <option value="fixed">Fixed date</option>
-                  </select>
-
-                  <div class="label">Fixed date (if selected)</div>
-                  <input id="edDateFixed" type="date" />
-                </div>
-
-                <div id="edTextBlock" style="display:none;">
-                  <div class="label">Text value</div>
-                  <textarea id="edTextValue" placeholder="e.g., Company legal name..."></textarea>
-                </div>
-
-                <div class="actions">
-                  <button class="btn btn-primary" id="edApplyBtn" type="button">Apply</button>
-                  <button class="btn btn-outline" id="edCancelBtn" type="button">Clear</button>
-                  <button class="btn btn-danger" id="edDeleteBtn" type="button" style="display:none;">Delete</button>
-                </div>
-
-                <div class="note" id="editorHint">
-                  After Apply, tap on the document to place the field.
+                <div class="doc-actions">
+                  <button class="btn icon" data-open-editor="1" type="button">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/></svg>
+                    Edit
+                  </button>
+                  <button class="btn icon" type="button">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 6a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm10 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M8 12l6-6M8 12l6 6" stroke="white" stroke-opacity=".72" stroke-width="2" stroke-linecap="round"/></svg>
+                    Share
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </aside>
+        </div>
 
-        <main class="canvas-wrap">
-          <div class="page" id="docPage">
-            <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
-            <div class="hint" id="docHint">Loading PDF…</div>
-          </div>
+        <!-- Mobile FAB (matches screenshot vibe) -->
+        <div class="fab" aria-hidden="true">
+          <button class="btn primary" type="button" id="btnCreateFab">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="white" stroke-opacity=".95" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Create New
+          </button>
+        </div>
+      </section>
 
-          <div class="tag-actions">
-            <span>Tip: tap an existing field to edit it.</span>
-
-            <div class="pager">
-              <button class="btn btn-outline" id="prevPageBtn" type="button">Prev</button>
-              <span id="pageIndicator">Page 1</span>
-              <button class="btn btn-outline" id="nextPageBtn" type="button">Next</button>
-
-              <button class="btn btn-outline" id="backToRecipientsBtn" type="button">Back</button>
-              <button class="btn btn-primary" id="finishBtn" type="button">Next: Send</button>
+      <!-- EDITOR VIEW -->
+      <section class="view" id="viewEditor" aria-label="Document Editor">
+        <div class="editor-shell">
+          <!-- Left controls -->
+          <aside class="editor-left">
+            <div class="editor-head">
+              <h2>Document Editor</h2>
+              <p>Customize your agreement template with specific details.</p>
             </div>
-          </div>
-        </main>
-      </div>
-    </section>
 
-    <!-- Docs -->
-    <section class="view" id="viewDocs">
-      <div class="center-title">
-        <h2>My Documents</h2>
-        <p>(Demo placeholder)</p>
-      </div>
-    </section>
+            <div class="accordion">
+              <details class="acc" open>
+                <summary>
+                  <div class="sum-left">
+                    <div class="sum-ico" style="color:var(--accent);">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8 3h7l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M15 3v5h5" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </div>
+                    <div class="sum-txt">
+                      <b>Template Selection</b>
+                      <span>Choose your agreement type</span>
+                    </div>
+                  </div>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                    <path d="M7 10l5 5 5-5" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="acc-body">
+                  <label class="lbl">
+                    Agreement Type *
+                    <select class="sel" id="agreementType">
+                      <option>Non-Disclosure Agreement</option>
+                      <option>Employment Agreement</option>
+                      <option>Service Agreement</option>
+                      <option>Independent Contractor Agreement</option>
+                    </select>
+                  </label>
+                </div>
+              </details>
 
-    <!-- Account -->
-    <section class="view" id="viewAccount">
-      <div class="center-title">
-        <h2>Account</h2>
-        <p>(Demo placeholder)</p>
-      </div>
-    </section>
+              <details class="acc" open>
+                <summary>
+                  <div class="sum-left">
+                    <div class="sum-ico" style="color:var(--purple);">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div class="sum-txt">
+                      <b>Parties Information</b>
+                      <span>Enter details for both parties</span>
+                    </div>
+                  </div>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                    <path d="M7 10l5 5 5-5" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="acc-body">
+                  <div class="row2">
+                    <label class="lbl">
+                      Disclosing Party Name *
+                      <input class="inp" id="dpName" placeholder="Company or Individual Name" value="Acme Innovations LLC" />
+                    </label>
+                    <label class="lbl">
+                      Disclosing Party Address
+                      <input class="inp" id="dpAddr" placeholder="Full Address" value="12 Harbor Way, Boston, MA" />
+                    </label>
+                  </div>
+                  <div class="row2">
+                    <label class="lbl">
+                      Receiving Party Name *
+                      <input class="inp" id="rpName" placeholder="Company or Individual Name" value="Northstar Labs Inc." />
+                    </label>
+                    <label class="lbl">
+                      Receiving Party Address
+                      <input class="inp" id="rpAddr" placeholder="Full Address" value="88 Market St, Cambridge, MA" />
+                    </label>
+                  </div>
+                </div>
+              </details>
+
+              <details class="acc" open>
+                <summary>
+                  <div class="sum-left">
+                    <div class="sum-ico" style="color:var(--green);">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 7h16M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 7v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7" stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                    </div>
+                    <div class="sum-txt">
+                      <b>Agreement Terms</b>
+                      <span>Define the scope and purpose</span>
+                    </div>
+                  </div>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                    <path d="M7 10l5 5 5-5" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="acc-body">
+                  <label class="lbl">
+                    Purpose of Disclosure *
+                    <input class="inp" id="purpose" placeholder="e.g., mutual business partnership, product development" value="Potential partnership and product development" />
+                  </label>
+                  <label class="lbl">
+                    Describe what confidential information will be shared
+                    <textarea class="txt" id="confInfo" placeholder="Brief description...">Technical specifications, pricing, roadmap, and customer details.</textarea>
+                  </label>
+                  <div class="row2">
+                    <label class="lbl">
+                      Term Duration
+                      <input class="inp" id="term" placeholder="2" value="2" />
+                    </label>
+                    <label class="lbl">
+                      Duration Unit
+                      <select class="sel" id="termUnit">
+                        <option selected>Years</option>
+                        <option>Months</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              </details>
+
+              <details class="acc">
+                <summary>
+                  <div class="sum-left">
+                    <div class="sum-ico" style="color:var(--amber);">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8 3v2M16 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M4 11h16" stroke="currentColor" stroke-width="2" stroke-opacity=".7"/>
+                      </svg>
+                    </div>
+                    <div class="sum-txt">
+                      <b>Important Dates</b>
+                      <span>Set agreement timeline</span>
+                    </div>
+                  </div>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                    <path d="M7 10l5 5 5-5" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="acc-body">
+                  <label class="lbl">
+                    Effective Date *
+                    <input class="inp" id="effDate" placeholder="mm/dd/yyyy" value="02/16/2026" />
+                  </label>
+                </div>
+              </details>
+
+              <details class="acc">
+                <summary>
+                  <div class="sum-left">
+                    <div class="sum-ico" style="color:rgba(234,240,255,.8);">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div class="sum-txt">
+                      <b>Custom Clauses</b>
+                      <span>Add additional terms (optional)</span>
+                    </div>
+                  </div>
+                  <svg class="caret" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;">
+                    <path d="M7 10l5 5 5-5" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="acc-body">
+                  <label class="lbl">
+                    Extra clause
+                    <textarea class="txt" placeholder="Optional..."></textarea>
+                  </label>
+                </div>
+              </details>
+            </div>
+
+            <div class="progress">
+              <div class="progress-top">
+                <span>Completion Progress</span>
+                <span style="color:rgba(255,45,94,.95); font-weight:980;">33%</span>
+              </div>
+              <div class="bar" aria-label="Completion progress bar"><i></i></div>
+              <div class="progress-sub"><span class="dot"></span> 4 required fields remaining</div>
+            </div>
+          </aside>
+
+          <!-- Right preview -->
+          <section class="editor-right">
+            <div class="preview-head">
+              <b>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M8 3h7l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="white" stroke-opacity=".9" stroke-width="2"/>
+                  <path d="M15 3v5h5" stroke="white" stroke-opacity=".78" stroke-width="2"/>
+                </svg>
+                Document Preview
+              </b>
+              <span class="live"><i></i>Live</span>
+            </div>
+
+            <div class="paper-wrap">
+              <div class="paper" id="paper">
+                <div class="title">NON-DISCLOSURE AGREEMENT</div>
+                <div class="sub">Effective Date: <span id="pvEff">[Date]</span></div>
+
+                <p>
+                  This <span class="hl">Non-Disclosure Agreement</span> (the “Agreement”) is entered into as of
+                  <span class="hl" id="pvDateInline">[Date]</span> (the “Effective Date”) by and between:
+                </p>
+
+                <p>
+                  <span class="hl" id="pvDPName">[Disclosing Party Name]</span><br/>
+                  <span style="color:rgba(234,240,255,.60); font-weight:840;" id="pvDPAddr">[Disclosing Party Address]</span>
+                </p>
+
+                <p>
+                  and<br/>
+                  <span class="hl" id="pvRPName">[Receiving Party Name]</span><br/>
+                  <span style="color:rgba(234,240,255,.60); font-weight:840;" id="pvRPAddr">[Receiving Party Address]</span>
+                </p>
+
+                <div class="sec">1. Purpose</div>
+                <p><span class="hl">[Purpose of disclosure will be specified here]</span> — <span id="pvPurpose"></span></p>
+
+                <div class="sec">2. Confidential Information</div>
+                <p>
+                  For purposes of this Agreement, “Confidential Information” shall include all information or materials
+                  that is or could have commercial value or other utility in the business in which Disclosing Party is engaged.
+                </p>
+
+                <div class="sec">3. Term</div>
+                <p>
+                  This Agreement shall commence on the Effective Date and continue for a period of
+                  <span class="hl"><span id="pvTerm">2</span> <span id="pvTermUnit">years</span></span>,
+                  unless earlier terminated by either party with written notice.
+                </p>
+
+                <div class="sigrow">
+                  <div class="sig">
+                    <div style="font-weight:960; color:rgba(234,240,255,.86);">DISCLOSING PARTY</div>
+                    <div style="margin-top:6px;">Name</div>
+                    <div style="opacity:.7;">Signature &amp; Date</div>
+                  </div>
+                  <div class="sig">
+                    <div style="font-weight:960; color:rgba(234,240,255,.86);">RECEIVING PARTY</div>
+                    <div style="margin-top:6px;">Name</div>
+                    <div style="opacity:.7;">Signature &amp; Date</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
   </div>
-
-  <!-- Recipients modal -->
-  <div class="modal" id="recipientsModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-title">
-        <h2>Assign Recipients</h2>
-        <button class="modal-close" id="recipientsCloseBtn" type="button">Close</button>
-      </div>
-
-      <div id="recipientsList" style="display:flex; flex-direction:column; gap:10px; align-items:center;"></div>
-
-      <div style="margin-top:10px;">
-        <span class="link" id="addRecipientLink">+ Add Another Recipient</span>
-      </div>
-
-      <div class="next-bar" id="nextTagBar">Next: Tag Document</div>
-    </div>
-  </div>
-
-  <!-- Template modal -->
-  <div class="modal" id="templateModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-title">
-        <h2>Create from Template</h2>
-        <button class="modal-close" id="templateCloseBtn" type="button">Close</button>
-      </div>
-
-      <div class="note">
-        Pick a template and fill the prompts. We’ll generate a PDF you can tag and send.
-      </div>
-
-      <div style="margin-top:12px;">
-        <label style="display:block; font-size:11px; font-weight:900; color:#374151; margin-bottom:6px;">Template</label>
-        <select id="tplSelect" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-weight:800;">
-          <option value="nda">Mutual NDA</option>
-          <option value="service">Service Agreement</option>
-          <option value="offer">Employment Offer Letter</option>
-          <option value="lease">Lease Addendum</option>
-        </select>
-      </div>
-
-      <div class="template-form" id="tplFields"></div>
-
-      <div class="template-actions">
-        <button class="btn btn-outline" id="tplCancelBtn" type="button">Cancel</button>
-        <button class="btn btn-primary" id="tplGenerateBtn" type="button">Generate PDF</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ✅ pdf.js legacy + worker + pdf-lib -->
-  <script src="https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.min.js"></script>
-  <script src="https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
   <script>
-    // Utilities
-    function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
-    function todayISO(){
-      const d = new Date();
-      const pad = (n) => String(n).padStart(2,"0");
-      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    }
-    async function nextFrame(){ return new Promise(res => requestAnimationFrame(() => res())); }
+    // --- Simple router (hash-based) to mimic multi-page flow ---
+    const viewDashboard = document.getElementById('viewDashboard');
+    const viewEditor    = document.getElementById('viewEditor');
+    const navDash       = document.getElementById('navDash');
+    const navEdit       = document.getElementById('navEdit');
+    const miniActions   = document.getElementById('miniActions');
 
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    const state = {
-      authed: false,
-      fileName: null,
-      recipients: [{ name: "Alice", email: "alice@example.com" }],
-      pdfBytes: null,
-      pdfDocHandle: null,
-      pdfPageNumber: 1,
-      activeToolType: null,
-      pendingField: null,
-      selectedFieldId: null
-    };
-
-    // Views
-    const views = {
-      landing: document.getElementById("viewLanding"),
-      dashboard: document.getElementById("viewDashboard"),
-      upload: document.getElementById("viewUpload"),
-      tag: document.getElementById("viewTag"),
-      docs: document.getElementById("viewDocs"),
-      account: document.getElementById("viewAccount"),
-    };
-    const navAuthed = document.getElementById("navAuthed");
-    const navPublic = document.getElementById("navPublic");
-
-    function showView(key){
-      Object.values(views).forEach(v => v.classList.remove("active"));
-      views[key].classList.add("active");
-      navAuthed.style.display = state.authed ? "flex" : "none";
-      navPublic.style.display = state.authed ? "none" : "flex";
+    function setActiveCrumb(which){
+      navDash.classList.toggle('active', which === 'dash');
+      navEdit.classList.toggle('active', which === 'edit');
     }
 
-    document.querySelectorAll("[data-nav]").forEach(a => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        const dest = a.getAttribute("data-nav");
-        if(dest === "upload") showView("upload");
-        if(dest === "docs") showView("docs");
-        if(dest === "account") showView("account");
-      });
+    function show(route){
+      if(route === 'edit'){
+        viewDashboard.classList.remove('active');
+        viewEditor.classList.add('active');
+        setActiveCrumb('edit');
+        miniActions.style.display = 'flex';
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }else{
+        viewEditor.classList.remove('active');
+        viewDashboard.classList.add('active');
+        setActiveCrumb('dash');
+        miniActions.style.display = 'none';
+      }
+    }
+
+    function currentRoute(){
+      const h = (location.hash || '#/dashboard').toLowerCase();
+      if(h.includes('/edit')) return 'edit';
+      return 'dash';
+    }
+
+    window.addEventListener('hashchange', () => show(currentRoute()));
+    show(currentRoute());
+
+    // --- Wire "Create New" buttons to open editor (demo) ---
+    const toEdit = () => (location.hash = '#/edit');
+    document.getElementById('btnCreate').addEventListener('click', toEdit);
+    document.getElementById('btnCreate2').addEventListener('click', toEdit);
+    const fab = document.getElementById('btnCreateFab');
+    if(fab) fab.addEventListener('click', toEdit);
+
+    // Open editor when clicking a tile or recent doc edit
+    document.querySelectorAll('[data-open-editor]').forEach(el => {
+      el.addEventListener('click', toEdit);
     });
 
-    function fakeAuthAndGoDashboard(){ state.authed = true; showView("dashboard"); }
-    document.getElementById("getStartedBtn").addEventListener("click", fakeAuthAndGoDashboard);
-    document.getElementById("signupBtn").addEventListener("click", fakeAuthAndGoDashboard);
-    document.getElementById("loginLink").addEventListener("click", (e) => { e.preventDefault(); fakeAuthAndGoDashboard(); });
-    document.getElementById("chooseMonthly").addEventListener("click", fakeAuthAndGoDashboard);
-    document.getElementById("chooseAnnual").addEventListener("click", fakeAuthAndGoDashboard);
-
-    document.getElementById("startUploadBtn").addEventListener("click", () => showView("upload"));
-    document.getElementById("viewDocsBtn").addEventListener("click", () => showView("docs"));
-    document.getElementById("settingsBtn").addEventListener("click", () => showView("account"));
-    document.getElementById("logoutBtn").addEventListener("click", () => { state.authed = false; showView("landing"); });
-
-    document.getElementById("exploreBtn").addEventListener("click", () => {
-      document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
+    // Demo-only Add Recipients button (no backend)
+    document.getElementById('btnAddRecipients').addEventListener('click', () => {
+      alert('Demo-only: Add Recipients step (backend later).');
     });
 
-    // Upload
-    const dropZone = document.getElementById("dropZone");
-    const fileInput = document.getElementById("fileInput");
-    const uploadNextBtn = document.getElementById("uploadNextBtn");
-    const fileNameSpan = document.getElementById("fileName");
-    const blankPdfBtn = document.getElementById("blankPdfBtn");
+    // Tabs (visual only + basic filtering for tiles)
+    const tabs = document.querySelectorAll('.tab');
+    const tiles = document.querySelectorAll('.tile');
+    const search = document.getElementById('tplSearch');
 
-    function setUploadUiReady(name){
-      state.fileName = name;
-      fileNameSpan.textContent = name;
-      uploadNextBtn.disabled = false;
-      uploadNextBtn.classList.remove("btn-muted");
-      uploadNextBtn.classList.add("btn-primary");
-    }
+    function applyFilter(){
+      const active = document.querySelector('.tab.active')?.dataset.tab || 'all';
+      const q = (search.value || '').trim().toLowerCase();
 
-    async function fileToUint8Array(file){
-      const ab = await file.arrayBuffer();
-      return new Uint8Array(ab);
-    }
+      tiles.forEach(t => {
+        const cat = (t.dataset.category || '').toLowerCase();
+        const title = (t.querySelector('.t-title')?.textContent || '').toLowerCase();
+        const sub = (t.querySelector('.t-sub')?.textContent || '').toLowerCase();
 
-    async function setFile(file){
-      if(!file) return;
-      const ext = (file.name.split(".").pop() || "").toLowerCase();
-      if(ext !== "pdf"){ alert("This demo supports PDF uploads only."); return; }
-      state.pdfBytes = await fileToUint8Array(file);
-      setUploadUiReady(file.name);
-    }
+        const matchTab = (active === 'all') || (cat === active);
+        const matchQ = !q || title.includes(q) || sub.includes(q) || cat.includes(q);
 
-    dropZone.addEventListener("click", () => fileInput.click());
-    dropZone.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); fileInput.click(); }
-    });
-    fileInput.addEventListener("change", async (e) => {
-      const f = e.target.files && e.target.files[0];
-      await setFile(f);
-    });
-    dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.style.background = "#ffffff"; });
-    dropZone.addEventListener("dragleave", () => { dropZone.style.background = "#fafafa"; });
-    dropZone.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      dropZone.style.background = "#fafafa";
-      const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      await setFile(f);
-    });
-
-    // Template modal
-    const templateModal = document.getElementById("templateModal");
-    const tplSelect = document.getElementById("tplSelect");
-    const tplFields = document.getElementById("tplFields");
-    const tplCloseBtn = document.getElementById("templateCloseBtn");
-    const tplCancelBtn = document.getElementById("tplCancelBtn");
-    const tplGenerateBtn = document.getElementById("tplGenerateBtn");
-
-    blankPdfBtn.addEventListener("click", () => openTemplateModal());
-    tplCloseBtn.addEventListener("click", () => closeTemplateModal());
-    tplCancelBtn.addEventListener("click", () => closeTemplateModal());
-    templateModal.addEventListener("click", (e) => { if(e.target === templateModal) closeTemplateModal(); });
-
-    function openTemplateModal(){
-      templateModal.classList.add("show");
-      templateModal.setAttribute("aria-hidden", "false");
-      renderTemplateFields();
-    }
-    function closeTemplateModal(){
-      templateModal.classList.remove("show");
-      templateModal.setAttribute("aria-hidden", "true");
-    }
-
-    const templateSchemas = {
-      nda: {
-        title: "Mutual Non-Disclosure Agreement",
-        fields: [
-          { key:"partyA", label:"Disclosing Party (Company A)", type:"text", placeholder:"e.g., Acme Medical Solutions, Inc." },
-          { key:"partyB", label:"Receiving Party (Company B)", type:"text", placeholder:"e.g., Northshore Devices LLC" },
-          { key:"effective", label:"Effective date", type:"date", placeholder:"" },
-          { key:"term", label:"Term (months)", type:"number", placeholder:"12" },
-          { key:"purpose", label:"Purpose / context", type:"textarea", placeholder:"e.g., evaluating a potential partnership..." }
-        ]
-      },
-      service: {
-        title: "Service Agreement",
-        fields: [
-          { key:"client", label:"Client name", type:"text", placeholder:"e.g., Bay State Labs" },
-          { key:"provider", label:"Provider name", type:"text", placeholder:"e.g., DraftSendSign Services" },
-          { key:"start", label:"Start date", type:"date", placeholder:"" },
-          { key:"fee", label:"Monthly fee (USD)", type:"number", placeholder:"2500" },
-          { key:"scope", label:"Scope of services", type:"textarea", placeholder:"e.g., onboarding, support, reporting..." }
-        ]
-      },
-      offer: {
-        title: "Employment Offer Letter",
-        fields: [
-          { key:"candidate", label:"Candidate name", type:"text", placeholder:"e.g., Jordan Lee" },
-          { key:"company", label:"Company name", type:"text", placeholder:"e.g., DraftSendSign Inc." },
-          { key:"role", label:"Role / title", type:"text", placeholder:"e.g., Operations Analyst" },
-          { key:"start", label:"Start date", type:"date", placeholder:"" },
-          { key:"salary", label:"Annual salary (USD)", type:"number", placeholder:"90000" }
-        ]
-      },
-      lease: {
-        title: "Lease Addendum",
-        fields: [
-          { key:"landlord", label:"Landlord", type:"text", placeholder:"e.g., Harbor Properties" },
-          { key:"tenant", label:"Tenant", type:"text", placeholder:"e.g., DraftSendSign Inc." },
-          { key:"address", label:"Premises address", type:"text", placeholder:"e.g., 123 Main St, Boston, MA" },
-          { key:"effective", label:"Effective date", type:"date", placeholder:"" },
-          { key:"change", label:"Addendum details", type:"textarea", placeholder:"e.g., amended parking terms..." }
-        ]
-      }
-    };
-
-    function renderTemplateFields(){
-      const schema = templateSchemas[tplSelect.value];
-      tplFields.innerHTML = "";
-      schema.fields.forEach(f => {
-        const wrap = document.createElement("div");
-        const label = document.createElement("label");
-        label.textContent = f.label;
-        wrap.appendChild(label);
-
-        let input;
-        if(f.type === "textarea"){
-          input = document.createElement("textarea");
-          input.placeholder = f.placeholder || "";
-        } else {
-          input = document.createElement("input");
-          input.type = f.type === "date" ? "date" : (f.type === "number" ? "number" : "text");
-          input.placeholder = f.placeholder || "";
-        }
-        input.id = `tpl_${f.key}`;
-        if(f.type === "date"){ input.value = todayISO(); }
-        wrap.appendChild(input);
-
-        tplFields.appendChild(wrap);
-      });
-    }
-    tplSelect.addEventListener("change", renderTemplateFields);
-
-    async function generatePdfFromTemplate(templateKey){
-      const schema = templateSchemas[templateKey];
-      const values = {};
-      schema.fields.forEach(f => {
-        const el = document.getElementById(`tpl_${f.key}`);
-        values[f.key] = (el && "value" in el) ? el.value : "";
-      });
-
-      const { PDFDocument, StandardFonts, rgb } = PDFLib;
-      const pdfDoc = await PDFDocument.create();
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-      const page = pdfDoc.addPage([612, 792]);
-      const margin = 60;
-      let y = 740;
-
-      function drawLine(text, opts={}){
-        const size = opts.size || 11;
-        const fnt = opts.bold ? fontBold : font;
-        const color = opts.muted ? rgb(0.35,0.35,0.35) : rgb(0.1,0.1,0.1);
-        const words = String(text || "").split(" ");
-        let line = "";
-        for(const w of words){
-          const test = line ? (line + " " + w) : w;
-          const width = fnt.widthOfTextAtSize(test, size);
-          if(width > (612 - margin*2) && line){
-            page.drawText(line, { x: margin, y, size, font: fnt, color });
-            y -= size + 6;
-            line = w;
-          } else {
-            line = test;
-          }
-        }
-        if(line){
-          page.drawText(line, { x: margin, y, size, font: fnt, color });
-          y -= size + 6;
-        }
-        y -= 2;
-      }
-
-      page.drawText(schema.title, { x: margin, y, size: 18, font: fontBold, color: rgb(0.1,0.1,0.1) });
-      y -= 26;
-
-      const eff = values.effective || values.start || todayISO();
-      drawLine(`Effective Date: ${eff}`, { muted:true });
-      y -= 8;
-
-      if(templateKey === "nda"){
-        drawLine(`This Mutual Non-Disclosure Agreement (“Agreement”) is entered into by and between ${values.partyA || "[Company A]"} and ${values.partyB || "[Company B]"} (each a “Party”, collectively the “Parties”).`);
-        drawLine(`Purpose. The Parties wish to exchange certain confidential information for the purpose of: ${values.purpose || "[Purpose]"}.`);
-        drawLine(`Confidential Information. “Confidential Information” includes non-public business, technical, financial, and operational information disclosed in any form.`);
-        drawLine(`Obligations. Each Party will (a) use Confidential Information solely for the Purpose, (b) protect it using reasonable care, and (c) not disclose it except to personnel with a need to know.`);
-        drawLine(`Term. This Agreement remains in effect for ${values.term || "12"} months from the Effective Date. Confidentiality obligations survive for 3 years following termination.`);
-        drawLine(`No License. No rights are granted except as needed to evaluate the Purpose.`);
-      }
-      if(templateKey === "service"){
-        drawLine(`This Service Agreement (“Agreement”) is between ${values.client || "[Client]"} (“Client”) and ${values.provider || "[Provider]"} (“Provider”).`);
-        drawLine(`Scope. Provider will perform: ${values.scope || "[Scope]"}.`);
-        drawLine(`Fees. Client will pay Provider $${values.fee || "0"} per month, due within 15 days of invoice.`);
-        drawLine(`Term. Services begin on ${values.start || "[Start Date]"} and continue month-to-month unless terminated with 30 days’ notice.`);
-        drawLine(`Confidentiality. Each party will protect the other party’s confidential information.`);
-      }
-      if(templateKey === "offer"){
-        drawLine(`${values.company || "[Company]"} is pleased to offer ${values.candidate || "[Candidate]"} the position of ${values.role || "[Role]"} effective ${values.start || "[Start Date]"}.`);
-        drawLine(`Compensation. Base salary will be $${values.salary || "0"} per year, paid in accordance with standard payroll practices.`);
-        drawLine(`Employment Relationship. Employment is at-will unless otherwise required by law.`);
-        drawLine(`Confidentiality & IP. You agree to protect confidential information and assign work product created within scope of employment.`);
-      }
-      if(templateKey === "lease"){
-        drawLine(`This Lease Addendum (“Addendum”) is entered into by ${values.landlord || "[Landlord]"} (“Landlord”) and ${values.tenant || "[Tenant]"} (“Tenant”).`);
-        drawLine(`Premises: ${values.address || "[Address]"}. Effective ${values.effective || "[Effective Date]"}.`);
-        drawLine(`Addendum Terms. ${values.change || "[Describe changes]"}.`);
-        drawLine(`All other terms of the Lease remain in full force and effect.`);
-      }
-
-      y -= 10;
-      drawLine("IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.", { bold:true });
-
-      y -= 12;
-      drawLine("Party A: ________________________________", { muted:true });
-      drawLine("Party B: ________________________________", { muted:true });
-      drawLine("Date:    ________________________________", { muted:true });
-
-      return new Uint8Array(await pdfDoc.save());
-    }
-
-    tplGenerateBtn.addEventListener("click", async () => {
-      try{
-        const key = tplSelect.value;
-        state.pdfBytes = await generatePdfFromTemplate(key);
-        closeTemplateModal();
-        setUploadUiReady(`${key}.pdf`);
-        openRecipientsModal();
-      }catch(err){
-        alert("Template generation failed: " + (err?.message || String(err)));
-      }
-    });
-
-    // Recipients modal
-    const recipientsModal = document.getElementById("recipientsModal");
-    const recipientsList = document.getElementById("recipientsList");
-    const addRecipientLink = document.getElementById("addRecipientLink");
-    const nextTagBar = document.getElementById("nextTagBar");
-    const recipientsCloseBtn = document.getElementById("recipientsCloseBtn");
-
-    function openRecipientsModal(){
-      renderRecipients();
-      recipientsModal.classList.add("show");
-      recipientsModal.setAttribute("aria-hidden", "false");
-    }
-    function closeRecipientsModal(){
-      recipientsModal.classList.remove("show");
-      recipientsModal.setAttribute("aria-hidden", "true");
-    }
-    function renderRecipients(){
-      recipientsList.innerHTML = "";
-      state.recipients.forEach((r, idx) => {
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const name = document.createElement("input");
-        name.className = "field";
-        name.placeholder = "Name";
-        name.value = r.name;
-        name.addEventListener("input", () => { state.recipients[idx].name = name.value; });
-
-        const email = document.createElement("input");
-        email.className = "field";
-        email.placeholder = "Email";
-        email.value = r.email;
-        email.addEventListener("input", () => { state.recipients[idx].email = email.value; });
-
-        const remove = document.createElement("span");
-        remove.className = "link danger";
-        remove.textContent = "Remove";
-        remove.addEventListener("click", () => {
-          state.recipients.splice(idx, 1);
-          if(state.recipients.length === 0) state.recipients.push({ name:"", email:"" });
-          renderRecipients();
-        });
-
-        row.appendChild(name);
-        row.appendChild(email);
-        row.appendChild(remove);
-        recipientsList.appendChild(row);
+        t.style.display = (matchTab && matchQ) ? '' : 'none';
       });
     }
 
-    addRecipientLink.addEventListener("click", () => {
-      state.recipients.push({ name:"", email:"" });
-      renderRecipients();
-    });
-
-    recipientsCloseBtn.addEventListener("click", closeRecipientsModal);
-    recipientsModal.addEventListener("click", (e) => { if(e.target === recipientsModal) closeRecipientsModal(); });
-
-    uploadNextBtn.addEventListener("click", openRecipientsModal);
-    document.getElementById("backToRecipientsBtn").addEventListener("click", openRecipientsModal);
-
-    // PDF viewer
-    const docPage = document.getElementById("docPage");
-    const docHint = document.getElementById("docHint");
-    const pdfCanvas = document.getElementById("pdfCanvas");
-    const pageIndicator = document.getElementById("pageIndicator");
-    const prevPageBtn = document.getElementById("prevPageBtn");
-    const nextPageBtn = document.getElementById("nextPageBtn");
-
-    if (window.pdfjsLib) {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js";
-    }
-
-    function showError(msg){
-      docHint.style.display = "flex";
-      docHint.textContent = msg;
-    }
-
-    async function loadPdf(pdfBytes){
-      if(!window.pdfjsLib) throw new Error("pdfjsLib missing; pdf.js failed to load.");
-      state.pdfDocHandle = await window.pdfjsLib.getDocument({ data: pdfBytes }).promise;
-      state.pdfPageNumber = 1;
-      await renderPdfPage();
-    }
-
-    async function renderPdfPage(){
-      if(!state.pdfDocHandle) return;
-      await nextFrame();
-      const page = await state.pdfDocHandle.getPage(state.pdfPageNumber);
-      const containerWidth = docPage.clientWidth - 2;
-      if(containerWidth <= 10) throw new Error("PDF container has zero width.");
-      const unscaled = page.getViewport({ scale: 1 });
-      const scale = containerWidth / unscaled.width;
-      const viewport = page.getViewport({ scale });
-
-      const ctx = pdfCanvas.getContext("2d", { alpha: false });
-      pdfCanvas.width = Math.floor(viewport.width);
-      pdfCanvas.height = Math.floor(viewport.height);
-      docPage.style.height = pdfCanvas.height + "px";
-
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      pageIndicator.textContent = `Page ${state.pdfPageNumber} / ${state.pdfDocHandle.numPages}`;
-      prevPageBtn.disabled = state.pdfPageNumber <= 1;
-      nextPageBtn.disabled = state.pdfPageNumber >= state.pdfDocHandle.numPages;
-    }
-
-    function clearPlacedFields(){ docPage.querySelectorAll(".placed").forEach(el => el.remove()); }
-
-    prevPageBtn.addEventListener("click", async () => {
-      try{
-        if(!state.pdfDocHandle || state.pdfPageNumber <= 1) return;
-        state.pdfPageNumber -= 1;
-        clearPlacedFields();
-        clearEditorSelection();
-        await renderPdfPage();
-      }catch(err){ showError("PDF render error:\n" + (err?.message || String(err))); }
-    });
-
-    nextPageBtn.addEventListener("click", async () => {
-      try{
-        if(!state.pdfDocHandle || state.pdfPageNumber >= state.pdfDocHandle.numPages) return;
-        state.pdfPageNumber += 1;
-        clearPlacedFields();
-        clearEditorSelection();
-        await renderPdfPage();
-      }catch(err){ showError("PDF render error:\n" + (err?.message || String(err))); }
-    });
-
-    // Assign dropdown + editor
-    const assignSelect = document.getElementById("assignSelect");
-    function recipientsAsOptions(){
-      return state.recipients.map(r => {
-        const n = (r.name || "Signer").trim();
-        const em = (r.email || "email@example.com").trim();
-        return `${n} (${em})`;
+    tabs.forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        applyFilter();
       });
-    }
-    function renderAssignDropdown(){
-      const opts = recipientsAsOptions();
-      assignSelect.innerHTML = "";
-      opts.forEach(v => {
-        const o = document.createElement("option");
-        o.value = v; o.textContent = v;
-        assignSelect.appendChild(o);
-      });
-      if(assignSelect.options.length === 0){
-        const o = document.createElement("option");
-        o.value = "Signer (email@example.com)";
-        o.textContent = "Signer (email@example.com)";
-        assignSelect.appendChild(o);
-      }
-    }
+    });
+    search.addEventListener('input', applyFilter);
 
-    const editorEmpty = document.getElementById("editorEmpty");
-    const editorBody = document.getElementById("editorBody");
-    const editorModePill = document.getElementById("editorModePill");
+    // --- Editor live preview bindings ---
+    const $ = (id) => document.getElementById(id);
 
-    const edType = document.getElementById("edType");
-    const edLabel = document.getElementById("edLabel");
-    const edAssigned = document.getElementById("edAssigned");
+    const pvEff = $('pvEff');
+    const pvDateInline = $('pvDateInline');
+    const pvDPName = $('pvDPName');
+    const pvDPAddr = $('pvDPAddr');
+    const pvRPName = $('pvRPName');
+    const pvRPAddr = $('pvRPAddr');
+    const pvPurpose = $('pvPurpose');
+    const pvTerm = $('pvTerm');
+    const pvTermUnit = $('pvTermUnit');
 
-    const edSignatureBlock = document.getElementById("edSignatureBlock");
-    const edSigMode = document.getElementById("edSigMode");
-    const edSigName = document.getElementById("edSigName");
-
-    const edInitialsBlock = document.getElementById("edInitialsBlock");
-    const edInitials = document.getElementById("edInitials");
-
-    const edDateBlock = document.getElementById("edDateBlock");
-    const edDateMode = document.getElementById("edDateMode");
-    const edDateFixed = document.getElementById("edDateFixed");
-
-    const edTextBlock = document.getElementById("edTextBlock");
-    const edTextValue = document.getElementById("edTextValue");
-
-    const edApplyBtn = document.getElementById("edApplyBtn");
-    const edCancelBtn = document.getElementById("edCancelBtn");
-    const edDeleteBtn = document.getElementById("edDeleteBtn");
-    const editorHint = document.getElementById("editorHint");
-
-    function labelFor(type){
-      if(type === "signature") return "Signature";
-      if(type === "initials") return "Initials";
-      if(type === "date") return "Date";
-      return "Text Input";
-    }
-    function showEditor(){ editorEmpty.style.display="none"; editorBody.style.display="block"; }
-    function hideEditor(){ editorEmpty.style.display="block"; editorBody.style.display="none"; }
-    function setEditorBlocks(type){
-      edSignatureBlock.style.display = (type === "signature") ? "block" : "none";
-      edInitialsBlock.style.display  = (type === "initials") ? "block" : "none";
-      edDateBlock.style.display      = (type === "date") ? "block" : "none";
-      edTextBlock.style.display      = (type === "text") ? "block" : "none";
-    }
-    function renderEditorAssignedOptions(selected){
-      const opts = recipientsAsOptions();
-      edAssigned.innerHTML = "";
-      opts.forEach(v => {
-        const o = document.createElement("option");
-        o.value = v; o.textContent = v;
-        edAssigned.appendChild(o);
-      });
-      if(edAssigned.options.length === 0){
-        const o = document.createElement("option");
-        o.value = "Signer (email@example.com)";
-        o.textContent = "Signer (email@example.com)";
-        edAssigned.appendChild(o);
-      }
-      edAssigned.value = selected || edAssigned.options[0].value;
+    function normalizeUnit(v){
+      const s = (v || '').toLowerCase();
+      return s.includes('month') ? 'months' : 'years';
     }
 
-    function clearEditorSelection(){
-      state.activeToolType = null;
-      state.pendingField = null;
-      state.selectedFieldId = null;
-      document.querySelectorAll(".tool").forEach(el => el.classList.remove("active"));
-      hideEditor();
-      docHint.style.display = "flex";
-      docHint.textContent = "Select a tool, configure it, then tap on the document to place.";
+    function updatePreview(){
+      const effDate = $('effDate').value || '[Date]';
+      pvEff.textContent = effDate;
+      pvDateInline.textContent = effDate;
+
+      pvDPName.textContent = $('dpName').value || '[Disclosing Party Name]';
+      pvDPAddr.textContent = $('dpAddr').value || '[Disclosing Party Address]';
+
+      pvRPName.textContent = $('rpName').value || '[Receiving Party Name]';
+      pvRPAddr.textContent = $('rpAddr').value || '[Receiving Party Address]';
+
+      pvPurpose.textContent = $('purpose').value || '';
+      pvTerm.textContent = $('term').value || '2';
+      pvTermUnit.textContent = normalizeUnit($('termUnit').value);
     }
 
-    function setActiveTool(type){
-      state.activeToolType = type;
-      state.selectedFieldId = null;
-      state.pendingField = null;
-
-      document.querySelectorAll(".tool").forEach(el => {
-        el.classList.toggle("active", el.getAttribute("data-tool") === type);
-      });
-
-      showEditor();
-      editorModePill.textContent = "New field";
-      edDeleteBtn.style.display = "none";
-
-      edType.value = labelFor(type);
-      edLabel.value = labelFor(type);
-      renderEditorAssignedOptions(assignSelect.value);
-
-      edSigMode.value = "typed";
-      edSigName.value = "";
-      edInitials.value = "";
-      edDateMode.value = "auto";
-      edDateFixed.value = todayISO();
-      edTextValue.value = "";
-
-      setEditorBlocks(type);
-
-      editorHint.textContent = "After Apply, tap on the document to place the field.";
-      docHint.style.display = "flex";
-      docHint.textContent = "Configure the field in the sidebar, then tap on the document to place.";
-    }
-
-    document.querySelectorAll(".tool").forEach(t => {
-      t.addEventListener("click", () => setActiveTool(t.getAttribute("data-tool")));
+    // Bind inputs
+    ['agreementType','dpName','dpAddr','rpName','rpAddr','purpose','confInfo','term','termUnit','effDate'].forEach(id => {
+      const el = $(id);
+      if(!el) return;
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
     });
 
-    assignSelect.addEventListener("change", () => {
-      if(state.activeToolType && !state.selectedFieldId){
-        renderEditorAssignedOptions(assignSelect.value);
-      }
+    updatePreview();
+
+    // Demo help
+    document.getElementById('btnHelp').addEventListener('click', () => {
+      alert('Static UI demo.\n\n• Dashboard → Template Library → Document Editor\n• No backend yet (placeholders only)\n• Images are random Unsplash URLs (per instructions).');
     });
-
-    function buildFieldFromEditor(){
-      const type = state.activeToolType;
-      if(!type) return null;
-      const assigned = edAssigned.value || assignSelect.value;
-      const label = (edLabel.value || labelFor(type)).trim();
-
-      let displayValue = "";
-      let meta = {};
-
-      if(type === "signature"){
-        const mode = edSigMode.value;
-        const name = (edSigName.value || "").trim();
-        displayValue = mode === "typed" ? (name ? `/${name}/` : "/Typed Signature/") : "[Draw here]";
-        meta = { mode, name };
-      }
-      if(type === "initials"){
-        const ini = (edInitials.value || "").trim();
-        displayValue = ini || "[Initials]";
-        meta = { initials: ini };
-      }
-      if(type === "date"){
-        const mode = edDateMode.value;
-        const date = mode === "auto" ? todayISO() : (edDateFixed.value || todayISO());
-        displayValue = date;
-        meta = { mode, date };
-      }
-      if(type === "text"){
-        const text = (edTextValue.value || "").trim();
-        displayValue = text ? text.slice(0, 24) : "[Text]";
-        meta = { text };
-      }
-
-      return {
-        id: state.selectedFieldId || uid(),
-        type,
-        label,
-        assigned,
-        displayValue,
-        meta,
-        page: state.pdfPageNumber
-      };
-    }
-
-    edApplyBtn.addEventListener("click", () => {
-      const field = buildFieldFromEditor();
-      if(!field){ alert("Select a tool first."); return; }
-
-      if(state.selectedFieldId){
-        const el = docPage.querySelector(`.placed[data-id="${state.selectedFieldId}"]`);
-        if(el){
-          el.dataset.type = field.type;
-          el.dataset.label = field.label;
-          el.dataset.assigned = field.assigned;
-          el.dataset.page = String(field.page);
-          el.dataset.meta = JSON.stringify(field.meta);
-          el.dataset.value = field.displayValue;
-          el.innerHTML = `${field.label}: ${field.displayValue}<small>${field.assigned}</small>`;
-        }
-        docHint.style.display = "flex";
-        docHint.textContent = "Updated field.";
-      } else {
-        state.pendingField = field;
-        docHint.style.display = "flex";
-        docHint.textContent = "Tap on the document to place the field.";
-      }
-    });
-
-    edCancelBtn.addEventListener("click", () => clearEditorSelection());
-    edDeleteBtn.addEventListener("click", () => {
-      if(!state.selectedFieldId) return;
-      const el = docPage.querySelector(`.placed[data-id="${state.selectedFieldId}"]`);
-      if(el) el.remove();
-      clearEditorSelection();
-    });
-
-    function enableDragWithinPage(el){
-      let dragging = false;
-      let startX = 0, startY = 0, origLeft = 0, origTop = 0;
-
-      el.addEventListener("pointerdown", (ev) => {
-        selectPlacedField(el);
-        dragging = true;
-        el.setPointerCapture(ev.pointerId);
-        startX = ev.clientX; startY = ev.clientY;
-        origLeft = parseFloat(el.style.left);
-        origTop = parseFloat(el.style.top);
-        ev.preventDefault();
-      });
-
-      el.addEventListener("pointermove", (ev) => {
-        if(!dragging) return;
-        const dx = ev.clientX - startX;
-        const dy = ev.clientY - startY;
-        const newLeft = Math.max(8, Math.min(origLeft + dx, docPage.clientWidth - el.offsetWidth - 8));
-        const newTop  = Math.max(8, Math.min(origTop + dy, docPage.clientHeight - el.offsetHeight - 8));
-        el.style.left = newLeft + "px";
-        el.style.top = newTop + "px";
-      });
-
-      el.addEventListener("pointerup", () => { dragging = false; });
-      el.addEventListener("pointercancel", () => { dragging = false; });
-    }
-
-    function placeField(field, x, y){
-      const el = document.createElement("div");
-      el.className = "placed";
-      el.dataset.id = field.id;
-      el.dataset.type = field.type;
-      el.dataset.label = field.label;
-      el.dataset.assigned = field.assigned;
-      el.dataset.page = String(field.page);
-      el.dataset.meta = JSON.stringify(field.meta || {});
-      el.dataset.value = field.displayValue || "";
-
-      el.style.left = Math.max(8, Math.min(x - 60, docPage.clientWidth - 160)) + "px";
-      el.style.top  = Math.max(8, Math.min(y - 16, docPage.clientHeight - 54)) + "px";
-
-      el.innerHTML = `${field.label}: ${field.displayValue}<small>${field.assigned}</small>`;
-      enableDragWithinPage(el);
-      docPage.appendChild(el);
-    }
-
-    function selectPlacedField(el){
-      state.selectedFieldId = el.dataset.id;
-      state.activeToolType = el.dataset.type;
-      state.pendingField = null;
-
-      document.querySelectorAll(".tool").forEach(tool => {
-        tool.classList.toggle("active", tool.getAttribute("data-tool") === state.activeToolType);
-      });
-
-      showEditor();
-      editorModePill.textContent = "Editing existing field";
-      edDeleteBtn.style.display = "inline-block";
-
-      const type = state.activeToolType;
-      edType.value = labelFor(type);
-      edLabel.value = el.dataset.label || labelFor(type);
-      renderEditorAssignedOptions(el.dataset.assigned || assignSelect.value);
-      setEditorBlocks(type);
-
-      let meta = {};
-      try{ meta = JSON.parse(el.dataset.meta || "{}"); } catch {}
-      edSigMode.value = meta.mode || "typed";
-      edSigName.value = meta.name || "";
-      edInitials.value = meta.initials || "";
-      edDateMode.value = meta.mode || "auto";
-      edDateFixed.value = meta.date || todayISO();
-      edTextValue.value = meta.text || "";
-
-      editorHint.textContent = "Edit values and click Apply to update this field.";
-      docHint.style.display = "flex";
-      docHint.textContent = "Editing field. Click Apply to update, or Delete to remove.";
-    }
-
-    docPage.addEventListener("pointerdown", (e) => {
-      if(e.target.closest(".placed")) return;
-      if(!state.pdfDocHandle) return;
-
-      if(!state.pendingField){
-        docHint.style.display = "flex";
-        docHint.textContent = "Select a tool and click Apply before placing.";
-        return;
-      }
-
-      const rect = docPage.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      state.pendingField.page = state.pdfPageNumber;
-      placeField(state.pendingField, x, y);
-      docHint.style.display = "none";
-    });
-
-    nextTagBar.addEventListener("click", async () => {
-      try{
-        closeRecipientsModal();
-        showView("tag");
-
-        renderAssignDropdown();
-        clearPlacedFields();
-        clearEditorSelection();
-
-        if(!state.pdfBytes){
-          showError("No PDF loaded.\nGo back and upload a PDF or generate a template.");
-          return;
-        }
-
-        docHint.style.display = "flex";
-        docHint.textContent = "Loading PDF…";
-
-        await loadPdf(state.pdfBytes);
-
-        docHint.style.display = "flex";
-        docHint.textContent = "Select a tool, configure it, then tap on the document to place.";
-      }catch(err){
-        showError("Failed to load PDF viewer:\n" + (err?.message || String(err)));
-      }
-    });
-
-    document.getElementById("finishBtn").addEventListener("click", () => {
-      alert("Demo complete: next step would be Send + signature workflow (backend).");
-      showView("dashboard");
-    });
-
-    showView("landing");
   </script>
 </body>
 </html>
