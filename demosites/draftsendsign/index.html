@@ -3,18 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DraftSendSign — Demo</title>
+  <title>DraftSendSign — Demo (Fully Functional / Local Save)</title>
   <meta name="theme-color" content="#0b0f16" />
-  <meta name="description" content="DraftSendSign UI demo (static). Dashboard → Template Library → Document Editor." />
+  <meta name="description" content="DraftSendSign UI demo (functional). Local-only save, templates, recipients, statuses, export." />
 
   <style>
     :root{
-      /* --- Core palette (dark premium) --- */
       --bg0:#070a10;
       --bg1:#0b0f16;
       --panel:#0f1622;
       --panel2:#101a28;
-      --panel3:#0c1320;
       --border:rgba(255,255,255,.075);
       --hair:rgba(255,255,255,.055);
       --text:#eaf0ff;
@@ -22,19 +20,16 @@
       --muted2:rgba(234,240,255,.58);
       --muted3:rgba(234,240,255,.46);
 
-      /* Accent (pink/red like screenshots) */
       --accent:#ff2d5e;
       --accent2:#ff4a76;
-      --accentGlow:rgba(255,45,94,.35);
 
-      /* Secondary accents for KPI icons */
       --green:#24d18e;
       --amber:#ffb020;
       --purple:#9b6dff;
 
       --radius:20px;
       --radius2:26px;
-      --shadow: 0 30px 90px rgba(0,0,0,.55);
+
       --shadow2: 0 18px 55px rgba(0,0,0,.45);
       --shadow3: 0 10px 28px rgba(0,0,0,.34);
 
@@ -60,7 +55,7 @@
     button{ font-family:inherit; }
     .wrap{ min-height:100%; display:flex; flex-direction:column; }
 
-    /* ---------- Top Nav (like screenshots) ---------- */
+    /* Top Nav */
     .topbar{
       position:sticky; top:0; z-index:50;
       border-bottom:1px solid var(--hair);
@@ -74,13 +69,9 @@
       display:flex; align-items:center; justify-content:space-between;
       gap:14px;
     }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      min-width:240px;
-    }
+    .brand{ display:flex; align-items:center; gap:12px; min-width:240px; }
     .brand .logo{
-      width:38px; height:38px;
-      border-radius:12px;
+      width:38px; height:38px; border-radius:12px;
       background:
         radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,.22), transparent 65%),
         linear-gradient(135deg, rgba(255,45,94,.95), rgba(255,74,118,.55));
@@ -90,18 +81,11 @@
       flex:0 0 auto;
     }
     .brand .logo svg{ width:18px; height:18px; opacity:.95; }
-    .brand .name{
-      font-weight:950;
-      letter-spacing:-.35px;
-      font-size:16px;
-      line-height:1.1;
-    }
+    .brand .name{ font-weight:950; letter-spacing:-.35px; font-size:16px; line-height:1.1; }
 
     .crumbs{
       display:flex; align-items:center; gap:10px;
-      flex:1 1 auto;
-      justify-content:center;
-      min-width: 280px;
+      flex:1 1 auto; justify-content:center; min-width: 280px;
     }
     .crumb{
       display:inline-flex; align-items:center; gap:10px;
@@ -113,6 +97,8 @@
       font-weight:850;
       font-size:13px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      cursor:pointer;
+      user-select:none;
     }
     .crumb svg{ width:16px; height:16px; opacity:.95; }
     .crumb.active{
@@ -121,15 +107,12 @@
       color:#fff;
       box-shadow: 0 18px 45px rgba(255,45,94,.12);
     }
-    .chev{
-      opacity:.40;
-      font-weight:900;
-      user-select:none;
-    }
+    .crumb[aria-disabled="true"]{ opacity:.55; cursor:default; }
+    .chev{ opacity:.40; font-weight:900; user-select:none; }
+
     .right-actions{
       display:flex; align-items:center; justify-content:flex-end;
-      gap:10px;
-      min-width:240px;
+      gap:10px; min-width:240px;
     }
 
     .pillbtn{
@@ -144,10 +127,7 @@
       cursor:pointer;
       transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
-    .pillbtn:hover{
-      background: rgba(255,255,255,.05);
-      border-color: rgba(255,255,255,.11);
-    }
+    .pillbtn:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.11); }
     .pillbtn:active{ transform: translateY(1px); }
     .pillbtn svg{ width:16px; height:16px; opacity:.95; }
     .pillbtn.primary{
@@ -157,15 +137,10 @@
       box-shadow: 0 20px 55px rgba(255,45,94,.12);
     }
 
-    /* ---------- Content container ---------- */
-    .page{
-      max-width: var(--max);
-      margin:0 auto;
-      width:100%;
-      padding: 26px 18px 44px;
-    }
+    /* Content */
+    .page{ max-width: var(--max); margin:0 auto; width:100%; padding: 26px 18px 44px; }
 
-    /* ---------- Dashboard hero ---------- */
+    /* Dashboard hero */
     .hero h1{
       margin: 18px 0 6px;
       font-size: clamp(36px, 5vw, 56px);
@@ -173,14 +148,9 @@
       line-height: 1.02;
       font-weight: 980;
     }
-    .hero p{
-      margin: 0;
-      color: var(--muted);
-      font-weight: 750;
-      font-size: 15px;
-    }
+    .hero p{ margin: 0; color: var(--muted); font-weight: 750; font-size: 15px; }
 
-    /* ---------- Stat cards row ---------- */
+    /* Stats */
     .stats{
       margin-top: 22px;
       display:grid;
@@ -207,53 +177,28 @@
       opacity:.8;
     }
     .card > *{ position:relative; }
-    .kpi-top{
-      display:flex; align-items:flex-start; justify-content:space-between;
-      gap:12px;
-      margin-bottom: 10px;
-    }
+    .kpi-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 10px; }
     .kpi-icon{
-      width:44px; height:44px;
-      border-radius:16px;
+      width:44px; height:44px; border-radius:16px;
       display:grid; place-items:center;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
     .kpi-icon svg{ width:18px; height:18px; opacity:.95; }
-
     .kpi-delta{
       display:inline-flex; align-items:center; gap:8px;
-      font-weight:900;
-      font-size:12px;
-      color: var(--muted2);
-      opacity:.95;
-      user-select:none;
+      font-weight:900; font-size:12px; color: var(--muted2);
+      opacity:.95; user-select:none;
     }
     .kpi-delta.up{ color: rgba(36,209,142,.92); }
     .kpi-delta.down{ color: rgba(255,86,86,.92); }
     .kpi-delta svg{ width:14px; height:14px; }
+    .kpi-value{ font-size: 44px; letter-spacing: -1.2px; font-weight: 980; margin: 0; }
+    .kpi-label{ margin: 0; color: var(--muted2); font-weight: 860; font-size: 13px; }
+    .kpi-sub{ margin: 6px 0 0; color: var(--muted3); font-weight: 820; font-size: 12px; }
 
-    .kpi-value{
-      font-size: 44px;
-      letter-spacing: -1.2px;
-      font-weight: 980;
-      margin: 0;
-    }
-    .kpi-label{
-      margin: 0;
-      color: var(--muted2);
-      font-weight: 860;
-      font-size: 13px;
-    }
-    .kpi-sub{
-      margin: 6px 0 0;
-      color: var(--muted3);
-      font-weight: 820;
-      font-size: 12px;
-    }
-
-    /* ---------- Call to action panel ---------- */
+    /* CTA */
     .cta{
       margin-top: 18px;
       border-radius: var(--radius2);
@@ -276,23 +221,12 @@
       position:relative;
       padding: 20px 20px;
       display:flex; align-items:center; justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
+      gap:16px; flex-wrap:wrap;
     }
-    .cta h3{
-      margin:0 0 4px;
-      font-size: 22px;
-      font-weight: 980;
-      letter-spacing:-.5px;
-    }
-    .cta p{
-      margin:0;
-      color: var(--muted);
-      font-weight: 760;
-      font-size: 13.5px;
-      max-width: 70ch;
-    }
+    .cta h3{ margin:0 0 4px; font-size: 22px; font-weight: 980; letter-spacing:-.5px; }
+    .cta p{ margin:0; color: var(--muted); font-weight: 760; font-size: 13.5px; max-width: 70ch; }
     .cta-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       padding: 12px 16px;
@@ -305,10 +239,7 @@
       cursor:pointer;
       transition: transform .08s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
     }
-    .btn:hover{
-      background: rgba(255,255,255,.05);
-      border-color: rgba(255,255,255,.12);
-    }
+    .btn:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); }
     .btn:active{ transform: translateY(1px); }
     .btn svg{ width:16px; height:16px; opacity:.95; }
     .btn.primary{
@@ -317,24 +248,17 @@
       box-shadow: 0 20px 55px rgba(255,45,94,.20);
     }
     .btn.primary:hover{ box-shadow: 0 26px 70px rgba(255,45,94,.24); }
-    .btn.ghost{
-      background: rgba(255,255,255,.02);
+    .btn.ghost{ background: rgba(255,255,255,.02); }
+    .btn.danger{
+      border-color: rgba(255,86,86,.30);
+      background: rgba(255,86,86,.10);
     }
+    .btn.small{ padding: 10px 14px; font-size: 12.5px; }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
 
-    /* ---------- Template Library + Recent Docs section ---------- */
-    .two-col{
-      margin-top: 26px;
-      display:grid;
-      grid-template-columns: 1.55fr 1fr;
-      gap: 16px;
-      align-items:start;
-    }
-    .section-title{
-      font-size: 34px;
-      font-weight: 980;
-      letter-spacing:-.7px;
-      margin: 0 0 12px;
-    }
+    /* Two columns */
+    .two-col{ margin-top: 26px; display:grid; grid-template-columns: 1.55fr 1fr; gap: 16px; align-items:start; }
+    .section-title{ font-size: 34px; font-weight: 980; letter-spacing:-.7px; margin: 0 0 12px; }
 
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.032), rgba(255,255,255,.014));
@@ -354,7 +278,6 @@
       pointer-events:none;
     }
     .panel > *{ position:relative; }
-
     .panel-pad{ padding: 18px; }
 
     .search{
@@ -376,10 +299,7 @@
     }
     .search input::placeholder{ color: rgba(234,240,255,.40); font-weight:800; }
 
-    .tabs{
-      margin-top: 14px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
+    .tabs{ margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap; }
     .tab{
       display:inline-flex; align-items:center; gap:10px;
       padding: 10px 14px;
@@ -416,12 +336,7 @@
       color:#fff;
     }
 
-    .tiles{
-      margin-top: 14px;
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
+    .tiles{ margin-top: 14px; display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .tile{
       border-radius: 22px;
       border:1px solid var(--border);
@@ -437,15 +352,9 @@
       border-color: rgba(255,255,255,.14);
       background: rgba(0,0,0,.22);
     }
-    .tile .img{
-      height: 230px;
-      background-size: cover;
-      background-position: center;
-      position:relative;
-    }
+    .tile .img{ height: 230px; background-size: cover; background-position: center; position:relative; }
     .tile .rating{
-      position:absolute;
-      top: 12px; right: 12px;
+      position:absolute; top: 12px; right: 12px;
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
       border-radius: 999px;
@@ -457,23 +366,11 @@
       color:#fff;
     }
     .tile .rating svg{ width:14px; height:14px; color: rgba(255,210,84,.95); }
-    .tile .info{
-      padding: 14px 14px 16px;
-    }
-    .tile .t-title{
-      margin:0;
-      font-weight: 980;
-      letter-spacing:-.35px;
-      font-size: 15px;
-    }
-    .tile .t-sub{
-      margin:6px 0 0;
-      color: var(--muted2);
-      font-weight: 820;
-      font-size: 12.5px;
-    }
+    .tile .info{ padding: 14px 14px 16px; }
+    .tile .t-title{ margin:0; font-weight: 980; letter-spacing:-.35px; font-size: 15px; }
+    .tile .t-sub{ margin:6px 0 0; color: var(--muted2); font-weight: 820; font-size: 12.5px; }
 
-    /* ---------- Recent documents cards ---------- */
+    /* Recent docs */
     .recent-wrap{ display:flex; flex-direction:column; gap: 14px; }
     .doc-card{
       padding: 16px;
@@ -494,10 +391,7 @@
       pointer-events:none;
     }
     .doc-card > *{ position:relative; }
-    .doc-top{
-      display:flex; align-items:flex-start; justify-content:space-between;
-      gap: 10px;
-    }
+    .doc-top{ display:flex; align-items:flex-start; justify-content:space-between; gap: 10px; }
     .doc-title{
       margin:0;
       font-weight: 980;
@@ -527,6 +421,11 @@
       background: rgba(36,209,142,.10);
       color: rgba(172,255,224,.96);
     }
+    .status.draft{
+      border-color: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color: rgba(234,240,255,.75);
+    }
     .doc-meta{
       margin-top: 10px;
       display:flex; gap:12px; flex-wrap:wrap;
@@ -534,45 +433,21 @@
       font-weight: 850;
       font-size: 12px;
     }
-    .doc-meta .m{
-      display:inline-flex; align-items:center; gap:8px;
-    }
+    .doc-meta .m{ display:inline-flex; align-items:center; gap:8px; }
     .doc-meta svg{ width:14px; height:14px; opacity:.85; }
 
-    .doc-actions{
-      margin-top: 12px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .doc-actions .btn{
-      padding: 10px 14px;
-      font-size: 12.5px;
-    }
-    .doc-actions .btn.icon{
-      gap:10px;
-      min-width: 110px;
-    }
+    .doc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
 
-    /* Floating Create New button (bottom right, like screenshot) */
-    .fab{
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 60;
-      display:none;
-    }
-    .fab .btn{
-      padding: 12px 16px;
-      box-shadow: var(--shadow2);
-    }
+    /* Floating create */
+    .fab{ position: fixed; right: 18px; bottom: 18px; z-index: 60; display:none; }
+    .fab .btn{ box-shadow: var(--shadow2); }
 
-    /* ---------- Editor page ---------- */
-    .editor-shell{
-      margin-top: 6px;
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap: 16px;
-      align-items:start;
-    }
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    /* Editor */
+    .editor-shell{ margin-top: 6px; display:grid; grid-template-columns: 360px 1fr; gap: 16px; align-items:start; }
 
     .editor-left{
       border-radius: var(--radius2);
@@ -593,26 +468,11 @@
     }
     .editor-left > *{ position:relative; }
 
-    .editor-head{
-      padding: 16px 16px 8px;
-    }
-    .editor-head h2{
-      margin:0;
-      font-size: 22px;
-      font-weight: 980;
-      letter-spacing:-.5px;
-    }
-    .editor-head p{
-      margin:6px 0 0;
-      color: var(--muted2);
-      font-weight: 760;
-      font-size: 12.8px;
-    }
+    .editor-head{ padding: 16px 16px 8px; }
+    .editor-head h2{ margin:0; font-size: 22px; font-weight: 980; letter-spacing:-.5px; }
+    .editor-head p{ margin:6px 0 0; color: var(--muted2); font-weight: 760; font-size: 12.8px; }
 
-    .accordion{
-      padding: 10px 10px 14px;
-      display:flex; flex-direction:column; gap:10px;
-    }
+    .accordion{ padding: 10px 10px 14px; display:flex; flex-direction:column; gap:10px; }
     details.acc{
       border:1px solid var(--border);
       background: rgba(0,0,0,.18);
@@ -629,10 +489,8 @@
       user-select:none;
     }
     details.acc summary::-webkit-details-marker{ display:none; }
-    .sum-left{
-      display:flex; align-items:center; gap:10px;
-      min-width:0;
-    }
+
+    .sum-left{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sum-ico{
       width:28px; height:28px;
       border-radius: 10px;
@@ -641,11 +499,7 @@
       background: rgba(255,255,255,.03);
     }
     .sum-ico svg{ width:14px; height:14px; opacity:.9; }
-    .sum-txt{
-      min-width:0;
-      display:flex; flex-direction:column;
-      gap:2px;
-    }
+    .sum-txt{ min-width:0; display:flex; flex-direction:column; gap:2px; }
     .sum-txt b{
       font-weight: 960;
       letter-spacing:-.25px;
@@ -658,16 +512,10 @@
       font-size: 11.5px;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .caret{
-      opacity:.55;
-      transition: transform .18s ease;
-    }
+    .caret{ opacity:.55; transition: transform .18s ease; }
     details[open] .caret{ transform: rotate(180deg); }
 
-    .acc-body{
-      padding: 0 12px 12px;
-      display:flex; flex-direction:column; gap:10px;
-    }
+    .acc-body{ padding: 0 12px 12px; display:flex; flex-direction:column; gap:10px; }
     label.lbl{
       display:flex; flex-direction:column; gap:7px;
       font-weight: 900;
@@ -688,6 +536,27 @@
     }
     .txt{ min-height: 72px; resize: vertical; }
     .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+
+    .hintrow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      margin-top: 2px;
+      color: var(--muted3);
+      font-weight: 850;
+      font-size: 11.5px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(234,240,255,.80);
+      user-select:none;
+    }
+    .chip b{ font-weight: 980; }
 
     .progress{
       padding: 12px 12px 10px;
@@ -724,11 +593,7 @@
       font-size: 11.5px;
       display:flex; align-items:center; gap:8px;
     }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: rgba(255,45,94,.95);
-      box-shadow: 0 0 0 4px rgba(255,45,94,.12);
-    }
+    .dot{ width:8px; height:8px; border-radius:999px; background: rgba(255,45,94,.95); box-shadow: 0 0 0 4px rgba(255,45,94,.12); }
 
     .editor-right{
       border-radius: var(--radius2);
@@ -749,10 +614,13 @@
       pointer-events:none;
     }
     .editor-right > *{ position:relative; }
+
     .preview-head{
       padding: 14px 16px;
       display:flex; align-items:center; justify-content:space-between;
       border-bottom: 1px solid rgba(255,255,255,.06);
+      gap: 10px;
+      flex-wrap:wrap;
     }
     .preview-head b{
       font-weight: 980;
@@ -777,11 +645,9 @@
       display:inline-block;
     }
 
-    /* Fake PDF preview */
-    .paper-wrap{
-      padding: 18px;
-      display:flex; justify-content:center;
-    }
+    .head-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    .paper-wrap{ padding: 18px; display:flex; justify-content:center; }
     .paper{
       width: min(740px, 100%);
       background: #0a0e15;
@@ -790,55 +656,15 @@
       box-shadow: 0 30px 90px rgba(0,0,0,.55);
       padding: 26px 26px 18px;
     }
-    .paper .title{
-      text-align:center;
-      font-weight: 980;
-      letter-spacing:-.4px;
-      margin: 2px 0 4px;
-      font-size: 20px;
-    }
-    .paper .sub{
-      text-align:center;
-      color: rgba(234,240,255,.55);
-      font-weight: 850;
-      font-size: 12px;
-      margin: 0 0 18px;
-    }
-    .paper p{
-      margin: 10px 0;
-      color: rgba(234,240,255,.78);
-      font-weight: 760;
-      font-size: 12.8px;
-      line-height: 1.65;
-    }
-    .paper .hl{
-      color: rgba(255,45,94,.95);
-      text-decoration: underline;
-      text-decoration-color: rgba(255,45,94,.55);
-      font-weight: 900;
-    }
-    .paper .sec{
-      margin-top: 14px;
-      font-weight: 980;
-      letter-spacing:-.2px;
-      font-size: 13px;
-      color: rgba(234,240,255,.92);
-    }
-    .sigrow{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 16px;
-      color: rgba(234,240,255,.68);
-      font-weight: 800;
-      font-size: 12px;
-    }
-    .sig{
-      border-top: 1px solid rgba(255,255,255,.14);
-      padding-top: 10px;
-    }
+    .paper .title{ text-align:center; font-weight: 980; letter-spacing:-.4px; margin: 2px 0 4px; font-size: 20px; }
+    .paper .sub{ text-align:center; color: rgba(234,240,255,.55); font-weight: 850; font-size: 12px; margin: 0 0 18px; }
+    .paper p{ margin: 10px 0; color: rgba(234,240,255,.78); font-weight: 760; font-size: 12.8px; line-height: 1.65; }
+    .paper .hl{ color: rgba(255,45,94,.95); text-decoration: underline; text-decoration-color: rgba(255,45,94,.55); font-weight: 900; }
+    .paper .sec{ margin-top: 14px; font-weight: 980; letter-spacing:-.2px; font-size: 13px; color: rgba(234,240,255,.92); }
+    .sigrow{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; color: rgba(234,240,255,.68); font-weight: 800; font-size: 12px; }
+    .sig{ border-top: 1px solid rgba(255,255,255,.14); padding-top: 10px; }
 
-    /* ---------- Top editor mini actions row (like screenshot: Save Draft / Preview / Add Recipients) ---------- */
+    /* Mini actions row */
     .mini-actions{
       position:sticky;
       top: 72px;
@@ -850,6 +676,7 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
+      flex-wrap:wrap;
     }
     .left-hint{
       color: rgba(234,240,255,.58);
@@ -863,22 +690,108 @@
       box-shadow: 0 0 0 4px rgba(255,86,86,.14);
       display:inline-block;
     }
-    .mini-actions .btn{
-      padding: 10px 14px;
+
+    /* Modals */
+    .modal{
+      position: fixed; inset: 0;
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 16px;
+      background: rgba(0,0,0,.62);
+      z-index: 2000;
+    }
+    .modal.show{ display:flex; }
+    .modal-card{
+      width: min(760px, 100%);
+      background: rgba(14,19,29,.96);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 24px;
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
+      overflow:hidden;
+      position:relative;
+    }
+    .modal-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(720px 260px at 85% 0%, rgba(255,45,94,.16), transparent 70%),
+        radial-gradient(720px 260px at 10% 85%, rgba(155,109,255,.12), transparent 70%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .modal-card > *{ position:relative; }
+    .modal-head{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:space-between; gap: 12px;
+    }
+    .modal-head h3{ margin:0; font-size: 15px; font-weight: 980; letter-spacing:-.25px; }
+    .modal-close{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: rgba(234,240,255,.85);
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      cursor:pointer;
+      display:grid; place-items:center;
+    }
+    .modal-close:hover{ background: rgba(255,255,255,.05); }
+    .modal-body{ padding: 14px 16px 16px; }
+    .modal-body p{ margin: 0 0 12px; color: var(--muted2); font-weight: 780; font-size: 13px; line-height:1.55; }
+
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .stack{ display:flex; flex-direction:column; gap:10px; }
+
+    .muter{ color: var(--muted3); font-weight: 820; font-size: 12px; }
+
+    .table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow:hidden;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+    }
+    .table th, .table td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      text-align:left;
       font-size: 12.5px;
     }
+    .table th{ color: rgba(234,240,255,.78); font-weight: 950; }
+    .table td{ color: rgba(234,240,255,.70); font-weight: 800; }
+    .table tr:last-child td{ border-bottom:0; }
 
-    /* ---------- Page switching ---------- */
-    .view{ display:none; }
-    .view.active{ display:block; }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      background: rgba(14,19,29,.96);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      color: rgba(234,240,255,.90);
+      padding: 12px 14px;
+      border-radius: 16px;
+      display:none;
+      z-index: 3000;
+      max-width: min(920px, 92vw);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .toast.show{ display:block; }
 
-    /* ---------- Responsive ---------- */
+    /* Responsive */
     @media (max-width: 1060px){
       .crumbs{ justify-content:flex-start; }
       .right-actions{ min-width: unset; }
       .brand{ min-width: unset; }
       .two-col{ grid-template-columns: 1fr; }
       .fab{ display:block; }
+      .grid2{ grid-template-columns: 1fr; }
+      .grid3{ grid-template-columns: 1fr; }
     }
     @media (max-width: 980px){
       .stats{ grid-template-columns: 1fr; }
@@ -898,9 +811,8 @@
     <!-- TOP BAR -->
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="#/dashboard" aria-label="DraftSendSign home">
+        <div class="brand" aria-label="DraftSendSign home" style="cursor:pointer" id="brandHome">
           <div class="logo" aria-hidden="true">
-            <!-- doc icon -->
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M8 3h6l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="white" stroke-opacity=".92" stroke-width="1.8"/>
               <path d="M14 3v4h4" stroke="white" stroke-opacity=".92" stroke-width="1.8"/>
@@ -908,36 +820,43 @@
             </svg>
           </div>
           <div class="name">DraftSendSign</div>
-        </a>
+        </div>
 
-        <!-- breadcrumb-style nav -->
         <nav class="crumbs" aria-label="Primary">
-          <a class="crumb active" id="navDash" href="#/dashboard">
+          <div class="crumb active" id="navDash" data-route="dashboard">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M4 10.5 12 4l8 6.5V20a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2v-9.5Z" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linejoin="round"/>
             </svg>
             Dashboard
-          </a>
+          </div>
           <span class="chev">›</span>
-          <a class="crumb" id="navEdit" href="#/edit">
+          <div class="crumb" id="navEdit" data-route="edit">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linejoin="round"/>
               <path d="M13.5 6.5 17.5 10.5" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
             Edit Document
-          </a>
+          </div>
           <span class="chev">›</span>
-          <span class="crumb" id="navRecipients" aria-disabled="true" style="opacity:.55; cursor:default;">
+          <div class="crumb" id="navRecipients" data-route="recipients" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
               <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
             Add Recipients
-          </span>
+          </div>
         </nav>
 
         <div class="right-actions">
-          <button class="pillbtn" id="btnHelp" type="button" title="Demo-only">
+          <button class="pillbtn" id="btnLocal" type="button" title="Local-only storage">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 8l5 5 5-5" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 3v10" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Local
+          </button>
+          <button class="pillbtn" id="btnHelp" type="button" title="Help">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="white" stroke-opacity=".88" stroke-width="1.8"/>
               <path d="M9.8 9.2a2.4 2.4 0 1 1 4.4 1.4c-.8 1.2-2 1.4-2 2.9" stroke="white" stroke-opacity=".86" stroke-width="1.8" stroke-linecap="round"/>
@@ -955,25 +874,37 @@
       </div>
     </header>
 
-    <!-- Editor mini-actions row -->
+    <!-- Mini actions row (Editor) -->
     <div class="mini-actions" id="miniActions">
-      <div class="left-hint"><i></i> Not saved yet</div>
+      <div class="left-hint" id="saveState"><i></i> Not saved yet</div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn ghost" type="button">
+        <button class="btn ghost small" type="button" id="btnSaveLocal">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M19 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h9l7 7v7a2 2 0 0 1-2 2Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
             <path d="M12 12v6M9 15h6" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
-          Save Draft
+          Save Locally
         </button>
-        <button class="btn ghost" type="button">
+
+        <button class="btn ghost small" type="button" id="btnExportJSON">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="white" stroke-opacity=".9" stroke-width="1.8"/>
-            <path d="M12 15a3 3 0 1 0-3-3 3 3 0 0 0 3 3Z" stroke="white" stroke-opacity=".85" stroke-width="1.8"/>
+            <path d="M12 16V4" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 9l5-5 5 5" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4" stroke="white" stroke-opacity=".78" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          Preview
+          Export .json
         </button>
-        <button class="btn primary" type="button" id="btnAddRecipients">
+
+        <button class="btn ghost small" type="button" id="btnDownloadHTML">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M20 8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 8l5 5 5-5" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 3v10" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Download .html
+        </button>
+
+        <button class="btn primary small" type="button" id="btnAddRecipients">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".96" stroke-width="1.8"/>
             <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".92" stroke-width="1.8" stroke-linecap="round"/>
@@ -983,10 +914,8 @@
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <main class="page">
-
-      <!-- DASHBOARD VIEW -->
+      <!-- DASHBOARD -->
       <section class="view active" id="viewDashboard" aria-label="Dashboard">
         <div class="hero">
           <h1>Welcome to DraftSendSign</h1>
@@ -1006,10 +935,10 @@
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 5v14M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                12%
+                <span id="kpiSentDelta">12%</span>
               </div>
             </div>
-            <p class="kpi-value">24</p>
+            <p class="kpi-value" id="kpiSent">0</p>
             <p class="kpi-label">Documents Sent</p>
             <p class="kpi-sub">This month</p>
           </div>
@@ -1026,10 +955,10 @@
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 5v14M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                5%
+                <span id="kpiCompDelta">5%</span>
               </div>
             </div>
-            <p class="kpi-value">89%</p>
+            <p class="kpi-value" id="kpiCompletion">—</p>
             <p class="kpi-label">Completion Rate</p>
             <p class="kpi-sub">Last 30 days</p>
           </div>
@@ -1046,10 +975,10 @@
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 19V5M6 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                8%
+                <span id="kpiRespDelta">8%</span>
               </div>
             </div>
-            <p class="kpi-value">3.2h</p>
+            <p class="kpi-value" id="kpiResp">—</p>
             <p class="kpi-label">Avg. Response Time</p>
             <p class="kpi-sub">This week</p>
           </div>
@@ -1068,7 +997,7 @@
                 </svg>
                 Create New Document
               </button>
-              <button class="btn" type="button">
+              <button class="btn" id="btnUploadTemplate" type="button">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 16V4" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round"/>
                   <path d="M7 9l5-5 5 5" stroke="white" stroke-opacity=".88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1076,6 +1005,7 @@
                 </svg>
                 Upload Template
               </button>
+              <input id="fileTemplate" type="file" accept=".json" hidden />
             </div>
           </div>
         </div>
@@ -1099,7 +1029,7 @@
                     <svg viewBox="0 0 24 24" fill="none">
                       <path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/>
                     </svg>
-                    All Templates <span class="count">8</span>
+                    All Templates <span class="count" id="countAll">0</span>
                   </div>
                   <div class="tab" data-tab="employment" role="tab" aria-selected="false">
                     <svg viewBox="0 0 24 24" fill="none">
@@ -1107,7 +1037,7 @@
                       <path d="M4 9h16v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9Z" stroke="white" stroke-opacity=".8" stroke-width="2"/>
                       <path d="M9 12h6" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    Employment <span class="count">2</span>
+                    Employment <span class="count" id="countEmployment">0</span>
                   </div>
                   <div class="tab" data-tab="contracts" role="tab" aria-selected="false">
                     <svg viewBox="0 0 24 24" fill="none">
@@ -1115,53 +1045,25 @@
                       <path d="M15 3v5h5" stroke="white" stroke-opacity=".75" stroke-width="2"/>
                       <path d="M9 12h6M9 16h6" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    Contracts <span class="count">2</span>
+                    Contracts <span class="count" id="countContracts">0</span>
                   </div>
                   <div class="tab" data-tab="ndas" role="tab" aria-selected="false">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path d="M12 22s8-4 8-10V6l-8-3-8 3v6c0 6 8 10 8 10Z" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>
                       <path d="M9.5 12l1.7 1.7L14.8 10" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    NDAs <span class="count">2</span>
+                    NDAs <span class="count" id="countNDAs">0</span>
                   </div>
                   <div class="tab" data-tab="service" role="tab" aria-selected="false">
                     <svg viewBox="0 0 24 24" fill="none">
                       <path d="M20 7h-9l-2-2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>
                       <path d="M8 14h8" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    Service Agreements <span class="count">2</span>
+                    Service Agreements <span class="count" id="countService">0</span>
                   </div>
                 </div>
 
-                <div class="tiles" id="tiles">
-                  <!-- IMPORTANT: Using random internet images (Unsplash) per your instruction -->
-                  <div class="tile" data-open-editor="1" data-category="employment">
-                    <div class="img" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80');">
-                      <div class="rating">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .5-5.4 4.6 1.7 7-6.3-3.8L6.4 21l1.7-7L2.7 9.5 9.7 9 12 2z"/></svg>
-                        4.8
-                      </div>
-                    </div>
-                    <div class="info">
-                      <p class="t-title">Employment Agreement</p>
-                      <p class="t-sub">Offer, terms, confidentiality, signatures</p>
-                    </div>
-                  </div>
-
-                  <div class="tile" data-open-editor="1" data-category="ndas">
-                    <div class="img" style="background-image:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80');">
-                      <div class="rating">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .5-5.4 4.6 1.7 7-6.3-3.8L6.4 21l1.7-7L2.7 9.5 9.7 9 12 2z"/></svg>
-                        4.9
-                      </div>
-                    </div>
-                    <div class="info">
-                      <p class="t-title">Non-Disclosure Agreement</p>
-                      <p class="t-sub">Mutual NDA with term duration</p>
-                    </div>
-                  </div>
-                </div>
-
+                <div class="tiles" id="tiles"></div>
               </div>
             </div>
           </div>
@@ -1169,77 +1071,10 @@
           <!-- Recent Documents -->
           <div>
             <h2 class="section-title">Recent Documents</h2>
-            <div class="recent-wrap">
-              <div class="doc-card">
-                <div class="doc-top">
-                  <h3 class="doc-title">Employment Agreement —<br/>John Smith</h3>
-                  <span class="status sent">
-                    <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;">
-                      <path d="M22 2 11 13" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
-                      <path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linejoin="round"/>
-                    </svg>
-                    Sent
-                  </span>
-                </div>
-                <div class="doc-meta">
-                  <span class="m">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
-                    1 recipients
-                  </span>
-                  <span class="m">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
-                    02/15/2026
-                  </span>
-                </div>
-                <div class="doc-actions">
-                  <button class="btn icon" data-open-editor="1" type="button">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/></svg>
-                    Edit
-                  </button>
-                  <button class="btn icon" type="button">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 6a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm10 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M8 12l6-6M8 12l6 6" stroke="white" stroke-opacity=".72" stroke-width="2" stroke-linecap="round"/></svg>
-                    Share
-                  </button>
-                </div>
-              </div>
-
-              <div class="doc-card">
-                <div class="doc-top">
-                  <h3 class="doc-title">NDA — Tech Startup<br/>Partnership</h3>
-                  <span class="status completed">
-                    <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;">
-                      <path d="M9 12.5 11 14.5 15.5 10" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="white" stroke-opacity=".85" stroke-width="2"/>
-                    </svg>
-                    Completed
-                  </span>
-                </div>
-                <div class="doc-meta">
-                  <span class="m">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
-                    2 recipients
-                  </span>
-                  <span class="m">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
-                    02/14/2026
-                  </span>
-                </div>
-                <div class="doc-actions">
-                  <button class="btn icon" data-open-editor="1" type="button">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/></svg>
-                    Edit
-                  </button>
-                  <button class="btn icon" type="button">
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 6a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm10 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M8 12l6-6M8 12l6 6" stroke="white" stroke-opacity=".72" stroke-width="2" stroke-linecap="round"/></svg>
-                    Share
-                  </button>
-                </div>
-              </div>
-            </div>
+            <div class="recent-wrap" id="recentDocs"></div>
           </div>
         </div>
 
-        <!-- Mobile FAB (matches screenshot vibe) -->
         <div class="fab" aria-hidden="true">
           <button class="btn primary" type="button" id="btnCreateFab">
             <svg viewBox="0 0 24 24" fill="none">
@@ -1250,10 +1085,9 @@
         </div>
       </section>
 
-      <!-- EDITOR VIEW -->
+      <!-- EDITOR -->
       <section class="view" id="viewEditor" aria-label="Document Editor">
         <div class="editor-shell">
-          <!-- Left controls -->
           <aside class="editor-left">
             <div class="editor-head">
               <h2>Document Editor</h2>
@@ -1282,13 +1116,12 @@
                 <div class="acc-body">
                   <label class="lbl">
                     Agreement Type *
-                    <select class="sel" id="agreementType">
-                      <option>Non-Disclosure Agreement</option>
-                      <option>Employment Agreement</option>
-                      <option>Service Agreement</option>
-                      <option>Independent Contractor Agreement</option>
-                    </select>
+                    <select class="sel" id="agreementType"></select>
                   </label>
+                  <div class="hintrow">
+                    <span class="muter">Template comes from your local library.</span>
+                    <span class="chip">Doc ID: <b id="docIdChip">—</b></span>
+                  </div>
                 </div>
               </details>
 
@@ -1314,21 +1147,21 @@
                   <div class="row2">
                     <label class="lbl">
                       Disclosing Party Name *
-                      <input class="inp" id="dpName" placeholder="Company or Individual Name" value="Acme Innovations LLC" />
+                      <input class="inp" id="dpName" placeholder="Company or Individual Name" />
                     </label>
                     <label class="lbl">
                       Disclosing Party Address
-                      <input class="inp" id="dpAddr" placeholder="Full Address" value="12 Harbor Way, Boston, MA" />
+                      <input class="inp" id="dpAddr" placeholder="Full Address" />
                     </label>
                   </div>
                   <div class="row2">
                     <label class="lbl">
                       Receiving Party Name *
-                      <input class="inp" id="rpName" placeholder="Company or Individual Name" value="Northstar Labs Inc." />
+                      <input class="inp" id="rpName" placeholder="Company or Individual Name" />
                     </label>
                     <label class="lbl">
                       Receiving Party Address
-                      <input class="inp" id="rpAddr" placeholder="Full Address" value="88 Market St, Cambridge, MA" />
+                      <input class="inp" id="rpAddr" placeholder="Full Address" />
                     </label>
                   </div>
                 </div>
@@ -1355,21 +1188,21 @@
                 <div class="acc-body">
                   <label class="lbl">
                     Purpose of Disclosure *
-                    <input class="inp" id="purpose" placeholder="e.g., mutual business partnership, product development" value="Potential partnership and product development" />
+                    <input class="inp" id="purpose" placeholder="e.g., mutual business partnership, product development" />
                   </label>
                   <label class="lbl">
                     Describe what confidential information will be shared
-                    <textarea class="txt" id="confInfo" placeholder="Brief description...">Technical specifications, pricing, roadmap, and customer details.</textarea>
+                    <textarea class="txt" id="confInfo" placeholder="Brief description..."></textarea>
                   </label>
                   <div class="row2">
                     <label class="lbl">
                       Term Duration
-                      <input class="inp" id="term" placeholder="2" value="2" />
+                      <input class="inp" id="term" placeholder="2" />
                     </label>
                     <label class="lbl">
                       Duration Unit
                       <select class="sel" id="termUnit">
-                        <option selected>Years</option>
+                        <option>Years</option>
                         <option>Months</option>
                       </select>
                     </label>
@@ -1399,7 +1232,7 @@
                 <div class="acc-body">
                   <label class="lbl">
                     Effective Date *
-                    <input class="inp" id="effDate" placeholder="mm/dd/yyyy" value="02/16/2026" />
+                    <input class="inp" id="effDate" placeholder="mm/dd/yyyy" />
                   </label>
                 </div>
               </details>
@@ -1424,7 +1257,7 @@
                 <div class="acc-body">
                   <label class="lbl">
                     Extra clause
-                    <textarea class="txt" placeholder="Optional..."></textarea>
+                    <textarea class="txt" id="extraClause" placeholder="Optional..."></textarea>
                   </label>
                 </div>
               </details>
@@ -1433,14 +1266,13 @@
             <div class="progress">
               <div class="progress-top">
                 <span>Completion Progress</span>
-                <span style="color:rgba(255,45,94,.95); font-weight:980;">33%</span>
+                <span style="color:rgba(255,45,94,.95); font-weight:980;" id="pctChip">0%</span>
               </div>
-              <div class="bar" aria-label="Completion progress bar"><i></i></div>
-              <div class="progress-sub"><span class="dot"></span> 4 required fields remaining</div>
+              <div class="bar" aria-label="Completion progress bar"><i id="barFill" style="width:0%"></i></div>
+              <div class="progress-sub"><span class="dot"></span> <span id="requiredLeft">—</span></div>
             </div>
           </aside>
 
-          <!-- Right preview -->
           <section class="editor-right">
             <div class="preview-head">
               <b>
@@ -1450,16 +1282,26 @@
                 </svg>
                 Document Preview
               </b>
-              <span class="live"><i></i>Live</span>
+              <div class="head-actions">
+                <span class="live"><i></i>Live</span>
+                <button class="btn small" id="btnPrint" type="button" title="Print / Save as PDF from browser">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9V4h12v5" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M6 18h12v2H6v-2Z" stroke="white" stroke-opacity=".85" stroke-width="2"/>
+                    <path d="M6 14H5a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-1" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  Print
+                </button>
+              </div>
             </div>
 
             <div class="paper-wrap">
               <div class="paper" id="paper">
-                <div class="title">NON-DISCLOSURE AGREEMENT</div>
+                <div class="title" id="pvDocTitle">NON-DISCLOSURE AGREEMENT</div>
                 <div class="sub">Effective Date: <span id="pvEff">[Date]</span></div>
 
                 <p>
-                  This <span class="hl">Non-Disclosure Agreement</span> (the “Agreement”) is entered into as of
+                  This <span class="hl" id="pvType">Non-Disclosure Agreement</span> (the “Agreement”) is entered into as of
                   <span class="hl" id="pvDateInline">[Date]</span> (the “Effective Date”) by and between:
                 </p>
 
@@ -1478,7 +1320,7 @@
                 <p><span class="hl">[Purpose of disclosure will be specified here]</span> — <span id="pvPurpose"></span></p>
 
                 <div class="sec">2. Confidential Information</div>
-                <p>
+                <p id="pvConfInfo">
                   For purposes of this Agreement, “Confidential Information” shall include all information or materials
                   that is or could have commercial value or other utility in the business in which Disclosing Party is engaged.
                 </p>
@@ -1489,6 +1331,9 @@
                   <span class="hl"><span id="pvTerm">2</span> <span id="pvTermUnit">years</span></span>,
                   unless earlier terminated by either party with written notice.
                 </p>
+
+                <div class="sec">4. Additional Clauses</div>
+                <p id="pvExtra" style="color:rgba(234,240,255,.72);">[None]</p>
 
                 <div class="sigrow">
                   <div class="sig">
@@ -1511,137 +1356,1109 @@
     </main>
   </div>
 
+  <!-- RECIPIENTS MODAL -->
+  <div class="modal" id="recModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="recTitle">
+      <div class="modal-head">
+        <h3 id="recTitle">Add Recipients</h3>
+        <button class="modal-close" id="recClose" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" style="width:18px;height:18px;">
+            <path d="M6 6l12 12M18 6 6 18" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Add people who should receive and sign this document. (Local-only demo)</p>
+
+        <div class="grid2">
+          <label class="lbl">
+            Name
+            <input class="inp" id="recName" placeholder="e.g., John Smith" />
+          </label>
+          <label class="lbl">
+            Email
+            <input class="inp" id="recEmail" placeholder="e.g., john@example.com" />
+          </label>
+        </div>
+
+        <div class="grid2" style="margin-top:10px;">
+          <label class="lbl">
+            Role
+            <select class="sel" id="recRole">
+              <option value="Signer">Signer</option>
+              <option value="CC">CC</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </label>
+          <label class="lbl">
+            Signing Order
+            <input class="inp" id="recOrder" type="number" min="1" value="1" />
+          </label>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+          <button class="btn primary small" id="recAdd" type="button">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="white" stroke-opacity=".95" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Recipient
+          </button>
+          <button class="btn small" id="recClear" type="button">Clear</button>
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="muter" style="margin-bottom:8px;">Recipients</div>
+          <table class="table" aria-label="Recipients table">
+            <thead>
+              <tr>
+                <th style="width:28%;">Name</th>
+                <th>Email</th>
+                <th style="width:14%;">Role</th>
+                <th style="width:14%;">Order</th>
+                <th style="width:12%;">Remove</th>
+              </tr>
+            </thead>
+            <tbody id="recTable"></tbody>
+          </table>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:12px;">
+          <button class="btn ghost small" id="btnMarkDraft" type="button">Mark Draft</button>
+          <button class="btn ghost small" id="btnMarkSent" type="button">Mark Sent</button>
+          <button class="btn ghost small" id="btnMarkCompleted" type="button">Mark Completed</button>
+          <button class="btn primary small" id="btnDoneRecipients" type="button">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP MODAL -->
+  <div class="modal" id="helpModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="modal-head">
+        <h3 id="helpTitle">Demo Help (Local-Only)</h3>
+        <button class="modal-close" id="helpClose" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" style="width:18px;height:18px;">
+            <path d="M6 6l12 12M18 6 6 18" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Everything in this demo runs locally in your browser:
+          templates, documents, recipients, and status updates.
+        </p>
+        <div class="stack">
+          <div class="chip">Local storage key: <b>draftsendsign_demo_v1</b></div>
+          <div class="muter">What you can do:</div>
+          <ul style="margin:0; padding-left:18px; color: rgba(234,240,255,.78); font-weight:800; line-height:1.6;">
+            <li>Create documents from templates</li>
+            <li>Edit fields with live preview</li>
+            <li>Add/Remove recipients and set signing order</li>
+            <li>Mark status (Draft / Sent / Completed)</li>
+            <li>Save locally (localStorage) and export JSON</li>
+            <li>Download a filled HTML “print” copy</li>
+            <li>Upload a template pack JSON into your local library</li>
+          </ul>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:12px;">
+          <button class="btn primary small" id="helpOk" type="button">Got it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    // --- Simple router (hash-based) to mimic multi-page flow ---
-    const viewDashboard = document.getElementById('viewDashboard');
-    const viewEditor    = document.getElementById('viewEditor');
-    const navDash       = document.getElementById('navDash');
-    const navEdit       = document.getElementById('navEdit');
-    const miniActions   = document.getElementById('miniActions');
+    /* ============================================================
+       DraftSendSign Demo (Local-only)
+       - Templates + Documents saved in localStorage
+       - Export JSON + Download filled HTML
+       - Recipients + status updates
+       ============================================================ */
+
+    const LS_KEY = "draftsendsign_demo_v1";
+
+    // ---------- Utilities ----------
+    const $ = (id) => document.getElementById(id);
+    const nowISO = () => new Date().toISOString();
+    const uid = (p="doc") => `${p}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+    const fmtDate = (iso) => {
+      try{
+        const d = new Date(iso);
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        const yy = d.getFullYear();
+        return `${mm}/${dd}/${yy}`;
+      }catch{ return "—"; }
+    };
+    const monthKey = (iso) => {
+      const d = new Date(iso);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+    };
+    function toast(msg){
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toast._tm);
+      toast._tm = setTimeout(() => t.classList.remove("show"), 2400);
+    }
+    function downloadFile(filename, content, mime="application/octet-stream"){
+      const blob = new Blob([content], { type: mime });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+    function escapeHtml(s){
+      return String(s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    // ---------- Default templates (random internet images via Unsplash) ----------
+    const DEFAULT_TEMPLATES = [
+      {
+        id: "tpl_nda",
+        title: "Non-Disclosure Agreement",
+        category: "ndas",
+        rating: 4.9,
+        imageUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1400&q=80",
+        fields: {
+          agreementType: "Non-Disclosure Agreement",
+          dpName: "Acme Innovations LLC",
+          dpAddr: "12 Harbor Way, Boston, MA",
+          rpName: "Northstar Labs Inc.",
+          rpAddr: "88 Market St, Cambridge, MA",
+          purpose: "Potential partnership and product development",
+          confInfo: "Technical specifications, pricing, roadmap, and customer details.",
+          term: "2",
+          termUnit: "Years",
+          effDate: fmtDate(nowISO()),
+          extraClause: ""
+        }
+      },
+      {
+        id: "tpl_employment",
+        title: "Employment Agreement",
+        category: "employment",
+        rating: 4.8,
+        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80",
+        fields: {
+          agreementType: "Employment Agreement",
+          dpName: "PalmWeb, Inc.",
+          dpAddr: "250 Summer St, Boston, MA",
+          rpName: "John Smith",
+          rpAddr: "1 Main St, Boston, MA",
+          purpose: "Employment offer and role responsibilities",
+          confInfo: "Compensation details, internal policies, and proprietary product information.",
+          term: "2",
+          termUnit: "Years",
+          effDate: fmtDate(nowISO()),
+          extraClause: "Non-solicitation for 12 months after termination."
+        }
+      },
+      {
+        id: "tpl_service",
+        title: "Service Agreement",
+        category: "service",
+        rating: 4.7,
+        imageUrl: "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1400&q=80",
+        fields: {
+          agreementType: "Service Agreement",
+          dpName: "DraftSendSign Services",
+          dpAddr: "55 Federal St, Boston, MA",
+          rpName: "Client Company LLC",
+          rpAddr: "200 Tech Ave, Somerville, MA",
+          purpose: "Provision of services and project scope",
+          confInfo: "Statements of work, deliverables, pricing, and timelines.",
+          term: "12",
+          termUnit: "Months",
+          effDate: fmtDate(nowISO()),
+          extraClause: ""
+        }
+      },
+      {
+        id: "tpl_contract",
+        title: "Independent Contractor Agreement",
+        category: "contracts",
+        rating: 4.6,
+        imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=80",
+        fields: {
+          agreementType: "Independent Contractor Agreement",
+          dpName: "Studio North LLC",
+          dpAddr: "90 Seaport Blvd, Boston, MA",
+          rpName: "Contractor Name",
+          rpAddr: "Address",
+          purpose: "Contractor engagement for defined deliverables",
+          confInfo: "Work product details, payment terms, and proprietary methods.",
+          term: "6",
+          termUnit: "Months",
+          effDate: fmtDate(nowISO()),
+          extraClause: "Work product assigned to the disclosing party upon payment."
+        }
+      }
+    ];
+
+    // ---------- App State ----------
+    let state = null;
+    let activeDocId = null;
+    let dirty = false;
+
+    function loadState(){
+      const raw = localStorage.getItem(LS_KEY);
+      if(raw){
+        try{ return JSON.parse(raw); }catch(e){}
+      }
+      // seed
+      const seeded = {
+        version: 1,
+        createdAt: nowISO(),
+        templates: DEFAULT_TEMPLATES,
+        documents: [],
+        lastOpenedDocId: null
+      };
+      localStorage.setItem(LS_KEY, JSON.stringify(seeded));
+      return seeded;
+    }
+
+    function persistState(){
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
+
+    // ---------- Routing ----------
+    const viewDashboard = $("viewDashboard");
+    const viewEditor = $("viewEditor");
+    const miniActions = $("miniActions");
+    const navDash = $("navDash");
+    const navEdit = $("navEdit");
+    const navRecipients = $("navRecipients");
 
     function setActiveCrumb(which){
-      navDash.classList.toggle('active', which === 'dash');
-      navEdit.classList.toggle('active', which === 'edit');
+      navDash.classList.toggle("active", which==="dashboard");
+      navEdit.classList.toggle("active", which==="edit");
+      // recipients crumb is enabled only when doc is open
+      const enabled = !!activeDocId;
+      navRecipients.setAttribute("aria-disabled", enabled ? "false" : "true");
+      navRecipients.style.opacity = enabled ? "1" : ".55";
+      navRecipients.style.cursor = enabled ? "pointer" : "default";
     }
 
     function show(route){
-      if(route === 'edit'){
-        viewDashboard.classList.remove('active');
-        viewEditor.classList.add('active');
-        setActiveCrumb('edit');
-        miniActions.style.display = 'flex';
-        window.scrollTo({ top: 0, behavior: 'instant' });
+      if(route === "edit"){
+        viewDashboard.classList.remove("active");
+        viewEditor.classList.add("active");
+        miniActions.style.display = "flex";
+        setActiveCrumb("edit");
+        window.scrollTo({ top: 0, behavior: "instant" });
       }else{
-        viewEditor.classList.remove('active');
-        viewDashboard.classList.add('active');
-        setActiveCrumb('dash');
-        miniActions.style.display = 'none';
+        viewEditor.classList.remove("active");
+        viewDashboard.classList.add("active");
+        miniActions.style.display = "none";
+        setActiveCrumb("dashboard");
       }
     }
 
+    function go(route){
+      location.hash = `#/${route}`;
+    }
+
     function currentRoute(){
-      const h = (location.hash || '#/dashboard').toLowerCase();
-      if(h.includes('/edit')) return 'edit';
-      return 'dash';
+      const h = (location.hash || "#/dashboard").toLowerCase();
+      if(h.includes("/edit")) return "edit";
+      return "dashboard";
     }
 
-    window.addEventListener('hashchange', () => show(currentRoute()));
-    show(currentRoute());
+    window.addEventListener("hashchange", () => show(currentRoute()));
 
-    // --- Wire "Create New" buttons to open editor (demo) ---
-    const toEdit = () => (location.hash = '#/edit');
-    document.getElementById('btnCreate').addEventListener('click', toEdit);
-    document.getElementById('btnCreate2').addEventListener('click', toEdit);
-    const fab = document.getElementById('btnCreateFab');
-    if(fab) fab.addEventListener('click', toEdit);
+    // ---------- Templates / Tiles ----------
+    const tilesEl = $("tiles");
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const tplSearch = $("tplSearch");
+    let activeTab = "all";
 
-    // Open editor when clicking a tile or recent doc edit
-    document.querySelectorAll('[data-open-editor]').forEach(el => {
-      el.addEventListener('click', toEdit);
-    });
+    function setTab(tab){
+      activeTab = tab;
+      tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+      renderTemplates();
+    }
 
-    // Demo-only Add Recipients button (no backend)
-    document.getElementById('btnAddRecipients').addEventListener('click', () => {
-      alert('Demo-only: Add Recipients step (backend later).');
-    });
+    tabs.forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+    tplSearch.addEventListener("input", () => renderTemplates());
 
-    // Tabs (visual only + basic filtering for tiles)
-    const tabs = document.querySelectorAll('.tab');
-    const tiles = document.querySelectorAll('.tile');
-    const search = document.getElementById('tplSearch');
+    function renderTemplateCounts(){
+      const all = state.templates.length;
+      const count = (cat) => state.templates.filter(t => t.category === cat).length;
+      $("countAll").textContent = String(all);
+      $("countEmployment").textContent = String(count("employment"));
+      $("countContracts").textContent = String(count("contracts"));
+      $("countNDAs").textContent = String(count("ndas"));
+      $("countService").textContent = String(count("service"));
+    }
 
-    function applyFilter(){
-      const active = document.querySelector('.tab.active')?.dataset.tab || 'all';
-      const q = (search.value || '').trim().toLowerCase();
+    function renderTemplates(){
+      renderTemplateCounts();
+      const q = (tplSearch.value || "").trim().toLowerCase();
+      const list = state.templates.filter(t => {
+        const matchTab = (activeTab === "all") || (t.category === activeTab);
+        const hay = `${t.title} ${t.category}`.toLowerCase();
+        const matchQ = !q || hay.includes(q);
+        return matchTab && matchQ;
+      });
 
-      tiles.forEach(t => {
-        const cat = (t.dataset.category || '').toLowerCase();
-        const title = (t.querySelector('.t-title')?.textContent || '').toLowerCase();
-        const sub = (t.querySelector('.t-sub')?.textContent || '').toLowerCase();
+      tilesEl.innerHTML = list.map(t => `
+        <div class="tile" data-template-id="${escapeHtml(t.id)}" tabindex="0" role="button" aria-label="Open template ${escapeHtml(t.title)}">
+          <div class="img" style="background-image:url('${escapeHtml(t.imageUrl)}');">
+            <div class="rating">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .5-5.4 4.6 1.7 7-6.3-3.8L6.4 21l1.7-7L2.7 9.5 9.7 9 12 2z"/></svg>
+              ${escapeHtml(t.rating)}
+            </div>
+          </div>
+          <div class="info">
+            <p class="t-title">${escapeHtml(t.title)}</p>
+            <p class="t-sub">${escapeHtml(t.fields.purpose || "Template")}</p>
+          </div>
+        </div>
+      `).join("");
 
-        const matchTab = (active === 'all') || (cat === active);
-        const matchQ = !q || title.includes(q) || sub.includes(q) || cat.includes(q);
-
-        t.style.display = (matchTab && matchQ) ? '' : 'none';
+      tilesEl.querySelectorAll(".tile").forEach(tile => {
+        const open = () => {
+          const tplId = tile.getAttribute("data-template-id");
+          createDocumentFromTemplate(tplId);
+        };
+        tile.addEventListener("click", open);
+        tile.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){
+            e.preventDefault();
+            open();
+          }
+        });
       });
     }
 
-    tabs.forEach(t => {
-      t.addEventListener('click', () => {
-        tabs.forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        applyFilter();
+    // ---------- Documents / Recent Docs ----------
+    const recentEl = $("recentDocs");
+
+    function docStatusBadge(status){
+      const s = (status || "Draft");
+      const cls =
+        s === "Sent" ? "sent" :
+        s === "Completed" ? "completed" :
+        "draft";
+      const icon = s === "Sent"
+        ? `<svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;"><path d="M22 2 11 13" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/><path d="M22 2 15 22l-4-9-9-4 20-7Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linejoin="round"/></svg>`
+        : s === "Completed"
+        ? `<svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;"><path d="M9 12.5 11 14.5 15.5 10" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" stroke="white" stroke-opacity=".85" stroke-width="2"/></svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;"><path d="M8 3h7l4 4v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="white" stroke-opacity=".85" stroke-width="2"/><path d="M9 12h6M9 16h6" stroke="white" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/></svg>`;
+      return `<span class="status ${cls}">${icon}${escapeHtml(s)}</span>`;
+    }
+
+    function renderRecentDocs(){
+      const docs = [...state.documents].sort((a,b) => (b.updatedAt||"").localeCompare(a.updatedAt||""));
+      if(docs.length === 0){
+        recentEl.innerHTML = `
+          <div class="doc-card">
+            <div class="doc-top">
+              <h3 class="doc-title">No documents yet</h3>
+              ${docStatusBadge("Draft")}
+            </div>
+            <div class="doc-meta">
+              <span class="m">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
+                0 recipients
+              </span>
+              <span class="m">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
+                —
+              </span>
+            </div>
+            <div class="doc-actions">
+              <button class="btn primary small" type="button" id="btnMakeOne">Create your first document</button>
+            </div>
+          </div>
+        `;
+        $("btnMakeOne").addEventListener("click", () => openCreateModalQuick());
+        return;
+      }
+
+      recentEl.innerHTML = docs.slice(0,4).map(d => {
+        const title = d.title || d.agreementType || "Document";
+        const subtitle = d.displayName ? `— ${d.displayName}` : "";
+        const when = d.status === "Sent" ? "Sent" : d.status === "Completed" ? "Completed" : "Updated";
+        const recipients = (d.recipients || []).length;
+        return `
+          <div class="doc-card" data-doc-id="${escapeHtml(d.id)}">
+            <div class="doc-top">
+              <h3 class="doc-title">${escapeHtml(title)}<br/>${escapeHtml(subtitle || d.shortLabel || "")}</h3>
+              ${docStatusBadge(d.status)}
+            </div>
+            <div class="doc-meta">
+              <span class="m">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/></svg>
+                ${recipients} recipients
+              </span>
+              <span class="m">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M8 3v2M16 3v2" stroke="white" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="white" stroke-opacity=".75" stroke-width="2"/><path d="M4 11h16" stroke="white" stroke-opacity=".65" stroke-width="2"/></svg>
+                ${fmtDate(d.updatedAt || d.createdAt)}
+              </span>
+              <span class="m" title="${escapeHtml(d.updatedAt||"")}">${escapeHtml(when)}</span>
+            </div>
+            <div class="doc-actions">
+              <button class="btn small" data-action="edit" type="button">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="white" stroke-opacity=".85" stroke-width="2" stroke-linejoin="round"/></svg>
+                Edit
+              </button>
+              <button class="btn small" data-action="share" type="button">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M16 6a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM6 14a2 2 0 1 0-2-2 2 2 0 0 0 2 2Zm10 8a2 2 0 1 0-2-2 2 2 0 0 0 2 2Z" stroke="white" stroke-opacity=".8" stroke-width="2"/><path d="M8 12l6-6M8 12l6 6" stroke="white" stroke-opacity=".72" stroke-width="2" stroke-linecap="round"/></svg>
+                Share
+              </button>
+              <button class="btn danger small" data-action="delete" type="button">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      recentEl.querySelectorAll("[data-doc-id]").forEach(card => {
+        const docId = card.getAttribute("data-doc-id");
+        card.querySelector('[data-action="edit"]').addEventListener("click", () => openDocument(docId));
+        card.querySelector('[data-action="share"]').addEventListener("click", () => {
+          const d = state.documents.find(x => x.id === docId);
+          if(!d) return;
+          downloadFile(`${safeName(d.title || "document")}.json`, JSON.stringify(d, null, 2), "application/json");
+          toast("Downloaded document JSON (share locally).");
+        });
+        card.querySelector('[data-action="delete"]').addEventListener("click", () => {
+          if(!confirm("Delete this document? This only removes it from local storage.")) return;
+          state.documents = state.documents.filter(x => x.id !== docId);
+          if(activeDocId === docId) activeDocId = null;
+          persistState();
+          renderAll();
+          toast("Deleted locally.");
+        });
       });
-    });
-    search.addEventListener('input', applyFilter);
+    }
 
-    // --- Editor live preview bindings ---
-    const $ = (id) => document.getElementById(id);
+    // ---------- KPI calculations ----------
+    function renderKPIs(){
+      const docs = state.documents || [];
+      const currentMonth = monthKey(nowISO());
+      const sentThisMonth = docs.filter(d => d.status === "Sent" && monthKey(d.updatedAt||d.createdAt) === currentMonth).length;
 
-    const pvEff = $('pvEff');
-    const pvDateInline = $('pvDateInline');
-    const pvDPName = $('pvDPName');
-    const pvDPAddr = $('pvDPAddr');
-    const pvRPName = $('pvRPName');
-    const pvRPAddr = $('pvRPAddr');
-    const pvPurpose = $('pvPurpose');
-    const pvTerm = $('pvTerm');
-    const pvTermUnit = $('pvTermUnit');
+      // completion rate = completed / (sent + completed) * 100 (simple demo)
+      const completed30 = docs.filter(d => d.status === "Completed").length;
+      const sentOrCompleted = docs.filter(d => d.status === "Sent" || d.status === "Completed").length;
+      const compRate = sentOrCompleted ? Math.round((completed30 / sentOrCompleted) * 100) : 0;
+
+      // avg response time (fake): from sentAt to completedAt average
+      const done = docs.filter(d => d.status === "Completed" && d.sentAt && d.completedAt);
+      let avgHours = 0;
+      if(done.length){
+        const totalMs = done.reduce((s,d) => s + (new Date(d.completedAt) - new Date(d.sentAt)), 0);
+        avgHours = totalMs / done.length / 3600000;
+      }
+      $("kpiSent").textContent = String(sentThisMonth);
+      $("kpiCompletion").textContent = `${compRate}%`;
+      $("kpiResp").textContent = done.length ? `${avgHours.toFixed(1)}h` : "—";
+    }
+
+    // ---------- Create / Open Document ----------
+    const agreementTypeSel = $("agreementType");
+    const docIdChip = $("docIdChip");
+
+    function safeName(s){
+      return String(s||"document").trim().replace(/[^\w\- ]+/g,"").replace(/\s+/g,"_").slice(0,64) || "document";
+    }
+
+    function createDocumentFromTemplate(templateId){
+      const tpl = state.templates.find(t => t.id === templateId) || state.templates[0];
+      if(!tpl){ toast("No templates available."); return; }
+
+      const id = uid("doc");
+      const createdAt = nowISO();
+      const doc = {
+        id,
+        templateId: tpl.id,
+        title: tpl.title,
+        category: tpl.category,
+        status: "Draft",
+        createdAt,
+        updatedAt: createdAt,
+        sentAt: null,
+        completedAt: null,
+        recipients: [],
+        fields: { ...tpl.fields },
+      };
+
+      // simple display label like the screenshot ("— John Smith")
+      const rp = doc.fields.rpName || "";
+      doc.displayName = rp && rp.length < 28 ? rp : "";
+      doc.shortLabel = doc.displayName ? doc.displayName : "";
+
+      state.documents.push(doc);
+      state.lastOpenedDocId = id;
+      persistState();
+
+      openDocument(id);
+      toast("Created new document.");
+    }
+
+    function openDocument(docId){
+      const doc = state.documents.find(d => d.id === docId);
+      if(!doc){ toast("Document not found."); return; }
+      // prompt if leaving unsaved changes
+      if(dirty && activeDocId && activeDocId !== docId){
+        if(!confirm("You have unsaved changes. Continue and lose changes?")) return;
+      }
+
+      activeDocId = docId;
+      state.lastOpenedDocId = docId;
+      persistState();
+
+      hydrateEditor(doc);
+      go("edit");
+      setDirty(false);
+      setSaveState("Loaded (local)");
+    }
+
+    function openCreateModalQuick(){
+      // pick NDA by default
+      createDocumentFromTemplate(state.templates[0]?.id || "tpl_nda");
+    }
+
+    // ---------- Editor bindings / live preview ----------
+    const inputs = {
+      dpName: $("dpName"),
+      dpAddr: $("dpAddr"),
+      rpName: $("rpName"),
+      rpAddr: $("rpAddr"),
+      purpose: $("purpose"),
+      confInfo: $("confInfo"),
+      term: $("term"),
+      termUnit: $("termUnit"),
+      effDate: $("effDate"),
+      extraClause: $("extraClause"),
+    };
+
+    const pv = {
+      docTitle: $("pvDocTitle"),
+      type: $("pvType"),
+      eff: $("pvEff"),
+      dateInline: $("pvDateInline"),
+      dpName: $("pvDPName"),
+      dpAddr: $("pvDPAddr"),
+      rpName: $("pvRPName"),
+      rpAddr: $("pvRPAddr"),
+      purpose: $("pvPurpose"),
+      confInfo: $("pvConfInfo"),
+      term: $("pvTerm"),
+      termUnit: $("pvTermUnit"),
+      extra: $("pvExtra"),
+    };
 
     function normalizeUnit(v){
-      const s = (v || '').toLowerCase();
-      return s.includes('month') ? 'months' : 'years';
+      const s = (v || "").toLowerCase();
+      return s.includes("month") ? "months" : "years";
     }
 
-    function updatePreview(){
-      const effDate = $('effDate').value || '[Date]';
-      pvEff.textContent = effDate;
-      pvDateInline.textContent = effDate;
-
-      pvDPName.textContent = $('dpName').value || '[Disclosing Party Name]';
-      pvDPAddr.textContent = $('dpAddr').value || '[Disclosing Party Address]';
-
-      pvRPName.textContent = $('rpName').value || '[Receiving Party Name]';
-      pvRPAddr.textContent = $('rpAddr').value || '[Receiving Party Address]';
-
-      pvPurpose.textContent = $('purpose').value || '';
-      pvTerm.textContent = $('term').value || '2';
-      pvTermUnit.textContent = normalizeUnit($('termUnit').value);
+    function completionFor(doc){
+      // required: agreementType, dpName, rpName, purpose, effDate
+      const f = doc.fields || {};
+      const required = [
+        ["agreementType", !!(f.agreementType && String(f.agreementType).trim())],
+        ["dpName", !!(f.dpName && String(f.dpName).trim())],
+        ["rpName", !!(f.rpName && String(f.rpName).trim())],
+        ["purpose", !!(f.purpose && String(f.purpose).trim())],
+        ["effDate", !!(f.effDate && String(f.effDate).trim())],
+      ];
+      const done = required.filter(r => r[1]).length;
+      const pct = Math.round((done / required.length) * 100);
+      const left = required.length - done;
+      return { pct, left };
     }
 
-    // Bind inputs
-    ['agreementType','dpName','dpAddr','rpName','rpAddr','purpose','confInfo','term','termUnit','effDate'].forEach(id => {
-      const el = $(id);
+    function setDirty(v){
+      dirty = v;
+      // update little dot
+      $("saveState").innerHTML = v
+        ? `<i></i> Not saved yet`
+        : `<span style="display:inline-flex;align-items:center;gap:10px;"><i style="background:rgba(36,209,142,.95); box-shadow: 0 0 0 4px rgba(36,209,142,.14);"></i> Saved locally</span>`;
+    }
+    function setSaveState(label){
+      // label used when loading doc, etc.
+      $("saveState").innerHTML = `<span style="display:inline-flex;align-items:center;gap:10px;"><i style="background:rgba(36,209,142,.95); box-shadow: 0 0 0 4px rgba(36,209,142,.14);"></i> ${escapeHtml(label)}</span>`;
+    }
+
+    function hydrateEditor(doc){
+      // agreement type dropdown sourced from templates
+      agreementTypeSel.innerHTML = state.templates.map(t => {
+        const v = t.title;
+        const selected = (doc.fields.agreementType === v) ? "selected" : "";
+        return `<option ${selected}>${escapeHtml(v)}</option>`;
+      }).join("");
+
+      docIdChip.textContent = doc.id.split("_").slice(-2).join("_").slice(0, 12);
+
+      // fill inputs
+      for(const k in inputs){
+        if(!inputs[k]) continue;
+        inputs[k].value = doc.fields[k] ?? "";
+      }
+
+      // term unit - keep the option label casing
+      inputs.termUnit.value = doc.fields.termUnit || "Years";
+
+      renderPreviewFromDoc(doc);
+      renderProgress(doc);
+      renderRecipientsTable();
+    }
+
+    function renderProgress(doc){
+      const { pct, left } = completionFor(doc);
+      $("pctChip").textContent = `${pct}%`;
+      $("barFill").style.width = `${pct}%`;
+      $("requiredLeft").textContent = left === 0 ? "All required fields complete" : `${left} required fields remaining`;
+    }
+
+    function renderPreviewFromDoc(doc){
+      const f = doc.fields || {};
+      pv.docTitle.textContent = (f.agreementType || doc.title || "DOCUMENT").toUpperCase();
+      pv.type.textContent = f.agreementType || "Agreement";
+      pv.eff.textContent = f.effDate || "[Date]";
+      pv.dateInline.textContent = f.effDate || "[Date]";
+      pv.dpName.textContent = f.dpName || "[Disclosing Party Name]";
+      pv.dpAddr.textContent = f.dpAddr || "[Disclosing Party Address]";
+      pv.rpName.textContent = f.rpName || "[Receiving Party Name]";
+      pv.rpAddr.textContent = f.rpAddr || "[Receiving Party Address]";
+      pv.purpose.textContent = f.purpose || "";
+      pv.confInfo.textContent = (f.confInfo && String(f.confInfo).trim())
+        ? f.confInfo
+        : `For purposes of this Agreement, “Confidential Information” shall include all information or materials
+that is or could have commercial value or other utility in the business in which Disclosing Party is engaged.`;
+      pv.term.textContent = f.term || "2";
+      pv.termUnit.textContent = normalizeUnit(f.termUnit || "Years");
+      pv.extra.textContent = (f.extraClause && String(f.extraClause).trim()) ? f.extraClause : "[None]";
+    }
+
+    function activeDoc(){
+      return state.documents.find(d => d.id === activeDocId) || null;
+    }
+
+    function updateDocFromInputs(){
+      const doc = activeDoc();
+      if(!doc) return;
+
+      // update agreementType from dropdown (also updates title)
+      doc.fields.agreementType = agreementTypeSel.value;
+      doc.title = agreementTypeSel.value;
+
+      for(const k in inputs){
+        if(!inputs[k]) continue;
+        doc.fields[k] = inputs[k].value;
+      }
+      doc.fields.termUnit = inputs.termUnit.value;
+
+      // labels
+      doc.displayName = (doc.fields.rpName || "").trim();
+      doc.shortLabel = doc.displayName ? doc.displayName : "";
+
+      doc.updatedAt = nowISO();
+      renderPreviewFromDoc(doc);
+      renderProgress(doc);
+      setDirty(true);
+    }
+
+    // bind all inputs
+    agreementTypeSel.addEventListener("change", updateDocFromInputs);
+    Object.values(inputs).forEach(el => {
       if(!el) return;
-      el.addEventListener('input', updatePreview);
-      el.addEventListener('change', updatePreview);
+      el.addEventListener("input", updateDocFromInputs);
+      el.addEventListener("change", updateDocFromInputs);
     });
 
-    updatePreview();
+    // ---------- Local Save ----------
+    $("btnSaveLocal").addEventListener("click", () => {
+      const doc = activeDoc();
+      if(!doc){ toast("No document open."); return; }
+      // persist full state
+      persistState();
+      setDirty(false);
+      toast("Saved locally (localStorage).");
+      renderAll(); // refresh dashboard lists + KPIs
+    });
 
-    // Demo help
-    document.getElementById('btnHelp').addEventListener('click', () => {
-      alert('Static UI demo.\n\n• Dashboard → Template Library → Document Editor\n• No backend yet (placeholders only)\n• Images are random Unsplash URLs (per instructions).');
+    // autosave (lightweight): saves every 10s if dirty
+    setInterval(() => {
+      if(!dirty) return;
+      const doc = activeDoc();
+      if(!doc) return;
+      persistState();
+      setDirty(false);
+      // do not toast; keep subtle
+      setSaveState("Autosaved locally");
+      setTimeout(() => setSaveState("Saved locally"), 1200);
+    }, 10000);
+
+    // ---------- Export JSON (active doc) ----------
+    $("btnExportJSON").addEventListener("click", () => {
+      const doc = activeDoc();
+      if(!doc){ toast("No document open."); return; }
+      const filename = `${safeName(doc.title)}_${safeName(doc.displayName || "recipient")}.json`;
+      downloadFile(filename, JSON.stringify(doc, null, 2), "application/json");
+      toast("Exported document JSON.");
+    });
+
+    // ---------- Download filled HTML (active doc) ----------
+    $("btnDownloadHTML").addEventListener("click", () => {
+      const doc = activeDoc();
+      if(!doc){ toast("No document open."); return; }
+      const f = doc.fields || {};
+      const title = escapeHtml((f.agreementType || doc.title || "Agreement").toUpperCase());
+      const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>${title} — Filled Copy</title>
+<style>
+  body{ margin:0; padding:30px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0f16; color:#eaf0ff; }
+  .paper{ max-width: 860px; margin:0 auto; background:#0a0e15; border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:28px; }
+  h1{ margin:0 0 4px; text-align:center; letter-spacing:-.5px; font-size:22px; }
+  .sub{ text-align:center; margin:0 0 18px; color: rgba(234,240,255,.65); font-weight:700; font-size:13px; }
+  p{ line-height:1.7; font-size:13px; color: rgba(234,240,255,.82); margin: 10px 0; }
+  .sec{ margin-top: 14px; font-weight: 900; }
+  .hl{ color:#ff2d5e; text-decoration: underline; text-decoration-color: rgba(255,45,94,.55); font-weight: 800; }
+  .sigrow{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; color: rgba(234,240,255,.72); font-weight: 700; font-size: 12px; }
+  .sig{ border-top: 1px solid rgba(255,255,255,.14); padding-top: 10px; }
+  .meta{ margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.10); color: rgba(234,240,255,.60); font-size: 12px; }
+  .tag{ display:inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); margin-right: 8px; background: rgba(255,255,255,.04); }
+</style>
+</head>
+<body>
+  <div class="paper">
+    <h1>${title}</h1>
+    <div class="sub">Effective Date: ${escapeHtml(f.effDate || "[Date]")}</div>
+
+    <p>
+      This <span class="hl">${escapeHtml(f.agreementType || "Agreement")}</span> (the “Agreement”) is entered into as of
+      <span class="hl">${escapeHtml(f.effDate || "[Date]")}</span> (the “Effective Date”) by and between:
+    </p>
+
+    <p>
+      <span class="hl">${escapeHtml(f.dpName || "[Disclosing Party Name]")}</span><br/>
+      <span style="color:rgba(234,240,255,.65); font-weight:700;">${escapeHtml(f.dpAddr || "[Disclosing Party Address]")}</span>
+    </p>
+
+    <p>
+      and<br/>
+      <span class="hl">${escapeHtml(f.rpName || "[Receiving Party Name]")}</span><br/>
+      <span style="color:rgba(234,240,255,.65); font-weight:700;">${escapeHtml(f.rpAddr || "[Receiving Party Address]")}</span>
+    </p>
+
+    <div class="sec">1. Purpose</div>
+    <p><span class="hl">[Purpose of disclosure will be specified here]</span> — ${escapeHtml(f.purpose || "")}</p>
+
+    <div class="sec">2. Confidential Information</div>
+    <p>${escapeHtml(f.confInfo || "")}</p>
+
+    <div class="sec">3. Term</div>
+    <p>
+      This Agreement shall commence on the Effective Date and continue for a period of
+      <span class="hl">${escapeHtml(f.term || "2")} ${escapeHtml((f.termUnit||"Years").toLowerCase().includes("month") ? "months" : "years")}</span>,
+      unless earlier terminated by either party with written notice.
+    </p>
+
+    <div class="sec">4. Additional Clauses</div>
+    <p>${escapeHtml((f.extraClause && String(f.extraClause).trim()) ? f.extraClause : "[None]")}</p>
+
+    <div class="sigrow">
+      <div class="sig">
+        <div style="font-weight:900; color:rgba(234,240,255,.86);">DISCLOSING PARTY</div>
+        <div style="margin-top:6px;">Name</div>
+        <div style="opacity:.7;">Signature &amp; Date</div>
+      </div>
+      <div class="sig">
+        <div style="font-weight:900; color:rgba(234,240,255,.86);">RECEIVING PARTY</div>
+        <div style="margin-top:6px;">Name</div>
+        <div style="opacity:.7;">Signature &amp; Date</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div class="tag">Status: ${escapeHtml(doc.status || "Draft")}</div>
+      <div class="tag">Recipients: ${(doc.recipients||[]).length}</div>
+      <div class="tag">Doc ID: ${escapeHtml(doc.id)}</div>
+    </div>
+  </div>
+</body>
+</html>`;
+      const filename = `${safeName(doc.title)}_${safeName(doc.displayName||"recipient")}.html`;
+      downloadFile(filename, html, "text/html");
+      toast("Downloaded filled HTML copy.");
+    });
+
+    // ---------- Print preview area ----------
+    $("btnPrint").addEventListener("click", () => {
+      // print just the paper
+      const doc = activeDoc();
+      if(!doc){ toast("No document open."); return; }
+      const paper = $("paper").outerHTML;
+      const w = window.open("", "_blank");
+      w.document.write(`<!doctype html><html><head><meta charset="utf-8"/><title>Print</title>
+        <style>
+          body{ margin:0; padding:24px; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0f16; color:#eaf0ff; }
+          .paper-wrap{ display:flex; justify-content:center; }
+          .paper{ width:min(860px,100%); background:#0a0e15; border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:28px; }
+          @media print{ body{ background:#fff; color:#000; } .paper{ border:0; box-shadow:none; } }
+        </style></head><body><div class="paper-wrap">${paper}</div></body></html>`);
+      w.document.close();
+      w.focus();
+      w.print();
+    });
+
+    // ---------- Recipients Modal ----------
+    const recModal = $("recModal");
+    const recClose = $("recClose");
+    const btnAddRecipients = $("btnAddRecipients");
+    const recName = $("recName");
+    const recEmail = $("recEmail");
+    const recRole = $("recRole");
+    const recOrder = $("recOrder");
+    const recAdd = $("recAdd");
+    const recClear = $("recClear");
+    const recTable = $("recTable");
+    const btnDoneRecipients = $("btnDoneRecipients");
+    const btnMarkDraft = $("btnMarkDraft");
+    const btnMarkSent = $("btnMarkSent");
+    const btnMarkCompleted = $("btnMarkCompleted");
+
+    function openRecModal(){
+      const doc = activeDoc();
+      if(!doc){ toast("No document open."); return; }
+      recModal.classList.add("show");
+      recModal.setAttribute("aria-hidden","false");
+      renderRecipientsTable();
+      setActiveCrumb("edit");
+      setTimeout(() => recName.focus(), 80);
+    }
+    function closeRecModal(){
+      recModal.classList.remove("show");
+      recModal.setAttribute("aria-hidden","true");
+      // keep on editor
+    }
+
+    btnAddRecipients.addEventListener("click", openRecModal);
+    recClose.addEventListener("click", closeRecModal);
+    btnDoneRecipients.addEventListener("click", closeRecModal);
+    recModal.addEventListener("click", (e) => { if(e.target === recModal) closeRecModal(); });
+
+    function renderRecipientsTable(){
+      const doc = activeDoc();
+      if(!doc) return;
+      const list = (doc.recipients || []).slice().sort((a,b) => (a.order||0)-(b.order||0));
+      recTable.innerHTML = list.map(r => `
+        <tr>
+          <td>${escapeHtml(r.name)}</td>
+          <td>${escapeHtml(r.email)}</td>
+          <td>${escapeHtml(r.role)}</td>
+          <td>${escapeHtml(String(r.order||1))}</td>
+          <td><button class="btn danger small" data-remove="${escapeHtml(r.id)}" type="button">Remove</button></td>
+        </tr>
+      `).join("") || `<tr><td colspan="5" style="color:rgba(234,240,255,.55); font-weight:850;">No recipients yet.</td></tr>`;
+
+      recTable.querySelectorAll("[data-remove]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-remove");
+          doc.recipients = (doc.recipients || []).filter(x => x.id !== id);
+          doc.updatedAt = nowISO();
+          setDirty(true);
+          renderRecipientsTable();
+        });
+      });
+    }
+
+    recAdd.addEventListener("click", () => {
+      const doc = activeDoc();
+      if(!doc) return;
+      const name = (recName.value || "").trim();
+      const email = (recEmail.value || "").trim();
+      const role = recRole.value;
+      const order = Math.max(1, Number(recOrder.value || "1"));
+
+      if(!name || !email){
+        toast("Name + email required.");
+        return;
+      }
+      if(!/^\S+@\S+\.\S+$/.test(email)){
+        toast("Please enter a valid email.");
+        return;
+      }
+      doc.recipients = doc.recipients || [];
+      doc.recipients.push({ id: uid("rec"), name, email, role, order, addedAt: nowISO(), status: "Pending" });
+      doc.updatedAt = nowISO();
+      setDirty(true);
+
+      recName.value = "";
+      recEmail.value = "";
+      recRole.value = "Signer";
+      recOrder.value = String(order + 1);
+
+      renderRecipientsTable();
+      toast("Recipient added.");
+    });
+
+    recClear.addEventListener("click", () => {
+      recName.value = "";
+      recEmail.value = "";
+      recRole.value = "Signer";
+      recOrder.value = "1";
+      recName.focus();
+    });
+
+    function setDocStatus(status){
+      const doc = activeDoc();
+      if(!doc) return;
+      doc.status = status;
+      doc.updatedAt = nowISO();
+      if(status === "Sent"){
+        doc.sentAt = doc.sentAt || nowISO();
+      }
+      if(status === "Completed"){
+        doc.completedAt = doc.completedAt || nowISO();
+        // if no sentAt, set it earlier
+        doc.sentAt = doc.sentAt || nowISO();
+      }
+      setDirty(true);
+      renderAll();
+      toast(`Status set to ${status}.`);
+    }
+    btnMarkDraft.addEventListener("click", () => setDocStatus("Draft"));
+    btnMarkSent.addEventListener("click", () => setDocStatus("Sent"));
+    btnMarkCompleted.addEventListener("click", () => setDocStatus("Completed"));
+
+    // ---------- Upload Template Pack ----------
+    const fileTemplate = $("fileTemplate");
+    $("btnUploadTemplate").addEventListener("click", () => fileTemplate.click());
+
+    fileTemplate.addEventListener("change", async () => {
+      const f = fileTemplate.files && fileTemplate.files[0];
+      if(!f) return;
+      try{
+        const text = await f.text();
+        const data = JSON.parse(text);
+
+        // Accept either:
+        // 1) { templates: [...] }
+        // 2) [ ...templates ]
+        const incoming = Array.isArray(data) ? data : (data.templates || []);
+        if(!Array.isArray(incoming) || incoming.length === 0){
+          toast("No templates found in JSON.");
+          return;
+        }
+
+        // normalize + add ids if missing
+        const normalized = incoming.map(t => ({
+          id: t.id || uid("tpl"),
+          title: t.title || "Untitled Template",
+          category: t.category || "contracts",
+          rating: Number(t.rating || 4.6),
+          imageUrl: t.imageUrl || "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=80",
+          fields: { ...(t.fields || {}) }
+        }));
+
+        // merge by id (replace)
+        const existingIds = new Set(state.templates.map(x => x.id));
+        normalized.forEach(t => {
+          const idx = state.templates.findIndex(x => x.id === t.id);
+          if(idx >= 0) state.templates[idx] = t;
+          else state.templates.push(t);
+        });
+
+        persistState();
+        renderTemplates();
+        toast(`Loaded ${normalized.length} template(s) locally.`);
+      }catch(e){
+        toast("Template JSON invalid.");
+      }finally{
+        fileTemplate.value = "";
+      }
+    });
+
+    // ---------- Navigation click wiring ----------
+    $("brandHome").addEventListener("click", () => go("dashboard"));
+    $("btnCreate").addEventListener("click", () => openCreateModalQuick());
+    $("btnCreate2").addEventListener("click", () => openCreateModalQuick());
+    const fab = $("btnCreateFab"); if(fab) fab.addEventListener("click", () => openCreateModalQuick());
+
+    // crumbs
+    [navDash, navEdit].forEach(el => {
+      el.addEventListener("click", () => {
+        const r = el.dataset.route;
+        if(r === "dashboard"){
+          if(dirty && confirm("You have unsaved changes. Save locally before leaving?")){
+            persistState();
+            setDirty(false);
+          }
+          go("dashboard");
+        }else if(r === "edit"){
+          if(activeDocId) go("edit");
+          else toast("Create or open a document first.");
+        }
+      });
+    });
+    navRecipients.addEventListener("click", () => {
+      if(navRecipients.getAttribute("aria-disabled") === "true") return;
+      openRecModal();
+    });
+
+    // ---------- Help / Local indicator ----------
+    const helpModal = $("helpModal");
+    function openHelp(){
+      helpModal.classList.add("show");
+      helpModal.setAttribute("aria-hidden","false");
+    }
+    function closeHelp(){
+      helpModal.classList.remove("show");
+      helpModal.setAttribute("aria-hidden","true");
+    }
+    $("btnHelp").addEventListener("click", openHelp);
+    $("helpClose").addEventListener("click", closeHelp);
+    $("helpOk").addEventListener("click", closeHelp);
+    helpModal.addEventListener("click", (e) => { if(e.target === helpModal) closeHelp(); });
+
+    $("btnLocal").addEventListener("click", () => {
+      toast("This demo stores everything locally in your browser (localStorage).");
+    });
+
+    // ---------- Render everything ----------
+    function renderAll(){
+      renderTemplates();
+      renderRecentDocs();
+      renderKPIs();
+    }
+
+    // ---------- Boot ----------
+    state = loadState();
+    renderAll();
+    show(currentRoute());
+
+    // If a last doc exists, keep Edit accessible
+    if(state.lastOpenedDocId){
+      activeDocId = state.lastOpenedDocId;
+      setActiveCrumb(currentRoute());
+    }
+
+    // Prevent accidental loss if dirty
+    window.addEventListener("beforeunload", (e) => {
+      if(!dirty) return;
+      e.preventDefault();
+      e.returnValue = "";
     });
   </script>
 </body>
