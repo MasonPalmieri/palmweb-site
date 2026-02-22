@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SportsWire — Live Scores & News</title>
   <meta name="theme-color" content="#0b1220" />
-  <meta name="description" content="NFL headline + sport taglines + live scores + top headlines." />
+  <meta name="description" content="Favorites + league stories + team stories + live scores." />
 
   <style>
     :root{
@@ -23,6 +23,7 @@
       --blue:#3aa0ff;
       --green:#35d07f;
       --accent: linear-gradient(135deg, rgba(58,160,255,.95), rgba(53,208,127,.95));
+      --warn: rgba(255,210,120,.18);
     }
 
     *{ box-sizing:border-box; }
@@ -86,6 +87,11 @@
       border-color: transparent;
       background: var(--accent);
       color: #051018;
+    }
+    .btn-danger{
+      border-color: rgba(255,140,140,.25);
+      background: rgba(255,80,80,.10);
+      color: rgba(255,235,235,.95);
     }
 
     .hero{ padding: 22px 0 12px; }
@@ -181,7 +187,7 @@
       max-width: 78ch;
     }
 
-    /* NEW: Sport taglines strip */
+    /* Sport taglines strip */
     .strip{
       margin-top: 12px;
       border-radius: 18px;
@@ -386,7 +392,7 @@
       font-size: 12px;
     }
 
-    .empty, .err{
+    .empty, .err, .warn{
       border-radius: var(--radius2);
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
@@ -400,6 +406,177 @@
       background: rgba(255,60,60,.10);
       color: rgba(255,220,220,.95);
     }
+    .warn{
+      border-color: rgba(255,220,140,.28);
+      background: var(--warn);
+      color: rgba(255,245,220,.95);
+    }
+
+    /* Favorites */
+    .favWrap{
+      padding: 14px 0 0;
+      display:grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){
+      .favWrap{ grid-template-columns: 1fr; }
+    }
+    .favBody{ padding: 10px; display:flex; flex-direction:column; gap: 10px; }
+    .input{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.92);
+      padding: 11px 12px;
+      font-weight: 900;
+      outline:none;
+    }
+    .hint{ color: var(--muted2); font-weight: 850; font-size: 12px; margin-top: 2px; }
+    .searchRow{
+      display:flex; gap: 10px; flex-wrap:wrap; align-items:center;
+    }
+    .searchRow > *{ flex: 1; min-width: 190px; }
+    .results{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .resItem{
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .resItem:last-child{ border-bottom: 0; }
+    .resName{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+    }
+    .resName strong{
+      font-weight: 980;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .resName span{
+      color: var(--muted2);
+      font-weight: 850;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .favList{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      padding: 10px;
+    }
+    .favItem{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .drag{
+      cursor: grab;
+      user-select:none;
+      font-weight: 980;
+      opacity: .8;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+    .favMeta{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      flex: 1;
+    }
+    .favMeta strong{
+      font-weight: 980;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .favMeta span{
+      color: var(--muted2);
+      font-weight: 850;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      padding: 7px 10px;
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      white-space: nowrap;
+    }
+
+    /* Favorite stories */
+    .stories{ padding: 10px; display:flex; flex-direction:column; gap: 10px; }
+    .storyBlock{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .storyTop{
+      display:flex; align-items:center; justify-content:space-between; gap: 10px; flex-wrap:wrap;
+    }
+    .storyTop strong{ font-weight: 980; }
+    .subtle{ color: var(--muted2); font-weight: 850; font-size: 12px; }
+    .storyGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 980px){
+      .twoCol{ grid-template-columns: 1fr; }
+    }
+
+    /* College baseball embed */
+    .iframeWrap{
+      padding: 10px;
+    }
+    iframe.cb{
+      width: 100%;
+      height: 720px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius2);
+      background: rgba(0,0,0,.18);
+    }
   </style>
 </head>
 
@@ -410,7 +587,7 @@
         <div class="logo">SW</div>
         <div class="brand-text">
           <strong>SportsWire</strong>
-          <span>Top story + sport taglines + scores</span>
+          <span>Favorites + league stories + team stories + scores</span>
         </div>
       </a>
 
@@ -444,7 +621,7 @@
       </div>
     </div>
 
-    <!-- NEW: TAGLINES -->
+    <!-- TAGLINES -->
     <div class="strip" aria-live="polite" style="margin-top:12px;">
       <div class="stripHead">
         <h2>Today in Sports</h2>
@@ -467,6 +644,54 @@
       <button id="toggleAuto" class="btn" type="button" aria-pressed="false">Auto: Off</button>
       <div id="lastUpdated" class="metaLine"><span class="kdot"></span><span>—</span></div>
     </div>
+
+    <!-- Favorites + Stories -->
+    <section class="favWrap" aria-label="Favorites and stories">
+      <div class="card">
+        <div class="card-head">
+          <h2>My Favorites</h2>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <span class="pill" id="favCount">0</span>
+            <button id="clearFavs" class="btn btn-danger" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="favBody">
+          <div class="searchRow">
+            <span class="selectWrap">
+              <select id="favLeagueSelect" class="select" aria-label="Select league for team search"></select>
+            </span>
+            <input id="teamSearch" class="input" placeholder="Search teams (e.g., Celtics, Alabama, Duke) …" />
+            <button id="teamSearchBtn" class="btn btn-primary" type="button">Search</button>
+          </div>
+          <div class="hint">Add teams, then drag to rank them. Your ranking drives display order.</div>
+
+          <div id="searchResults" class="results" role="list" aria-label="Team search results">
+            <div class="empty">Search to add teams.</div>
+          </div>
+
+          <div class="strip" style="margin-top:2px;">
+            <div class="stripHead">
+              <h2>Ranked Favorites</h2>
+              <span class="pill">Drag to reorder</span>
+            </div>
+            <div id="favList" class="favList" aria-label="Favorite teams list">
+              <div class="empty">No favorites yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Today’s Stories</h2>
+          <span class="pill" id="storiesMeta">Favorites</span>
+        </div>
+        <div id="stories" class="stories">
+          <div class="empty">Add favorites to see top team story + top league story.</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <section class="container grid">
@@ -477,6 +702,26 @@
       </div>
       <div id="scores" class="list">
         <div class="empty">Loading…</div>
+      </div>
+
+      <!-- College baseball special case -->
+      <div id="collegeBaseballBlock" style="display:none;">
+        <div class="card-head" style="border-top:1px solid rgba(255,255,255,.10);">
+          <h2>College Baseball Scoreboard</h2>
+          <span class="pill">D1Baseball (via NCAA)</span>
+        </div>
+        <div class="iframeWrap">
+          <div class="warn" style="margin-bottom:10px;">
+            College baseball scores are shown using the D1Baseball scoreboard feature (embedded).
+          </div>
+          <iframe
+            class="cb"
+            src="https://www.ncaa.com/d1baseballcom-scoreboard"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="D1Baseball Scoreboard via NCAA.com"
+          ></iframe>
+        </div>
       </div>
     </div>
 
@@ -492,18 +737,30 @@
   </section>
 
   <script>
-    // ESPN site API endpoints are public but unofficial; they can change.
+    /**
+     * Data Sources:
+     * - ESPN site API endpoints (unofficial/public; may change): https://site.api.espn.com/apis/site/v2/sports/{sport}/{league}/...
+     * - D1Baseball college baseball scoreboard: embedded via NCAA.com page.
+     */
+
+    // Expanded leagues (includes college sports)
     const LEAGUES = [
       { label: "NFL", sport: "football", league: "nfl" },
       { label: "NBA", sport: "basketball", league: "nba" },
+      { label: "WNBA", sport: "basketball", league: "wnba" },
       { label: "MLB", sport: "baseball", league: "mlb" },
       { label: "NHL", sport: "hockey", league: "nhl" },
       { label: "NCAAF", sport: "football", league: "college-football" },
       { label: "NCAAM", sport: "basketball", league: "mens-college-basketball" },
-      { label: "EPL", sport: "soccer", league: "eng.1" }
+      { label: "NCAAW", sport: "basketball", league: "womens-college-basketball" },
+      { label: "College Baseball", sport: "baseball", league: "college-baseball" }, // Scores handled via D1Baseball embed
+      { label: "College Softball", sport: "softball", league: "college-softball" },
+      { label: "EPL", sport: "soccer", league: "eng.1" },
+      { label: "UCL", sport: "soccer", league: "uefa.champions" },
+      { label: "MLS", sport: "soccer", league: "usa.1" }
     ];
 
-    // Taglines you asked for: one per sport (editable list)
+    // Taglines (same idea as your original)
     const TAGLINE_SPORTS = [
       { abbr: "NFL", sport: "football", league: "nfl" },
       { abbr: "NBA", sport: "basketball", league: "nba" },
@@ -529,15 +786,37 @@
     const taglineGridEl = document.getElementById("taglineGrid");
     const taglineStatusEl = document.getElementById("taglineStatus");
 
-    // Dropdown
+    // Favorites
+    const favLeagueSelect = document.getElementById("favLeagueSelect");
+    const teamSearch = document.getElementById("teamSearch");
+    const teamSearchBtn = document.getElementById("teamSearchBtn");
+    const searchResultsEl = document.getElementById("searchResults");
+    const favListEl = document.getElementById("favList");
+    const favCountEl = document.getElementById("favCount");
+    const clearFavsBtn = document.getElementById("clearFavs");
+
+    // Stories
+    const storiesEl = document.getElementById("stories");
+    const storiesMetaEl = document.getElementById("storiesMeta");
+
+    // College baseball embed block
+    const collegeBaseballBlock = document.getElementById("collegeBaseballBlock");
+
+    // Dropdowns
     const stored = localStorage.getItem("sportswire_league") || "0";
     LEAGUES.forEach((l, i) => {
       const opt = document.createElement("option");
       opt.value = String(i);
       opt.textContent = l.label;
       leagueSelect.appendChild(opt);
+
+      const opt2 = document.createElement("option");
+      opt2.value = String(i);
+      opt2.textContent = l.label;
+      favLeagueSelect.appendChild(opt2);
     });
     leagueSelect.value = (!isNaN(Number(stored)) ? stored : "0");
+    favLeagueSelect.value = leagueSelect.value;
 
     let autoTimer = null;
 
@@ -577,7 +856,7 @@
       const fallback = {
         NFL: "NFL: chaos scheduled as usual.",
         NBA: "NBA: someone got hot, and defenses noticed late.",
-        MLB: "MLB: spring training vibes, regular-season stakes.",
+        MLB: "MLB: baseball is a daily soap opera with gum.",
         NHL: "NHL: goals, grit, and one goalie stealing the plot."
       }[abbr] || "Busy day. Again.";
 
@@ -668,7 +947,6 @@
     }
 
     async function loadTaglines(nflTopHeadline){
-      // Build cards
       taglineGridEl.innerHTML = "";
       TAGLINE_SPORTS.forEach(s => {
         const card = document.createElement("div");
@@ -683,14 +961,13 @@
         taglineGridEl.appendChild(card);
       });
 
-      // Fetch top headline per sport (NFL uses the already-fetched hero headline to avoid extra request)
       const jobs = TAGLINE_SPORTS.map(async s => {
         try{
           let title = "";
           let when = "";
           if(s.abbr === "NFL" && nflTopHeadline){
             title = nflTopHeadline;
-            when = ""; // hero has time already
+            when = "";
           }else{
             const url = `${baseUrl(s)}/news`;
             const news = await safeFetchJson(url);
@@ -787,10 +1064,35 @@
       });
     }
 
+    function isCollegeBaseballChosen(chosen){
+      return chosen && chosen.sport === "baseball" && chosen.league === "college-baseball";
+    }
+
     async function loadSelectedLeague(){
       const idx = Number(leagueSelect.value || "0");
       const chosen = LEAGUES[idx] || LEAGUES[0];
       localStorage.setItem("sportswire_league", String(idx));
+      favLeagueSelect.value = String(idx);
+
+      // College baseball: show D1Baseball embed; do not hit ESPN scoreboard here
+      if(isCollegeBaseballChosen(chosen)){
+        collegeBaseballBlock.style.display = "block";
+        scoreboardMetaEl.textContent = "College Baseball";
+        scoresEl.innerHTML = `<div class="warn">College baseball scores are shown below via the D1Baseball scoreboard embed.</div>`;
+
+        // Headlines can still come from ESPN college baseball news:
+        const newsUrl = `${baseUrl(chosen)}/news`;
+        try{
+          const news = await safeFetchJson(newsUrl);
+          renderNews(news);
+        }catch(e){
+          newsEl.innerHTML = `<div class="err">Couldn’t load college baseball headlines.</div>`;
+        }
+        return;
+      }
+
+      // Other leagues: hide embed and use ESPN scoreboard
+      collegeBaseballBlock.style.display = "none";
 
       const b = baseUrl(chosen);
       const scoreboardUrl = `${b}/scoreboard`;
@@ -809,6 +1111,346 @@
       }
     }
 
+    // ---------------------------
+    // Favorites (sports + teams)
+    // ---------------------------
+
+    const FAV_KEY = "sportswire_favs_v1";
+
+    /**
+     * Favorite entry shape:
+     * { id: string, teamId: string|number, teamName: string, leagueLabel: string, sport: string, league: string }
+     */
+    function loadFavs(){
+      try{
+        const raw = localStorage.getItem(FAV_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){ return []; }
+    }
+    function saveFavs(favs){
+      localStorage.setItem(FAV_KEY, JSON.stringify(favs || []));
+      renderFavs();
+    }
+
+    function uniqId(){
+      return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function setFavCount(n){
+      favCountEl.textContent = String(n || 0);
+    }
+
+    function leagueByIndex(i){
+      return LEAGUES[Number(i)] || LEAGUES[0];
+    }
+
+    async function searchTeamsForLeague(leagueObj, query){
+      // ESPN teams endpoint (unofficial). Often supports ?limit=...; we keep it simple.
+      const url = `${baseUrl(leagueObj)}/teams`;
+      const data = await safeFetchJson(url);
+
+      // Common shapes:
+      // data.sports[0].leagues[0].teams = [{ team: {...} }]
+      // or data.teams = [{ team: {...} }]
+      let teams = [];
+      try{
+        if(Array.isArray(data?.sports) && data.sports[0]?.leagues?.[0]?.teams){
+          teams = data.sports[0].leagues[0].teams.map(x => x.team).filter(Boolean);
+        }else if(Array.isArray(data?.teams)){
+          teams = data.teams.map(x => x.team || x).filter(Boolean);
+        }
+      }catch(e){ teams = []; }
+
+      const q = (query || "").trim().toLowerCase();
+      if(!q) return teams.slice(0, 25);
+
+      // Filter locally
+      return teams.filter(t => {
+        const name = (t.displayName || t.name || "").toLowerCase();
+        const short = (t.shortDisplayName || "").toLowerCase();
+        const abbr = (t.abbreviation || "").toLowerCase();
+        return name.includes(q) || short.includes(q) || abbr.includes(q);
+      }).slice(0, 25);
+    }
+
+    function renderSearchResults(items, leagueObj){
+      if(!items.length){
+        searchResultsEl.innerHTML = `<div class="empty">No matches. Try another spelling.</div>`;
+        return;
+      }
+
+      searchResultsEl.innerHTML = "";
+      items.forEach(team => {
+        const teamId = team.id;
+        const displayName = team.displayName || team.name || "Team";
+        const abbr = team.abbreviation ? `(${team.abbreviation})` : "";
+        const meta = `${leagueObj.label} • ${leagueObj.sport}/${leagueObj.league}`;
+
+        const row = document.createElement("div");
+        row.className = "resItem";
+        row.innerHTML = `
+          <div class="resName">
+            <strong title="${escapeHtml(displayName)}">${escapeHtml(displayName)} ${escapeHtml(abbr)}</strong>
+            <span>${escapeHtml(meta)}</span>
+          </div>
+          <button class="btn btn-primary" type="button">Add</button>
+        `;
+        const btn = row.querySelector("button");
+        btn.addEventListener("click", () => addFavorite(teamId, displayName, leagueObj));
+        searchResultsEl.appendChild(row);
+      });
+    }
+
+    function addFavorite(teamId, teamName, leagueObj){
+      const favs = loadFavs();
+
+      // prevent duplicates by league+teamId
+      const exists = favs.some(f => String(f.teamId) === String(teamId) && f.league === leagueObj.league && f.sport === leagueObj.sport);
+      if(exists) return;
+
+      favs.push({
+        id: uniqId(),
+        teamId: String(teamId),
+        teamName: teamName || "Team",
+        leagueLabel: leagueObj.label,
+        sport: leagueObj.sport,
+        league: leagueObj.league
+      });
+
+      saveFavs(favs);
+      loadStoriesForFavs(); // update stories immediately
+    }
+
+    function removeFavorite(id){
+      const favs = loadFavs().filter(f => f.id !== id);
+      saveFavs(favs);
+      loadStoriesForFavs();
+    }
+
+    function moveFavorite(fromIndex, toIndex){
+      const favs = loadFavs();
+      if(fromIndex < 0 || toIndex < 0 || fromIndex >= favs.length || toIndex >= favs.length) return;
+      const [item] = favs.splice(fromIndex, 1);
+      favs.splice(toIndex, 0, item);
+      saveFavs(favs);
+      loadStoriesForFavs();
+    }
+
+    function renderFavs(){
+      const favs = loadFavs();
+      setFavCount(favs.length);
+
+      if(!favs.length){
+        favListEl.innerHTML = `<div class="empty">No favorites yet.</div>`;
+        return;
+      }
+
+      favListEl.innerHTML = "";
+      favs.forEach((f, idx) => {
+        const div = document.createElement("div");
+        div.className = "favItem";
+        div.setAttribute("draggable", "true");
+        div.dataset.idx = String(idx);
+        div.innerHTML = `
+          <span class="drag" title="Drag to reorder">↕ Rank ${idx + 1}</span>
+          <div class="favMeta">
+            <strong title="${escapeHtml(f.teamName)}">${escapeHtml(f.teamName)}</strong>
+            <span>${escapeHtml(f.leagueLabel)} • ${escapeHtml(f.sport + "/" + f.league)}</span>
+          </div>
+          <button class="btn btn-danger" type="button">Remove</button>
+        `;
+
+        div.querySelector("button").addEventListener("click", () => removeFavorite(f.id));
+
+        // drag events
+        div.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", div.dataset.idx);
+          e.dataTransfer.effectAllowed = "move";
+        });
+        div.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+        });
+        div.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const from = Number(e.dataTransfer.getData("text/plain"));
+          const to = Number(div.dataset.idx);
+          if(!isNaN(from) && !isNaN(to) && from !== to){
+            moveFavorite(from, to);
+          }
+        });
+
+        favListEl.appendChild(div);
+      });
+    }
+
+    clearFavsBtn.addEventListener("click", () => {
+      localStorage.removeItem(FAV_KEY);
+      renderFavs();
+      loadStoriesForFavs();
+    });
+
+    async function runTeamSearch(){
+      const leagueObj = leagueByIndex(favLeagueSelect.value);
+      const q = teamSearch.value || "";
+      searchResultsEl.innerHTML = `<div class="empty">Searching…</div>`;
+      try{
+        const teams = await searchTeamsForLeague(leagueObj, q);
+        renderSearchResults(teams, leagueObj);
+      }catch(e){
+        searchResultsEl.innerHTML = `<div class="err">Couldn’t search teams (feed issue).</div>`;
+      }
+    }
+
+    teamSearchBtn.addEventListener("click", runTeamSearch);
+    teamSearch.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") runTeamSearch();
+    });
+
+    // ---------------------------
+    // Stories: team + league top
+    // ---------------------------
+
+    async function fetchLeagueTopStory(sport, league){
+      const url = `https://site.api.espn.com/apis/site/v2/sports/${encodeURIComponent(sport)}/${encodeURIComponent(league)}/news`;
+      const news = await safeFetchJson(url);
+      const items = (news && (news.articles || news.headlines)) ? (news.articles || news.headlines) : [];
+      const top = items[0] || null;
+      if(!top) return null;
+
+      const title = top.headline || top.title || "Top story";
+      const href = pickLink(top.links) || top.link || "#";
+      const when = top.published ? fmtShort(top.published) : (top.lastModified ? fmtShort(top.lastModified) : "");
+      return { title, href, when };
+    }
+
+    async function fetchTeamTopStory(sport, league, teamId){
+      // Most common pattern:
+      // .../teams/{teamId}/news
+      const url = `https://site.api.espn.com/apis/site/v2/sports/${encodeURIComponent(sport)}/${encodeURIComponent(league)}/teams/${encodeURIComponent(teamId)}/news`;
+      const news = await safeFetchJson(url);
+      const items = (news && (news.articles || news.headlines)) ? (news.articles || news.headlines) : [];
+      const top = items[0] || null;
+      if(!top) return null;
+
+      const title = top.headline || top.title || "Top team story";
+      const href = pickLink(top.links) || top.link || "#";
+      const when = top.published ? fmtShort(top.published) : (top.lastModified ? fmtShort(top.lastModified) : "");
+      return { title, href, when };
+    }
+
+    function groupFavsByLeague(favs){
+      const map = new Map(); // key => { sport, league, leagueLabel, favs: [] }
+      favs.forEach(f => {
+        const key = `${f.sport}__${f.league}`;
+        if(!map.has(key)){
+          map.set(key, { sport: f.sport, league: f.league, leagueLabel: f.leagueLabel, favs: [] });
+        }
+        map.get(key).favs.push(f);
+      });
+      return Array.from(map.values());
+    }
+
+    async function loadStoriesForFavs(){
+      const favs = loadFavs();
+      storiesMetaEl.textContent = favs.length ? `${favs.length} Teams` : "Favorites";
+
+      if(!favs.length){
+        storiesEl.innerHTML = `<div class="empty">Add favorites to see top team story + top league story.</div>`;
+        return;
+      }
+
+      storiesEl.innerHTML = `<div class="empty">Loading stories…</div>`;
+
+      const groups = groupFavsByLeague(favs);
+
+      // Fetch league top stories (one per league group)
+      const leagueTopByKey = new Map();
+      await Promise.all(groups.map(async g => {
+        try{
+          const top = await fetchLeagueTopStory(g.sport, g.league);
+          leagueTopByKey.set(`${g.sport}__${g.league}`, top);
+        }catch(e){
+          leagueTopByKey.set(`${g.sport}__${g.league}`, null);
+        }
+      }));
+
+      // Fetch team top stories
+      const teamStoryById = new Map();
+      await Promise.all(favs.map(async f => {
+        try{
+          const top = await fetchTeamTopStory(f.sport, f.league, f.teamId);
+          teamStoryById.set(f.id, top);
+        }catch(e){
+          teamStoryById.set(f.id, null);
+        }
+      }));
+
+      // Render: group blocks, teams appear in user-ranked order (already ordered in favs)
+      storiesEl.innerHTML = "";
+
+      groups.forEach(g => {
+        const key = `${g.sport}__${g.league}`;
+        const leagueTop = leagueTopByKey.get(key);
+
+        const block = document.createElement("div");
+        block.className = "storyBlock";
+
+        block.innerHTML = `
+          <div class="storyTop">
+            <strong>${escapeHtml(g.leagueLabel)}</strong>
+            <span class="chip">${escapeHtml(g.sport + "/" + g.league)}</span>
+          </div>
+
+          <div class="twoCol">
+            <div class="headline">
+              <p class="t">League top story</p>
+              ${
+                leagueTop
+                ? `<a class="t" href="${escapeHtml(leagueTop.href)}" target="_blank" rel="noopener">${escapeHtml(leagueTop.title)}</a>
+                   <p class="small">${escapeHtml(leagueTop.when || "Today")}</p>`
+                : `<p class="small">No league headline found right now.</p>`
+              }
+            </div>
+
+            <div class="warn">
+              Tip: Drag your favorites to change the story order.
+              <div class="subtle" style="margin-top:6px;">Rank 1 shows first. Yes, your #1 gets the spotlight.</div>
+            </div>
+          </div>
+
+          <div class="storyGrid" data-group="${escapeHtml(key)}"></div>
+        `;
+
+        const grid = block.querySelector(`[data-group="${CSS.escape(key)}"]`);
+
+        // teams in ranked order: use global favs order, but filter to this league group
+        favs.filter(f => f.sport === g.sport && f.league === g.league).forEach(f => {
+          const top = teamStoryById.get(f.id);
+
+          const row = document.createElement("div");
+          row.className = "headline";
+          row.innerHTML = `
+            <p class="t">${escapeHtml(f.teamName)} <span class="subtle">— top team story</span></p>
+            ${
+              top
+              ? `<a class="t" href="${escapeHtml(top.href)}" target="_blank" rel="noopener">${escapeHtml(top.title)}</a>
+                 <p class="small">${escapeHtml(top.when || "Today")}</p>`
+              : `<p class="small">No team headline found right now.</p>`
+            }
+          `;
+          grid.appendChild(row);
+        });
+
+        storiesEl.appendChild(block);
+      });
+    }
+
+    // ---------------------------
+    // Main load
+    // ---------------------------
+
     async function loadAll(){
       setLoading();
 
@@ -820,6 +1462,10 @@
 
       // 3) Selected league panels
       await loadSelectedLeague();
+
+      // 4) Favorites render + stories
+      renderFavs();
+      await loadStoriesForFavs();
 
       const now = new Date();
       lastUpdatedEl.innerHTML =
@@ -843,6 +1489,8 @@
       toggleAuto.setAttribute("aria-pressed", "true");
     });
 
+    // Initial
+    renderFavs();
     loadAll();
   </script>
 </body>
