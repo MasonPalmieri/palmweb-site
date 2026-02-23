@@ -1,0 +1,27 @@
+# deps
+node_modules/
+
+# builds
+.next/
+dist/
+out/
+
+# env
+.env
+.env.local
+
+# local db / runtime
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# local storage
+storage/documents/*
+storage/templates/*
+outbox/*
+
+!.gitkeep
+
+# OS
+.DS_Store
