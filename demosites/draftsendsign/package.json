@@ -1,0 +1,14 @@
+{
+  "name": "draftsendsign",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local-first starter for a DraftSendSign-style e-sign workflow (demo UI + backend-ready skeleton).",
+  "scripts": {
+    "dev": "echo \"Next step: scaffold apps/web then run from there\"",
+    "format": "npx prettier . --write",
+    "lint": "echo \"Next step: add lint\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}
