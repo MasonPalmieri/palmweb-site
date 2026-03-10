@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Importer Database Lookup</title>
+
+<style>
+
+body{
+font-family:system-ui;
+margin:0;
+background:#f5f7fa;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
+}
+
+h1{
+color:#0b2e4e;
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:1px solid #ccc;
+margin-top:10px;
+}
+
+button{
+margin-top:15px;
+padding:14px 20px;
+border:none;
+border-radius:999px;
+background:#f28c28;
+color:white;
+font-weight:800;
+cursor:pointer;
+}
+
+.results{
+margin-top:30px;
+}
+
+.company{
+background:white;
+padding:20px;
+border-radius:14px;
+margin-bottom:14px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Importer Database Lookup</h1>
+
+<p>Search companies importing goods from China using shipment dataset records.</p>
+
+<input id="search" placeholder="Enter company name">
+
+<button onclick="searchCompany()">Search Import Records</button>
+
+<div id="results" class="results"></div>
+
+</div>
+
+<script>
+
+const dataset = [
+
+{company:"Apple Inc",country:"China",product:"Electronics Components"},
+{company:"Tesla",country:"China",product:"Automotive Parts"},
+{company:"Nike",country:"China",product:"Apparel"},
+{company:"Home Depot",country:"China",product:"Construction Materials"},
+{company:"Walmart",country:"China",product:"Consumer Goods"},
+{company:"Target",country:"China",product:"Retail Merchandise"}
+
+];
+
+function searchCompany(){
+
+const q=document.getElementById("search").value.toLowerCase();
+
+const results=dataset.filter(c=>c.company.toLowerCase().includes(q));
+
+const container=document.getElementById("results");
+
+container.innerHTML="";
+
+if(results.length===0){
+
+container.innerHTML="<p>No records found in this sample dataset.</p>";
+return;
+
+}
+
+results.forEach(c=>{
+
+container.innerHTML+=`
+
+<div class="company">
+
+<strong>${c.company}</strong><br>
+
+Import Country: ${c.country}<br>
+
+Product Type: ${c.product}
+
+</div>
+
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
