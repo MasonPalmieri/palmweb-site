@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Company Tariff Eligibility Check | TariffBridge</title>
+
+<style>
+
+:root{
+--blue:#1d79c6;
+--green:#2cab4b;
+--text:#0b1220;
+--muted:#556173;
+--hair:rgba(15,23,42,.08);
+--shadow:0 18px 55px rgba(15,23,42,.10);
+}
+
+body{
+margin:0;
+font-family:ui-sans-serif,system-ui;
+background:#f8fafc;
+color:var(--text);
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
+}
+
+header{
+text-align:center;
+padding:30px 0;
+}
+
+header img{
+width:340px;
+}
+
+h1{
+font-size:40px;
+margin-bottom:10px;
+}
+
+p{
+color:var(--muted);
+font-size:18px;
+}
+
+.lookup{
+background:white;
+border:1px solid var(--hair);
+border-radius:20px;
+padding:30px;
+box-shadow:var(--shadow);
+margin-top:30px;
+}
+
+label{
+font-weight:700;
+display:block;
+margin-top:16px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid var(--hair);
+margin-top:6px;
+}
+
+button{
+margin-top:20px;
+padding:14px 22px;
+border:none;
+border-radius:999px;
+background:linear-gradient(135deg,var(--blue),var(--green));
+color:white;
+font-weight:900;
+font-size:16px;
+cursor:pointer;
+}
+
+.result{
+margin-top:25px;
+background:#f1f5f9;
+padding:20px;
+border-radius:14px;
+display:none;
+}
+
+.form{
+margin-top:30px;
+display:none;
+}
+
+.form input, .form textarea{
+width:100%;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+border:1px solid var(--hair);
+}
+
+footer{
+margin-top:40px;
+text-align:center;
+font-size:13px;
+color:#64748b;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<img src="assets/tbbanner.png">
+</header>
+
+<h1>Check If Your Company May Qualify</h1>
+
+<p>
+Enter your company name to check whether your imports may have been affected by tariff rulings.
+</p>
+
+<div class="lookup">
+
+<label>Company Name</label>
+<input id="company">
+
+<label>Primary Import Country</label>
+<input id="country" placeholder="Example: China">
+
+<button onclick="checkCompany()">Check Eligibility</button>
+
+<div id="result" class="result"></div>
+
+<div id="form" class="form">
+
+<h3>Request Full Refund Review</h3>
+
+<form action="https://formsubmit.co/mason@palmweb.net" method="POST">
+
+<input type="hidden" name="_subject" value="TariffBridge Company Check Lead">
+<input type="hidden" name="_captcha" value="false">
+
+<label>Your Name</label>
+<input name="Name">
+
+<label>Email</label>
+<input name="Email">
+
+<label>Phone</label>
+<input name="Phone">
+
+<label>Additional Notes</label>
+<textarea name="Notes"></textarea>
+
+<br><br>
+
+<button>Request Eligibility Review</button>
+
+</form>
+
+</div>
+
+</div>
+
+<footer>
+© <span id="year"></span> TariffBridge
+</footer>
+
+</div>
+
+<script>
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function checkCompany(){
+
+const company=document.getElementById("company").value;
+
+const country=document.getElementById("country").value;
+
+if(!company){
+alert("Enter company name");
+return;
+}
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").innerHTML=`
+
+<strong>${company}</strong> may have imported goods subject to tariffs depending on shipment records.
+
+Companies importing from <strong>${country}</strong> between 2018-2024 often paid tariffs under Section 301.
+
+A tariff specialist can review your customs entries to determine whether refunds may be available.
+
+`;
+
+document.getElementById("form").style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
