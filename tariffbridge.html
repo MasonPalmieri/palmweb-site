@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>TariffBridge — Tariff Refund Recovery</title>
 
-<meta name="description" content="TariffBridge helps U.S. importers determine whether they qualify for tariff refunds after recent court rulings.">
+<meta name="description" content="Find out whether your company may qualify for tariff refunds after recent court rulings.">
 
 <style>
 
@@ -23,7 +24,6 @@ margin:0;
 font-family:ui-sans-serif,system-ui;
 background:#f8fafc;
 color:var(--text);
-line-height:1.6;
 }
 
 .container{
@@ -101,48 +101,6 @@ color:inherit;
 margin-top:0;
 }
 
-.card:hover{
-transform:translateY(-3px);
-}
-
-.form{
-background:white;
-border:1px solid var(--hair);
-border-radius:20px;
-padding:30px;
-box-shadow:var(--shadow);
-max-width:700px;
-margin:auto;
-}
-
-input,select,textarea{
-width:100%;
-padding:12px;
-margin-top:6px;
-border-radius:10px;
-border:1px solid var(--hair);
-}
-
-label{
-font-weight:700;
-font-size:14px;
-}
-
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-margin-top:16px;
-}
-
-.full{
-grid-column:1/-1;
-}
-
-.submit{
-margin-top:20px;
-}
-
 footer{
 border-top:1px solid var(--hair);
 padding:20px;
@@ -155,10 +113,6 @@ background:white;
 @media(max-width:800px){
 
 .grid{
-grid-template-columns:1fr;
-}
-
-.form-grid{
 grid-template-columns:1fr;
 }
 
@@ -189,11 +143,11 @@ font-size:34px;
 <h1>Recover Tariffs Your Company May Have Overpaid</h1>
 
 <p class="lead">
-Recent court rulings may require the U.S. government to refund billions of dollars in tariffs collected under emergency authority.  
-Many U.S. importers may qualify for refunds with interest.
+Recent U.S. court rulings may require the government to refund billions of dollars in tariffs.
+Many importers may qualify for refunds with interest.
 </p>
 
-<a href="#form" class="btn">Check Refund Eligibility</a>
+<a href="tariffbridge-calculator.html" class="btn">Estimate Your Refund</a>
 
 </div>
 </section>
@@ -212,76 +166,17 @@ Many U.S. importers may qualify for refunds with interest.
 
 <a class="card" href="tariffbridge-electronics.html">
 <h3>Electronics Importers</h3>
-<p>Electronics and technology components were heavily impacted by Section 301 tariffs.</p>
+<p>Electronics products were heavily impacted by Section 301 tariffs.</p>
 </a>
 
 <a class="card" href="tariffbridge-automotive.html">
 <h3>Automotive Parts Importers</h3>
-<p>Many automotive suppliers paid tariffs that could now qualify for refunds.</p>
+<p>Automotive suppliers importing components may qualify for refunds.</p>
 </a>
 
 </div>
 
 </div>
-</section>
-
-<section id="form" class="section">
-
-<div class="container">
-
-<div class="form">
-
-<h2>Free Tariff Refund Eligibility Review</h2>
-
-<form action="https://formsubmit.co/mason@palmweb.net" method="POST">
-
-<input type="hidden" name="_subject" value="TariffBridge Lead">
-<input type="hidden" name="_captcha" value="false">
-
-<div class="form-grid">
-
-<label>
-Company Name
-<input name="Company">
-</label>
-
-<label>
-Your Name
-<input name="Name">
-</label>
-
-<label>
-Email
-<input name="Email">
-</label>
-
-<label>
-Phone
-<input name="Phone">
-</label>
-
-<label class="full">
-Import Countries
-<input name="Countries" placeholder="Example: China, Vietnam">
-</label>
-
-<label class="full">
-Additional Information
-<textarea name="Notes"></textarea>
-</label>
-
-</div>
-
-<div class="submit">
-<button class="btn">Submit for Review</button>
-</div>
-
-</form>
-
-</div>
-
-</div>
-
 </section>
 
 <footer>
