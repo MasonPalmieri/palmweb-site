@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Tariff Refund Calculator | TariffBridge</title>
+
+<style>
+
+:root{
+--blue:#1d79c6;
+--green:#2cab4b;
+--text:#0b1220;
+--muted:#556173;
+--hair:rgba(15,23,42,.08);
+--shadow:0 18px 55px rgba(15,23,42,.10);
+}
+
+body{
+margin:0;
+font-family:ui-sans-serif,system-ui;
+background:#f8fafc;
+color:var(--text);
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:40px 20px;
+}
+
+header{
+text-align:center;
+padding:30px 0;
+}
+
+header img{
+width:340px;
+}
+
+h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+p{
+color:var(--muted);
+font-size:18px;
+}
+
+.calc-box{
+background:white;
+border:1px solid var(--hair);
+border-radius:20px;
+padding:30px;
+box-shadow:var(--shadow);
+margin-top:30px;
+}
+
+label{
+display:block;
+font-weight:700;
+margin-top:16px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid var(--hair);
+margin-top:6px;
+}
+
+button{
+margin-top:20px;
+padding:14px 22px;
+border:none;
+border-radius:999px;
+background:linear-gradient(135deg,var(--blue),var(--green));
+color:white;
+font-weight:900;
+font-size:16px;
+cursor:pointer;
+}
+
+.result{
+margin-top:25px;
+background:#f1f5f9;
+padding:20px;
+border-radius:14px;
+display:none;
+}
+
+.result strong{
+font-size:20px;
+}
+
+footer{
+margin-top:40px;
+text-align:center;
+font-size:13px;
+color:#64748b;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<img src="assets/tbbanner.png">
+</header>
+
+<h1>Tariff Refund Estimator</h1>
+
+<p>
+Estimate the tariff refunds your company may be eligible to recover based on import value.
+</p>
+
+<div class="calc-box">
+
+<label>Annual Import Value (USD)</label>
+<input id="importValue" type="number" placeholder="Example: 25000000">
+
+<label>Average Tariff Rate</label>
+<select id="tariffRate">
+<option value="0.10">10%</option>
+<option value="0.15">15%</option>
+<option value="0.25" selected>25%</option>
+</select>
+
+<label>Years Tariffs Were Paid</label>
+<select id="years">
+<option value="1">1 year</option>
+<option value="2">2 years</option>
+<option value="3">3 years</option>
+<option value="4">4 years</option>
+<option value="5">5+ years</option>
+</select>
+
+<button onclick="calculateRefund()">Estimate Refund</button>
+
+<div id="result" class="result"></div>
+
+</div>
+
+<footer>
+© <span id="year"></span> TariffBridge
+</footer>
+
+</div>
+
+<script>
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function calculateRefund(){
+
+const importValue=parseFloat(document.getElementById("importValue").value);
+
+const rate=parseFloat(document.getElementById("tariffRate").value);
+
+const years=parseInt(document.getElementById("years").value);
+
+if(!importValue){
+alert("Please enter import value");
+return;
+}
+
+const tariffPaid=importValue*rate*years;
+
+const refundLow=tariffPaid*1.00;
+
+const refundHigh=tariffPaid*1.15;
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").innerHTML=`
+
+<strong>Estimated Tariffs Paid:</strong><br>
+$${tariffPaid.toLocaleString()}<br><br>
+
+<strong>Potential Refund Range:</strong><br>
+$${refundLow.toLocaleString()} – $${refundHigh.toLocaleString()}
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>
