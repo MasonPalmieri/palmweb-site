@@ -1,397 +1,1331 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Smith & Sons Plumbing — Emergency + Residential Service</title>
-  <meta name="description" content="Fast, reliable plumbing service. Emergency calls, repairs, installs, and maintenance." />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="referrer" content="no-referrer" />
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
 
-  <style>
-    :root{
-      --bg:#f7fafc;
-      --text:#0b1220;
-      --muted:#4b5563;
-      --brand:#0ea5e9;
-      --hot:#f97316;
-      --card:#ffffff;
-      --border: rgba(15,23,42,.12);
-      --shadow: 0 14px 36px rgba(15,23,42,.10);
-      --shadow2: 0 10px 24px rgba(15,23,42,.08);
-      --radius: 18px;
-      --max: 1140px;
-    }
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1000px 560px at 10% -10%, rgba(14,165,233,.18), transparent 60%),
-        radial-gradient(1000px 560px at 90% 0%, rgba(249,115,22,.10), transparent 60%),
-        var(--bg);
-      color:var(--text);
-      line-height:1.55;
-    }
-    a{color:inherit}
-    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Summit Plumbing Co. — Emergency + Residential Plumbing Service</title>
+<meta name="description" content="Fast, reliable plumbing service in Warwick, RI. Emergency calls, water heaters, fixture installs, and more. Licensed & insured." />
+<meta name="theme-color" content="#1a4d3e" />
+<meta name="referrer" content="no-referrer" />
 
-    header{
-      position:sticky;top:0;z-index:50;
-      background: rgba(247,250,252,.86);
-      backdrop-filter: blur(12px);
-      border-bottom:1px solid var(--border);
-    }
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
-    .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .brand strong{font-weight:950}
-    .tag{
-      font-weight:950;font-size:12px;
-      color:#7c2d12;
-      background: rgba(249,115,22,.12);
-      border:1px solid rgba(249,115,22,.25);
-      padding:6px 10px;border-radius:999px;
-    }
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
 
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:999px;border:1px solid transparent;
-      text-decoration:none;font-weight:950;cursor:pointer;user-select:none;white-space:nowrap;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn:active{transform: translateY(1px)}
-    .btn-primary{background:var(--brand);color:#fff;box-shadow: 0 16px 34px rgba(14,165,233,.22)}
-    .btn-hot{background:var(--hot);color:#fff;box-shadow: 0 16px 34px rgba(249,115,22,.18)}
-    .btn-outline{background:#fff;border:1px solid var(--border);color:var(--text)}
-    .btn-outline:hover{background: rgba(255,255,255,.70)}
+<style>
+/* ============================================
+   SUMMIT PLUMBING CO. — Design System
+   ============================================ */
+:root {
+  --green-900: #1a4d3e;
+  --green-800: #1e5a48;
+  --green-700: #2d7a5e;
+  --green-600: #389e76;
+  --green-500: #4db890;
+  --mint: #a7f3d0;
+  --mint-light: #d1fae5;
+  --mint-pale: #ecfdf5;
+  --bg: #f9fafb;
+  --white: #ffffff;
+  --text: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+  --border: rgba(26, 77, 62, 0.10);
+  --border-strong: rgba(26, 77, 62, 0.18);
+  --emergency: #dc2626;
+  --emergency-bg: #fef2f2;
+  --emergency-border: rgba(220, 38, 38, 0.20);
+  --emergency-glow: rgba(220, 38, 38, 0.12);
+  --orange: #ea580c;
+  --orange-bg: #fff7ed;
+  --shadow-sm: 0 1px 3px rgba(26, 77, 62, 0.06);
+  --shadow-md: 0 8px 24px rgba(26, 77, 62, 0.08);
+  --shadow-lg: 0 16px 40px rgba(26, 77, 62, 0.10);
+  --shadow-xl: 0 24px 56px rgba(26, 77, 62, 0.12);
+  --radius: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --max: 1120px;
+  --font-display: 'Cabinet Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'General Sans', system-ui, -apple-system, sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    .hero{padding: 24px 0 18px}
-    .hero-grid{display:grid;grid-template-columns: 1.05fr .95fr;gap: 14px;align-items: stretch}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-    .hero-card{
-      background: rgba(255,255,255,.85);
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-      position: relative;
-      overflow:hidden;
-    }
-    .hero-card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(460px 220px at 15% 15%, rgba(14,165,233,.16), transparent 70%),
-        radial-gradient(460px 220px at 92% 0%, rgba(249,115,22,.10), transparent 70%);
-      pointer-events:none;
-    }
-    .hero-card > *{position:relative}
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-    /* ✅ FIXED: use images.unsplash.com (stable) instead of source.unsplash.com */
-    .hero-photo{
-      border-radius: 22px;
-      border:1px solid rgba(15,23,42,.10);
-      box-shadow: var(--shadow2);
-      min-height: 320px;
-      overflow:hidden;
-      position:relative;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.10)),
-        url("https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
-    }
-    .hero-photo::after{
-      content:"";
-      position:absolute; inset:0;
-      background: radial-gradient(600px 360px at 20% 20%, rgba(255,255,255,.18), transparent 60%);
-      pointer-events:none;
-    }
-    .hero-photo .cap{
-      position:absolute; left: 14px; bottom: 14px;
-      background: rgba(255,255,255,.88);
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-weight: 950;
-      font-size: 12px;
-    }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
 
-    h1{
-      margin:0 0 10px;
-      font-size: clamp(30px, 3.6vw, 46px);
-      letter-spacing: -0.9px;
-      line-height: 1.05;
-    }
-    p{margin:0 0 14px;color: rgba(11,18,32,.70);font-weight:750}
+.container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+@media (min-width: 768px) { .container { padding: 0 32px; } }
 
-    .bullets{
-      margin: 12px 0 0;
-      padding: 0;
-      list-style:none;
-      display:grid;
-      gap: 10px;
-    }
-    .bullets li{
-      display:flex;gap:10px;align-items:flex-start;
-      padding: 10px 12px;
-      background:#fff;
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 16px;
-      box-shadow: var(--shadow2);
-      font-weight:850;
-      color: rgba(11,18,32,.82);
-    }
-    .bullets span{
-      width: 10px;height:10px;border-radius:999px;margin-top:5px;
-      background: linear-gradient(135deg, var(--brand), var(--hot));
-      flex: 0 0 auto;
-    }
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(249, 250, 251, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
 
-    .emergency{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      border-radius: 18px;
-      border:1px solid rgba(249,115,22,.25);
-      background: rgba(249,115,22,.10);
-      padding: 12px 14px;
-      margin-top: 14px;
-      font-weight: 900;
-    }
-    .emergency small{display:block;color: rgba(11,18,32,.70);font-weight:800;margin-top:2px}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  gap: 8px;
+  overflow: hidden;
+}
 
-    .section{padding: 42px 0}
-    .section h2{margin:0;font-size:26px;letter-spacing:-.2px}
-    .section p.sub{margin:8px 0 0; color: rgba(11,18,32,.65); font-weight:750}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex-shrink: 1;
+}
 
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .card{
-      background:#fff;
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    .card h3{margin:0 0 6px;font-size:16px;font-weight:950}
-    .card p{margin:0;color: rgba(11,18,32,.68);font-weight:750}
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  color: var(--green-900);
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .brand-name { font-size: 18px; }
+}
 
-    .review{
-      display:flex;gap:12px;align-items:flex-start;
-      padding: 14px;
-      border-radius: 22px;
-      border:1px solid rgba(15,23,42,.10);
-      background: rgba(255,255,255,.78);
-      box-shadow: var(--shadow2);
-    }
-    .avatar{
-      width: 44px;height: 44px;border-radius: 999px;
-      border: 1px solid rgba(15,23,42,.12);
-      background-size: cover;
-      background-position: center;
-      flex: 0 0 auto;
-    }
-    .stars{font-weight:950;color:#0b1220}
-    .mini{font-size:12px;color: rgba(11,18,32,.55);font-weight:850}
+.emergency-badge {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--emergency-bg);
+  border: 1px solid var(--emergency-border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--emergency);
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (min-width: 640px) {
+  .emergency-badge { display: inline-flex; }
+}
 
-    .split{
-      display:grid;
-      grid-template-columns: .9fr 1.1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .panel{
-      background:#fff;
-      border:1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    label{
-      display:flex;flex-direction:column;gap:6px;
-      font-weight:900;font-size:13px;
-    }
-    input,textarea{
-      padding: 12px;
-      border-radius: 14px;
-      border:1px solid rgba(15,23,42,.12);
-      font-size:14px;
-      background:#fff;
-      outline:none;
-    }
-    input:focus, textarea:focus{
-      border-color: rgba(14,165,233,.55);
-      box-shadow: 0 0 0 4px rgba(14,165,233,.12);
-    }
-    textarea{min-height: 120px; resize: vertical}
+.emergency-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--emergency);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
 
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top: 12px}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
 
-    footer{
-      border-top:1px solid rgba(15,23,42,.10);
-      padding:18px 0;
-      color: rgba(11,18,32,.55);
-      font-size:12px;
-      text-align:center;
-      background: rgba(255,255,255,.55);
-    }
+.header-nav {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
 
-    @media (max-width: 980px){
-      .hero-grid{grid-template-columns: 1fr}
-      .cards{grid-template-columns: 1fr}
-      .split{grid-template-columns: 1fr}
-      .hero-photo{min-height: 260px}
-    }
-  </style>
+@media (min-width: 768px) {
+  .header-nav { display: flex; }
+}
+
+.nav-link {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 10px;
+  transition: color var(--transition-interactive), background var(--transition-interactive);
+}
+.nav-link:hover { color: var(--green-900); background: rgba(26, 77, 62, 0.05); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Hamburger (mobile only) */
+.hamburger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--white);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.hamburger svg { width: 20px; height: 20px; color: var(--green-900); }
+@media (min-width: 768px) { .hamburger { display: none; } }
+
+/* Emergency call button - always visible on mobile */
+.emergency-call-mobile {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--emergency);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background var(--transition-interactive), transform var(--transition-interactive);
+}
+.emergency-call-mobile:hover { background: #b91c1c; }
+.emergency-call-mobile:active { transform: translateY(1px); }
+.emergency-call-mobile svg { width: 16px; height: 16px; }
+@media (min-width: 768px) { .emergency-call-mobile { display: none; } }
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(17, 24, 39, 0.40);
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out);
+}
+.mobile-menu.active { display: block; opacity: 1; }
+
+.mobile-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(320px, 85vw);
+  height: 100%;
+  background: var(--white);
+  padding: 24px;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transform: translateX(100%);
+  transition: transform 300ms var(--ease-out);
+}
+.mobile-menu.active .mobile-menu-panel { transform: translateX(0); }
+
+.mobile-menu-close {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.mobile-menu-close svg { width: 20px; height: 20px; }
+
+.mobile-menu-link {
+  display: block;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  border-radius: 12px;
+  transition: background var(--transition-interactive);
+}
+.mobile-menu-link:hover { background: var(--mint-pale); }
+
+.mobile-menu-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background var(--transition-interactive),
+              color var(--transition-interactive),
+              box-shadow var(--transition-interactive),
+              transform var(--transition-interactive);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--green-900);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(26, 77, 62, 0.20);
+}
+.btn-primary:hover { background: var(--green-800); box-shadow: 0 6px 20px rgba(26, 77, 62, 0.26); }
+
+.btn-emergency {
+  background: var(--emergency);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.20);
+}
+.btn-emergency:hover { background: #b91c1c; }
+
+.btn-outline {
+  background: var(--white);
+  color: var(--green-900);
+  border: 1px solid var(--border-strong);
+}
+.btn-outline:hover { background: var(--mint-pale); border-color: var(--green-700); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--green-700);
+  padding: 12px 16px;
+}
+.btn-ghost:hover { background: rgba(26, 77, 62, 0.05); }
+
+.btn-lg { padding: 16px 28px; font-size: 16px; border-radius: 14px; }
+
+/* Desktop CTA in header */
+.header-cta-desktop {
+  display: none;
+}
+@media (min-width: 768px) {
+  .header-cta-desktop { display: inline-flex; }
+}
+
+.header-phone-desktop {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .header-phone-desktop { display: inline-flex; }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  padding: 0 0 48px;
+  overflow: hidden;
+}
+
+.hero-emergency-bar {
+  background: linear-gradient(135deg, var(--emergency) 0%, #b91c1c 100%);
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.hero-emergency-bar a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.hero-emergency-bar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+.hero-emergency-bar .pulse-circle {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.hero-content {
+  padding-top: 40px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+  }
+  .hero-content { padding-top: 56px; }
+}
+
+.hero-text { max-width: 560px; }
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--mint-pale);
+  border: 1px solid rgba(167, 243, 208, 0.5);
+  color: var(--green-900);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.hero-label svg { width: 14px; height: 14px; }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--green-900);
+  margin-bottom: 18px;
+}
+h1 .text-accent { color: var(--green-700); }
+
+.hero-sub {
+  font-size: clamp(16px, 1.8vw, 19px);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.trust-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.trust-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--mint-pale);
+  color: var(--green-700);
+  flex-shrink: 0;
+}
+.trust-icon svg { width: 18px; height: 18px; }
+
+.hero-image-wrapper {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  aspect-ratio: 4 / 5;
+  max-height: 560px;
+}
+@media (min-width: 768px) {
+  .hero-image-wrapper { aspect-ratio: 3 / 4; }
+}
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px;
+  background: linear-gradient(to top, rgba(26, 77, 62, 0.85), transparent);
+}
+
+.hero-image-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ============================================
+   SECTIONS (shared)
+   ============================================ */
+.section {
+  padding: 64px 0;
+}
+@media (min-width: 768px) {
+  .section { padding: 80px 0; }
+}
+
+.section-header {
+  margin-bottom: 36px;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--mint-pale);
+  border: 1px solid rgba(167, 243, 208, 0.5);
+  color: var(--green-700);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(26px, 3.2vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  color: var(--green-900);
+  margin-bottom: 10px;
+}
+
+.section-sub {
+  font-size: clamp(15px, 1.6vw, 17px);
+  color: var(--text-muted);
+  font-weight: 500;
+  max-width: 520px;
+}
+
+/* ============================================
+   SERVICES
+   ============================================ */
+.services-section {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .services-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.service-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  transition: box-shadow var(--transition-interactive),
+              border-color var(--transition-interactive),
+              transform var(--transition-interactive);
+}
+.service-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--mint-pale);
+  color: var(--green-700);
+  margin-bottom: 18px;
+}
+.service-icon svg { width: 26px; height: 26px; }
+
+.service-card h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.3px;
+  color: var(--green-900);
+  margin-bottom: 8px;
+}
+
+.service-card p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+/* ============================================
+   REVIEWS
+   ============================================ */
+.reviews-section {
+  background: var(--bg);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.review-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition-interactive),
+              transform var(--transition-interactive);
+}
+.review-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.review-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--mint);
+  flex-shrink: 0;
+}
+
+.review-meta h4 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.review-stars {
+  color: #f59e0b;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.review-quote {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-grow: 1;
+}
+
+.review-quote strong {
+  display: block;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+/* ============================================
+   SERVICE REQUEST
+   ============================================ */
+.request-section {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+.request-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media (min-width: 768px) {
+  .request-grid { grid-template-columns: 1fr 1.2fr; gap: 32px; }
+}
+
+.request-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.request-info-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.request-info-card h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--green-900);
+  margin-bottom: 12px;
+}
+
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 8px 0;
+}
+.contact-line svg { width: 18px; height: 18px; color: var(--green-700); flex-shrink: 0; }
+.contact-line a { color: var(--green-700); font-weight: 700; }
+
+.steps-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--green-900);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.step-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1.5;
+  padding-top: 5px;
+}
+.step-text strong { color: var(--text); font-weight: 700; }
+
+/* Form */
+.request-form-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 480px) {
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .form-grid .form-full { grid-column: 1 / -1; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.1px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 14px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  transition: border-color var(--transition-interactive),
+              box-shadow var(--transition-interactive);
+  /* Ensure 44px touch targets */
+  min-height: 48px;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--green-700);
+  box-shadow: 0 0 0 3px rgba(45, 122, 94, 0.12);
+}
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.form-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  background: var(--green-900);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+.footer a {
+  color: var(--mint);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Stagger children */
+.reveal-stagger .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger .reveal:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger .reveal:nth-child(3) { transition-delay: 160ms; }
+
+/* ============================================
+   SVG LOGO
+   ============================================ */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo svg {
+  flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 767px) {
+  .hero-image-wrapper {
+    max-height: 340px;
+    aspect-ratio: 16 / 10;
+  }
+  .section-header { text-align: center; }
+  .section-sub { margin-left: auto; margin-right: auto; }
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="#">
-        <strong>Smith & Sons Plumbing</strong>
-        <span class="tag">Emergency service</span>
+
+<!-- ========== EMERGENCY BAR ========== -->
+<div class="hero-emergency-bar" role="alert">
+  <span>
+    <span class="pulse-circle" aria-hidden="true"></span>
+    24/7 Emergency Line — <a href="tel:+14015551234">(401) 555-1234</a>
+  </span>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+  <div class="container header-inner">
+    <div class="header-left">
+      <a href="#" class="brand-logo" aria-label="Summit Plumbing Co.">
+        <!-- Inline SVG Logo: Mountain/pipe mark -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="#1a4d3e"/>
+          <path d="M8 22L16 10L24 22" stroke="#a7f3d0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 22L16 15L20 22" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          <circle cx="16" cy="10" r="2" fill="#a7f3d0"/>
+        </svg>
+        <span class="brand-name">Summit Plumbing Co.</span>
       </a>
-      <div class="row" style="margin:0;">
-        <a class="btn btn-outline" href="../index.html">PalmWeb</a>
-        <a class="btn btn-outline" href="tel:+14015551234">Call (401) 555-1234</a>
-        <a class="btn btn-hot" href="#request">Request Service</a>
-      </div>
+      <span class="emergency-badge">Emergency Service</span>
     </div>
-  </header>
 
-  <main class="hero">
-    <div class="container hero-grid">
-      <section class="hero-card">
-        <h1>Fast plumbing help — without the runaround.</h1>
-        <p>Clear estimates, clean work, and quick communication. Serving Warwick + nearby towns.</p>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#reviews" class="nav-link">Reviews</a>
+      <a href="../index.html" class="nav-link">PalmWeb</a>
+    </nav>
 
-        <div class="row">
-          <a class="btn btn-hot" href="tel:+14015551234">Call Now</a>
-          <a class="btn btn-primary" href="#services">See Services</a>
-          <a class="btn btn-outline" href="#reviews">Recent Reviews</a>
-        </div>
+    <div class="header-actions">
+      <a href="tel:+14015551234" class="btn btn-ghost header-phone-desktop">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        (401) 555-1234
+      </a>
+      <a href="#request" class="btn btn-primary header-cta-desktop">Request Service</a>
 
-        <ul class="bullets">
-          <li><span></span>Same-week availability for most repairs</li>
-          <li><span></span>Licensed • Insured • Respectful in your home</li>
-          <li><span></span>Emergency after-hours support</li>
-        </ul>
+      <!-- Mobile: Emergency call always visible -->
+      <a href="tel:+14015551234" class="emergency-call-mobile" aria-label="Emergency Call">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call
+      </a>
 
-        <div class="emergency">
-          <div>
-            Burst pipe or backup?
-            <small>24/7 emergency response line</small>
-          </div>
-          <a class="btn btn-hot" href="tel:+14015551234">Emergency Call</a>
-        </div>
-      </section>
-
-      <aside class="hero-photo" aria-label="Plumber tools photo">
-        <div class="cap">Licensed • Insured • Same-week openings</div>
-      </aside>
+      <!-- Hamburger -->
+      <button class="hamburger" aria-label="Open menu" onclick="toggleMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
-  </main>
+  </div>
+</header>
 
-  <section class="section" id="services">
-    <div class="container">
-      <h2>Services</h2>
-      <p class="sub">Bold cards + clear outcomes.</p>
-
-      <div class="cards">
-        <div class="card"><h3>Emergency Repairs</h3><p>Leaks, backups, broken lines — quick diagnosis and repair.</p></div>
-        <div class="card"><h3>Water Heaters</h3><p>Tank + tankless installs, repairs, and maintenance.</p></div>
-        <div class="card"><h3>Fixtures + Installs</h3><p>Toilets, faucets, disposals, new lines, and upgrades.</p></div>
-      </div>
+<!-- ========== MOBILE MENU ========== -->
+<div class="mobile-menu" id="mobileMenu" onclick="if(event.target===this)toggleMenu()">
+  <div class="mobile-menu-panel">
+    <button class="mobile-menu-close" aria-label="Close menu" onclick="toggleMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <a href="#services" class="mobile-menu-link" onclick="toggleMenu()">Services</a>
+    <a href="#reviews" class="mobile-menu-link" onclick="toggleMenu()">Reviews</a>
+    <a href="#request" class="mobile-menu-link" onclick="toggleMenu()">Request Service</a>
+    <a href="../index.html" class="mobile-menu-link">PalmWeb</a>
+    <div class="mobile-menu-cta">
+      <a href="tel:+14015551234" class="btn btn-emergency btn-lg" style="width:100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Emergency: (401) 555-1234
+      </a>
+      <a href="#request" class="btn btn-primary btn-lg" style="width:100%;" onclick="toggleMenu()">Request Service</a>
     </div>
-  </section>
+  </div>
+</div>
 
-  <section class="section" id="reviews" style="background: rgba(255,255,255,.60); border-top:1px solid rgba(15,23,42,.10); border-bottom:1px solid rgba(15,23,42,.10);">
-    <div class="container">
-      <h2>Recent Reviews</h2>
-      <p class="sub">Now with real avatars (still purely demo).</p>
-
-      <div class="cards" style="grid-template-columns: 1fr; max-width: 860px;">
-        <div class="review">
-          <!-- ✅ FIXED: stable image URL -->
-          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80');"></div>
-          <div>
-            <div class="stars">★★★★★</div>
-            <div style="font-weight:950;margin-top:4px;">“Showed up same day.”</div>
-            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Fixed a leak under the sink and cleaned everything up. Great communication.</div>
-            <div class="mini" style="margin-top:8px;">— Jamie R.</div>
-          </div>
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Serving Warwick &amp; Nearby Towns, RI
         </div>
-        <div class="review">
-          <!-- ✅ FIXED: stable image URL -->
-          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80');"></div>
-          <div>
-            <div class="stars">★★★★★</div>
-            <div style="font-weight:950;margin-top:4px;">“Honest and straightforward.”</div>
-            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Explained the options clearly and didn’t upsell. Price was fair.</div>
-            <div class="mini" style="margin-top:8px;">— Mike T.</div>
-          </div>
-        </div>
-        <div class="review">
-          <!-- ✅ FIXED: stable image URL -->
-          <div class="avatar" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&h=200&q=80');"></div>
-          <div>
-            <div class="stars">★★★★★</div>
-            <div style="font-weight:950;margin-top:4px;">“Professional work.”</div>
-            <div style="color:rgba(11,18,32,.70);font-weight:750;margin-top:6px;">Installed a new water heater quickly and the area was spotless after.</div>
-            <div class="mini" style="margin-top:8px;">— Sarah L.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        <h1>Reliable plumbing,<br><span class="text-accent">done right.</span></h1>
+        <p class="hero-sub">Clear estimates, clean work, and honest communication. Same-week availability for most repairs — because plumbing problems don't wait.</p>
 
-  <section class="section" id="request">
-    <div class="container">
-      <h2>Request Service</h2>
-      <p class="sub">Still uses FormSubmit like your other demos.</p>
-
-      <div class="split">
-        <div class="panel">
-          <div style="font-weight:950; font-size:16px;">Contact</div>
-          <p style="margin-top:8px;">
-            <strong>Phone:</strong> <a href="tel:+14015551234">(401) 555-1234</a><br>
-            <strong>Email:</strong> <a href="mailto:service@smithsonsplumbing.com">service@smithsonsplumbing.com</a>
-          </p>
-          <div class="mini">What happens next</div>
-          <p style="margin-top:6px;">We’ll text/call to confirm details and give you 2–3 time options.</p>
-          <div class="mini" style="margin-top:10px;">Demo note</div>
-          <p style="margin-top:6px;">This form submits to PalmWeb via FormSubmit.</p>
+        <div class="hero-buttons">
+          <a href="#request" class="btn btn-primary btn-lg">Request Service</a>
+          <a href="tel:+14015551234" class="btn btn-outline btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call Now
+          </a>
         </div>
 
-        <div class="panel">
-          <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
-            <input type="hidden" name="_subject" value="Demo Lead — Plumbing Site" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-
-            <label>Your name* <input required name="Name" /></label>
-            <label>Phone* <input required name="Phone" /></label>
-            <label>Address / City <input name="Location" /></label>
-            <label>What’s going on? <textarea name="Details" placeholder="Leak under kitchen sink, started today..."></textarea></label>
-
-            <div class="row">
-              <button class="btn btn-primary" type="submit">Send Request</button>
-              <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
+        <div class="trust-items">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
+            Same-week availability for most repairs
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            Fully licensed &amp; insured
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            24/7 emergency support available
+          </div>
+        </div>
+      </div>
 
-            <p class="mini" style="margin-top:10px;">Demo note: This form submits via FormSubmit.</p>
-          </form>
+      <div class="hero-image-wrapper reveal">
+        <img
+          src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=900&q=80"
+          alt="Professional plumber working with tools"
+          loading="eager"
+        />
+        <div class="hero-image-overlay">
+          <div class="hero-image-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Licensed &bull; Insured &bull; Same-Week Openings
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    <div class="container">© <span id="year"></span> Smith & Sons Plumbing (Demo). Built by PalmWeb.</div>
-  </footer>
+<!-- ========== SERVICES ========== -->
+<section class="section services-section" id="services">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">What We Do</div>
+      <h2>Our Services</h2>
+      <p class="section-sub">From burst pipes to new installs — handled with care and backed by clear pricing.</p>
+    </div>
 
-  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    <div class="services-grid reveal-stagger">
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.77 4 4 0 0 1 0 6.76 4 4 0 0 1-4.78 4.77 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
+        <h3>Emergency Repairs</h3>
+        <p>Leaks, backups, and broken lines — fast diagnosis and same-day repair when you need it most. Available 24/7.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8l4 2"/><circle cx="12" cy="14" r="8"/></svg>
+        </div>
+        <h3>Water Heaters</h3>
+        <p>Tank and tankless installations, repairs, and annual maintenance. We'll help you pick the right system for your home.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Fixtures &amp; Installs</h3>
+        <p>Toilets, faucets, garbage disposals, new lines, and bathroom upgrades. Clean work, every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== REVIEWS ========== -->
+<section class="section reviews-section" id="reviews">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">What Customers Say</div>
+      <h2>Recent Reviews</h2>
+      <p class="section-sub">Real feedback from homeowners in Warwick and nearby towns.</p>
+    </div>
+
+    <div class="reviews-grid reveal-stagger">
+      <div class="review-card reveal">
+        <div class="review-header">
+          <img
+            class="review-avatar"
+            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80"
+            alt="Jamie R."
+            loading="lazy"
+          />
+          <div class="review-meta">
+            <h4>Jamie R.</h4>
+            <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </div>
+        <div class="review-quote">
+          <strong>"Showed up same day."</strong>
+          Fixed a leak under the kitchen sink and cleaned everything up. Great communication from start to finish.
+        </div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-header">
+          <img
+            class="review-avatar"
+            src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80"
+            alt="Mike T."
+            loading="lazy"
+          />
+          <div class="review-meta">
+            <h4>Mike T.</h4>
+            <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </div>
+        <div class="review-quote">
+          <strong>"Honest and straightforward."</strong>
+          Explained the options clearly and didn't try to upsell. Price was exactly what they quoted.
+        </div>
+      </div>
+
+      <div class="review-card reveal">
+        <div class="review-header">
+          <img
+            class="review-avatar"
+            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&h=200&q=80"
+            alt="Sarah L."
+            loading="lazy"
+          />
+          <div class="review-meta">
+            <h4>Sarah L.</h4>
+            <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
+          </div>
+        </div>
+        <div class="review-quote">
+          <strong>"Professional work."</strong>
+          Installed a new water heater quickly and left the area spotless. Would absolutely recommend to neighbors.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICE REQUEST ========== -->
+<section class="section request-section" id="request">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Get Started</div>
+      <h2>Request Service</h2>
+      <p class="section-sub">Tell us what's going on and we'll get back to you with a plan.</p>
+    </div>
+
+    <div class="request-grid">
+      <div class="request-info">
+        <div class="request-info-card">
+          <h3>Contact Information</h3>
+          <div class="contact-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a href="tel:+14015551234">(401) 555-1234</a>
+          </div>
+          <div class="contact-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:service@summitplumbingco.com">service@summitplumbingco.com</a>
+          </div>
+          <div class="contact-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Warwick &amp; nearby towns, RI</span>
+          </div>
+        </div>
+
+        <div class="request-info-card">
+          <h3>What Happens Next</h3>
+          <ul class="steps-list">
+            <li class="step-item">
+              <span class="step-num">1</span>
+              <span class="step-text"><strong>We review your request</strong> — usually within a few hours during business hours.</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">2</span>
+              <span class="step-text"><strong>We'll call or text</strong> to confirm details and give you 2–3 available time slots.</span>
+            </li>
+            <li class="step-item">
+              <span class="step-num">3</span>
+              <span class="step-text"><strong>We show up on time</strong>, diagnose the issue, and give you a clear estimate before starting.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="request-form-card reveal">
+        <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
+          <input type="hidden" name="_subject" value="Demo Lead — Summit Plumbing Site" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="form-name">Your name *</label>
+              <input type="text" id="form-name" name="Name" required placeholder="John Smith" />
+            </div>
+            <div class="form-group">
+              <label for="form-phone">Phone *</label>
+              <input type="tel" id="form-phone" name="Phone" required placeholder="(401) 555-0000" />
+            </div>
+            <div class="form-group form-full">
+              <label for="form-address">Address / City</label>
+              <input type="text" id="form-address" name="Location" placeholder="123 Main St, Warwick, RI" />
+            </div>
+            <div class="form-group form-full">
+              <label for="form-details">Describe the issue</label>
+              <textarea id="form-details" name="Details" placeholder="Leak under kitchen sink, started this morning..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">Send Request</button>
+            <a href="../index.html" class="btn btn-ghost">Back to PalmWeb</a>
+          </div>
+          <p class="form-note">This is a demo site. Form submissions go to PalmWeb via FormSubmit.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <p>&copy; <span id="year"></span> Summit Plumbing Co. (Demo). Built by <a href="../index.html">PalmWeb</a>.</p>
+    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="opacity:.5;font-size:12px;">Created with Perplexity Computer</a>
+  </div>
+</footer>
+
+<script>
+// Year
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Mobile menu
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('active');
+  document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+}
+
+// Scroll reveal with IntersectionObserver
+(function() {
+  const reveals = document.querySelectorAll('.reveal');
+  if (!reveals.length) return;
+
+  // Respect prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    reveals.forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  reveals.forEach(el => observer.observe(el));
+})();
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      const headerOffset = 70;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  });
+});
+</script>
 </body>
 </html>

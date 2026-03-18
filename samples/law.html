@@ -1,568 +1,1156 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Riverside Legal Group — Clear Advice. Practical Next Steps.</title>
-  <meta name="description" content="A small law firm focused on clear communication and practical outcomes. Consultations available." />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="referrer" content="no-referrer" />
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
 
-  <style>
-    :root{
-      --bg:#f6f7fb;
-      --paper:#ffffff;
-      --text:#0b1220;
-      --muted:#4b5563;
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
 
-      --navy:#111827;
-      --gold:#b45309;
-      --goldSoft: rgba(180,83,9,.10);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ridgeline Law Group — Clear Advice. Practical Next Steps.</title>
+<meta name="description" content="Ridgeline Law Group provides clear legal counsel in Business & Contracts, Real Estate, and Employment law.">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
 
-      --border: rgba(15,23,42,.12);
-      --shadow: 0 18px 60px rgba(15,23,42,.10);
-      --shadow2: 0 10px 26px rgba(15,23,42,.08);
-      --radius: 22px;
-      --max: 1140px;
-    }
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    *{ box-sizing:border-box; }
-    html,body{
-      margin:0;padding:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1200px 680px at 20% -10%, rgba(17,24,39,.10), transparent 60%),
-        radial-gradient(1200px 680px at 90% 0%, rgba(180,83,9,.10), transparent 60%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    a{ color: inherit; }
-    .container{ max-width: var(--max); margin:0 auto; padding:0 18px; }
+:root {
+  --navy: #0f172a;
+  --slate-blue: #1e3a5f;
+  --blue-accent: #60a5fa;
+  --blue-light: #93c5fd;
+  --gray-bg: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --white: #ffffff;
+  --font-display: 'Cabinet Grotesk', system-ui, sans-serif;
+  --font-body: 'General Sans', system-ui, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.06);
+  --shadow-md: 0 4px 16px rgba(15,23,42,.08);
+  --shadow-lg: 0 8px 32px rgba(15,23,42,.12);
+  --shadow-xl: 0 16px 48px rgba(15,23,42,.16);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --transition: 0.3s cubic-bezier(.4,0,.2,1);
+}
 
-    /* Top bar */
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(246,247,251,.82);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav{
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
-      padding: 14px 0;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0;
-    }
-    .mark{
-      width: 42px; height: 42px; border-radius: 14px;
-      background: rgba(17,24,39,.08);
-      border: 1px solid rgba(17,24,39,.12);
-      display:flex;align-items:center;justify-content:center;
-      font-weight: 950;
-      letter-spacing: .6px;
-      color: var(--navy);
-      flex: 0 0 auto;
-    }
-    .brand strong{ font-weight: 950; font-size: 14px; }
-    .brand span{ display:block; font-size: 12px; color: rgba(11,18,32,.62); font-weight: 800; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
-    .badge{
-      font-weight: 950;
-      font-size: 12px;
-      color: #3f2d1e;
-      background: var(--goldSoft);
-      border: 1px solid rgba(180,83,9,.22);
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-left: 8px;
-      white-space: nowrap;
-    }
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--gray-700);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+img { max-width: 100%; height: auto; display: block; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      text-decoration:none;
-      font-weight: 950;
-      cursor:pointer;
-      user-select:none;
-      white-space: nowrap;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btn-primary{
-      background: var(--navy);
-      color:#fff;
-      box-shadow: 0 18px 44px rgba(17,24,39,.18);
-    }
-    .btn-gold{
-      background: var(--gold);
-      color:#fff;
-      box-shadow: 0 18px 44px rgba(180,83,9,.18);
-    }
-    .btn-outline{
-      background: rgba(255,255,255,.75);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-    .btn-outline:hover{ background:#fff; }
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
-    /* Hero */
-    .hero{
-      padding: 22px 0 18px;
-    }
-    .hero-shell{
-      background: rgba(255,255,255,.68);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 14px;
-      padding: 18px;
-      align-items: stretch;
-    }
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4 { font-family: var(--font-display); color: var(--navy); line-height: 1.15; }
+h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 700; letter-spacing: -0.02em; }
+h3 { font-size: clamp(1.125rem, 2vw, 1.375rem); font-weight: 700; letter-spacing: -0.01em; }
+h4 { font-size: 1rem; font-weight: 600; }
 
-    h1{
-      margin:0 0 10px;
-      font-size: clamp(30px, 3.6vw, 46px);
-      letter-spacing: -0.9px;
-      line-height: 1.05;
-    }
-    .lead{
-      margin:0 0 14px;
-      color: rgba(11,18,32,.70);
-      font-weight: 750;
-      max-width: 62ch;
-    }
+/* ===== SCROLL ANIMATIONS ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    /* ✅ FIXED: stable images.unsplash.com */
-    .hero-photo{
-      border-radius: 22px;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-      min-height: 340px;
-      position: relative;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.10)),
-        url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
-    }
-    .hero-photo .label{
-      position:absolute; left: 16px; bottom: 16px;
-      background: rgba(255,255,255,.86);
-      border: 1px solid rgba(15,23,42,.12);
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-weight: 950;
-      font-size: 12px;
-    }
+/* ===== HEADER ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--gray-200);
+  transition: box-shadow var(--transition);
+}
+.header.scrolled { box-shadow: var(--shadow-md); }
 
-    .hero-card{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-      margin-top: 12px;
-    }
-    .hero-card h3{ margin:0 0 8px; font-size: 16px; font-weight: 950; }
-    .hero-card p{ margin:0; color: rgba(11,18,32,.68); font-weight: 750; }
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 16px;
+}
 
-    .checklist{
-      margin: 12px 0 0;
-      padding: 0;
-      list-style:none;
-      display:grid;
-      gap: 10px;
-    }
-    .checklist li{
-      display:flex; gap:10px; align-items:flex-start;
-      padding: 10px 12px;
-      background: rgba(246,247,251,.75);
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 16px;
-      font-weight: 850;
-      color: rgba(11,18,32,.82);
-    }
-    .dot{
-      width: 10px; height: 10px; border-radius: 999px; margin-top: 6px;
-      background: linear-gradient(135deg, var(--navy), var(--gold));
-      flex: 0 0 auto;
-    }
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
 
-    .mini{ font-size: 12px; color: rgba(11,18,32,.55); font-weight: 850; }
+.logo-mark {
+  width: 44px;
+  height: 44px;
+  background: var(--navy);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
 
-    /* Sections */
-    section{ padding: 44px 0; }
-    .section-head{
-      display:flex; align-items:flex-end; justify-content:space-between; gap: 12px;
-      margin-bottom: 14px;
-    }
-    .section-head h2{
-      margin:0;
-      font-size: 28px;
-      letter-spacing: -0.3px;
-    }
-    .section-head p{ margin:0; color: rgba(11,18,32,.65); font-weight: 750; max-width: 75ch; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.brand-subtitle {
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .card{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-      position: relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(320px 180px at 20% 10%, rgba(180,83,9,.12), transparent 70%);
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
-    .card h3{ margin:0 0 6px; font-size:16px; font-weight:950; }
-    .card p{ margin:0; color: rgba(11,18,32,.68); font-weight: 750; }
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
 
-    /* Results strip */
-    .strip{
-      background: rgba(255,255,255,.60);
-      border-top: 1px solid rgba(15,23,42,.10);
-      border-bottom: 1px solid rgba(15,23,42,.10);
-    }
-    .stats{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .stat{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    .stat strong{
-      display:block;
-      font-size: 18px;
-      font-weight: 950;
-      letter-spacing: -0.2px;
-    }
-    .stat span{
-      display:block;
-      margin-top: 6px;
-      color: rgba(11,18,32,.65);
-      font-weight: 800;
-      font-size: 12px;
-    }
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    /* Intake */
-    .two{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-      align-items:start;
-    }
-    .panel{
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
-    label{
-      display:flex;flex-direction:column;gap:6px;
-      font-weight:900;font-size:13px;
-    }
-    input,textarea,select{
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(15,23,42,.12);
-      background:#fff;
-      font-size: 14px;
-      outline:none;
-    }
-    input:focus, textarea:focus, select:focus{
-      border-color: rgba(180,83,9,.45);
-      box-shadow: 0 0 0 4px rgba(180,83,9,.10);
-    }
-    textarea{ min-height: 120px; resize: vertical; }
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--navy); background: var(--gray-100); }
 
-    .notice{
-      border: 1px solid rgba(180,83,9,.30);
-      background: rgba(180,83,9,.10);
-      border-radius: 18px;
-      padding: 12px 14px;
-      color: rgba(63,45,30,.95);
-      font-weight: 850;
-      font-size: 13px;
-      margin-top: 12px;
-    }
+.header-phone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-blue);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.header-phone:hover { background: var(--gray-100); }
+.header-phone svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-    footer{
-      border-top: 1px solid rgba(15,23,42,.10);
-      padding: 18px 0;
-      color: rgba(11,18,32,.55);
-      font-size: 12px;
-      text-align:center;
-      background: rgba(255,255,255,.55);
-    }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+  min-height: 44px;
+}
+.btn-primary:hover { background: var(--slate-blue); transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
-    @media (max-width: 980px){
-      .hero-grid{ grid-template-columns: 1fr; }
-      .grid{ grid-template-columns: 1fr; }
-      .two{ grid-template-columns: 1fr; }
-      .stats{ grid-template-columns: 1fr 1fr; }
-      .hero-photo{ min-height: 260px; }
-    }
-    @media (max-width: 520px){
-      .stats{ grid-template-columns: 1fr; }
-    }
-  </style>
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), background var(--transition);
+  white-space: nowrap;
+  min-height: 44px;
+}
+.btn-outline:hover { border-color: var(--navy); background: var(--gray-100); }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  gap: 5px;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1001;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--navy);
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(100vh - 72px);
+  height: calc(100dvh - 72px);
+  background: var(--white);
+  padding: 24px;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 999;
+  overflow-y: auto;
+}
+.mobile-menu.active { display: flex; }
+
+.mobile-menu a, .mobile-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gray-700);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+  width: 100%;
+  text-align: left;
+}
+.mobile-menu a:hover, .mobile-menu button:hover { background: var(--gray-100); }
+.mobile-menu .btn-primary { justify-content: center; margin-top: 16px; color: var(--white); }
+
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 0 60px;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #eff6ff;
+  color: var(--slate-blue);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
+}
+.hero-label svg { width: 14px; height: 14px; }
+
+.hero h1 { margin-bottom: 20px; }
+.hero h1 span { color: var(--blue-accent); }
+
+.hero-tagline {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  color: var(--gray-600);
+  margin-bottom: 32px;
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.hero-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.hero-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--gray-700);
+  list-style: none;
+}
+
+.check-icon {
+  width: 24px;
+  height: 24px;
+  background: #dbeafe;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.check-icon svg { width: 13px; height: 13px; color: var(--slate-blue); }
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.hero-image-wrapper {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  max-height: 560px;
+}
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15,23,42,0.2) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* ===== PRACTICE AREAS ===== */
+.practice-areas {
+  padding: 100px 0;
+  background: var(--gray-bg);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 56px;
+}
+.section-header p {
+  margin-top: 16px;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  color: var(--gray-500);
+  line-height: 1.6;
+}
+
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.practice-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  border: 1px solid var(--gray-200);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.practice-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--slate-blue), var(--blue-accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+.practice-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.practice-card:hover::before { transform: scaleX(1); }
+
+.practice-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.practice-icon svg { width: 28px; height: 28px; color: var(--slate-blue); }
+
+.practice-card h3 { margin-bottom: 12px; }
+.practice-card p { font-size: 15px; color: var(--gray-500); line-height: 1.65; }
+
+/* ===== STATS STRIP ===== */
+.stats-strip {
+  padding: 80px 0;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.stats-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(96,165,250,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  position: relative;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 32px 16px;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: background var(--transition);
+}
+.stat-card:hover { background: rgba(255,255,255,0.1); }
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: var(--blue-accent);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.01em;
+}
+
+/* ===== ATTORNEYS ===== */
+.attorneys {
+  padding: 100px 0;
+  background: var(--white);
+}
+
+.attorneys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.attorney-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  transition: transform var(--transition), box-shadow var(--transition);
+  background: var(--white);
+}
+.attorney-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.attorney-photo {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+}
+.attorney-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+.attorney-card:hover .attorney-photo img { transform: scale(1.04); }
+
+.attorney-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15,23,42,0.5) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.attorney-info {
+  padding: 24px;
+}
+.attorney-info h3 { margin-bottom: 4px; font-size: 1.2rem; }
+.attorney-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--blue-accent);
+  margin-bottom: 12px;
+}
+.attorney-focus {
+  font-size: 14px;
+  color: var(--gray-500);
+  line-height: 1.55;
+}
+
+/* ===== CONSULTATION SECTION ===== */
+.consultation {
+  padding: 100px 0;
+  background: var(--gray-bg);
+}
+
+.consult-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+}
+
+.consult-info {
+  background: var(--navy);
+  padding: 56px 48px;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.consult-info h2 { color: var(--white); margin-bottom: 20px; }
+.consult-info > p {
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 36px;
+}
+
+.expect-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.expect-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.expect-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(96,165,250,0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.expect-icon svg { width: 16px; height: 16px; color: var(--blue-accent); }
+.expect-text h4 { color: var(--white); font-size: 15px; margin-bottom: 2px; }
+.expect-text p { color: rgba(255,255,255,0.55); font-size: 13px; line-height: 1.5; }
+
+.consult-disclaimer {
+  padding: 16px;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--blue-accent);
+}
+.consult-disclaimer p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.55;
+}
+
+.consult-form-panel {
+  background: var(--white);
+  padding: 56px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.consult-form-panel h3 {
+  margin-bottom: 8px;
+  font-size: 1.4rem;
+}
+.form-subtitle {
+  color: var(--gray-500);
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--navy);
+  background: var(--white);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  -webkit-appearance: none;
+  min-height: 48px;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+}
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group select { cursor: pointer; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: 40px 0;
+  background: var(--navy);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-copy {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+}
+.footer-copy a { color: rgba(255,255,255,0.7); transition: color var(--transition); }
+.footer-copy a:hover { color: var(--white); }
+
+.footer-attr {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  transition: color var(--transition);
+}
+.footer-attr:hover { color: rgba(255,255,255,0.6); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1023px) {
+  .header-nav .nav-link, .header-phone, .demo-badge, .header-nav .btn-primary { display: none; }
+  .hamburger { display: flex; }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .hero-image-wrapper {
+    max-height: 400px;
+    aspect-ratio: 16/10;
+  }
+
+  .practice-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .attorneys-grid { grid-template-columns: 1fr 1fr; }
+
+  .consult-grid { grid-template-columns: 1fr; }
+  .consult-info { padding: 40px 32px; }
+  .consult-form-panel { padding: 40px 32px; }
+}
+
+@media (max-width: 767px) {
+  .container { padding: 0 20px; }
+
+  .header-inner { height: 64px; }
+  .brand-subtitle { display: none; }
+  .brand-name { font-size: 15px; }
+  .logo-mark { width: 38px; height: 38px; font-size: 14px; }
+
+  .mobile-menu { top: 64px; height: calc(100vh - 64px); height: calc(100dvh - 64px); }
+
+  .hero { padding: 40px 0 36px; }
+  .hero-grid { gap: 28px; }
+  .hero-image-wrapper {
+    max-height: 280px;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius);
+  }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-outline { width: 100%; justify-content: center; }
+
+  .practice-areas { padding: 72px 0; }
+  .practice-grid { grid-template-columns: 1fr; }
+  .practice-card { padding: 32px 24px; }
+  .section-header { margin-bottom: 40px; }
+
+  .stats-strip { padding: 60px 0; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stat-card { padding: 24px 12px; }
+
+  .attorneys { padding: 72px 0; }
+  .attorneys-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+
+  .consultation { padding: 72px 0; }
+  .consult-info { padding: 32px 24px; }
+  .consult-form-panel { padding: 32px 24px; }
+  .form-row { grid-template-columns: 1fr; }
+
+  .footer-inner { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 374px) {
+  .hero h1 { font-size: 1.85rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="#">
-        <div class="mark">RL</div>
-        <div>
-          <strong>Riverside Legal Group</strong>
-          <span>Business • Real Estate • Employment</span>
-        </div>
-        <span class="badge">Demo Site</span>
-      </a>
 
-      <div class="row">
-        <a class="btn btn-outline" href="../index.html">PalmWeb</a>
-        <a class="btn btn-outline" href="tel:+14015559876">Call (401) 555-9876</a>
-        <a class="btn btn-gold" href="#intake">Request Consult</a>
+<!-- ===== HEADER ===== -->
+<header class="header" id="header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo-mark" aria-label="Ridgeline Law Group">RLG</div>
+        <div class="brand-text">
+          <span class="brand-name">Ridgeline Law Group</span>
+          <span class="brand-subtitle">Business · Real Estate · Employment</span>
+        </div>
+        <span class="demo-badge">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 1.5"/></svg>
+          Demo
+        </span>
+      </div>
+
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#practice-areas" class="nav-link">Practice Areas</a>
+        <a href="#attorneys" class="nav-link">Attorneys</a>
+        <a href="../index.html" class="nav-link">PalmWeb</a>
+        <a href="tel:+14015559876" class="header-phone" aria-label="Call (401) 555-9876">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          (401) 555-9876
+        </a>
+        <a href="#consultation" class="btn-primary">Request Consult</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+    <a href="#practice-areas" onclick="closeMobileMenu()">Practice Areas</a>
+    <a href="#attorneys" onclick="closeMobileMenu()">Attorneys</a>
+    <a href="tel:+14015559876">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      (401) 555-9876
+    </a>
+    <a href="../index.html">PalmWeb</a>
+    <a href="#consultation" class="btn-primary" onclick="closeMobileMenu()">Request Consult</a>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="fade-in">
+        <div class="hero-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Rhode Island Legal Counsel
+        </div>
+        <h1>Clear Legal Advice.<br><span>Practical</span> Next Steps.</h1>
+        <p class="hero-tagline">Ridgeline Law Group helps businesses and individuals navigate legal challenges with straightforward counsel you can act on — not jargon you can't.</p>
+        <ul class="hero-checklist">
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            Responsive within 24 hours
+          </li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            Transparent, flat-rate billing
+          </li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            Personalized legal strategy
+          </li>
+        </ul>
+        <div class="hero-actions">
+          <a href="#consultation" class="btn-primary">
+            Schedule a Consultation
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#practice-areas" class="btn-outline">Our Practice Areas</a>
+        </div>
+      </div>
+
+      <div class="hero-image-wrapper fade-in">
+        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="Professional handshake in a modern office" loading="eager">
+        <div class="hero-image-overlay"></div>
       </div>
     </div>
-  </header>
+  </div>
+</section>
 
-  <main class="hero">
-    <div class="container">
-      <div class="hero-shell">
-        <div class="hero-grid">
-          <section>
-            <h1>Clear advice, calm guidance, practical next steps.</h1>
-            <p class="lead">
-              A small firm built for business owners and families who want straightforward communication and clean execution.
-            </p>
+<!-- ===== PRACTICE AREAS ===== -->
+<section class="practice-areas" id="practice-areas">
+  <div class="container">
+    <div class="section-header fade-in">
+      <h2>Practice Areas</h2>
+      <p>Focused expertise in the areas that matter most to Rhode Island businesses and professionals.</p>
+    </div>
 
-            <div class="row">
-              <a class="btn btn-primary" href="#practice">Practice Areas</a>
-              <a class="btn btn-outline" href="#results">Case Results</a>
-              <a class="btn btn-gold" href="#intake">Request a Consult</a>
+    <div class="practice-grid">
+      <div class="practice-card fade-in">
+        <div class="practice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <h3>Business & Contracts</h3>
+        <p>Entity formation, partnership agreements, contract drafting and review, mergers, and day-to-day business counsel. We keep your operations legally sound so you can focus on growth.</p>
+      </div>
+
+      <div class="practice-card fade-in">
+        <div class="practice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </div>
+        <h3>Real Estate</h3>
+        <p>Commercial and residential transactions, title review, lease negotiations, zoning issues, and property disputes. Clear guidance from offer to closing and beyond.</p>
+      </div>
+
+      <div class="practice-card fade-in">
+        <div class="practice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Employment</h3>
+        <p>Employment agreements, workplace policies, compliance, disputes, and separations. We protect both employer and employee interests with practical, enforceable solutions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS STRIP ===== -->
+<section class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card fade-in">
+        <div class="stat-number">&lt;24h</div>
+        <div class="stat-label">Average Response Time</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Client Satisfaction</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-number">2,400+</div>
+        <div class="stat-label">Contracts Reviewed</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ATTORNEYS ===== -->
+<section class="attorneys" id="attorneys">
+  <div class="container">
+    <div class="section-header fade-in">
+      <h2>Meet the Team</h2>
+      <p>Experienced attorneys who bring clarity, diligence, and a practical mindset to every engagement.</p>
+    </div>
+
+    <div class="attorneys-grid">
+      <div class="attorney-card fade-in">
+        <div class="attorney-photo">
+          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" alt="James Whitfield, Managing Partner" loading="lazy">
+          <div class="attorney-photo-overlay"></div>
+        </div>
+        <div class="attorney-info">
+          <h3>James Whitfield</h3>
+          <p class="attorney-title">Managing Partner</p>
+          <p class="attorney-focus">Business formation, mergers & acquisitions, commercial contracts</p>
+        </div>
+      </div>
+
+      <div class="attorney-card fade-in">
+        <div class="attorney-photo">
+          <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=600&q=80" alt="Maria Delgado, Senior Associate" loading="lazy">
+          <div class="attorney-photo-overlay"></div>
+        </div>
+        <div class="attorney-info">
+          <h3>Maria Delgado</h3>
+          <p class="attorney-title">Senior Associate</p>
+          <p class="attorney-focus">Real estate transactions, title review, zoning & land use</p>
+        </div>
+      </div>
+
+      <div class="attorney-card fade-in">
+        <div class="attorney-photo">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Nadia Okafor, Associate" loading="lazy">
+          <div class="attorney-photo-overlay"></div>
+        </div>
+        <div class="attorney-info">
+          <h3>Nadia Okafor</h3>
+          <p class="attorney-title">Associate</p>
+          <p class="attorney-focus">Employment law, workplace compliance, dispute resolution</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONSULTATION ===== -->
+<section class="consultation" id="consultation">
+  <div class="container">
+    <div class="consult-grid fade-in">
+      <div class="consult-info">
+        <h2>Let's Talk About<br>Your Situation</h2>
+        <p>Schedule a consultation and get actionable guidance — not a lecture. We'll review your matter, outline your options, and give you clear next steps.</p>
+
+        <div class="expect-list">
+          <div class="expect-item">
+            <div class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
-
-            <div class="hero-card">
-              <h3>What you can expect</h3>
-              <p>We’ll tell you what matters, what doesn’t, and what to do next — without legal jargon.</p>
-              <ul class="checklist">
-                <li><span class="dot"></span>Fast response times and clear timelines</li>
-                <li><span class="dot"></span>Up-front scope and next steps</li>
-                <li><span class="dot"></span>Options explained in plain English</li>
-              </ul>
-              <p class="mini" style="margin-top:10px;">Demo note: Sample law firm site built by PalmWeb.</p>
+            <div class="expect-text">
+              <h4>30-Minute Initial Review</h4>
+              <p>We'll discuss your situation and assess how we can help.</p>
             </div>
-          </section>
-
-          <aside class="hero-photo" aria-label="Law office photo">
-            <div class="label">Focused • Discreet • Client-first</div>
-          </aside>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <section id="practice">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Practice Areas</h2>
-          <p>Structured content that builds trust quickly — and helps visitors self-select the right service.</p>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Business & Contracts</h3>
-          <p>Entity setup, agreements, negotiation support, and dispute prevention.</p>
-        </div>
-        <div class="card">
-          <h3>Real Estate</h3>
-          <p>Purchases, leases, closings, landlord/tenant issues, and document review.</p>
-        </div>
-        <div class="card">
-          <h3>Employment</h3>
-          <p>Policies, compliance basics, terminations, and workplace dispute support.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="results" class="strip">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Recent Outcomes</h2>
-          <p>Quick credibility strip (still written as demo examples).</p>
-        </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <strong>48 hrs</strong>
-          <span>Average response time on new inquiries</span>
-        </div>
-        <div class="stat">
-          <strong>92%</strong>
-          <span>Clients reporting “clear communication”</span>
-        </div>
-        <div class="stat">
-          <strong>300+</strong>
-          <span>Contracts reviewed / negotiated</span>
-        </div>
-        <div class="stat">
-          <strong>15+</strong>
-          <span>Years combined experience</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="team">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Attorneys</h2>
-          <p>Credibility-forward layout with roles (and no “same exact card style” as your other samples).</p>
-        </div>
-      </div>
-
-      <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
-        <div class="card" style="display:grid;gap:10px;">
-          <div style="height:120px;border-radius:18px;border:1px solid rgba(15,23,42,.10);box-shadow:var(--shadow2);
-            background:url('https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;"></div>
-          <div>
-            <h3>Jordan Rivers, Esq.</h3>
-            <p>Contracts • Business matters • Negotiation and risk reduction.</p>
-            <div class="mini" style="margin-top:8px;">Focus: commercial agreements</div>
           </div>
-        </div>
-
-        <div class="card" style="display:grid;gap:10px;">
-          <div style="height:120px;border-radius:18px;border:1px solid rgba(15,23,42,.10);box-shadow:var(--shadow2);
-            background:url('https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;"></div>
-          <div>
-            <h3>Casey Lane, Esq.</h3>
-            <p>Real estate • Leases • Transaction support.</p>
-            <div class="mini" style="margin-top:8px;">Focus: closings + lease review</div>
-          </div>
-        </div>
-
-        <div class="card" style="display:grid;gap:10px;">
-          <div style="height:120px;border-radius:18px;border:1px solid rgba(15,23,42,.10);box-shadow:var(--shadow2);
-            background:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;"></div>
-          <div>
-            <h3>Sam Patel, Esq.</h3>
-            <p>Employment • Policies • Workplace disputes.</p>
-            <div class="mini" style="margin-top:8px;">Focus: compliance + HR support</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="intake">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Request a Consultation</h2>
-          <p>A clean intake section with clear expectations (and a visible disclaimer).</p>
-        </div>
-      </div>
-
-      <div class="two">
-        <div class="panel">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Before you submit</h3>
-          <p style="margin:0;color:rgba(11,18,32,.70);font-weight:750">
-            We’ll respond within one business day with next steps and availability.
-          </p>
-
-          <div class="notice">
-            This demo form is for design purposes only. Submitting sends to PalmWeb via FormSubmit.
-          </div>
-
-          <p class="mini" style="margin-top:10px;">
-            For real law firms, add secure intake + confidentiality disclaimers + jurisdiction language.
-          </p>
-
-          <div class="row" style="margin-top:12px;">
-            <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
-            <a class="btn btn-primary" href="tel:+14015559876">Call Office</a>
-          </div>
-        </div>
-
-        <div class="panel">
-          <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
-            <input type="hidden" name="_subject" value="Demo Lead — Law Firm Site" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-
-            <label>Your name* <input required name="Name" /></label>
-            <label>Phone* <input required name="Phone" /></label>
-            <label>Email <input name="Email" type="email" /></label>
-
-            <label>Topic
-              <select name="Topic">
-                <option>Business / contract</option>
-                <option>Real estate</option>
-                <option>Employment</option>
-                <option>Other</option>
-              </select>
-            </label>
-
-            <label>Brief description
-              <textarea name="Details" placeholder="What’s going on and what outcome do you want?"></textarea>
-            </label>
-
-            <div class="row">
-              <button class="btn btn-gold" type="submit">Send Request</button>
-              <a class="btn btn-outline" href="../index.html">Back</a>
+          <div class="expect-item">
+            <div class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
             </div>
+            <div class="expect-text">
+              <h4>Clear Options Outlined</h4>
+              <p>You'll leave with a written summary of your legal position.</p>
+            </div>
+          </div>
+          <div class="expect-item">
+            <div class="expect-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="expect-text">
+              <h4>No Obligation</h4>
+              <p>No pressure, no commitment. Just straightforward guidance.</p>
+            </div>
+          </div>
+        </div>
 
-            <p class="mini" style="margin-top:10px;">Demo note: This form submits via FormSubmit.</p>
-          </form>
+        <div class="consult-disclaimer">
+          <p>This is a demo website built by PalmWeb. No attorney-client relationship is created by submitting this form. For actual legal advice, consult a licensed attorney.</p>
         </div>
       </div>
+
+      <div class="consult-form-panel">
+        <h3>Request a Consultation</h3>
+        <p class="form-subtitle">Fill out the form and we'll reach out within one business day.</p>
+
+        <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html">
+          <input type="hidden" name="_subject" value="Ridgeline Law Group — Consultation Request (Demo)">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="John Smith" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(401) 555-0000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="topic">Legal Topic</label>
+            <select id="topic" name="topic" required>
+              <option value="" disabled selected>Select a topic</option>
+              <option value="business-contracts">Business & Contracts</option>
+              <option value="real-estate">Real Estate</option>
+              <option value="employment">Employment</option>
+              <option value="other">Other / Not Sure</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Brief Description</label>
+            <textarea id="description" name="description" placeholder="Tell us briefly about your situation..." rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width:100%;">
+            Submit Request
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    <div class="container">© <span id="year"></span> Riverside Legal Group (Demo). Built by PalmWeb.</div>
-  </footer>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; 2026 Ridgeline Law Group (Demo). Built by <a href="../index.html">PalmWeb</a>.</p>
+      <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" class="footer-attr">Created with Perplexity Computer</a>
+    </div>
+  </div>
+</footer>
 
-  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script>
+/* ===== HEADER SCROLL SHADOW ===== */
+const header = document.getElementById('header');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const scroll = window.scrollY;
+  header.classList.toggle('scrolled', scroll > 10);
+  lastScroll = scroll;
+}, { passive: true });
+
+/* ===== HAMBURGER MENU ===== */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+hamburger.addEventListener('click', () => {
+  const isActive = hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  hamburger.setAttribute('aria-expanded', isActive);
+  document.body.style.overflow = isActive ? 'hidden' : '';
+});
+
+function closeMobileMenu() {
+  hamburger.classList.remove('active');
+  mobileMenu.classList.remove('active');
+  hamburger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+/* ===== INTERSECTION OBSERVER (SCROLL ANIMATIONS) ===== */
+const fadeEls = document.querySelectorAll('.fade-in');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // Stagger the animation slightly for elements in the same batch
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+fadeEls.forEach(el => observer.observe(el));
+
+/* ===== SMOOTH SCROLL FOR ANCHORS ===== */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      const headerHeight = header.offsetHeight;
+      const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+    }
+  });
+});
+</script>
 </body>
 </html>

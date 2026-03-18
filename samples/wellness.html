@@ -1,513 +1,1240 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BrightPath Physical Therapy — Move Better. Feel Better.</title>
-  <meta name="description" content="Physical therapy and rehab. Personalized plans, clear progress, and easy scheduling." />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="referrer" content="no-referrer" />
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
 
-  <style>
-    :root{
-      --bg:#f3fbff;
-      --card:#ffffff;
-      --text:#062033;
-      --muted:#4b5563;
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
 
-      --aqua:#22c3ee;
-      --teal:#14b8a6;
-      --ink:#0b1220;
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Balance Wellness Studio — Move Better. Feel Better.</title>
+<meta name="description" content="Evidence-based physical therapy and wellness. Personalized rehab plans, clear progress tracking, and easy scheduling." />
+<meta name="theme-color" content="#f5f0eb" />
+<meta name="referrer" content="no-referrer" />
 
-      --border: rgba(6,32,51,.12);
-      --shadow: 0 18px 60px rgba(6,32,51,.10);
-      --shadow2: 0 10px 26px rgba(6,32,51,.08);
-      --radius: 22px;
-      --max: 1140px;
-    }
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;padding:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1100px 700px at 20% -10%, rgba(34,195,238,.18), transparent 60%),
-        radial-gradient(1100px 700px at 90% 0%, rgba(20,184,166,.12), transparent 60%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    a{color:inherit}
-    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+<style>
+  /* ── Tokens ── */
+  :root {
+    --bg: #f5f0eb;
+    --bg-warm: #f9f5f0;
+    --stone: #e8ddd0;
+    --stone-light: #f0e8dc;
+    --accent-gray: #78716c;
+    --dark: #292524;
+    --dark-muted: #44403c;
+    --sage: #8a9a7b;
+    --sage-light: rgba(138, 154, 123, .12);
+    --sage-mid: rgba(138, 154, 123, .22);
 
-    header{
-      position: sticky; top:0; z-index:50;
-      background: rgba(243,251,255,.82);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between; gap:14px;
-      padding: 14px 0;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;text-decoration:none;
-    }
-    .logo{
-      width: 42px; height: 42px; border-radius: 14px;
-      background: rgba(34,195,238,.14);
-      border: 1px solid rgba(34,195,238,.20);
-      display:flex;align-items:center;justify-content:center;
-      font-weight: 950;
-      color: rgba(6,32,51,.90);
-      letter-spacing:.5px;
-    }
-    .brand strong{font-size:14px;font-weight:950}
-    .brand span{display:block;font-size:12px;color:rgba(6,32,51,.62);font-weight:800}
-    .badge{
-      font-weight:950;font-size:12px;
-      color: rgba(6,32,51,.92);
-      background: rgba(20,184,166,.10);
-      border: 1px solid rgba(20,184,166,.22);
-      padding:6px 10px;border-radius:999px;
-      margin-left: 8px;
-    }
+    --card: #ffffff;
+    --border: rgba(41, 37, 36, .10);
+    --border-warm: rgba(41, 37, 36, .08);
+    --shadow-sm: 0 2px 8px rgba(41, 37, 36, .06);
+    --shadow-md: 0 12px 40px rgba(41, 37, 36, .08);
+    --shadow-lg: 0 20px 60px rgba(41, 37, 36, .10);
+    --radius: 20px;
+    --radius-lg: 28px;
+    --max: 1160px;
 
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    --font-display: 'Cabinet Grotesk', sans-serif;
+    --font-body: 'General Sans', sans-serif;
 
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:999px;
-      border:1px solid transparent;
-      text-decoration:none;font-weight:950;
-      cursor:pointer; user-select:none; white-space:nowrap;
-      transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn:active{transform: translateY(1px)}
-    .btn-primary{
-      color:#062033;
-      background: linear-gradient(135deg, rgba(34,195,238,.95), rgba(20,184,166,.95));
-      box-shadow: 0 18px 44px rgba(34,195,238,.16);
-    }
-    .btn-ink{
-      background: var(--ink);
-      color:#fff;
-      box-shadow: 0 18px 44px rgba(11,18,32,.16);
-    }
-    .btn-outline{
-      background: rgba(255,255,255,.75);
-      border:1px solid var(--border);
-    }
-    .btn-outline:hover{background:#fff}
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-    /* Hero */
-    .hero{padding: 22px 0 18px;}
-    .hero-shell{
-      border-radius: 28px;
-      border: 1px solid rgba(6,32,51,.10);
-      background: rgba(255,255,255,.66);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 14px;
-      padding: 18px;
-      align-items: stretch;
-    }
-    h1{
-      margin:0 0 10px;
-      font-size: clamp(30px, 3.6vw, 46px);
-      line-height: 1.05;
-      letter-spacing: -0.9px;
-    }
-    .lead{
-      margin:0 0 14px;
-      color: rgba(6,32,51,.70);
-      font-weight: 750;
-      max-width: 62ch;
-    }
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  button { font-family: inherit; }
 
-    .photo-grid{
-      display:grid;
+  /* ── Container ── */
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+  @media (min-width: 768px) { .container { padding: 0 32px; } }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 1;
+    transition: opacity 0.7s var(--ease-out);
+  }
+  .reveal.hidden {
+    opacity: 0;
+  }
+
+  /* ══════════════════════════════════
+     HEADER
+  ══════════════════════════════════ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(245, 240, 235, .88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--dark);
+    letter-spacing: .5px;
+    flex-shrink: 0;
+  }
+  .brand-text strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+  .brand-text span {
+    display: block;
+    font-size: 12px;
+    color: var(--accent-gray);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .demo-badge {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    color: var(--sage);
+    background: var(--sage-light);
+    border: 1px solid var(--sage-mid);
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+  }
+  .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile nav */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 73px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 240, 235, .96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 90;
+    padding: 24px 20px;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+  .mobile-menu.open {
+    display: flex;
+  }
+  .mobile-menu a,
+  .mobile-menu button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  @media (max-width: 767px) {
+    .hamburger { display: flex; }
+    .nav-right .btn,
+    .nav-right .nav-link {
+      display: none;
+    }
+    .brand-text span { display: none; }
+    .demo-badge { display: none; }
+  }
+  @media (min-width: 768px) {
+    .mobile-menu { display: none !important; }
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: background var(--transition-interactive),
+                color var(--transition-interactive),
+                box-shadow var(--transition-interactive),
+                transform var(--transition-interactive),
+                border-color var(--transition-interactive);
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--dark);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(41, 37, 36, .18);
+  }
+  .btn-primary:hover {
+    background: #1c1917;
+    box-shadow: 0 6px 24px rgba(41, 37, 36, .22);
+    transform: translateY(-1px);
+  }
+  .btn-sage {
+    background: var(--sage);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(138, 154, 123, .22);
+  }
+  .btn-sage:hover {
+    background: #7a8a6b;
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: rgba(255, 255, 255, .65);
+    border: 1px solid var(--border);
+    color: var(--dark);
+  }
+  .btn-outline:hover {
+    background: #fff;
+    border-color: rgba(41, 37, 36, .18);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--dark-muted);
+    padding: 10px 16px;
+  }
+  .btn-ghost:hover { background: rgba(41, 37, 36, .05); }
+  .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent-gray);
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: color var(--transition-interactive), background var(--transition-interactive);
+  }
+  .nav-link:hover { color: var(--dark); background: rgba(41, 37, 36, .04); }
+
+  /* ══════════════════════════════════
+     HERO
+  ══════════════════════════════════ */
+  .hero {
+    padding: 40px 0 24px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .hero {
+      padding: 56px 0 40px;
+    }
+    .hero-inner {
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      height: 360px;
+      gap: 48px;
     }
-    .ph{
-      border-radius: 22px;
-      border: 1px solid rgba(6,32,51,.10);
-      box-shadow: var(--shadow2);
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      overflow:hidden;
-    }
-    .ph::after{
-      content:"";
-      position:absolute; inset:0;
-      background: radial-gradient(520px 320px at 20% 20%, rgba(255,255,255,.14), transparent 60%);
-      pointer-events:none;
-    }
-    .ph.big{ grid-row: 1 / span 2; }
+  }
+  .hero-content {
+    max-width: 560px;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sage);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--sage);
+    border-radius: 2px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--dark);
+    margin-bottom: 20px;
+  }
+  .hero-lead {
+    font-size: clamp(16px, 1.6vw, 18px);
+    color: var(--accent-gray);
+    font-weight: 500;
+    line-height: 1.6;
+    max-width: 48ch;
+    margin-bottom: 32px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .pill-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, .7);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dark-muted);
+  }
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
 
-    .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid rgba(6,32,51,.12);
-      background: rgba(255,255,255,.78);
-      padding:8px 10px;
-      border-radius:999px;
-      font-weight:900;font-size:13px;
-      color: rgba(6,32,51,.84);
+  /* Photo grid */
+  .hero-photos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    height: 320px;
+  }
+  @media (min-width: 768px) {
+    .hero-photos {
+      grid-template-columns: 1.2fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 420px;
     }
-
-    /* Sections */
-    section{padding:44px 0}
-    .section-head{
-      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
-      margin-bottom:14px;
+    .hero-photos .photo-large {
+      grid-row: 1 / -1;
     }
-    .section-head h2{margin:0;font-size:28px;letter-spacing:-.3px}
-    .section-head p{margin:0;color: rgba(6,32,51,.65);font-weight:750;max-width:75ch}
+  }
+  .photo-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-warm);
+  }
+  .photo-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(245, 240, 235, .08) 0%, rgba(41, 37, 36, .04) 100%);
+    pointer-events: none;
+  }
+  @media (max-width: 767px) {
+    .hero-photos .photo-small { display: none; }
+    .hero-photos { height: 260px; }
+  }
 
-    .grid{
-      display:grid;
+  /* ══════════════════════════════════
+     TREATMENTS
+  ══════════════════════════════════ */
+  .treatments {
+    padding: 64px 0;
+  }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sage);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--sage);
+    border-radius: 2px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.8px;
+    color: var(--dark);
+    margin-bottom: 12px;
+  }
+  .section-desc {
+    font-size: 16px;
+    color: var(--accent-gray);
+    font-weight: 500;
+    max-width: 55ch;
+    margin-bottom: 40px;
+  }
+  .treatment-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .treatment-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 14px;
+      gap: 20px;
     }
-    .card{
-      background:#fff;
-      border: 1px solid rgba(6,32,51,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-      position: relative;
-      overflow:hidden;
-    }
-    .card::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(320px 180px at 20% 10%, rgba(34,195,238,.14), transparent 70%),
-        radial-gradient(320px 180px at 90% 0%, rgba(20,184,166,.10), transparent 70%);
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
-    .card h3{margin:0 0 6px;font-size:16px;font-weight:950}
-    .card p{margin:0;color: rgba(6,32,51,.68);font-weight:750}
+  }
+  .treatment-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-interactive),
+                transform var(--transition-interactive);
+    position: relative;
+  }
+  .treatment-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .treatment-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--sage-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .treatment-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--sage);
+    stroke-width: 1.8;
+    fill: none;
+  }
+  .treatment-card h3 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+  .treatment-card p {
+    font-size: 15px;
+    color: var(--accent-gray);
+    font-weight: 400;
+    line-height: 1.6;
+  }
 
-    .strip{
-      background: rgba(255,255,255,.55);
-      border-top: 1px solid rgba(6,32,51,.10);
-      border-bottom: 1px solid rgba(6,32,51,.10);
+  /* ══════════════════════════════════
+     TESTIMONIALS
+  ══════════════════════════════════ */
+  .testimonials {
+    padding: 64px 0;
+    background: var(--bg-warm);
+    border-top: 1px solid var(--border-warm);
+    border-bottom: 1px solid var(--border-warm);
+  }
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .testimonial-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
+  }
+  .testimonial-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .testimonial-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .testimonial-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid var(--stone);
+    flex-shrink: 0;
+  }
+  .testimonial-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--dark);
+  }
+  .testimonial-role {
+    font-size: 13px;
+    color: var(--accent-gray);
+    font-weight: 400;
+  }
+  .stars {
+    color: #d4a846;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .testimonial-quote {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .testimonial-quote strong {
+    font-style: normal;
+    font-weight: 700;
+  }
 
-    .split{
-      display:grid;
+  /* ══════════════════════════════════
+     INSURANCE & FAQ
+  ══════════════════════════════════ */
+  .info-section {
+    padding: 64px 0;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 40px;
+  }
+  @media (min-width: 768px) {
+    .info-grid {
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-      align-items:start;
+      gap: 24px;
+      align-items: start;
     }
-    .panel{
-      background:#fff;
-      border: 1px solid rgba(6,32,51,.10);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-      padding: 16px;
-    }
+  }
+  .info-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .info-panel h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+  .info-panel p {
+    font-size: 15px;
+    color: var(--accent-gray);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .bring-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .bring-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dark-muted);
+  }
+  .bring-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+  }
 
-    label{display:flex;flex-direction:column;gap:6px;font-weight:900;font-size:13px}
-    input,textarea,select{
-      padding:12px;border-radius:14px;border:1px solid rgba(6,32,51,.12);
-      background:#fff;font-size:14px;outline:none;
-    }
-    input:focus,textarea:focus,select:focus{
-      border-color: rgba(34,195,238,.55);
-      box-shadow: 0 0 0 4px rgba(34,195,238,.12);
-    }
-    textarea{min-height:120px;resize:vertical}
-    .mini{font-size:12px;color: rgba(6,32,51,.55);font-weight:850}
+  /* ── Form ── */
+  .form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 480px) {
+    .form-row { grid-template-columns: 1fr 1fr; }
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(41, 37, 36, .14);
+    background: var(--bg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--dark);
+    outline: none;
+    transition: border-color var(--transition-interactive),
+                box-shadow var(--transition-interactive);
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px var(--sage-light);
+  }
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  .form-note {
+    font-size: 12px;
+    color: var(--accent-gray);
+    font-weight: 400;
+  }
 
-    footer{
-      border-top: 1px solid rgba(6,32,51,.10);
-      padding: 18px 0;
-      color: rgba(6,32,51,.55);
-      font-size: 12px;
-      text-align:center;
-      background: rgba(255,255,255,.55);
-    }
+  /* ══════════════════════════════════
+     FOOTER
+  ══════════════════════════════════ */
+  footer {
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    background: rgba(255, 255, 255, .4);
+  }
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .footer-inner p {
+    font-size: 13px;
+    color: var(--accent-gray);
+    font-weight: 400;
+  }
+  .footer-inner a {
+    transition: color var(--transition-interactive);
+  }
+  .footer-inner a:hover { color: var(--dark); }
 
-    /* Modal */
-    .modal{
-      position:fixed; inset:0;
-      display:none; align-items:center; justify-content:center;
-      padding: 14px;
-      background: rgba(0,0,0,.55);
-      z-index: 999;
-    }
-    .modal.show{display:flex}
-    .modal-card{
-      width: min(720px, 100%);
-      max-height: 86vh;
-      overflow:auto;
-      background:#fff;
-      border: 1px solid rgba(6,32,51,.12);
-      border-radius: 24px;
-      box-shadow: 0 26px 90px rgba(0,0,0,.38);
-      padding: 16px;
-    }
-    .modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
-    .close{
-      border:1px solid rgba(6,32,51,.12);
-      background:#fff;
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-weight: 950;
-      cursor:pointer;
-    }
-    .close:hover{background: rgba(0,0,0,.03)}
+  /* ══════════════════════════════════
+     MODAL
+  ══════════════════════════════════ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(41, 37, 36, .5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--ease-out), visibility 0.3s var(--ease-out);
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal-panel {
+    width: min(600px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 32px 80px rgba(41, 37, 36, .24);
+    padding: 32px;
+    transform: translateY(16px) scale(.98);
+    transition: transform 0.3s var(--ease-out);
+  }
+  .modal-overlay.open .modal-panel {
+    transform: translateY(0) scale(1);
+  }
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .modal-header h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.4px;
+  }
+  .modal-header p {
+    font-size: 14px;
+    color: var(--accent-gray);
+    margin-top: 4px;
+  }
+  .modal-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--accent-gray);
+    flex-shrink: 0;
+    transition: background var(--transition-interactive), color var(--transition-interactive);
+  }
+  .modal-close:hover {
+    background: rgba(41, 37, 36, .05);
+    color: var(--dark);
+  }
 
-    @media (max-width: 980px){
-      .hero-grid{grid-template-columns: 1fr}
-      .photo-grid{height: 280px}
-      .grid{grid-template-columns: 1fr}
-      .split{grid-template-columns: 1fr}
+  @media (max-width: 767px) {
+    .modal-panel {
+      padding: 24px 20px;
+      border-radius: 20px;
     }
-  </style>
+  }
+
+  /* ── Misc ── */
+  .divider-line {
+    width: 48px;
+    height: 2px;
+    background: var(--stone);
+    border-radius: 2px;
+    margin: 24px 0;
+  }
+
+  /* prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { transition: none; }
+    .reveal.hidden { opacity: 1; }
+    .modal-overlay, .modal-panel { transition: none; }
+  }
+</style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav">
+
+<!-- ══════ HEADER ══════ -->
+<header>
+  <div class="container nav">
+    <div class="nav-left">
       <a class="brand" href="#">
-        <div class="logo">BP</div>
-        <div>
-          <strong>BrightPath Physical Therapy</strong>
-          <span>Evidence-based rehab • Clear progress plans</span>
+        <div class="logo-mark">BW</div>
+        <div class="brand-text">
+          <strong>Balance Wellness Studio</strong>
+          <span>Evidence-based rehab &bull; Clear progress plans</span>
         </div>
-        <span class="badge">Demo Site</span>
       </a>
-
-      <div class="row">
-        <a class="btn btn-outline" href="../index.html">PalmWeb</a>
-        <a class="btn btn-outline" href="tel:+14015553456">Call (401) 555-3456</a>
-        <button class="btn btn-primary" type="button" data-open-appt>Request Appointment</button>
-      </div>
+      <span class="demo-badge">Demo Site</span>
     </div>
-  </header>
 
-  <main class="hero">
-    <div class="container">
-      <div class="hero-shell">
-        <div class="hero-grid">
-          <section>
-            <h1>Move better. Feel better. Get back to what you love.</h1>
-            <p class="lead">
-              Personalized plans, measurable progress, and simple scheduling — built for busy people.
-            </p>
-
-            <div class="row">
-              <button class="btn btn-primary" type="button" data-open-appt>Request an Appointment</button>
-              <a class="btn btn-outline" href="#treatments">Treatments</a>
-              <a class="btn btn-outline" href="#faq">Insurance</a>
-            </div>
-
-            <div class="pillrow">
-              <span class="pill">Sports injuries</span>
-              <span class="pill">Back & neck pain</span>
-              <span class="pill">Post-surgery rehab</span>
-            </div>
-
-            <p class="mini" style="margin-top:12px;">Demo note: Sample wellness/PT site built by PalmWeb.</p>
-          </section>
-
-          <aside class="photo-grid" aria-label="Clinic photos">
-            <div class="ph big" style="background-image:url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1400&q=80');"></div>
-            <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=900&q=80');"></div>
-            <div class="ph" style="background-image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80');"></div>
-          </aside>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <section id="treatments">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Treatments</h2>
-          <p>Clear “what we help” categories with a calmer, healthcare-forward look.</p>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card"><h3>Manual Therapy</h3><p>Hands-on treatment to reduce pain and improve mobility.</p></div>
-        <div class="card"><h3>Strength & Mobility</h3><p>Personalized program built around your goals and lifestyle.</p></div>
-        <div class="card"><h3>Return-to-Sport</h3><p>Sport-specific rehab with measurable progress milestones.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="strip">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>What Patients Say</h2>
-          <p>Testimonials with real avatar photos (still demo).</p>
-        </div>
-      </div>
-
-      <div class="grid" style="grid-template-columns: 1fr; max-width: 860px;">
-        <div class="card" style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(6,32,51,.12);
-            background:url('https://images.unsplash.com/photo-1520975693411-b4fa54f17bb5?auto=format&fit=crop&w=200&q=80') center/cover no-repeat;"></div>
-          <div>
-            <div style="font-weight:950;">★★★★★ “I’m running again.”</div>
-            <p style="margin-top:6px;">Clear plan, steady progress, and great coaching. Pain is gone.</p>
-            <div class="mini">— Alex M.</div>
-          </div>
-        </div>
-
-        <div class="card" style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(6,32,51,.12);
-            background:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80') center/cover no-repeat;"></div>
-          <div>
-            <div style="font-weight:950;">★★★★★ “Explained everything.”</div>
-            <p style="margin-top:6px;">They made it simple and helped me stay consistent at home.</p>
-            <div class="mini">— Renee K.</div>
-          </div>
-        </div>
-
-        <div class="card" style="display:flex;gap:12px;align-items:flex-start;">
-          <div style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(6,32,51,.12);
-            background:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80') center/cover no-repeat;"></div>
-          <div>
-            <div style="font-weight:950;">★★★★★ “Professional and friendly.”</div>
-            <p style="margin-top:6px;">Appointments were on time and the care felt personalized.</p>
-            <div class="mini">— Chris D.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="faq">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Insurance & FAQs</h2>
-          <p>Helpful info that reduces friction before a call.</p>
-        </div>
-      </div>
-
-      <div class="split">
-        <div class="panel">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Insurance</h3>
-          <p style="margin:0;color:rgba(6,32,51,.70);font-weight:750">
-            We accept many major plans. Call and we’ll verify benefits before your first visit.
-          </p>
-          <div class="mini" style="margin-top:10px;">What to bring</div>
-          <p style="margin-top:6px;">Insurance card • Photo ID • Referral (if required)</p>
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn btn-primary" type="button" data-open-appt>Request Appointment</button>
-            <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h3 style="margin:0 0 8px;font-size:16px;font-weight:950;">Quick Request</h3>
-          <p style="margin:0;color:rgba(6,32,51,.70);font-weight:750">
-            Prefer not to call? Send details and we’ll reach out.
-          </p>
-
-          <form action="https://formsubmit.co/mason@palmweb.net" method="POST" style="margin-top:12px;">
-            <input type="hidden" name="_subject" value="Demo Lead — Wellness/PT Site" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-
-            <label>Your name* <input required name="Name" /></label>
-            <label>Phone* <input required name="Phone" /></label>
-            <label>Email <input name="Email" type="email" /></label>
-            <label>Preferred time <input name="Preferred Time" placeholder="Weekday morning" /></label>
-            <label>What brings you in? <textarea name="Details" placeholder="Back pain for 3 months, worse when sitting..."></textarea></label>
-
-            <div class="row">
-              <button class="btn btn-ink" type="submit">Send Request</button>
-              <a class="btn btn-outline" href="../index.html">Back</a>
-            </div>
-
-            <p class="mini" style="margin-top:10px;">Demo note: This form submits via FormSubmit.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">© <span id="year"></span> BrightPath PT (Demo). Built by PalmWeb.</div>
-  </footer>
-
-  <!-- Appointment modal -->
-  <div class="modal" id="apptModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="apptTitle">
-      <div class="modal-head">
-        <div>
-          <div id="apptTitle" style="font-weight:950;font-size:18px;letter-spacing:-.2px;">Appointment Request</div>
-          <div class="mini">Demo: uses FormSubmit (no booking backend).</div>
-        </div>
-        <button class="close" type="button" id="closeModal">✕</button>
-      </div>
-
-      <form action="https://formsubmit.co/mason@palmweb.net" method="POST">
-        <input type="hidden" name="_subject" value="Demo Lead — PT Appointment Modal" />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <label>Your name* <input required name="Name" /></label>
-          <label>Phone* <input required name="Phone" /></label>
-          <label>Email <input name="Email" type="email" /></label>
-          <label>Preferred time <input name="Preferred Time" placeholder="Weekday afternoon" /></label>
-          <label style="grid-column:1/-1;">What brings you in?
-            <textarea name="Details" placeholder="Knee pain after running..."></textarea>
-          </label>
-        </div>
-
-        <div class="row" style="margin-top:12px;">
-          <button class="btn btn-primary" type="submit">Send Request</button>
-          <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
-        </div>
-      </form>
+    <div class="nav-right">
+      <a class="nav-link" href="../index.html">PalmWeb</a>
+      <a class="btn btn-outline" href="tel:+14015553456" style="font-size:13px;">(401) 555-3456</a>
+      <button class="btn btn-primary" type="button" data-open-appt>Request Appointment</button>
+      <button class="hamburger" type="button" id="hamburgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
+</header>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="btn btn-primary" href="tel:+14015553456">Call (401) 555-3456</a>
+  <button class="btn btn-sage" type="button" data-open-appt style="width:100%;">Request Appointment</button>
+  <a class="btn btn-outline" href="#treatments">Our Treatments</a>
+  <a class="btn btn-outline" href="#testimonials">Testimonials</a>
+  <a class="btn btn-outline" href="#faq">Insurance & FAQs</a>
+  <a class="btn btn-ghost" href="../index.html">← Back to PalmWeb</a>
+</div>
 
-    const modal = document.getElementById("apptModal");
-    const openBtns = document.querySelectorAll("[data-open-appt]");
-    const closeBtn = document.getElementById("closeModal");
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content reveal">
+        <div class="hero-eyebrow">Wellness & Physical Therapy</div>
+        <h1>Move better.<br>Feel better.</h1>
+        <p class="hero-lead">
+          Personalized rehab plans, measurable progress, and simple scheduling — built for busy people who want to get back to what they love.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button" data-open-appt>Request an Appointment</button>
+          <a class="btn btn-outline" href="#treatments">Our Treatments</a>
+        </div>
+        <div class="pill-row">
+          <span class="pill"><span class="pill-dot"></span>Sports injuries</span>
+          <span class="pill"><span class="pill-dot"></span>Back &amp; neck pain</span>
+          <span class="pill"><span class="pill-dot"></span>Post-surgery rehab</span>
+        </div>
+      </div>
 
-    function openModal(){
-      modal.classList.add("show");
-      modal.setAttribute("aria-hidden","false");
-      document.body.style.overflow = "hidden";
-    }
-    function closeModal(){
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
+      <div class="hero-photos reveal" aria-label="Clinic photos">
+        <div class="photo-card photo-large"
+             style="background-image:url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80');"
+             role="img" aria-label="Physical therapy clinic"></div>
+        <div class="photo-card photo-small"
+             style="background-image:url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=600&q=80');"
+             role="img" aria-label="Wellness exercise session"></div>
+        <div class="photo-card photo-small"
+             style="background-image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80');"
+             role="img" aria-label="Fitness training"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    openBtns.forEach(b => b.addEventListener("click", openModal));
-    closeBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
-    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && modal.classList.contains("show")) closeModal(); });
-  </script>
+<!-- ══════ TREATMENTS ══════ -->
+<section class="treatments" id="treatments">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">What We Treat</div>
+      <h2>Our Treatments</h2>
+      <p class="section-desc">Clear categories, calm design, and a healthcare-forward approach to getting you better.</p>
+    </div>
+
+    <div class="treatment-grid">
+      <div class="treatment-card reveal">
+        <div class="treatment-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 11c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4v0c0 2.2-1.8 4-4 4h-2c-2.2 0-4-1.8-4-4z"/>
+            <path d="M12 3v4M12 17v4M5 12H3M21 12h-2"/>
+          </svg>
+        </div>
+        <h3>Manual Therapy</h3>
+        <p>Hands-on treatment to reduce pain, improve joint mobility, and restore soft tissue function. Techniques tailored to your specific condition.</p>
+      </div>
+
+      <div class="treatment-card reveal">
+        <div class="treatment-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M12 2v2M4.93 4.93l1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3>Strength &amp; Mobility</h3>
+        <p>A personalized exercise program built around your goals and lifestyle. Focused on building lasting strength and full range of motion.</p>
+      </div>
+
+      <div class="treatment-card reveal">
+        <div class="treatment-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3>Return-to-Sport</h3>
+        <p>Sport-specific rehabilitation with measurable progress milestones. We get athletes back on the field safely and confidently.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TESTIMONIALS ══════ -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Patient Stories</div>
+      <h2>What Our Patients Say</h2>
+      <p class="section-desc">Real experiences from people who trusted us with their recovery.</p>
+    </div>
+
+    <div class="testimonial-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-top">
+          <div class="testimonial-avatar"
+               style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80');"></div>
+          <div>
+            <div class="testimonial-name">Alex M.</div>
+            <div class="testimonial-role">Marathon Runner</div>
+          </div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote"><strong>"I'm running again."</strong> Clear plan, steady progress, and great coaching every step of the way. The pain is completely gone.</p>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-top">
+          <div class="testimonial-avatar"
+               style="background-image:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80');"></div>
+          <div>
+            <div class="testimonial-name">Renee K.</div>
+            <div class="testimonial-role">Office Professional</div>
+          </div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote"><strong>"They explained everything."</strong> Made it simple to understand and helped me stay consistent with my exercises at home.</p>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-top">
+          <div class="testimonial-avatar"
+               style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80');"></div>
+          <div>
+            <div class="testimonial-name">Chris D.</div>
+            <div class="testimonial-role">Weekend Athlete</div>
+          </div>
+        </div>
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-quote"><strong>"Professional and friendly."</strong> Appointments were always on time and the care felt genuinely personalized to my needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ INSURANCE & FAQ ══════ -->
+<section class="info-section" id="faq">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Getting Started</div>
+      <h2>Insurance &amp; FAQs</h2>
+      <p class="section-desc">Everything you need to know before your first visit.</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-panel reveal">
+        <h3>Insurance &amp; What to Bring</h3>
+        <p>We accept most major insurance plans. Call us and we'll verify your benefits before your first appointment — no surprises.</p>
+        <div style="font-size:14px;font-weight:600;color:var(--dark);margin-bottom:10px;">What to bring to your first visit:</div>
+        <ul class="bring-list">
+          <li>Insurance card</li>
+          <li>Photo ID</li>
+          <li>Referral or prescription (if required)</li>
+          <li>Comfortable clothing for movement</li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" type="button" data-open-appt>Request Appointment</button>
+          <a class="btn btn-outline" href="../index.html">Back to PalmWeb</a>
+        </div>
+      </div>
+
+      <div class="info-panel reveal">
+        <h3>Quick Request Form</h3>
+        <p>Prefer not to call? Send us your details and we'll reach out to schedule.</p>
+
+        <form class="form-stack" action="https://formsubmit.co/mason@palmweb.net" method="POST">
+          <input type="hidden" name="_subject" value="Demo Lead — Wellness/PT Site" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fq-name">Your name *</label>
+              <input id="fq-name" required name="Name" placeholder="Jane Smith" />
+            </div>
+            <div class="form-group">
+              <label for="fq-phone">Phone *</label>
+              <input id="fq-phone" required name="Phone" type="tel" placeholder="(401) 555-0000" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fq-email">Email</label>
+              <input id="fq-email" name="Email" type="email" placeholder="jane@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="fq-time">Preferred time</label>
+              <input id="fq-time" name="Preferred Time" placeholder="Weekday mornings" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="fq-details">What brings you in?</label>
+            <textarea id="fq-details" name="Details" placeholder="Back pain for 3 months, worse when sitting..."></textarea>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button class="btn btn-sage" type="submit">Send Request</button>
+          </div>
+          <p class="form-note">This is a demo site. Form submissions are sent via FormSubmit.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="container footer-inner">
+    <p>&copy; <span id="year"></span> Balance Wellness Studio (Demo). Built by <a href="../index.html" style="text-decoration:underline;">PalmWeb</a>.</p>
+    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer" style="opacity:.5;font-size:12px;">Created with Perplexity Computer</a>
+  </div>
+</footer>
+
+<!-- ══════ APPOINTMENT MODAL ══════ -->
+<div class="modal-overlay" id="apptModal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="apptTitle">
+    <div class="modal-header">
+      <div>
+        <h3 id="apptTitle">Request an Appointment</h3>
+        <p>Fill in your details and we'll get back to you within one business day.</p>
+      </div>
+      <button class="modal-close" type="button" id="closeModal" aria-label="Close modal">✕</button>
+    </div>
+
+    <form class="form-stack" action="https://formsubmit.co/mason@palmweb.net" method="POST">
+      <input type="hidden" name="_subject" value="Demo Lead — PT Appointment Modal" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://palmweb.net/thank-you.html" />
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="m-name">Your name *</label>
+          <input id="m-name" required name="Name" placeholder="Jane Smith" />
+        </div>
+        <div class="form-group">
+          <label for="m-phone">Phone *</label>
+          <input id="m-phone" required name="Phone" type="tel" placeholder="(401) 555-0000" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="m-email">Email</label>
+          <input id="m-email" name="Email" type="email" placeholder="jane@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="m-time">Preferred time</label>
+          <input id="m-time" name="Preferred Time" placeholder="Weekday afternoons" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="m-details">What brings you in?</label>
+        <textarea id="m-details" name="Details" placeholder="Knee pain after running, shoulder stiffness..."></textarea>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn btn-primary" type="submit">Send Request</button>
+        <button class="btn btn-outline" type="button" id="cancelModal">Cancel</button>
+      </div>
+      <p class="form-note">This is a demo site. Form submissions are sent via FormSubmit.</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ── Modal ──
+  const modal = document.getElementById('apptModal');
+  const openBtns = document.querySelectorAll('[data-open-appt]');
+  const closeBtn = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelModal');
+
+  function openModal() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    // Focus first input
+    setTimeout(() => {
+      const firstInput = modal.querySelector('input[name="Name"]');
+      if (firstInput) firstInput.focus();
+    }, 300);
+  }
+  function closeModalFn() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openBtns.forEach(b => b.addEventListener('click', openModal));
+  closeBtn.addEventListener('click', closeModalFn);
+  cancelBtn.addEventListener('click', closeModalFn);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModalFn(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModalFn(); });
+
+  // ── Hamburger ──
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileLinks = mobileMenu.querySelectorAll('a, button[data-open-appt]');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── Scroll reveal (IntersectionObserver) ──
+  const revealEls = document.querySelectorAll('.reveal');
+  // Set initial hidden state
+  revealEls.forEach(el => el.classList.add('hidden'));
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('hidden');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+    revealEls.forEach(el => observer.observe(el));
+  } else {
+    // Fallback: show all
+    revealEls.forEach(el => el.classList.remove('hidden'));
+  }
+
+  // ── Smooth scroll for anchor links ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
