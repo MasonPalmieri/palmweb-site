@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bryant Baseball in the Pros — PalmWeb</title>
+  <meta name="description" content="Tracking Bryant University baseball alumni currently active in professional baseball (MLB and MiLB).">
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #1a1a2e;
+      background: #f0f1f5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ===== VARIABLES ===== */
+    :root {
+      --navy: #0c2340;
+      --navy-deep: #081a30;
+      --gold: #c5a55a;
+      --gold-light: #dac07a;
+      --white: #ffffff;
+      --gray-50: #f7f8fa;
+      --gray-100: #f0f1f5;
+      --gray-200: #e2e4ea;
+      --gray-300: #c8cbd4;
+      --gray-400: #9da2ae;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --red-sox: #BD3039;
+      --braves: #CE1141;
+      --dodgers: #005A9C;
+      --tigers: #0C2340;
+      --nationals: #AB0003;
+      --brewers: #FFC52F;
+      --royals: #004687;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.06);
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy-deep);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .header-logo svg { flex-shrink: 0; }
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: var(--gold);
+      border-radius: 100px;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .header-nav a {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+    .header-nav a:hover { color: var(--white); }
+    .palmweb-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy) !important;
+      background: var(--gold);
+      border-radius: 100px;
+      transition: all var(--transition);
+    }
+    .palmweb-link:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+    }
+    .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+    /* Mobile nav overlay */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--navy-deep);
+      z-index: 99;
+      padding: 24px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-nav.active { display: flex; }
+    .mobile-nav a {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      color: rgba(255,255,255,0.85);
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      transition: background var(--transition);
+    }
+    .mobile-nav a:hover { background: rgba(255,255,255,0.06); }
+    .mobile-nav .palmweb-link {
+      margin-top: 16px;
+      justify-content: center;
+      padding: 14px;
+      font-size: 15px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, #102a4a 100%);
+      padding: 80px 24px 64px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 80% 20%, rgba(197,165,90,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 20% 80%, rgba(197,165,90,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    /* Diamond pattern */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.015) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.015) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.015) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.015) 75%);
+      background-size: 40px 40px;
+      background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+    .hero-content { flex: 1; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(197,165,90,0.1);
+      border: 1px solid rgba(197,165,90,0.2);
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow svg { width: 14px; height: 14px; }
+    .hero h1 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: clamp(16px, 1.8vw, 18px);
+      line-height: 1.6;
+      color: rgba(255,255,255,0.65);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+    .hero-stats-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-stat-value {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 32px;
+      color: var(--gold);
+      line-height: 1.1;
+    }
+    .hero-stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero-graphic {
+      flex-shrink: 0;
+      width: 200px;
+      height: 200px;
+      position: relative;
+    }
+    /* Baseball SVG */
+    .hero-baseball {
+      width: 200px;
+      height: 200px;
+      opacity: 0.15;
+    }
+
+    /* ===== FILTER BAR ===== */
+    .filter-section {
+      position: sticky;
+      top: 60px;
+      z-index: 50;
+      background: rgba(240,241,245,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .filter-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-inner::-webkit-scrollbar { display: none; }
+    .filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-600);
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 100px;
+      white-space: nowrap;
+      transition: all var(--transition);
+      min-height: 44px;
+      flex-shrink: 0;
+    }
+    .filter-pill:hover {
+      border-color: var(--gray-300);
+      background: var(--gray-50);
+    }
+    .filter-pill.active {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .filter-pill .count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.08);
+      border-radius: 100px;
+    }
+    .filter-pill.active .count {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ===== PLAYER GRID ===== */
+    .players-section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 24px;
+    }
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--gray-500);
+    }
+    .no-results-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      color: var(--gray-300);
+    }
+    .no-results h3 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    /* ===== PLAYER CARD ===== */
+    .player-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+      opacity: 0;
+      transform: translateY(16px);
+      animation: cardIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .player-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-2px);
+    }
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card header */
+    .card-header {
+      position: relative;
+      padding: 24px 24px 20px;
+      overflow: hidden;
+      min-height: 140px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.08;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.3), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+    }
+    /* Diamond pattern on card header */
+    .card-header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(255,255,255,0.03) 10px,
+          rgba(255,255,255,0.03) 11px
+        );
+      pointer-events: none;
+    }
+
+    .card-headshot {
+      position: relative;
+      z-index: 2;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+    .card-headshot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .card-headshot .headshot-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .card-header-info {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 0;
+    }
+    .card-player-name {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .card-player-number {
+      font-size: 15px;
+      font-weight: 700;
+      opacity: 0.5;
+    }
+    .card-player-meta {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .card-player-meta span + span::before {
+      content: '·';
+      margin: 0 5px;
+      opacity: 0.4;
+    }
+
+    /* Level badge */
+    .level-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--white);
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .level-badge.mlb { background: rgba(0,0,0,0.6); }
+    .level-badge.aaa { background: rgba(30,60,114,0.7); }
+    .level-badge.aa { background: rgba(60,90,130,0.6); }
+    .level-badge.other { background: rgba(80,80,80,0.6); }
+    .level-badge.injured { background: rgba(180,40,40,0.7); }
+    .level-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+    }
+    .level-badge.injured .level-badge-dot { background: #fbbf24; }
+
+    /* Card body */
+    .card-body { padding: 0 24px 24px; }
+
+    /* Team info */
+    .card-team {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card-team-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+    .card-team-org {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-400);
+    }
+
+    /* Stats row */
+    .card-stats {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .card-stats-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .stat-item {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .stat-value {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--gray-900);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    /* Award badge */
+    .card-award {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400e;
+      background: #fef3c7;
+      border-radius: var(--radius-sm);
+    }
+    .card-award svg { width: 14px; height: 14px; color: #d97706; }
+
+    /* Bio section */
+    .card-bio {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .bio-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 3px 0;
+      gap: 8px;
+    }
+    .bio-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-400);
+      flex-shrink: 0;
+    }
+    .bio-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-700);
+      text-align: right;
+      min-width: 0;
+    }
+
+    /* Transaction */
+    .card-transaction {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .card-transaction-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .card-transaction-text {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    /* Card footer link */
+    .card-footer {
+      padding-top: 14px;
+    }
+    .card-profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      transition: all var(--transition);
+    }
+    .card-profile-link:hover {
+      gap: 10px;
+    }
+    .card-profile-link svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--transition);
+    }
+    .card-profile-link:hover svg {
+      transform: translateX(2px);
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: var(--navy-deep);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .footer-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+    .footer-text a {
+      color: var(--gold);
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+    .footer-text a:hover { color: var(--gold-light); }
+    .footer-divider {
+      width: 48px;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 16px auto;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header-nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+
+      .hero { padding: 48px 20px 40px; }
+      .hero-inner { flex-direction: column; gap: 24px; text-align: center; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .hero-stats-row { justify-content: center; }
+      .hero-graphic { width: 120px; height: 120px; order: -1; }
+      .hero-baseball { width: 120px; height: 120px; }
+
+      .filter-inner { padding: 10px 16px; gap: 8px; }
+      .filter-label { display: none; }
+
+      .players-section { padding: 20px 16px 48px; }
+      .players-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .card-header { padding: 20px 20px 16px; min-height: 120px; }
+      .card-headshot { width: 72px; height: 72px; }
+      .card-player-name { font-size: 19px; }
+      .card-body { padding: 0 20px 20px; }
+      .stat-value { font-size: 15px; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .players-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="../index.html" class="header-logo" target="_blank" rel="noopener noreferrer">
+          <!-- Baseball diamond logo -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect x="4" y="4" width="20" height="20" rx="4" transform="rotate(45 14 0.86)" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            <circle cx="14" cy="14" r="5" fill="none" stroke="#c5a55a" stroke-width="2"/>
+            <path d="M11.5 11.2C12.3 12.6 12.3 15.4 11.5 16.8" stroke="#c5a55a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <path d="M16.5 11.2C15.7 12.6 15.7 15.4 16.5 16.8" stroke="#c5a55a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </svg>
+          Bryant Baseball
+        </a>
+        <span class="demo-badge">Sample</span>
+      </div>
+      <nav class="header-nav">
+        <a href="#players">Players</a>
+        <a href="../index.html" class="palmweb-link" target="_blank" rel="noopener noreferrer">
+          PalmWeb
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3.5 2.5h6v6m0-6L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </nav>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#players" onclick="closeMobileMenu()">Players</a>
+    <a href="../index.html" class="palmweb-link" target="_blank" rel="noopener noreferrer">
+      PalmWeb
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3.5 2.5h6v6m0-6L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 5C6 6.2 6 7.8 5.5 9" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><path d="M8.5 5C8 6.2 8 7.8 8.5 9" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          2026 Season Tracker
+        </div>
+        <h1>Bryant Baseball<br><span>in the Pros</span></h1>
+        <p class="hero-desc">Tracking Bryant University Bulldogs alumni currently active in professional baseball across MLB and MiLB organizations.</p>
+        <div class="hero-stats-row" id="heroStats">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="hero-graphic">
+        <svg class="hero-baseball" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+          <circle cx="100" cy="100" r="90" stroke="white" stroke-width="2" fill="none"/>
+          <path d="M60 30C75 60 75 140 60 170" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M140 30C125 60 125 140 140 170" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Stitch marks left -->
+          <line x1="55" y1="45" x2="63" y2="50" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="52" y1="60" x2="60" y2="63" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="51" y1="76" x2="59" y2="77" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="51" y1="92" x2="59" y2="92" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="51" y1="108" x2="59" y2="108" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="51" y1="124" x2="59" y2="123" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="52" y1="140" x2="60" y2="137" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="55" y1="155" x2="63" y2="150" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Stitch marks right -->
+          <line x1="145" y1="45" x2="137" y2="50" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="148" y1="60" x2="140" y2="63" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="149" y1="76" x2="141" y2="77" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="149" y1="92" x2="141" y2="92" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="149" y1="108" x2="141" y2="108" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="149" y1="124" x2="141" y2="123" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="148" y1="140" x2="140" y2="137" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="145" y1="155" x2="137" y2="150" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <section class="filter-section" id="players">
+    <div class="filter-inner" id="filterBar">
+      <span class="filter-label">Filter</span>
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- PLAYERS GRID -->
+  <section class="players-section">
+    <div class="players-grid" id="playersGrid">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <circle cx="14" cy="14" r="5" fill="none" stroke="#c5a55a" stroke-width="2"/>
+          <path d="M11.5 11.2C12.3 12.6 12.3 15.4 11.5 16.8" stroke="#c5a55a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <path d="M16.5 11.2C15.7 12.6 15.7 15.4 16.5 16.8" stroke="#c5a55a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        Bryant Baseball Tracker
+      </div>
+      <p class="footer-text">
+        Built by <a href="../index.html" target="_blank" rel="noopener noreferrer">PalmWeb LLC</a> — a demo project by Mason Palmieri.
+      </p>
+      <div class="footer-divider"></div>
+      <p class="footer-text">
+        Data as of March 2026. Player data sourced from MLB.com and MiLB.com.<br>
+        &copy; 2026 PalmWeb LLC. Not affiliated with MLB or Bryant University.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ===== PLAYER DATA =====
+    const PLAYERS = [
+      {
+        name: "Mickey Gasper",
+        number: 11,
+        position: "C/2B",
+        bats_throws: "S/R",
+        height: "5'10\"",
+        weight: 205,
+        age: 30,
+        born: "10/11/1995",
+        birthplace: "Merrimack, NH",
+        draft: "2018, NYY, Rd 27",
+        college: "Bryant",
+        debut: "8/12/2024",
+        current_team: "Worcester Red Sox",
+        org: "Boston Red Sox",
+        level: "AAA",
+        status: "Active",
+        type: "position",
+        career_stats: { AB: 113, AVG: ".133", HR: 2, RBI: 11, SB: 2, OPS: ".445" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681508/headshot/silo/current",
+        mlb_url: "https://www.mlb.com/player/mickey-gasper-681508",
+        transactions: "Feb 2026: Claimed off waivers by Red Sox from Nationals. Mar 2026: Optioned to Worcester (AAA).",
+        org_color: "#BD3039"
+      },
+      {
+        name: "James Karinchak",
+        number: 22,
+        position: "RHP",
+        bats_throws: "R/R",
+        height: "6'3\"",
+        weight: 215,
+        age: 30,
+        born: "9/22/1995",
+        birthplace: "Newburgh, NY",
+        draft: "2017, CLE, Rd 9",
+        college: "Bryant",
+        debut: "9/14/2019",
+        current_team: "Gwinnett Stripers",
+        org: "Atlanta Braves",
+        level: "AAA",
+        status: "Active",
+        type: "pitcher",
+        career_stats: { W: 12, L: 11, ERA: "3.10", G: 174, SV: 15, IP: "165.2", SO: 253, WHIP: "1.18" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/675916/headshot/silo/current",
+        mlb_url: "https://www.mlb.com/player/james-karinchak-675916",
+        transactions: "Dec 2025: Signed MiLB deal with Braves. 2026 ST: 0.00 ERA, 9 K in 4.1 IP.",
+        org_color: "#CE1141"
+      },
+      {
+        name: "Ryan Ward",
+        number: 10,
+        position: "LF",
+        bats_throws: "L/R",
+        height: "5'10\"",
+        weight: 200,
+        age: 28,
+        born: "2/23/1998",
+        birthplace: "Worcester, MA",
+        draft: "2019, LAD, Rd 8",
+        college: "Bryant",
+        debut: null,
+        current_team: "Oklahoma City Comets",
+        org: "Los Angeles Dodgers",
+        level: "AAA",
+        status: "Active",
+        type: "position",
+        career_stats: { AB: 2670, AVG: ".265", HR: 150, RBI: 506, SB: 59, OPS: ".844" },
+        award: "2025 PCL MVP",
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669899/headshot/silo/current",
+        mlb_url: "https://www.mlb.com/player/ryan-ward-669899",
+        transactions: "Mar 2026: Optioned to OKC (AAA). 2025 PCL MVP — .290/36 HR/122 RBI.",
+        org_color: "#005A9C"
+      },
+      {
+        name: "Tyler Mattison",
+        number: null,
+        position: "RHP",
+        bats_throws: "R/R",
+        height: "6'5\"",
+        weight: 225,
+        age: 26,
+        born: "9/05/1999",
+        birthplace: "Fort Ann, NY",
+        draft: "2021, DET, Rd 4",
+        college: "Bryant",
+        debut: null,
+        current_team: "Toledo Mud Hens",
+        org: "Detroit Tigers",
+        level: "AAA",
+        status: "Active",
+        type: "pitcher",
+        career_stats: { W: 16, L: 5, ERA: "3.58", G: 105, SV: 10, IP: "138.1", SO: 189, WHIP: "1.28" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/694331/headshot/silo/current",
+        mlb_url: "https://www.mlb.com/player/tyler-mattison-694331",
+        transactions: "Dec 2025: Signed MiLB deal with Tigers. 2026 ST: 2.70 ERA in 3.1 IP.",
+        org_color: "#0C2340"
+      },
+      {
+        name: "Tyler Schoff",
+        number: null,
+        position: "RHP",
+        bats_throws: "R/R",
+        height: "6'2\"",
+        weight: 200,
+        age: 27,
+        born: "12/06/1998",
+        birthplace: "Lee Center, NY",
+        draft: "UDFA, WSH (2021)",
+        college: "Bryant",
+        debut: null,
+        current_team: "Washington Nationals org",
+        org: "Washington Nationals",
+        level: "MiLB",
+        status: "Injured — Full Season",
+        type: "pitcher",
+        career_stats: { W: 18, L: 8, ERA: "4.28", G: 128, SV: 14, IP: "176.2", SO: 211, WHIP: "1.34" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/694887/headshot/silo/current",
+        mlb_url: "https://www.milb.com/player/tyler-schoff-694887",
+        transactions: "Currently on injured list (full-season). Last pitched in 2025 with Nationals org.",
+        org_color: "#AB0003"
+      },
+      {
+        name: "Brett Wichrowski",
+        number: null,
+        position: "RHP",
+        bats_throws: "R/R",
+        height: "6'4\"",
+        weight: 215,
+        age: 23,
+        born: "8/15/2002",
+        birthplace: "Voorhees, NJ",
+        draft: "2023, MIL, Rd 13",
+        college: "Bryant",
+        debut: null,
+        current_team: "Biloxi Shuckers",
+        org: "Milwaukee Brewers",
+        level: "AA",
+        status: "Active",
+        type: "pitcher",
+        career_stats: { W: 3, L: 6, ERA: "3.44", G: 22, SV: 0, IP: "99.1", SO: 72, WHIP: "1.38" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814489/headshot/silo/current",
+        mlb_url: "https://www.milb.com/player/brett-wichrowski-814489",
+        transactions: "2025: 3-6, 3.44 ERA in 99.1 IP at AA Biloxi. Selected for Brewers Spring Breakout 2026.",
+        org_color: "#FFC52F"
+      },
+      {
+        name: "Coleman Picard",
+        number: null,
+        position: "RHP",
+        bats_throws: "R/R",
+        height: "6'2\"",
+        weight: 185,
+        age: 24,
+        born: "10/27/2001",
+        birthplace: "Worcester, MA",
+        draft: "2023, KC, Rd 6",
+        college: "Bryant",
+        debut: null,
+        current_team: "Kansas City Royals org",
+        org: "Kansas City Royals",
+        level: "Rookie/A",
+        status: "Active (returning from injury)",
+        type: "pitcher",
+        career_stats: { W: 0, L: 0, ERA: "3.52", G: 5, SV: 0, IP: "7.2", SO: 15, WHIP: "1.30" },
+        headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814537/headshot/silo/current",
+        mlb_url: "https://www.milb.com/player/coleman-picard-814537",
+        transactions: "Nov 2025: Activated from 60-day IL. Drafted 6th round 2023. Returning from injuries.",
+        org_color: "#004687"
+      }
+    ];
+
+    // ===== ORG ABBREVIATION MAP =====
+    const ORG_ABBREV = {
+      "Boston Red Sox": "BOS",
+      "Atlanta Braves": "ATL",
+      "Los Angeles Dodgers": "LAD",
+      "Detroit Tigers": "DET",
+      "Washington Nationals": "WSH",
+      "Milwaukee Brewers": "MIL",
+      "Kansas City Royals": "KC"
+    };
+
+    // ===== FILTER CONFIG =====
+    const FILTERS = [
+      { key: "all", label: "All" },
+      { key: "aaa", label: "AAA" },
+      { key: "aa", label: "AA" },
+      { key: "pitchers", label: "Pitchers" },
+      { key: "hitters", label: "Hitters" }
+    ];
+
+    let activeFilter = "all";
+
+    // ===== HELPER FUNCTIONS =====
+    function getFilteredPlayers(filter) {
+      switch (filter) {
+        case "aaa": return PLAYERS.filter(p => p.level === "AAA");
+        case "aa": return PLAYERS.filter(p => p.level === "AA");
+        case "pitchers": return PLAYERS.filter(p => p.type === "pitcher");
+        case "hitters": return PLAYERS.filter(p => p.type === "position");
+        default: return PLAYERS;
+      }
+    }
+
+    function getFilterCount(filter) {
+      return getFilteredPlayers(filter).length;
+    }
+
+    function getLevelBadgeClass(player) {
+      if (player.status.toLowerCase().includes('injured')) return 'injured';
+      if (player.level === 'AAA') return 'aaa';
+      if (player.level === 'AA') return 'aa';
+      if (player.level === 'MLB') return 'mlb';
+      return 'other';
+    }
+
+    function getLevelBadgeText(player) {
+      if (player.status.toLowerCase().includes('injured')) return 'Injured';
+      return player.level;
+    }
+
+    function getOrgAbbrev(org) {
+      return ORG_ABBREV[org] || org;
+    }
+
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('');
+    }
+
+    // ===== RENDER FUNCTIONS =====
+    function renderHeroStats() {
+      const totalPlayers = PLAYERS.length;
+      const orgs = new Set(PLAYERS.map(p => p.org)).size;
+      const pitchers = PLAYERS.filter(p => p.type === 'pitcher').length;
+      const position = PLAYERS.filter(p => p.type === 'position').length;
+
+      document.getElementById('heroStats').innerHTML = `
+        <div class="hero-stat">
+          <div class="hero-stat-value">${totalPlayers}</div>
+          <div class="hero-stat-label">Active Pros</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">${orgs}</div>
+          <div class="hero-stat-label">Organizations</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">${pitchers}</div>
+          <div class="hero-stat-label">Pitchers</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">${position}</div>
+          <div class="hero-stat-label">Position Players</div>
+        </div>
+      `;
+    }
+
+    function renderFilters() {
+      const bar = document.getElementById('filterBar');
+      const label = bar.querySelector('.filter-label');
+      // Remove old pills
+      bar.querySelectorAll('.filter-pill').forEach(el => el.remove());
+
+      FILTERS.forEach(f => {
+        const count = getFilterCount(f.key);
+        const btn = document.createElement('button');
+        btn.className = `filter-pill${f.key === activeFilter ? ' active' : ''}`;
+        btn.setAttribute('data-filter', f.key);
+        btn.innerHTML = `${f.label} <span class="count">${count}</span>`;
+        btn.addEventListener('click', () => setFilter(f.key));
+        bar.appendChild(btn);
+      });
+    }
+
+    function renderStatsRow(player) {
+      if (player.type === 'pitcher') {
+        const s = player.career_stats;
+        return `
+          <div class="stats-row">
+            <div class="stat-item"><div class="stat-value">${s.W}-${s.L}</div><div class="stat-label">W-L</div></div>
+            <div class="stat-item"><div class="stat-value">${s.ERA}</div><div class="stat-label">ERA</div></div>
+            <div class="stat-item"><div class="stat-value">${s.G}</div><div class="stat-label">G</div></div>
+            <div class="stat-item"><div class="stat-value">${s.SV}</div><div class="stat-label">SV</div></div>
+            <div class="stat-item"><div class="stat-value">${s.IP}</div><div class="stat-label">IP</div></div>
+            <div class="stat-item"><div class="stat-value">${s.SO}</div><div class="stat-label">SO</div></div>
+            <div class="stat-item"><div class="stat-value">${s.WHIP}</div><div class="stat-label">WHIP</div></div>
+          </div>
+        `;
+      } else {
+        const s = player.career_stats;
+        return `
+          <div class="stats-row">
+            <div class="stat-item"><div class="stat-value">${s.AB}</div><div class="stat-label">AB</div></div>
+            <div class="stat-item"><div class="stat-value">${s.AVG}</div><div class="stat-label">AVG</div></div>
+            <div class="stat-item"><div class="stat-value">${s.HR}</div><div class="stat-label">HR</div></div>
+            <div class="stat-item"><div class="stat-value">${s.RBI}</div><div class="stat-label">RBI</div></div>
+            <div class="stat-item"><div class="stat-value">${s.SB}</div><div class="stat-label">SB</div></div>
+            <div class="stat-item"><div class="stat-value">${s.OPS}</div><div class="stat-label">OPS</div></div>
+          </div>
+        `;
+      }
+    }
+
+    function renderPlayerCard(player, index) {
+      const badgeClass = getLevelBadgeClass(player);
+      const badgeText = getLevelBadgeText(player);
+      const orgAbbrev = getOrgAbbrev(player.org);
+      const initials = getInitials(player.name);
+      const numberDisplay = player.number ? `<span class="card-player-number">#${player.number}</span>` : '';
+      const debutDisplay = player.debut ? `<div class="bio-row"><span class="bio-label">MLB Debut</span><span class="bio-value">${player.debut}</span></div>` : '';
+      const awardDisplay = player.award ? `<div class="card-award"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1l1.76 3.57L13 5.25l-2.93 2.85.69 4.04L7 10.25l-3.76 1.89.69-4.04L1 5.25l4.24-.68L7 1z" fill="currentColor"/></svg>${player.award}</div>` : '';
+
+      return `
+        <article class="player-card" style="animation-delay: ${index * 0.06}s">
+          <div class="card-header" style="background: linear-gradient(135deg, ${player.org_color} 0%, ${adjustColor(player.org_color, -30)} 100%);">
+            <div class="level-badge ${badgeClass}">
+              <span class="level-badge-dot"></span>
+              ${badgeText}
+            </div>
+            <div class="card-headshot">
+              <img src="${player.headshot_url}" alt="${player.name} headshot" loading="lazy"
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="headshot-fallback" style="display:none;">${initials}</div>
+            </div>
+            <div class="card-header-info">
+              <div class="card-player-name">${player.name} ${numberDisplay}</div>
+              <div class="card-player-meta">
+                <span>${player.position}</span>
+                <span>${player.bats_throws}</span>
+                <span>${player.height}, ${player.weight} lbs</span>
+                <span>Age ${player.age}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="card-team">
+              <div>
+                <div class="card-team-name">${player.current_team}</div>
+                <div class="card-team-org">${player.org} (${orgAbbrev})</div>
+              </div>
+            </div>
+
+            <div class="card-stats">
+              <div class="card-stats-title">Career Stats</div>
+              ${renderStatsRow(player)}
+              ${awardDisplay}
+            </div>
+
+            <div class="card-bio">
+              <div class="bio-row"><span class="bio-label">Born</span><span class="bio-value">${player.born} — ${player.birthplace}</span></div>
+              <div class="bio-row"><span class="bio-label">Draft</span><span class="bio-value">${player.draft}</span></div>
+              <div class="bio-row"><span class="bio-label">College</span><span class="bio-value">${player.college}</span></div>
+              ${debutDisplay}
+            </div>
+
+            <div class="card-transaction">
+              <div class="card-transaction-title">Latest Update</div>
+              <div class="card-transaction-text">${player.transactions}</div>
+            </div>
+
+            <div class="card-footer">
+              <a href="${player.mlb_url}" class="card-profile-link" target="_blank" rel="noopener noreferrer">
+                Full Profile
+                <svg viewBox="0 0 14 14" fill="none"><path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderPlayers() {
+      const grid = document.getElementById('playersGrid');
+      const filtered = getFilteredPlayers(activeFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="no-results">
+            <svg class="no-results-icon" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2"/>
+              <path d="M22 22C25 28 25 36 22 42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M42 22C39 28 39 36 42 42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <h3>No players found</h3>
+            <p>Try a different filter to see players.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((p, i) => renderPlayerCard(p, i)).join('');
+    }
+
+    function setFilter(key) {
+      activeFilter = key;
+      renderFilters();
+      renderPlayers();
+    }
+
+    // Darken a hex color
+    function adjustColor(hex, amount) {
+      hex = hex.replace('#', '');
+      const r = Math.max(0, Math.min(255, parseInt(hex.substring(0, 2), 16) + amount));
+      const g = Math.max(0, Math.min(255, parseInt(hex.substring(2, 4), 16) + amount));
+      const b = Math.max(0, Math.min(255, parseInt(hex.substring(4, 6), 16) + amount));
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    }
+
+    // ===== MOBILE MENU =====
+    function toggleMobileMenu() {
+      const nav = document.getElementById('mobileNav');
+      const btn = document.querySelector('.mobile-menu-btn');
+      const isOpen = nav.classList.toggle('active');
+      btn.innerHTML = isOpen
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+    }
+
+    function closeMobileMenu() {
+      document.getElementById('mobileNav').classList.remove('active');
+      const btn = document.querySelector('.mobile-menu-btn');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHeroStats();
+      renderFilters();
+      renderPlayers();
+    });
+  </script>
+</body>
+</html>
