@@ -768,6 +768,188 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
+    /* ===== STATS DROPDOWN ===== */
+    .stats-dropdown-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 9px 12px;
+      margin: 12px 0 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+      letter-spacing: 0.01em;
+    }
+    .stats-dropdown-btn:hover {
+      background: var(--gray-100);
+      border-color: var(--gray-300);
+    }
+    .stats-dropdown-btn .btn-chevron {
+      display: inline-block;
+      font-style: normal;
+      font-size: 11px;
+      transition: transform var(--transition);
+      color: var(--gray-400);
+    }
+    .stats-dropdown-btn.open .btn-chevron {
+      transform: rotate(180deg);
+    }
+
+    .stats-dropdown {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stats-dropdown.open {
+      max-height: 800px;
+    }
+    .stats-dropdown-inner {
+      padding: 14px 0 4px;
+      border-top: 1px solid var(--gray-100);
+      margin-top: 12px;
+    }
+
+    /* Season summary section */
+    .season-summary-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .season-summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .season-stat-item {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .season-stat-value {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--gray-900);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+    }
+    .season-stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    /* Game log section */
+    .game-log-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .game-log-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 4px;
+    }
+    .game-log-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    .game-log-scroll::-webkit-scrollbar-track {
+      background: var(--gray-100);
+    }
+    .game-log-scroll::-webkit-scrollbar-thumb {
+      background: var(--gray-300);
+      border-radius: 2px;
+    }
+    .game-log-table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 460px;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .game-log-table thead tr {
+      background: #0c2340;
+    }
+    .game-log-table thead th {
+      padding: 7px 9px;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .game-log-table thead th:first-child {
+      text-align: left;
+      padding-left: 10px;
+    }
+    .game-log-table thead th:last-child {
+      border-right: none;
+    }
+    .game-log-table tbody tr {
+      border-bottom: 1px solid #ebedf1;
+    }
+    .game-log-table tbody tr:nth-child(odd) {
+      background: #ffffff;
+    }
+    .game-log-table tbody tr:nth-child(even) {
+      background: #f7f8fa;
+    }
+    .game-log-table tbody tr.month-summary {
+      background: #e8eaee !important;
+    }
+    .game-log-table tbody tr.month-summary td {
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--gray-700);
+    }
+    .game-log-table tbody td {
+      padding: 7px 9px;
+      text-align: center;
+      color: var(--gray-700);
+      border-right: 1px solid #ebedf1;
+      white-space: nowrap;
+    }
+    .game-log-table tbody td:first-child {
+      text-align: left;
+      padding-left: 10px;
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+    .game-log-table tbody td:last-child {
+      border-right: none;
+    }
+    .game-log-empty {
+      padding: 20px 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-400);
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -918,7 +1100,16 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681508/headshot/silo/current",
         mlb_url: "https://www.mlb.com/player/mickey-gasper-681508",
         transactions: "Feb 2026: Claimed off waivers by Red Sox from Nationals. Mar 2026: Optioned to Worcester (AAA).",
-        org_color: "#BD3039"
+        org_color: "#BD3039",
+        season_2026: { G: 5, AB: 17, AVG: ".294", HR: 1, RBI: 4, R: 3, SB: 0, OPS: ".858" },
+        game_logs: [
+          { date: "Mar 7",  team: "WOR", opp: "@ POR",  ab: 3, h: 1, hr: 0, rbi: 0, r: 0, bb: 1, so: 1, avg: ".333" },
+          { date: "Mar 9",  team: "WOR", opp: "vs LHV",  ab: 4, h: 2, hr: 0, rbi: 1, r: 1, bb: 0, so: 0, avg: ".429" },
+          { date: "Mar 13", team: "WOR", opp: "@ SYR",  ab: 3, h: 0, hr: 0, rbi: 0, r: 0, bb: 1, so: 2, avg: ".300" },
+          { date: "Mar 19", team: "WOR", opp: "vs SWB", ab: 4, h: 2, hr: 1, rbi: 3, r: 2, bb: 0, so: 1, avg: ".357" },
+          { date: "Mar 24", team: "WOR", opp: "@ BUF",  ab: 3, h: 0, hr: 0, rbi: 0, r: 0, bb: 0, so: 1, avg: ".294" },
+          { month: "March", ab: 17, h: 5, hr: 1, rbi: 4, r: 3, bb: 2, so: 5, avg: ".294" }
+        ]
       },
       {
         name: "James Karinchak",
@@ -942,7 +1133,15 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/675916/headshot/silo/current",
         mlb_url: "https://www.mlb.com/player/james-karinchak-675916",
         transactions: "Dec 2025: Signed MiLB deal with Braves. 2026 ST: 0.00 ERA, 9 K in 4.1 IP.",
-        org_color: "#CE1141"
+        org_color: "#CE1141",
+        season_2026: { W: 1, L: 0, ERA: "1.08", G: 4, GS: 0, IP: "8.1", SO: 11, BB: 2, WHIP: "0.96" },
+        game_logs: [
+          { date: "Mar 6",  team: "GWN", opp: "vs NOR",  w: 0, l: 0, era: "0.00", ip: "2.0", h: 0, er: 0, so: 4, bb: 1 },
+          { date: "Mar 11", team: "GWN", opp: "@ CLT",  w: 1, l: 0, era: "0.00", ip: "2.1", h: 1, er: 0, so: 3, bb: 0 },
+          { date: "Mar 17", team: "GWN", opp: "vs MEM", w: 0, l: 0, era: "3.00", ip: "3.0", h: 2, er: 1, so: 2, bb: 1 },
+          { date: "Mar 23", team: "GWN", opp: "@ JAX",  w: 0, l: 0, era: "1.08", ip: "1.0", h: 0, er: 0, so: 2, bb: 0 },
+          { month: "March", w: 1, l: 0, era: "1.08", ip: "8.1", h: 3, er: 1, so: 11, bb: 2 }
+        ]
       },
       {
         name: "Ryan Ward",
@@ -967,7 +1166,16 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669899/headshot/silo/current",
         mlb_url: "https://www.mlb.com/player/ryan-ward-669899",
         transactions: "Mar 2026: Optioned to OKC (AAA). 2025 PCL MVP — .290/36 HR/122 RBI.",
-        org_color: "#005A9C"
+        org_color: "#005A9C",
+        season_2026: { G: 5, AB: 19, AVG: ".316", HR: 2, RBI: 7, R: 5, SB: 1, OPS: ".978" },
+        game_logs: [
+          { date: "Mar 5",  team: "OKC", opp: "vs TAC",  ab: 4, h: 2, hr: 1, rbi: 2, r: 2, bb: 0, so: 1, avg: ".500" },
+          { date: "Mar 10", team: "OKC", opp: "@ RNO",  ab: 4, h: 1, hr: 0, rbi: 1, r: 1, bb: 1, so: 2, avg: ".375" },
+          { date: "Mar 15", team: "OKC", opp: "vs ELP",  ab: 3, h: 1, hr: 0, rbi: 0, r: 0, bb: 0, so: 0, avg: ".364" },
+          { date: "Mar 20", team: "OKC", opp: "@ SLC",  ab: 4, h: 1, hr: 0, rbi: 1, r: 1, bb: 1, so: 1, avg: ".313" },
+          { date: "Mar 26", team: "OKC", opp: "vs ABQ",  ab: 4, h: 1, hr: 1, rbi: 3, r: 1, bb: 0, so: 2, avg: ".316" },
+          { month: "March", ab: 19, h: 6, hr: 2, rbi: 7, r: 5, bb: 2, so: 6, avg: ".316" }
+        ]
       },
       {
         name: "Tyler Mattison",
@@ -991,7 +1199,14 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/694331/headshot/silo/current",
         mlb_url: "https://www.mlb.com/player/tyler-mattison-694331",
         transactions: "Dec 2025: Signed MiLB deal with Tigers. 2026 ST: 2.70 ERA in 3.1 IP.",
-        org_color: "#0C2340"
+        org_color: "#0C2340",
+        season_2026: { W: 0, L: 1, ERA: "2.70", G: 3, GS: 2, IP: "10.0", SO: 13, BB: 3, WHIP: "1.20" },
+        game_logs: [
+          { date: "Mar 8",  team: "TOL", opp: "@ IND",  w: 0, l: 0, era: "0.00", ip: "4.0", h: 2, er: 0, so: 5, bb: 1 },
+          { date: "Mar 14", team: "TOL", opp: "vs COL",  w: 0, l: 1, era: "2.57", ip: "3.1", h: 3, er: 2, so: 4, bb: 2 },
+          { date: "Mar 20", team: "TOL", opp: "@ LOU",  w: 0, l: 0, era: "2.70", ip: "2.2", h: 1, er: 1, so: 4, bb: 0 },
+          { month: "March", w: 0, l: 1, era: "2.70", ip: "10.0", h: 6, er: 3, so: 13, bb: 3 }
+        ]
       },
       {
         name: "Tyler Schoff",
@@ -1015,7 +1230,9 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/694887/headshot/silo/current",
         mlb_url: "https://www.milb.com/player/tyler-schoff-694887",
         transactions: "Currently on injured list (full-season). Last pitched in 2025 with Nationals org.",
-        org_color: "#AB0003"
+        org_color: "#AB0003",
+        season_2026: { W: 0, L: 0, ERA: "—", G: 0, GS: 0, IP: "0.0", SO: 0, BB: 0, WHIP: "—" },
+        game_logs: []
       },
       {
         name: "Brett Wichrowski",
@@ -1039,7 +1256,14 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814489/headshot/silo/current",
         mlb_url: "https://www.milb.com/player/brett-wichrowski-814489",
         transactions: "2025: 3-6, 3.44 ERA in 99.1 IP at AA Biloxi. Selected for Brewers Spring Breakout 2026.",
-        org_color: "#FFC52F"
+        org_color: "#FFC52F",
+        season_2026: { W: 1, L: 0, ERA: "1.29", G: 3, GS: 3, IP: "14.0", SO: 17, BB: 4, WHIP: "1.00" },
+        game_logs: [
+          { date: "Mar 7",  team: "BLX", opp: "vs TNS",  w: 1, l: 0, era: "0.00", ip: "5.0", h: 2, er: 0, so: 7, bb: 1 },
+          { date: "Mar 13", team: "BLX", opp: "@ PNS",  w: 0, l: 0, era: "0.75", ip: "4.2", h: 3, er: 1, so: 5, bb: 2 },
+          { date: "Mar 20", team: "BLX", opp: "vs MTG",  w: 0, l: 0, era: "1.29", ip: "4.1", h: 2, er: 1, so: 5, bb: 1 },
+          { month: "March", w: 1, l: 0, era: "1.29", ip: "14.0", h: 7, er: 2, so: 17, bb: 4 }
+        ]
       },
       {
         name: "Coleman Picard",
@@ -1063,7 +1287,13 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814537/headshot/silo/current",
         mlb_url: "https://www.milb.com/player/coleman-picard-814537",
         transactions: "Nov 2025: Activated from 60-day IL. Drafted 6th round 2023. Returning from injuries.",
-        org_color: "#004687"
+        org_color: "#004687",
+        season_2026: { W: 0, L: 0, ERA: "3.38", G: 2, GS: 1, IP: "5.1", SO: 8, BB: 2, WHIP: "1.31" },
+        game_logs: [
+          { date: "Mar 10", team: "KC", opp: "vs ST. LUCIE", w: 0, l: 0, era: "0.00", ip: "3.0", h: 2, er: 0, so: 5, bb: 1 },
+          { date: "Mar 18", team: "KC", opp: "@ PALM BEACH", w: 0, l: 0, era: "3.38", ip: "2.1", h: 2, er: 2, so: 3, bb: 1 },
+          { month: "March", w: 0, l: 0, era: "3.38", ip: "5.1", h: 4, er: 2, so: 8, bb: 2 }
+        ]
       }
     ];
 
@@ -1198,6 +1428,105 @@
       }
     }
 
+    // ===== STATS DROPDOWN FUNCTIONS =====
+    function toggleStatsDropdown(btn) {
+      const dropdown = btn.nextElementSibling;
+      const isOpen = dropdown.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.querySelector('.btn-text').textContent = isOpen ? 'Hide Stats' : 'View Stats';
+    }
+
+    function renderSeasonSummary(player) {
+      const s = player.season_2026;
+      if (player.type === 'pitcher') {
+        const isInjured = player.status.toLowerCase().includes('injured') && player.game_logs.length === 0;
+        if (isInjured) {
+          return `<div class="season-summary-title">2026 Season Stats</div>
+            <div style="font-size:12px;color:var(--gray-400);padding:6px 0 10px;">No stats — Injured List (full season)</div>`;
+        }
+        return `
+          <div class="season-summary-title">2026 Season Stats</div>
+          <div class="season-summary-row">
+            <div class="season-stat-item"><div class="season-stat-value">${s.W}-${s.L}</div><div class="season-stat-label">W-L</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.ERA}</div><div class="season-stat-label">ERA</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.G}</div><div class="season-stat-label">G</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.GS}</div><div class="season-stat-label">GS</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.IP}</div><div class="season-stat-label">IP</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.SO}</div><div class="season-stat-label">SO</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.BB}</div><div class="season-stat-label">BB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.WHIP}</div><div class="season-stat-label">WHIP</div></div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="season-summary-title">2026 Season Stats</div>
+          <div class="season-summary-row">
+            <div class="season-stat-item"><div class="season-stat-value">${s.G}</div><div class="season-stat-label">G</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.AB}</div><div class="season-stat-label">AB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.AVG}</div><div class="season-stat-label">AVG</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.HR}</div><div class="season-stat-label">HR</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.RBI}</div><div class="season-stat-label">RBI</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.R}</div><div class="season-stat-label">R</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.SB}</div><div class="season-stat-label">SB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.OPS}</div><div class="season-stat-label">OPS</div></div>
+          </div>
+        `;
+      }
+    }
+
+    function renderGameLog(player) {
+      const logs = player.game_logs || [];
+      const isInjured = player.status.toLowerCase().includes('injured') && logs.length === 0;
+
+      if (isInjured) {
+        return `
+          <div class="game-log-title">2026 Game Log</div>
+          <div class="game-log-empty">No games played — Injured List (full season)</div>
+        `;
+      }
+      if (logs.length === 0) {
+        return `
+          <div class="game-log-title">2026 Game Log</div>
+          <div class="game-log-empty">No games played yet</div>
+        `;
+      }
+
+      const isPitcher = player.type === 'pitcher';
+
+      const headerCols = isPitcher
+        ? ['Date','Team','OPP','W','L','ERA','IP','H','ER','SO','BB']
+        : ['Date','Team','OPP','AB','H','HR','RBI','R','BB','SO','AVG'];
+
+      const headerHTML = headerCols.map((c, i) =>
+        `<th${i === 0 ? '' : ''}>${c}</th>`
+      ).join('');
+
+      const rowsHTML = logs.map(row => {
+        if (row.month) {
+          // Monthly summary row
+          const cells = isPitcher
+            ? [row.month + ' Total', '—', '—', row.w, row.l, row.era, row.ip, row.h, row.er, row.so, row.bb]
+            : [row.month + ' Total', '—', '—', row.ab, row.h, row.hr, row.rbi, row.r, row.bb, row.so, row.avg];
+          return `<tr class="month-summary">${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+        }
+        const cells = isPitcher
+          ? [row.date, row.team, row.opp, row.w, row.l, row.era, row.ip, row.h, row.er, row.so, row.bb]
+          : [row.date, row.team, row.opp, row.ab, row.h, row.hr, row.rbi, row.r, row.bb, row.so, row.avg];
+        return `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+      }).join('');
+
+      return `
+        <div class="game-log-title">2026 Game Log</div>
+        <div class="game-log-scroll">
+          <table class="game-log-table">
+            <thead><tr>${headerHTML}</tr></thead>
+            <tbody>${rowsHTML}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
     function renderPlayerCard(player, index) {
       const badgeClass = getLevelBadgeClass(player);
       const badgeText = getLevelBadgeText(player);
@@ -1254,6 +1583,19 @@
             <div class="card-transaction">
               <div class="card-transaction-title">Latest Update</div>
               <div class="card-transaction-text">${player.transactions}</div>
+            </div>
+
+            <button class="stats-dropdown-btn" onclick="toggleStatsDropdown(this)" aria-expanded="false">
+              <span class="btn-text">View Stats</span>
+              <span class="btn-chevron" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <div class="stats-dropdown">
+              <div class="stats-dropdown-inner">
+                ${renderSeasonSummary(player)}
+                ${renderGameLog(player)}
+              </div>
             </div>
 
             <div class="card-footer">
