@@ -410,6 +410,10 @@
     @keyframes cardIn {
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes dot-pulse {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
 
     /* Card header */
     .card-header {
@@ -1101,15 +1105,8 @@
         mlb_url: "https://www.mlb.com/player/mickey-gasper-681508",
         transactions: "Feb 2026: Claimed off waivers by Red Sox from Nationals. Mar 2026: Optioned to Worcester (AAA).",
         org_color: "#BD3039",
-        season_2026: { G: 5, AB: 17, AVG: ".294", HR: 1, RBI: 4, R: 3, SB: 0, OPS: ".858" },
-        game_logs: [
-          { date: "Mar 7",  team: "WOR", opp: "@ POR",  ab: 3, h: 1, hr: 0, rbi: 0, r: 0, bb: 1, so: 1, avg: ".333" },
-          { date: "Mar 9",  team: "WOR", opp: "vs LHV",  ab: 4, h: 2, hr: 0, rbi: 1, r: 1, bb: 0, so: 0, avg: ".429" },
-          { date: "Mar 13", team: "WOR", opp: "@ SYR",  ab: 3, h: 0, hr: 0, rbi: 0, r: 0, bb: 1, so: 2, avg: ".300" },
-          { date: "Mar 19", team: "WOR", opp: "vs SWB", ab: 4, h: 2, hr: 1, rbi: 3, r: 2, bb: 0, so: 1, avg: ".357" },
-          { date: "Mar 24", team: "WOR", opp: "@ BUF",  ab: 3, h: 0, hr: 0, rbi: 0, r: 0, bb: 0, so: 1, avg: ".294" },
-          { month: "March", ab: 17, h: 5, hr: 1, rbi: 4, r: 3, bb: 2, so: 5, avg: ".294" }
-        ]
+        mlbId: 681508,
+        statGroup: "hitting"
       },
       {
         name: "James Karinchak",
@@ -1134,14 +1131,8 @@
         mlb_url: "https://www.mlb.com/player/james-karinchak-675916",
         transactions: "Dec 2025: Signed MiLB deal with Braves. 2026 ST: 0.00 ERA, 9 K in 4.1 IP.",
         org_color: "#CE1141",
-        season_2026: { W: 1, L: 0, ERA: "1.08", G: 4, GS: 0, IP: "8.1", SO: 11, BB: 2, WHIP: "0.96" },
-        game_logs: [
-          { date: "Mar 6",  team: "GWN", opp: "vs NOR",  w: 0, l: 0, era: "0.00", ip: "2.0", h: 0, er: 0, so: 4, bb: 1 },
-          { date: "Mar 11", team: "GWN", opp: "@ CLT",  w: 1, l: 0, era: "0.00", ip: "2.1", h: 1, er: 0, so: 3, bb: 0 },
-          { date: "Mar 17", team: "GWN", opp: "vs MEM", w: 0, l: 0, era: "3.00", ip: "3.0", h: 2, er: 1, so: 2, bb: 1 },
-          { date: "Mar 23", team: "GWN", opp: "@ JAX",  w: 0, l: 0, era: "1.08", ip: "1.0", h: 0, er: 0, so: 2, bb: 0 },
-          { month: "March", w: 1, l: 0, era: "1.08", ip: "8.1", h: 3, er: 1, so: 11, bb: 2 }
-        ]
+        mlbId: 675916,
+        statGroup: "pitching"
       },
       {
         name: "Ryan Ward",
@@ -1167,15 +1158,8 @@
         mlb_url: "https://www.mlb.com/player/ryan-ward-669899",
         transactions: "Mar 2026: Optioned to OKC (AAA). 2025 PCL MVP — .290/36 HR/122 RBI.",
         org_color: "#005A9C",
-        season_2026: { G: 5, AB: 19, AVG: ".316", HR: 2, RBI: 7, R: 5, SB: 1, OPS: ".978" },
-        game_logs: [
-          { date: "Mar 5",  team: "OKC", opp: "vs TAC",  ab: 4, h: 2, hr: 1, rbi: 2, r: 2, bb: 0, so: 1, avg: ".500" },
-          { date: "Mar 10", team: "OKC", opp: "@ RNO",  ab: 4, h: 1, hr: 0, rbi: 1, r: 1, bb: 1, so: 2, avg: ".375" },
-          { date: "Mar 15", team: "OKC", opp: "vs ELP",  ab: 3, h: 1, hr: 0, rbi: 0, r: 0, bb: 0, so: 0, avg: ".364" },
-          { date: "Mar 20", team: "OKC", opp: "@ SLC",  ab: 4, h: 1, hr: 0, rbi: 1, r: 1, bb: 1, so: 1, avg: ".313" },
-          { date: "Mar 26", team: "OKC", opp: "vs ABQ",  ab: 4, h: 1, hr: 1, rbi: 3, r: 1, bb: 0, so: 2, avg: ".316" },
-          { month: "March", ab: 19, h: 6, hr: 2, rbi: 7, r: 5, bb: 2, so: 6, avg: ".316" }
-        ]
+        mlbId: 669899,
+        statGroup: "hitting"
       },
       {
         name: "Tyler Mattison",
@@ -1200,13 +1184,8 @@
         mlb_url: "https://www.mlb.com/player/tyler-mattison-694331",
         transactions: "Dec 2025: Signed MiLB deal with Tigers. 2026 ST: 2.70 ERA in 3.1 IP.",
         org_color: "#0C2340",
-        season_2026: { W: 0, L: 1, ERA: "2.70", G: 3, GS: 2, IP: "10.0", SO: 13, BB: 3, WHIP: "1.20" },
-        game_logs: [
-          { date: "Mar 8",  team: "TOL", opp: "@ IND",  w: 0, l: 0, era: "0.00", ip: "4.0", h: 2, er: 0, so: 5, bb: 1 },
-          { date: "Mar 14", team: "TOL", opp: "vs COL",  w: 0, l: 1, era: "2.57", ip: "3.1", h: 3, er: 2, so: 4, bb: 2 },
-          { date: "Mar 20", team: "TOL", opp: "@ LOU",  w: 0, l: 0, era: "2.70", ip: "2.2", h: 1, er: 1, so: 4, bb: 0 },
-          { month: "March", w: 0, l: 1, era: "2.70", ip: "10.0", h: 6, er: 3, so: 13, bb: 3 }
-        ]
+        mlbId: 694331,
+        statGroup: "pitching"
       },
       {
         name: "Tyler Schoff",
@@ -1231,8 +1210,8 @@
         mlb_url: "https://www.milb.com/player/tyler-schoff-694887",
         transactions: "Currently on injured list (full-season). Last pitched in 2025 with Nationals org.",
         org_color: "#AB0003",
-        season_2026: { W: 0, L: 0, ERA: "—", G: 0, GS: 0, IP: "0.0", SO: 0, BB: 0, WHIP: "—" },
-        game_logs: []
+        mlbId: 694887,
+        statGroup: "pitching"
       },
       {
         name: "Brett Wichrowski",
@@ -1257,13 +1236,8 @@
         mlb_url: "https://www.milb.com/player/brett-wichrowski-814489",
         transactions: "2025: 3-6, 3.44 ERA in 99.1 IP at AA Biloxi. Selected for Brewers Spring Breakout 2026.",
         org_color: "#FFC52F",
-        season_2026: { W: 1, L: 0, ERA: "1.29", G: 3, GS: 3, IP: "14.0", SO: 17, BB: 4, WHIP: "1.00" },
-        game_logs: [
-          { date: "Mar 7",  team: "BLX", opp: "vs TNS",  w: 1, l: 0, era: "0.00", ip: "5.0", h: 2, er: 0, so: 7, bb: 1 },
-          { date: "Mar 13", team: "BLX", opp: "@ PNS",  w: 0, l: 0, era: "0.75", ip: "4.2", h: 3, er: 1, so: 5, bb: 2 },
-          { date: "Mar 20", team: "BLX", opp: "vs MTG",  w: 0, l: 0, era: "1.29", ip: "4.1", h: 2, er: 1, so: 5, bb: 1 },
-          { month: "March", w: 1, l: 0, era: "1.29", ip: "14.0", h: 7, er: 2, so: 17, bb: 4 }
-        ]
+        mlbId: 814489,
+        statGroup: "pitching"
       },
       {
         name: "Coleman Picard",
@@ -1287,13 +1261,7 @@
         headshot_url: "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814537/headshot/silo/current",
         mlb_url: "https://www.milb.com/player/coleman-picard-814537",
         transactions: "Nov 2025: Activated from 60-day IL. Drafted 6th round 2023. Returning from injuries.",
-        org_color: "#004687",
-        season_2026: { W: 0, L: 0, ERA: "3.38", G: 2, GS: 1, IP: "5.1", SO: 8, BB: 2, WHIP: "1.31" },
-        game_logs: [
-          { date: "Mar 10", team: "KC", opp: "vs ST. LUCIE", w: 0, l: 0, era: "0.00", ip: "3.0", h: 2, er: 0, so: 5, bb: 1 },
-          { date: "Mar 18", team: "KC", opp: "@ PALM BEACH", w: 0, l: 0, era: "3.38", ip: "2.1", h: 2, er: 2, so: 3, bb: 1 },
-          { month: "March", w: 0, l: 0, era: "3.38", ip: "5.1", h: 4, er: 2, so: 8, bb: 2 }
-        ]
+        org_color: "#004687"
       }
     ];
 
@@ -1307,6 +1275,35 @@
       "Milwaukee Brewers": "MIL",
       "Kansas City Royals": "KC"
     };
+
+    // ===== MILB/MLB TEAM ABBREVIATION MAP =====
+    const TEAM_ABBREV = {
+      "Worcester Red Sox": "WOR", "Gwinnett Stripers": "GWN", "Oklahoma City Comets": "OKC",
+      "Toledo Mud Hens": "TOL", "Rochester Red Wings": "ROC", "Biloxi Shuckers": "BIL",
+      "Syracuse Mets": "SYR", "Norfolk Tides": "NOR", "Charlotte Knights": "CLT",
+      "Durham Bulls": "DUR", "Scranton/Wilkes-Barre RailRiders": "SWB",
+      "Louisville Bats": "LOU", "Indianapolis Indians": "IND", "Memphis Redbirds": "MEM",
+      "Nashville Sounds": "NAS", "Iowa Cubs": "IOW", "Jacksonville Jumbo Shrimp": "JAX",
+      "Lehigh Valley IronPigs": "LHV", "Buffalo Bisons": "BUF", "Omaha Storm Chasers": "OMA",
+      "St. Paul Saints": "STP", "Round Rock Express": "RRE", "Sugar Land Space Cowboys": "SLC",
+      "Las Vegas Aviators": "LVA", "Sacramento River Cats": "SAC", "Tacoma Rainiers": "TAC",
+      "Reno Aces": "REN", "Albuquerque Isotopes": "ABQ", "El Paso Chihuahuas": "ELP",
+      "Salt Lake Bees": "SLB", "Portland Sea Dogs": "POR", "Binghamton Rumble Ponies": "BNG",
+      "Somerset Patriots": "SOM", "Hartford Yard Goats": "HFD", "New Hampshire Fisher Cats": "NH",
+      "Reading Fightin Phils": "REA", "Akron RubberDucks": "AKR", "Erie SeaWolves": "ERI",
+      "Harrisburg Senators": "HBG", "Richmond Flying Squirrels": "RIC",
+      "Pensacola Blue Wahoos": "PNS", "Mississippi Braves": "MSB", "Montgomery Biscuits": "MGM",
+      "Chattanooga Lookouts": "CHA", "Birmingham Barons": "BIR", "Tennessee Smokies": "TNS",
+      "Rocket City Trash Pandas": "RC", "Amarillo Sod Poodles": "AMA",
+      "Corpus Christi Hooks": "CC", "Frisco RoughRiders": "FRI", "Midland RockHounds": "MID",
+      "San Antonio Missions": "SA", "Wichita Wind Surge": "WIC", "Tulsa Drillers": "TUL",
+      "Arkansas Travelers": "ARK", "Springfield Cardinals": "SGF"
+    };
+
+    function getTeamAbbrev(teamName) {
+      if (!teamName) return '???';
+      return TEAM_ABBREV[teamName] || teamName.substring(0, 3).toUpperCase();
+    }
 
     // ===== FILTER CONFIG =====
     const FILTERS = [
@@ -1428,67 +1425,196 @@
       }
     }
 
+    // ===== LIVE STATS FETCH =====
+    const SPORT_IDS = [11, 12, 13, 14, 1]; // AAA first, then AA, High-A, A, MLB
+
+    async function fetchPlayerStats(player) {
+      if (!player.mlbId) return null;
+      const { mlbId, statGroup } = player;
+      const base = 'https://statsapi.mlb.com/api/v1';
+
+      for (const sportId of SPORT_IDS) {
+        try {
+          const [seasonRes, gameLogRes] = await Promise.all([
+            fetch(`${base}/people/${mlbId}/stats?stats=season&group=${statGroup}&season=2026&sportId=${sportId}`),
+            fetch(`${base}/people/${mlbId}/stats?stats=gameLog&group=${statGroup}&season=2026&sportId=${sportId}`)
+          ]);
+
+          if (!seasonRes.ok || !gameLogRes.ok) continue;
+
+          const [seasonData, gameLogData] = await Promise.all([
+            seasonRes.json(),
+            gameLogRes.json()
+          ]);
+
+          const seasonSplits = (seasonData.stats && seasonData.stats[0] && seasonData.stats[0].splits) || [];
+          const gameLogSplits = (gameLogData.stats && gameLogData.stats[0] && gameLogData.stats[0].splits) || [];
+
+          // Use first sportId that returns any data
+          if (seasonSplits.length > 0 || gameLogSplits.length > 0) {
+            const seasonStats = seasonSplits.length > 0 ? seasonSplits[0].stat : null;
+            const gameLogs = gameLogSplits; // already sorted by date from API
+            return { seasonStats, gameLogs };
+          }
+        } catch (err) {
+          // Network error on this sportId, try next
+          continue;
+        }
+      }
+
+      return { seasonStats: null, gameLogs: [] };
+    }
+
+    // Stats cache keyed by mlbId
+    const statsCache = new Map();
+
     // ===== STATS DROPDOWN FUNCTIONS =====
-    function toggleStatsDropdown(btn) {
+    async function toggleStatsDropdown(btn) {
       const dropdown = btn.nextElementSibling;
       const isOpen = dropdown.classList.toggle('open');
       btn.classList.toggle('open', isOpen);
       btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       btn.querySelector('.btn-text').textContent = isOpen ? 'Hide Stats' : 'View Stats';
+
+      if (!isOpen) return; // closing — nothing to do
+
+      // Find the player by name stored in data attribute on the card
+      const card = btn.closest('.player-card');
+      const playerName = card ? card.dataset.playerName : null;
+      const player = playerName ? PLAYERS.find(p => p.name === playerName) : null;
+      if (!player) return;
+
+      const inner = dropdown.querySelector('.stats-dropdown-inner');
+
+      // Coleman Picard — no mlbId
+      if (!player.mlbId) {
+        inner.innerHTML = `
+          <div style="font-size:12px;color:var(--gray-400);padding:10px 0;">
+            Stats not available — player not yet in MLB Stats system.
+          </div>
+        `;
+        return;
+      }
+
+      // Return cached result without re-fetching
+      if (statsCache.has(player.mlbId)) {
+        const cached = statsCache.get(player.mlbId);
+        inner.innerHTML = renderSeasonSummary(player, cached.seasonStats)
+          + renderGameLog(player, cached.gameLogs)
+          + renderLastUpdated(cached.fetchedAt);
+        return;
+      }
+
+      // Show loading state
+      inner.innerHTML = `
+        <div style="font-size:12px;color:var(--gray-400);padding:10px 0;display:flex;align-items:center;gap:8px;">
+          <span class="loading-dots">Loading stats</span>
+          <span style="display:inline-flex;gap:3px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--gray-400);animation:dot-pulse 1.2s ease-in-out infinite;"></span>
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--gray-400);animation:dot-pulse 1.2s ease-in-out 0.4s infinite;"></span>
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--gray-400);animation:dot-pulse 1.2s ease-in-out 0.8s infinite;"></span>
+          </span>
+        </div>
+      `;
+
+      try {
+        const result = await fetchPlayerStats(player);
+        const fetchedAt = new Date();
+        const seasonStats = result ? result.seasonStats : null;
+        const gameLogs = result ? result.gameLogs : [];
+
+        statsCache.set(player.mlbId, { seasonStats, gameLogs, fetchedAt });
+
+        inner.innerHTML = renderSeasonSummary(player, seasonStats)
+          + renderGameLog(player, gameLogs)
+          + renderLastUpdated(fetchedAt);
+      } catch (err) {
+        inner.innerHTML = `
+          <div style="font-size:12px;color:var(--gray-400);padding:10px 0;">
+            Unable to load stats. Try again later.
+          </div>
+        `;
+      }
     }
 
-    function renderSeasonSummary(player) {
-      const s = player.season_2026;
+    function renderLastUpdated(date) {
+      const formatted = date.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+      });
+      return `<div style="font-size:11px;color:var(--gray-400);padding-top:10px;text-align:right;">Updated: ${formatted}</div>`;
+    }
+
+    function renderSeasonSummary(player, seasonStats) {
+      if (!seasonStats) {
+        const noDataMsg = player.type === 'pitcher'
+          ? 'No 2026 stats yet'
+          : 'No 2026 stats yet';
+        return `<div class="season-summary-title">2026 Season Stats</div>
+          <div style="font-size:12px;color:var(--gray-400);padding:6px 0 10px;">${noDataMsg}</div>`;
+      }
+      const s = seasonStats;
       if (player.type === 'pitcher') {
-        const isInjured = player.status.toLowerCase().includes('injured') && player.game_logs.length === 0;
-        if (isInjured) {
-          return `<div class="season-summary-title">2026 Season Stats</div>
-            <div style="font-size:12px;color:var(--gray-400);padding:6px 0 10px;">No stats — Injured List (full season)</div>`;
-        }
+        const wins = s.wins != null ? s.wins : 0;
+        const losses = s.losses != null ? s.losses : 0;
         return `
           <div class="season-summary-title">2026 Season Stats</div>
           <div class="season-summary-row">
-            <div class="season-stat-item"><div class="season-stat-value">${s.W}-${s.L}</div><div class="season-stat-label">W-L</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.ERA}</div><div class="season-stat-label">ERA</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.G}</div><div class="season-stat-label">G</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.GS}</div><div class="season-stat-label">GS</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.IP}</div><div class="season-stat-label">IP</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.SO}</div><div class="season-stat-label">SO</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.BB}</div><div class="season-stat-label">BB</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.WHIP}</div><div class="season-stat-label">WHIP</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${wins}-${losses}</div><div class="season-stat-label">W-L</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.era || '—'}</div><div class="season-stat-label">ERA</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.gamesPlayed || 0}</div><div class="season-stat-label">G</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.gamesStarted || 0}</div><div class="season-stat-label">GS</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.inningsPitched || '0.0'}</div><div class="season-stat-label">IP</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.strikeOuts || 0}</div><div class="season-stat-label">SO</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.baseOnBalls || 0}</div><div class="season-stat-label">BB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.whip || '—'}</div><div class="season-stat-label">WHIP</div></div>
           </div>
         `;
       } else {
         return `
           <div class="season-summary-title">2026 Season Stats</div>
           <div class="season-summary-row">
-            <div class="season-stat-item"><div class="season-stat-value">${s.G}</div><div class="season-stat-label">G</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.AB}</div><div class="season-stat-label">AB</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.AVG}</div><div class="season-stat-label">AVG</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.HR}</div><div class="season-stat-label">HR</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.RBI}</div><div class="season-stat-label">RBI</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.R}</div><div class="season-stat-label">R</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.SB}</div><div class="season-stat-label">SB</div></div>
-            <div class="season-stat-item"><div class="season-stat-value">${s.OPS}</div><div class="season-stat-label">OPS</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.gamesPlayed || 0}</div><div class="season-stat-label">G</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.atBats || 0}</div><div class="season-stat-label">AB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.avg || '.000'}</div><div class="season-stat-label">AVG</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.homeRuns || 0}</div><div class="season-stat-label">HR</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.rbi || 0}</div><div class="season-stat-label">RBI</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.runs || 0}</div><div class="season-stat-label">R</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.stolenBases || 0}</div><div class="season-stat-label">SB</div></div>
+            <div class="season-stat-item"><div class="season-stat-value">${s.ops || '.000'}</div><div class="season-stat-label">OPS</div></div>
           </div>
         `;
       }
     }
 
-    function renderGameLog(player) {
-      const logs = player.game_logs || [];
-      const isInjured = player.status.toLowerCase().includes('injured') && logs.length === 0;
+    function formatGameDate(dateStr) {
+      // dateStr format: "2026-03-27"
+      if (!dateStr) return '';
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const parts = dateStr.split('-');
+      if (parts.length < 3) return dateStr;
+      const month = months[parseInt(parts[1], 10) - 1] || parts[1];
+      const day = parseInt(parts[2], 10);
+      return `${month} ${day}`;
+    }
 
-      if (isInjured) {
-        return `
-          <div class="game-log-title">2026 Game Log</div>
-          <div class="game-log-empty">No games played — Injured List (full season)</div>
-        `;
-      }
+    function getMonthName(dateStr) {
+      const months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+      const parts = dateStr.split('-');
+      return months[parseInt(parts[1], 10) - 1] || parts[1];
+    }
+
+    function renderGameLog(player, gameLogs) {
+      const logs = gameLogs || [];
+
       if (logs.length === 0) {
+        const isInjured = player.status.toLowerCase().includes('injured');
+        const emptyMsg = isInjured
+          ? 'No games played — Injured List'
+          : "No games played yet — season hasn't started";
         return `
           <div class="game-log-title">2026 Game Log</div>
-          <div class="game-log-empty">No games played yet</div>
+          <div class="game-log-empty">${emptyMsg}</div>
         `;
       }
 
@@ -1498,23 +1624,84 @@
         ? ['Date','Team','OPP','W','L','ERA','IP','H','ER','SO','BB']
         : ['Date','Team','OPP','AB','H','HR','RBI','R','BB','SO','AVG'];
 
-      const headerHTML = headerCols.map((c, i) =>
-        `<th${i === 0 ? '' : ''}>${c}</th>`
-      ).join('');
+      const headerHTML = headerCols.map(c => `<th>${c}</th>`).join('');
 
-      const rowsHTML = logs.map(row => {
-        if (row.month) {
-          // Monthly summary row
-          const cells = isPitcher
-            ? [row.month + ' Total', '—', '—', row.w, row.l, row.era, row.ip, row.h, row.er, row.so, row.bb]
-            : [row.month + ' Total', '—', '—', row.ab, row.h, row.hr, row.rbi, row.r, row.bb, row.so, row.avg];
-          return `<tr class="month-summary">${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+      // Group games by month and build rows with monthly summaries
+      const monthGroups = {};
+      const monthOrder = [];
+      logs.forEach(split => {
+        const monthName = getMonthName(split.date);
+        if (!monthGroups[monthName]) {
+          monthGroups[monthName] = [];
+          monthOrder.push(monthName);
         }
-        const cells = isPitcher
-          ? [row.date, row.team, row.opp, row.w, row.l, row.era, row.ip, row.h, row.er, row.so, row.bb]
-          : [row.date, row.team, row.opp, row.ab, row.h, row.hr, row.rbi, row.r, row.bb, row.so, row.avg];
-        return `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
-      }).join('');
+        monthGroups[monthName].push(split);
+      });
+
+      let rowsHTML = '';
+      monthOrder.forEach(monthName => {
+        const group = monthGroups[monthName];
+        // Individual game rows
+        group.forEach(split => {
+          const s = split.stat;
+          const dateDisplay = formatGameDate(split.date);
+          const teamAbbr = getTeamAbbrev(split.team && split.team.name);
+          const oppAbbr = getTeamAbbrev(split.opponent && split.opponent.name);
+          const oppDisplay = split.isHome ? `vs ${oppAbbr}` : `@ ${oppAbbr}`;
+          let cells;
+          if (isPitcher) {
+            cells = [dateDisplay, teamAbbr, oppDisplay,
+              s.wins || 0, s.losses || 0, s.era || '0.00',
+              s.inningsPitched || '0.0', s.hits || 0, s.earnedRuns || 0,
+              s.strikeOuts || 0, s.baseOnBalls || 0];
+          } else {
+            cells = [dateDisplay, teamAbbr, oppDisplay,
+              s.atBats || 0, s.hits || 0, s.homeRuns || 0,
+              s.rbi || 0, s.runs || 0, s.baseOnBalls || 0,
+              s.strikeOuts || 0, s.avg || '.000'];
+          }
+          rowsHTML += `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+        });
+        // Monthly summary row
+        if (isPitcher) {
+          const totW = group.reduce((a, g) => a + (g.stat.wins || 0), 0);
+          const totL = group.reduce((a, g) => a + (g.stat.losses || 0), 0);
+          const totIP = group.reduce((a, g) => {
+            const ip = parseFloat(g.stat.inningsPitched || 0);
+            return a + Math.floor(ip) + (ip % 1) / 0.3 * 0.1;
+          }, 0);
+          const totH = group.reduce((a, g) => a + (g.stat.hits || 0), 0);
+          const totER = group.reduce((a, g) => a + (g.stat.earnedRuns || 0), 0);
+          const totSO = group.reduce((a, g) => a + (g.stat.strikeOuts || 0), 0);
+          const totBB = group.reduce((a, g) => a + (g.stat.baseOnBalls || 0), 0);
+          // ERA for month: 9 * ER / IP (in thirds)
+          const ipThirds = group.reduce((a, g) => {
+            const raw = g.stat.inningsPitched || '0';
+            const parts = String(raw).split('.');
+            return a + parseInt(parts[0], 10) * 3 + parseInt(parts[1] || 0, 10);
+          }, 0);
+          const monthERA = ipThirds > 0 ? (totER * 27 / ipThirds).toFixed(2) : '0.00';
+          const ipOuts = group.reduce((a, g) => {
+            const raw = g.stat.inningsPitched || '0';
+            const parts = String(raw).split('.');
+            return a + parseInt(parts[0], 10) * 3 + parseInt(parts[1] || 0, 10);
+          }, 0);
+          const ipDisplay = `${Math.floor(ipOuts / 3)}.${ipOuts % 3}`;
+          const cells = [monthName + ' Total', '—', '—', totW, totL, monthERA, ipDisplay, totH, totER, totSO, totBB];
+          rowsHTML += `<tr class="month-summary">${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+        } else {
+          const totAB = group.reduce((a, g) => a + (g.stat.atBats || 0), 0);
+          const totH = group.reduce((a, g) => a + (g.stat.hits || 0), 0);
+          const totHR = group.reduce((a, g) => a + (g.stat.homeRuns || 0), 0);
+          const totRBI = group.reduce((a, g) => a + (g.stat.rbi || 0), 0);
+          const totR = group.reduce((a, g) => a + (g.stat.runs || 0), 0);
+          const totBB = group.reduce((a, g) => a + (g.stat.baseOnBalls || 0), 0);
+          const totSO = group.reduce((a, g) => a + (g.stat.strikeOuts || 0), 0);
+          const monthAVG = totAB > 0 ? (totH / totAB).toFixed(3).replace('0.', '.') : '.000';
+          const cells = [monthName + ' Total', '—', '—', totAB, totH, totHR, totRBI, totR, totBB, totSO, monthAVG];
+          rowsHTML += `<tr class="month-summary">${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+        }
+      });
 
       return `
         <div class="game-log-title">2026 Game Log</div>
@@ -1537,7 +1724,7 @@
       const awardDisplay = player.award ? `<div class="card-award"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1l1.76 3.57L13 5.25l-2.93 2.85.69 4.04L7 10.25l-3.76 1.89.69-4.04L1 5.25l4.24-.68L7 1z" fill="currentColor"/></svg>${player.award}</div>` : '';
 
       return `
-        <article class="player-card" style="animation-delay: ${index * 0.06}s">
+        <article class="player-card" data-player-name="${player.name}" style="animation-delay: ${index * 0.06}s">
           <div class="card-header" style="background: linear-gradient(135deg, ${player.org_color} 0%, ${adjustColor(player.org_color, -30)} 100%);">
             <div class="level-badge ${badgeClass}">
               <span class="level-badge-dot"></span>
@@ -1592,10 +1779,7 @@
               </span>
             </button>
             <div class="stats-dropdown">
-              <div class="stats-dropdown-inner">
-                ${renderSeasonSummary(player)}
-                ${renderGameLog(player)}
-              </div>
+              <div class="stats-dropdown-inner"></div>
             </div>
 
             <div class="card-footer">
