@@ -322,7 +322,7 @@ a, button, input, textarea, select {
 
 /* Hero stat cards */
 .hero-stats {
-  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);
 }
 
 .stat-card {
@@ -345,6 +345,23 @@ a, button, input, textarea, select {
 
 .stat-label {
   font-size: var(--text-xs); color: var(--text-muted); font-weight: 500;
+}
+
+.stat-icon {
+  width: 44px; height: 44px;
+  background: var(--accent-soft, rgba(20,184,166,0.12));
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--space-3);
+  color: var(--accent);
+}
+.stat-label-main {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--space-1);
+  line-height: 1.3;
 }
 
 /* ============================================
@@ -521,8 +538,16 @@ a, button, input, textarea, select {
 .sample-preview {
   aspect-ratio: 16/9; overflow: hidden;
   background: var(--bg-alt); position: relative;
-  display: flex; align-items: center; justify-content: center;
   border-bottom: 1px solid var(--border);
+}
+.sample-preview img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.sample-card:hover .sample-preview img {
+  transform: scale(1.03);
 }
 
 .sample-preview-label {
@@ -548,6 +573,81 @@ a, button, input, textarea, select {
 .sample-info p { font-size: var(--text-sm); color: var(--text-muted); line-height: 1.55; margin-bottom: var(--space-4); }
 
 .sample-actions { display: flex; gap: var(--space-2); }
+
+/* ===== PRICING ===== */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6); align-items: start;
+  margin-top: var(--space-8);
+}
+.pricing-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: var(--space-7);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.pricing-card:hover {
+  box-shadow: var(--shadow-lg); transform: translateY(-3px);
+}
+.pricing-card--featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), var(--shadow-md);
+}
+.pricing-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff;
+  font-size: var(--text-xs); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 4px 14px; border-radius: 999px;
+  white-space: nowrap;
+}
+.pricing-tier {
+  font-family: var(--font-display); font-size: var(--text-sm);
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+.pricing-price {
+  font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800; color: var(--text); line-height: 1.1;
+  margin-bottom: var(--space-1);
+  display: flex; align-items: baseline; gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.pricing-price-note {
+  font-size: var(--text-xs); font-weight: 500;
+  color: var(--text-faint); text-transform: lowercase;
+}
+.pricing-desc {
+  font-size: var(--text-sm); color: var(--text-muted);
+  margin-bottom: var(--space-5); line-height: 1.6;
+  min-height: 52px;
+}
+.pricing-features {
+  list-style: none; padding: 0; margin: 0 0 var(--space-6) 0;
+  display: flex; flex-direction: column; gap: var(--space-2);
+}
+.pricing-features li {
+  font-size: var(--text-sm); color: var(--text);
+  padding-left: var(--space-5); position: relative;
+  line-height: 1.5;
+}
+.pricing-features li::before {
+  content: "✓";
+  position: absolute; left: 0;
+  color: var(--accent); font-weight: 700; font-size: var(--text-sm);
+}
+.pricing-card .btn { width: 100%; justify-content: center; }
+.pricing-note {
+  text-align: center; font-size: var(--text-sm);
+  color: var(--text-faint); margin-top: var(--space-8);
+  max-width: 600px; margin-inline: auto;
+  line-height: 1.7;
+}
+@media (max-width: 900px) {
+  .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin-inline: auto; }
+}
 
 /* ============================================
    PROCESS
@@ -775,7 +875,7 @@ a, button, input, textarea, select {
   .mobile-menu-btn { display: flex; }
   .brand-tagline { display: none; }
   .hero-inner { grid-template-columns: 1fr; gap: var(--space-8); }
-  .hero-stats { max-width: 400px; }
+  .hero-stats { max-width: 400px; grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr; }
   .featured-inner { grid-template-columns: 1fr; gap: var(--space-8); }
   .samples-grid { grid-template-columns: 1fr; }
@@ -814,6 +914,7 @@ a, button, input, textarea, select {
     <div class="nav-links">
       <a href="#services">Services</a>
       <a href="#work">Work</a>
+      <a href="#pricing">Pricing</a>
       <a href="#process">Process</a>
       <a href="#faq">FAQ</a>
       <a href="#about">About</a>
@@ -833,6 +934,7 @@ a, button, input, textarea, select {
   <div class="mobile-menu" id="mobileMenu">
     <a href="#services" onclick="closeMenu()">Services</a>
     <a href="#work" onclick="closeMenu()">Work</a>
+    <a href="#pricing" onclick="closeMenu()">Pricing</a>
     <a href="#process" onclick="closeMenu()">Process</a>
     <a href="#faq" onclick="closeMenu()">FAQ</a>
     <a href="#about" onclick="closeMenu()">About</a>
@@ -848,37 +950,42 @@ a, button, input, textarea, select {
     <div class="hero-content">
       <div class="hero-kicker">
         <span class="hero-dot"></span>
-        Available for new projects
+        Now taking new clients
       </div>
 
-      <h1>Websites that work as hard as you do.</h1>
+      <h1>A website your customers will actually trust.</h1>
 
       <p class="hero-sub">
-        PalmWeb designs modern websites and practical automation for locally owned businesses. Clean messaging, fast load times, and real next steps that move the needle.
+        PalmWeb builds custom websites for local businesses in Rhode Island and Massachusetts. No templates, no page builders — hand-coded, fast, and built to get you leads.
       </p>
 
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#" data-open-quote>Request a Quote</a>
-        <a class="btn btn-outline" href="#work">View Recent Work</a>
+        <a class="btn btn-primary" href="#pricing">See Pricing</a>
+        <a class="btn btn-outline" href="#work">View Work</a>
       </div>
     </div>
 
     <div class="hero-stats">
       <div class="stat-card">
-        <div class="stat-number" data-count="12">0</div>
-        <div class="stat-label">Client projects delivered</div>
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="stat-label-main">No templates</div>
+        <div class="stat-label">Every site is hand-coded from scratch — no WordPress, no Wix, no drag-and-drop.</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" data-count-suffix="%" data-count="100">0</div>
-        <div class="stat-label">Mobile-first builds</div>
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-label-main">2–3 week delivery</div>
+        <div class="stat-label">Most projects go from first call to live site in two to three weeks.</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" data-count-prefix="<" data-count="2" data-count-suffix="s">0</div>
-        <div class="stat-label">Average load time</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" data-count-suffix="/5" data-count="5">0</div>
-        <div class="stat-label">Client satisfaction</div>
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="stat-label-main">Fixed pricing</div>
+        <div class="stat-label">You get a clear quote upfront. No hourly billing, no surprise invoices.</div>
       </div>
     </div>
   </div>
@@ -891,8 +998,8 @@ a, button, input, textarea, select {
   <div class="container">
     <div class="section-header center">
       <p class="section-label">Services</p>
-      <h2 class="section-title">Everything your business needs online</h2>
-      <p class="section-desc">From a clean homepage to automated workflows that save hours every week.</p>
+      <h2 class="section-title">What I build for local businesses</h2>
+      <p class="section-desc">Websites, automation, and support — tailored for small businesses that don't have an IT department.</p>
     </div>
 
     <div class="services-grid">
@@ -901,47 +1008,23 @@ a, button, input, textarea, select {
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
         </div>
         <h3>Website Design</h3>
-        <p>Custom-built sites that load fast, look professional, and work on every device. No templates, no bloated page builders.</p>
+        <p>Custom-built sites that load fast, look sharp, and work on every device. No templates, no bloated page builders — every line written by hand.</p>
       </div>
 
       <div class="service-card reveal">
         <div class="service-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
-        <h3>Automation</h3>
-        <p>Turn repetitive tasks into automated workflows. Form intake, document routing, email notifications, and client portals.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <h3>Consulting</h3>
-        <p>Honest advice on what to build, what tools to use, and where to spend your budget. No upsells, no unnecessary complexity.</p>
+        <h3>Automation &amp; Tools</h3>
+        <p>Turn repetitive tasks into automated workflows — lead capture forms, email notifications, booking integrations, and client-facing tools that save you hours every week.</p>
       </div>
 
       <div class="service-card reveal">
         <div class="service-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         </div>
-        <h3>Site Maintenance</h3>
-        <p>Ongoing updates, content changes, and performance tuning. Keep your site current without worrying about the technical side.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        </div>
-        <h3>SaaS Prototypes</h3>
-        <p>Interactive prototypes and MVP builds for software ideas. Test your concept with real users before committing to full development.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h3>Compliance Tools</h3>
-        <p>Custom internal tools for document management, regulatory compliance, and client-facing workflows that your team can actually use.</p>
+        <h3>Ongoing Support</h3>
+        <p>I don't disappear after launch. Content updates, performance tuning, and technical fixes — handled quickly so you can focus on running your business.</p>
       </div>
     </div>
   </div>
@@ -994,14 +1077,14 @@ a, button, input, textarea, select {
   <div class="container">
     <div class="section-header center">
       <p class="section-label">Portfolio</p>
-      <h2 class="section-title">Public Samples</h2>
-      <p class="section-desc">Industry-specific sample sites showcasing what a PalmWeb build looks like for different verticals.</p>
+      <h2 class="section-title">Work samples</h2>
+      <p class="section-desc">Click through any of these to see a full working site — these are real examples of what your site would look like.</p>
     </div>
 
     <div class="samples-grid">
       <div class="sample-card reveal">
-        <div class="sample-preview" style="background: linear-gradient(135deg, #1b1b1b, #3f2d1e);">
-          <span class="sample-preview-label" style="color:#d4a76a;">Harbor Street Kitchen</span>
+        <div class="sample-preview">
+          <img src="assets/preview-restaurant.jpg" alt="Harbor Street Kitchen sample website preview" loading="lazy">
         </div>
         <div class="sample-info">
           <div class="sample-type">Restaurant</div>
@@ -1014,8 +1097,8 @@ a, button, input, textarea, select {
       </div>
 
       <div class="sample-card reveal">
-        <div class="sample-preview" style="background: linear-gradient(135deg, #0f172a, #1e3a5f);">
-          <span class="sample-preview-label" style="color:#60a5fa;">Ridgeline Law Group</span>
+        <div class="sample-preview">
+          <img src="assets/preview-law.jpg" alt="Ridgeline Law Group sample website preview" loading="lazy">
         </div>
         <div class="sample-info">
           <div class="sample-type">Legal</div>
@@ -1028,8 +1111,8 @@ a, button, input, textarea, select {
       </div>
 
       <div class="sample-card reveal">
-        <div class="sample-preview" style="background: linear-gradient(135deg, #1a4d3e, #2d7a5e);">
-          <span class="sample-preview-label" style="color:#a7f3d0;">Summit Plumbing Co.</span>
+        <div class="sample-preview">
+          <img src="assets/preview-plumbing.jpg" alt="Summit Plumbing Co. sample website preview" loading="lazy">
         </div>
         <div class="sample-info">
           <div class="sample-type">Home Services</div>
@@ -1042,8 +1125,8 @@ a, button, input, textarea, select {
       </div>
 
       <div class="sample-card reveal">
-        <div class="sample-preview" style="background: linear-gradient(135deg, #f5f0eb, #e8ddd0);">
-          <span class="sample-preview-label" style="color:#78716c;">Balance Wellness Studio</span>
+        <div class="sample-preview">
+          <img src="assets/preview-wellness.jpg" alt="Balance Wellness Studio sample website preview" loading="lazy">
         </div>
         <div class="sample-info">
           <div class="sample-type">Wellness</div>
@@ -1056,8 +1139,8 @@ a, button, input, textarea, select {
       </div>
 
       <div class="sample-card reveal">
-        <div class="sample-preview" style="background: linear-gradient(135deg, #0c2340, #1a3a5c);">
-          <span class="sample-preview-label" style="color:#c5a55a;">Bryant Baseball Alumni</span>
+        <div class="sample-preview">
+          <img src="assets/preview-baseball.jpg" alt="Bryant Baseball alumni tracker preview" loading="lazy">
         </div>
         <div class="sample-info">
           <div class="sample-type">Sports / Personal Project</div>
@@ -1069,6 +1152,69 @@ a, button, input, textarea, select {
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRICING
+     ============================================ -->
+<section id="pricing" class="section section-alt">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-label">Pricing</p>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-desc">Fixed project quotes — you'll always know the cost before any work begins. No hourly billing, no surprises.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">$800<span class="pricing-price-note">starting at</span></div>
+        <p class="pricing-desc">A clean, fast website to get your business online and looking professional.</p>
+        <ul class="pricing-features">
+          <li>Up to 3 pages</li>
+          <li>Mobile-first, custom design</li>
+          <li>Contact form + email notifications</li>
+          <li>Google Analytics setup</li>
+          <li>1 round of revisions</li>
+          <li>Hosting &amp; domain guidance</li>
+        </ul>
+        <a class="btn btn-outline" href="#" data-open-quote>Get a Quote</a>
+      </div>
+
+      <div class="pricing-card pricing-card--featured reveal">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier">Business</div>
+        <div class="pricing-price">$1,500<span class="pricing-price-note">starting at</span></div>
+        <p class="pricing-desc">A full site with the tools your business actually needs to generate leads.</p>
+        <ul class="pricing-features">
+          <li>Up to 8 pages</li>
+          <li>Custom branding &amp; design system</li>
+          <li>Lead capture + automation</li>
+          <li>SEO-ready structure</li>
+          <li>2 rounds of revisions</li>
+          <li>30 days of post-launch support</li>
+        </ul>
+        <a class="btn btn-primary" href="#" data-open-quote>Get a Quote</a>
+      </div>
+
+      <div class="pricing-card reveal">
+        <div class="pricing-tier">Custom</div>
+        <div class="pricing-price">Let's talk<span class="pricing-price-note">&nbsp;</span></div>
+        <p class="pricing-desc">For businesses that need more — automation, portals, calculators, or complex tools.</p>
+        <ul class="pricing-features">
+          <li>Unlimited pages</li>
+          <li>Custom web apps &amp; tools</li>
+          <li>Advanced automation workflows</li>
+          <li>Third-party integrations</li>
+          <li>Ongoing retainer options</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn btn-outline" href="#" data-open-quote>Start a Conversation</a>
+      </div>
+    </div>
+
+    <p class="pricing-note">All projects include hosting setup, SSL, mobile optimization, and a Google-indexed launch. Prices vary based on complexity — your quote will be exact before any work starts.</p>
   </div>
 </section>
 
