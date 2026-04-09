@@ -322,14 +322,19 @@ a, button, input, textarea, select {
 
 /* Hero stat cards */
 .hero-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);
+  display: grid; grid-template-columns: 1fr; gap: var(--space-3);
 }
 
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg); padding: var(--space-5);
+  border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5);
   box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  grid-template-rows: auto auto;
+  gap: 2px var(--space-4);
+  align-items: start;
 }
 
 .stat-card::before {
@@ -345,24 +350,67 @@ a, button, input, textarea, select {
 
 .stat-label {
   font-size: var(--text-xs); color: var(--text-muted); font-weight: 500;
+  grid-column: 2; grid-row: 2;
+  align-self: start; line-height: 1.5;
 }
 
 .stat-icon {
-  width: 44px; height: 44px;
+  width: 40px; height: 40px;
   background: var(--accent-soft, rgba(20,184,166,0.12));
   border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: var(--space-3);
   color: var(--accent);
+  grid-column: 1; grid-row: 1 / 3;
+  align-self: center;
+  margin-bottom: 0;
 }
 .stat-label-main {
   font-family: var(--font-display);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--text);
-  margin-bottom: var(--space-1);
+  margin-bottom: 0;
   line-height: 1.3;
+  grid-column: 2; grid-row: 1;
+  align-self: end;
 }
+
+/* ============================================
+   HERO SERVICES STRIP
+   ============================================ */
+.hero-services {
+  display: flex; gap: var(--space-6); flex-wrap: wrap;
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+.hero-service-item {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-size: var(--text-sm); font-weight: 600; color: var(--text-muted);
+}
+.hero-service-item svg { color: var(--accent); flex-shrink: 0; }
+
+/* ============================================
+   SAMPLES DROPDOWN
+   ============================================ */
+.samples-toggle {
+  display: flex; align-items: center; gap: var(--space-2);
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-body); font-weight: 600; font-size: var(--text-sm);
+  cursor: pointer; color: var(--text);
+  transition: all var(--transition);
+  margin: 0 auto;
+}
+.samples-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.samples-toggle .toggle-chevron { transition: transform 0.35s ease; }
+.samples-toggle.open .toggle-chevron { transform: rotate(180deg); }
+.samples-collapse {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.samples-collapse.open { max-height: 4000px; }
 
 /* ============================================
    SECTION HEADERS
@@ -582,7 +630,7 @@ a, button, input, textarea, select {
 }
 .pricing-card {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: var(--space-7);
+  border-radius: var(--radius-lg); padding: 28px 44px;
   position: relative;
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--transition), transform var(--transition);
@@ -875,7 +923,7 @@ a, button, input, textarea, select {
   .mobile-menu-btn { display: flex; }
   .brand-tagline { display: none; }
   .hero-inner { grid-template-columns: 1fr; gap: var(--space-8); }
-  .hero-stats { max-width: 400px; grid-template-columns: 1fr; }
+  .hero-stats { max-width: 100%; }
   .services-grid { grid-template-columns: 1fr; }
   .featured-inner { grid-template-columns: 1fr; gap: var(--space-8); }
   .samples-grid { grid-template-columns: 1fr; }
@@ -912,7 +960,6 @@ a, button, input, textarea, select {
     </a>
 
     <div class="nav-links">
-      <a href="#services">Services</a>
       <a href="#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="#process">Process</a>
@@ -932,7 +979,6 @@ a, button, input, textarea, select {
   </nav>
 
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#services" onclick="closeMenu()">Services</a>
     <a href="#work" onclick="closeMenu()">Work</a>
     <a href="#pricing" onclick="closeMenu()">Pricing</a>
     <a href="#process" onclick="closeMenu()">Process</a>
@@ -963,6 +1009,21 @@ a, button, input, textarea, select {
         <a class="btn btn-primary" href="#pricing">See Pricing</a>
         <a class="btn btn-outline" href="#work">View Work</a>
       </div>
+
+      <div class="hero-services">
+        <div class="hero-service-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Website Design
+        </div>
+        <div class="hero-service-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Automation &amp; Tools
+        </div>
+        <div class="hero-service-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Ongoing Support
+        </div>
+      </div>
     </div>
 
     <div class="hero-stats">
@@ -991,44 +1052,7 @@ a, button, input, textarea, select {
   </div>
 </section>
 
-<!-- ============================================
-     SERVICES
-     ============================================ -->
-<section id="services" class="section section-alt">
-  <div class="container">
-    <div class="section-header center">
-      <p class="section-label">Services</p>
-      <h2 class="section-title">What I build for local businesses</h2>
-      <p class="section-desc">Websites, automation, and support — tailored for small businesses that don't have an IT department.</p>
-    </div>
 
-    <div class="services-grid">
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <h3>Website Design</h3>
-        <p>Custom-built sites that load fast, look sharp, and work on every device. No templates, no bloated page builders — every line written by hand.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3>Automation &amp; Tools</h3>
-        <p>Turn repetitive tasks into automated workflows — lead capture forms, email notifications, booking integrations, and client-facing tools that save you hours every week.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <div class="service-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-        </div>
-        <h3>Ongoing Support</h3>
-        <p>I don't disappear after launch. Content updates, performance tuning, and technical fixes — handled quickly so you can focus on running your business.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============================================
      FEATURED PROJECT — TARIFF RANGER
@@ -1078,10 +1102,16 @@ a, button, input, textarea, select {
     <div class="section-header center">
       <p class="section-label">Portfolio</p>
       <h2 class="section-title">Work samples</h2>
-      <p class="section-desc">Click through any of these to see a full working site — these are real examples of what your site would look like.</p>
+      <p class="section-desc">Real examples of what a PalmWeb site looks like. Click through any to see the full working site.</p>
     </div>
 
-    <div class="samples-grid">
+    <button class="samples-toggle" onclick="toggleSamples(this)" aria-expanded="false">
+      <span class="samples-toggle-text">View work samples (5)</span>
+      <svg class="toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+
+    <div id="samples-collapse" class="samples-collapse">
+    <div class="samples-grid" style="margin-top: var(--space-8);">
       <div class="sample-card reveal">
         <div class="sample-preview">
           <img src="assets/preview-restaurant.jpg" alt="Harbor Street Kitchen sample website preview" loading="lazy">
@@ -1152,6 +1182,7 @@ a, button, input, textarea, select {
         </div>
       </div>
     </div>
+    </div><!-- /samples-collapse -->
   </div>
 </section>
 
@@ -1390,7 +1421,6 @@ a, button, input, textarea, select {
         <span class="footer-text" style="font-weight:700;">PalmWeb LLC</span>
       </div>
       <div class="footer-links">
-        <a href="#services">Services</a>
         <a href="#work">Work</a>
         <a href="#process">Process</a>
         <a href="#faq">FAQ</a>
@@ -1472,6 +1502,15 @@ function closeMenu() {
 }
 
 /* FAQ accordion */
+function toggleSamples(btn) {
+  const collapse = document.getElementById('samples-collapse');
+  const isOpen = btn.classList.toggle('open');
+  collapse.classList.toggle('open', isOpen);
+  btn.setAttribute('aria-expanded', isOpen);
+  btn.querySelector('.samples-toggle-text').textContent =
+    isOpen ? 'Hide work samples' : 'View work samples (5)';
+}
+
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const answer = item.querySelector('.faq-answer');
