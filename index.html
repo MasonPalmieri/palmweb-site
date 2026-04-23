@@ -833,34 +833,86 @@ a, button, input, textarea, select {
   color: var(--accent);
   font-weight: 700;
 }
-.shop-box-price {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--text);
-  margin: 0;
-}
-.shop-box-from {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-right: 0.25rem;
-}
-.shop-box-cta {
-  text-align: center;
+.shop-box-tiers {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
+  gap: 14px;
 }
-.shop-box-cta .btn {
-  width: 100%;
-  min-width: 200px;
+.shop-tier {
+  display: block;
+  padding: 18px 20px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 }
-.shop-box-sub {
-  font-size: 0.8rem;
+[data-theme="dark"] .shop-tier {
+  background: #1a2030;
+  border-color: #2a3244;
+}
+.shop-tier:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(29,121,198,0.15);
+}
+.shop-tier--primary {
+  border-color: var(--accent);
+  background: #f0f7fc;
+}
+[data-theme="dark"] .shop-tier--primary {
+  background: #142238;
+}
+.shop-tier--primary::after {
+  content: 'Most popular';
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.shop-tier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.shop-tier-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+.shop-tier-price {
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+.shop-tier-note {
+  font-size: 0.85rem;
   color: var(--text-muted);
-  margin: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.shop-tier-note::after {
+  content: '→';
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+.shop-tier:hover .shop-tier-note::after {
+  transform: translateX(4px);
 }
 
 /* ============================================
