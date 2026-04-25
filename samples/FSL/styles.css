@@ -398,6 +398,7 @@ a:hover { color: var(--crimson-600); }
   max-width: 440px;
   aspect-ratio: 4/5;
   object-fit: cover;
+  object-position: center 30%;
   border-radius: 18px;
   box-shadow: var(--shadow-lg);
 }
