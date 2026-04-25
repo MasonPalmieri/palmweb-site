@@ -9,7 +9,7 @@ index.html           — Home (hero, bio, approach, tiers preview, sets-apart, r
 services.html        — General Counsel Services (full tier detail, scope, trust)
 styles.css           — Single stylesheet, ~990 lines, fully responsive
 script.js            — Sticky nav, mobile menu, scroll reveals, contact form handler
-assets/              — All images (logo, headshot, portrait, handshake, hall of fame)
+assets/              — All images (logo, headshot, portrait, handshake)
 ```
 
 ## Contact form delivery
@@ -46,7 +46,7 @@ No build step required.
 - **Palette** — Navy `#0A1733`, Crimson `#B91C2C`, Gold accent `#C8A24A`, Cream backgrounds
 - **Type** — Playfair Display (serif headings) + Inter (sans body)
 - **Imagery** — Uses all 8 of Matt's existing photos. Logo is rendered as-is.
-- **Tone** — Premium, authoritative, founder-friendly. Heavy on whitespace, clean tier cards, and proactive credibility cues (Hall of Fame, weekly engagement).
+- **Tone** — Premium, authoritative, founder-friendly. Heavy on whitespace, clean tier cards, and proactive credibility cues (real GC experience, weekly engagement, subscription model).
 
 ## Browser support
 
