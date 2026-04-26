@@ -713,6 +713,18 @@ textarea { resize: vertical; min-height: 120px; }
   padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
   font-size: 0.83rem; color: rgba(255,255,255,0.55);
 }
+.palmweb-credit {
+  margin-top: 18px; padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  font-size: 0.78rem; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.02em;
+}
+.palmweb-credit a {
+  color: rgba(255,255,255,0.78); text-decoration: none; font-weight: 500;
+}
+.palmweb-credit a:hover { color: var(--teal-300); }
+.palmweb-credit .sep { margin: 0 8px; opacity: 0.5; }
 
 @media (max-width: 920px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
