@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient Feedback Survey — CCRS</title>
+<meta name="description" content="Share your CCRS recovery experience. Your feedback is sent privately to our team — never published without your explicit consent." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="assets/logo.svg" alt="CCRS logo" />
+      <span class="brand-text">
+        <span class="brand-name">CCRS</span>
+        <span class="brand-tag">Recovery &amp; Performance</span>
+      </span>
+    </a>
+    <button class="menu-toggle" aria-label="Toggle navigation"><span></span></button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="videos.html">How-To Videos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="survey.html">Patient Feedback</a></li>
+    </ul>
+    <a class="btn btn-accent" href="contact.html">Get in Touch <span class="arrow">→</span></a>
+  </div>
+</header>
+
+<section class="hero" style="padding: 64px 0 32px;">
+  <div class="container" style="text-align:center;">
+    <span class="eyebrow">Patient Feedback</span>
+    <h1 style="max-width:760px; margin:16px auto 18px;">Tell us how your recovery went.</h1>
+    <p class="lede" style="max-width:620px; margin:0 auto;">Your responses go directly to our team — privately. Nothing is published unless you give explicit consent at the end of the form.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:24px;">
+  <div class="container">
+    <div class="form-card reveal">
+
+      <div class="form-success">
+        Thank you — your feedback has been queued in your email client. Hit Send and we'll take it from there.
+      </div>
+
+      <form id="survey-form" novalidate>
+
+        <!-- Patient info -->
+        <h3 style="font-size:1.05rem; color:var(--ink-900); margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--ink-200);">
+          Your Information
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="p_name">Full name</label>
+            <input id="p_name" name="p_name" type="text" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="p_email">Email</label>
+            <input id="p_email" name="p_email" type="email" required autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="p_phone">Phone <span style="color:var(--ink-400); font-weight:400;">(optional)</span></label>
+            <input id="p_phone" name="p_phone" type="tel" autocomplete="tel" />
+          </div>
+          <div class="form-group">
+            <label for="surgery_date">Surgery / start date</label>
+            <input id="surgery_date" name="surgery_date" type="date" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="procedure">Procedure or surgery</label>
+            <input id="procedure" name="procedure" type="text" placeholder="e.g. Total knee replacement" />
+          </div>
+          <div class="form-group">
+            <label for="provider">Provider / practice <span style="color:var(--ink-400); font-weight:400;">(optional)</span></label>
+            <input id="provider" name="provider" type="text" />
+          </div>
+        </div>
+
+        <!-- Ratings -->
+        <h3 style="font-size:1.05rem; color:var(--ink-900); margin: 24px 0 18px; padding-bottom:10px; border-bottom:1px solid var(--ink-200);">
+          Your Experience
+        </h3>
+
+        <!-- helper macro: scale 1–5 -->
+        <div class="form-group full">
+          <label>Overall experience with CCRS</label>
+          <div class="scale-row">
+            <label><input type="radio" name="overall" value="1" />1</label>
+            <label><input type="radio" name="overall" value="2" />2</label>
+            <label><input type="radio" name="overall" value="3" />3</label>
+            <label><input type="radio" name="overall" value="4" />4</label>
+            <label><input type="radio" name="overall" value="5" />5</label>
+          </div>
+          <div class="scale-labels"><span>Poor</span><span>Excellent</span></div>
+        </div>
+
+        <div class="form-group full">
+          <label>Ease of setup</label>
+          <div class="scale-row">
+            <label><input type="radio" name="setup" value="1" />1</label>
+            <label><input type="radio" name="setup" value="2" />2</label>
+            <label><input type="radio" name="setup" value="3" />3</label>
+            <label><input type="radio" name="setup" value="4" />4</label>
+            <label><input type="radio" name="setup" value="5" />5</label>
+          </div>
+          <div class="scale-labels"><span>Difficult</span><span>Effortless</span></div>
+        </div>
+
+        <div class="form-group full">
+          <label>Comfort during use</label>
+          <div class="scale-row">
+            <label><input type="radio" name="comfort" value="1" />1</label>
+            <label><input type="radio" name="comfort" value="2" />2</label>
+            <label><input type="radio" name="comfort" value="3" />3</label>
+            <label><input type="radio" name="comfort" value="4" />4</label>
+            <label><input type="radio" name="comfort" value="5" />5</label>
+          </div>
+          <div class="scale-labels"><span>Uncomfortable</span><span>Very comfortable</span></div>
+        </div>
+
+        <div class="form-group full">
+          <label>Pain relief effectiveness</label>
+          <div class="scale-row">
+            <label><input type="radio" name="relief" value="1" />1</label>
+            <label><input type="radio" name="relief" value="2" />2</label>
+            <label><input type="radio" name="relief" value="3" />3</label>
+            <label><input type="radio" name="relief" value="4" />4</label>
+            <label><input type="radio" name="relief" value="5" />5</label>
+          </div>
+          <div class="scale-labels"><span>Minimal relief</span><span>Significant relief</span></div>
+        </div>
+
+        <div class="form-group full">
+          <label>CCRS support &amp; service</label>
+          <div class="scale-row">
+            <label><input type="radio" name="support" value="1" />1</label>
+            <label><input type="radio" name="support" value="2" />2</label>
+            <label><input type="radio" name="support" value="3" />3</label>
+            <label><input type="radio" name="support" value="4" />4</label>
+            <label><input type="radio" name="support" value="5" />5</label>
+          </div>
+          <div class="scale-labels"><span>Poor</span><span>Outstanding</span></div>
+        </div>
+
+        <!-- Outcomes -->
+        <h3 style="font-size:1.05rem; color:var(--ink-900); margin: 24px 0 18px; padding-bottom:10px; border-bottom:1px solid var(--ink-200);">
+          Outcomes
+        </h3>
+
+        <div class="form-group full">
+          <label>Did using NICE1 reduce your pain medication use?</label>
+          <div class="radio-row">
+            <label><input type="radio" name="reduced_meds" value="Yes, significantly" /><span>Yes, significantly</span></label>
+            <label><input type="radio" name="reduced_meds" value="Yes, somewhat" /><span>Yes, somewhat</span></label>
+            <label><input type="radio" name="reduced_meds" value="No change" /><span>No change</span></label>
+            <label><input type="radio" name="reduced_meds" value="Not sure" /><span>Not sure</span></label>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label>Would you recommend CCRS to others?</label>
+          <div class="radio-row">
+            <label><input type="radio" name="recommend" value="Definitely" /><span>Definitely</span></label>
+            <label><input type="radio" name="recommend" value="Probably" /><span>Probably</span></label>
+            <label><input type="radio" name="recommend" value="Probably not" /><span>Probably not</span></label>
+            <label><input type="radio" name="recommend" value="Definitely not" /><span>Definitely not</span></label>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label for="comments">Anything else you'd like us to know?</label>
+          <textarea id="comments" name="comments" rows="4" placeholder="Optional comments, suggestions, or kudos."></textarea>
+        </div>
+
+        <div class="form-group full">
+          <div class="checkbox-row">
+            <input id="consent" name="consent" type="checkbox" value="yes" />
+            <label for="consent">
+              I give CCRS permission to share my feedback as a public testimonial. <span style="color:var(--ink-400); font-weight:400;">(Otherwise, your response stays private with the CCRS team.)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <button type="submit" class="btn btn-accent" style="width:100%; justify-content:center;">Submit Feedback <span class="arrow">→</span></button>
+          <p class="form-note">
+            <strong>Demo note:</strong> this form currently opens your email client with the response pre-filled and addressed to <a href="mailto:contact@recoverwithccrs.com">contact@recoverwithccrs.com</a>. We'll wire it to a private backend (Formspree, Resend, or a custom API) when you're ready to go live.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" style="margin-bottom:14px;">
+          <img class="brand-mark" src="assets/logo.svg" alt="" />
+          <span class="brand-text">
+            <span class="brand-name">CCRS</span>
+            <span class="brand-tag">Recovery &amp; Performance</span>
+          </span>
+        </a>
+        <p style="max-width:320px;">Cold Compression Recovery Solutions — opioid-free recovery and DME supply-chain solutions, based in Dallas, TX.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="videos.html">How-To Videos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="survey.html">Patient Feedback</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+12146085887">(214) 608-5887</a></li>
+          <li><a href="mailto:contact@recoverwithccrs.com">contact@recoverwithccrs.com</a></li>
+          <li>10725 Plano Road, Suite 400</li>
+          <li>Dallas, TX 75238</li>
+        </ul>
+      </div>
+      <div>
+        <h4>For Providers</h4>
+        <ul>
+          <li><a href="contact.html?role=Provider">Request an in-service</a></li>
+          <li><a href="contact.html?role=Provider">DME catalog inquiry</a></li>
+          <li><a href="contact.html?role=Provider">Become a referral partner</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 CCRS, LLC — All rights reserved.</span>
+      <span>Authorized distributor · NICE Recovery Systems</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
