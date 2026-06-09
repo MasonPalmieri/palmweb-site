@@ -112,6 +112,72 @@ if (surveyForm) {
   });
 }
 
+// ---- Rental inquiry form ----
+const rentalForm = document.getElementById('rental-form');
+if (rentalForm) {
+  // Live update of the "selected duration" readout
+  const readout = document.getElementById('readout-duration');
+  document.querySelectorAll('input[name="duration_choice"]').forEach(r => {
+    r.addEventListener('change', () => {
+      if (readout) readout.textContent = r.value;
+    });
+  });
+
+  rentalForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Require a duration choice (it's outside the form so .required doesn't catch it)
+    const chosen = document.querySelector('input[name="duration_choice"]:checked');
+    if (!chosen) {
+      alert('Please choose a rental duration above before submitting.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const data = new FormData(rentalForm);
+    const lines = [];
+    lines.push('CCRS — NICE1 Rental Inquiry');
+    lines.push('================================');
+    lines.push('');
+    lines.push(`Submitted: ${new Date().toLocaleString()}`);
+    lines.push('');
+    lines.push('— Patient —');
+    lines.push(`Name: ${data.get('first_name') || ''} ${data.get('last_name') || ''}`);
+    lines.push(`Date of Birth: ${data.get('dob') || '(not provided)'}`);
+    lines.push(`Email: ${data.get('email') || '(not provided)'}`);
+    lines.push(`Phone: ${data.get('phone') || '(not provided)'}`);
+    lines.push(`Preferred contact: ${data.get('contact_method') || '(not provided)'}`);
+    lines.push('');
+    lines.push('— Shipping address —');
+    lines.push(`${data.get('address_street') || ''}`);
+    lines.push(`${data.get('address_city') || ''}, ${(data.get('address_state') || '').toUpperCase()} ${data.get('address_zip') || ''}`);
+    lines.push('');
+    lines.push('— Procedure —');
+    lines.push(`Surgery date: ${data.get('surgery_date') || '(not provided)'}`);
+    lines.push(`Body part: ${data.get('body_part') || '(not provided)'}`);
+    lines.push('');
+    lines.push('— Rental selection —');
+    lines.push(`Duration: ${chosen.value}`);
+    lines.push(`Shipping: TBD (variable — confirm with patient)`);
+    lines.push('');
+    lines.push('— Notes —');
+    lines.push(data.get('notes') || '(none)');
+    lines.push('');
+    lines.push('— Reminder —');
+    lines.push('No payment was collected. Confirm final pricing + shipping with patient before charging.');
+    lines.push('');
+    lines.push('— Submitted from recoverwithccrs.com/rental —');
+
+    const subject = `[CCRS Rental] NICE1 ${chosen.dataset.label || ''} — ${data.get('first_name') || ''} ${data.get('last_name') || ''}`;
+    const body = lines.join('\n');
+    window.location.href = `mailto:contact@recoverwithccrs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    const success = rentalForm.querySelector('.form-success');
+    if (success) success.classList.add('show');
+    window.scrollTo({ top: rentalForm.offsetTop - 100, behavior: 'smooth' });
+  });
+}
+
 // ---- Active nav highlighting based on path ----
 (() => {
   const path = window.location.pathname.split('/').pop() || 'index.html';
