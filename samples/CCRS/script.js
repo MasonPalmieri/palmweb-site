@@ -154,7 +154,7 @@ if (rentalForm) {
     lines.push('');
     lines.push('— Procedure —');
     lines.push(`Surgery date: ${data.get('surgery_date') || '(not provided)'}`);
-    lines.push(`Body part: ${data.get('body_part') || '(not provided)'}`);
+    lines.push(`Body part: ${data.get('injury_type') || '(not provided)'}`);
     lines.push('');
     lines.push('— Rental selection —');
     lines.push(`Duration: ${chosen.value}`);
