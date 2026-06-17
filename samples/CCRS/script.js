@@ -148,23 +148,25 @@ if (rentalForm) {
     lines.push(`Phone: ${data.get('phone') || '(not provided)'}`);
     lines.push(`Preferred contact: ${data.get('contact_method') || '(not provided)'}`);
     lines.push('');
-    lines.push('— Shipping address —');
+    lines.push('— Delivery address —');
     lines.push(`${data.get('address_street') || ''}`);
     lines.push(`${data.get('address_city') || ''}, ${(data.get('address_state') || '').toUpperCase()} ${data.get('address_zip') || ''}`);
+    lines.push(`Address verified by patient: ${data.get('address_verify') ? 'Yes' : 'No'}`);
     lines.push('');
     lines.push('— Procedure —');
     lines.push(`Surgery date: ${data.get('surgery_date') || '(not provided)'}`);
     lines.push(`Body part: ${data.get('injury_type') || '(not provided)'}`);
+    lines.push(`Physician: ${data.get('physician_name') || '(not provided)'}`);
     lines.push('');
     lines.push('— Rental selection —');
     lines.push(`Duration: ${chosen.value}`);
-    lines.push(`Shipping: TBD (variable — confirm with patient)`);
+    lines.push(`Delivery: TBD (variable — confirm with patient)`);
     lines.push('');
     lines.push('— Notes —');
     lines.push(data.get('notes') || '(none)');
     lines.push('');
     lines.push('— Reminder —');
-    lines.push('No payment was collected. Confirm final pricing + shipping with patient before charging.');
+    lines.push('No payment was collected. Confirm final pricing + delivery with patient before charging.');
     lines.push('');
     lines.push('— Submitted from recoverwithccrs.com/rental —');
 
