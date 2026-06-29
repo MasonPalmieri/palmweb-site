@@ -53,11 +53,10 @@
 
     <div class="pricing-grid">
       <label class="pricing-card reveal">
-        <input type="radio" name="duration_choice" value="1 week — Call Us" data-price="0" data-label="1 week" />
+        <input type="radio" name="duration_choice" value="1 week" data-price="0" data-label="1 week" />
         <div class="pricing-head">
           <span class="pricing-eyebrow">Short-Term</span>
           <h3>1 Week</h3>
-          <div class="pricing-price"><span class="amount" style="font-size:2rem;">Call Us</span></div>
           <p class="pricing-sub">7 days</p>
         </div>
         <ul class="pricing-list">
@@ -69,12 +68,11 @@
       </label>
 
       <label class="pricing-card pricing-card-featured reveal">
-        <input type="radio" name="duration_choice" value="2 weeks — $375–$400" data-price="400" data-label="2 weeks" />
+        <input type="radio" name="duration_choice" value="2 weeks" data-price="0" data-label="2 weeks" />
         <div class="pricing-badge">Most common</div>
         <div class="pricing-head">
           <span class="pricing-eyebrow">Standard</span>
           <h3>2 Weeks</h3>
-          <div class="pricing-price"><span class="dollar">$</span><span class="amount">375–400</span></div>
           <p class="pricing-sub">14 days</p>
         </div>
         <ul class="pricing-list">
@@ -86,11 +84,10 @@
       </label>
 
       <label class="pricing-card reveal">
-        <input type="radio" name="duration_choice" value="4 weeks — $625–$650" data-price="650" data-label="4 weeks" />
+        <input type="radio" name="duration_choice" value="4 weeks" data-price="0" data-label="4 weeks" />
         <div class="pricing-head">
           <span class="pricing-eyebrow">Extended</span>
           <h3>4 Weeks</h3>
-          <div class="pricing-price"><span class="dollar">$</span><span class="amount">625–650</span></div>
           <p class="pricing-sub">28 days</p>
         </div>
         <ul class="pricing-list">
@@ -212,6 +209,11 @@
           <input id="physician_name" name="physician_name" type="text" required placeholder="Dr. Jane Smith" />
         </div>
 
+        <div class="form-group full">
+          <label for="procedure">Procedure <span style="color:var(--ink-400); font-weight:400;">(optional)</span></label>
+          <input id="procedure" name="procedure" type="text" placeholder="e.g. Total knee replacement, ACL repair, rotator cuff" />
+        </div>
+
         <h3 style="font-size:1.05rem; color:var(--ink-900); margin:28px 0 18px; padding-bottom:10px; border-bottom:1px solid var(--ink-200);">
           Contact Preference
         </h3>
@@ -321,7 +323,7 @@
   (() => {
     const params = new URLSearchParams(window.location.search);
     const d = params.get('duration');
-    const map = { '1w': '1 week — Call Us', '2w': '2 weeks — $375–$400', '4w': '4 weeks — $625–$650' };
+    const map = { '1w': '1 week', '2w': '2 weeks', '4w': '4 weeks' };
     if (d && map[d]) {
       const el = document.querySelector(`input[name="duration_choice"][value="${map[d]}"]`);
       if (el) {
