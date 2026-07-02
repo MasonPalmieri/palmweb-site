@@ -220,6 +220,28 @@ if (rentalForm) {
     const submitBtn = rentalForm.querySelector('button[type="submit"]');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
 
+    // Fire-and-forget: send to CCRS admin portal so the inquiry always lands in the staff dashboard,
+    // independent of Formspree/mailto. Runs in parallel; we don't await it or block the UX.
+    (function postToPortal() {
+      try {
+        const portalPayload = {};
+        for (const [k, v] of data.entries()) portalPayload[k] = v;
+        portalPayload.duration_choice = chosen.value;
+        fetch('https://ccrs-admin.onrender.com/api/webhooks/rental-inquiry', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CCRS-Webhook-Secret': 'ccrs-web-form-2026',
+          },
+          body: JSON.stringify(portalPayload),
+          keepalive: true,
+        }).catch((err) => console.warn('Portal webhook failed (non-blocking):', err));
+      } catch (err) {
+        console.warn('Portal webhook prep failed:', err);
+      }
+    })();
+
     const subject = `[CCRS Rental] NICE1 ${chosen.dataset.label || ''} — ${data.get('first_name') || ''} ${data.get('last_name') || ''}`;
     const body = buildRentalPayload(data, chosen);
     const mailtoUrl = `mailto:${RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
