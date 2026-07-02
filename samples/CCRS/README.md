@@ -1,36 +1,22 @@
-# CCRS — Recovery & Performance (Demo Redesign)
+# CCRS — Recovery &amp; Performance
 
-Static demo redesign for **CCRS, LLC** (recoverwithccrs.com), a Dallas, TX–based DME distributor and authorized partner of the NICE1 cold + compression therapy system.
+Production website for **CCRS, LLC** — a Dallas-based DME distributor, authorized partner of NICE Recovery Systems.
 
-> Live client site: https://recoverwithccrs.com
+> Built and maintained by [PalmWeb](https://palmweb.net) · mason@palmweb.net
+
+## Stack
+
+Pure static site — HTML / CSS / vanilla JS. No build step, no framework. Deploys to anything that serves files (Vercel, Netlify, GitHub Pages, S3, etc.).
 
 ## Pages
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Home — hero, what we do, NICE1 teaser, prospective-patient + provider audience cards, testimonial, CTA |
-| `products.html` | Full product catalog: NICE1, accessory wraps, ambIT, PlasmaFlow, DJO bone growth stimulators |
-| `videos.html` | NICE1 how-to video library (links currently point to existing CCRS video page; ready for YouTube/Vimeo embeds) |
-| `contact.html` | Patient / Provider / Other contact form (mailto submission for demo) |
+| `index.html` | Home — hero, what we do, NICE1 feature, patient/provider audience cards, testimonial, CTA |
+| `products.html` | Full product catalog: NICE1 / NICE2 / NICE3, accessory wraps, ambIT, PlasmaFlow, DJO bone growth stimulators |
+| `videos.html` | NICE1 how-to library — 9 embedded Vimeo videos, click-to-play |
+| `contact.html` | Patient / Provider / Other contact form (mailto submission until backend wired) |
 | `survey.html` | Private patient feedback survey — 5-point scales, outcome questions, optional public-testimonial consent |
-
-## Design language
-
-- **Palette:** clinical white + teal (`#0fa8a3` / `#0a3f3e`) drawn from the existing CCRS logo, deep ink-blue text.
-- **Type:** Space Grotesk for display, Inter for body — modern, technical, medical.
-- **Motion:** subtle reveal-on-scroll, soft hover lifts, pulsing "live system" indicator on hero.
-- **Imagery:** custom inline SVGs for product visuals so the demo runs with zero external image deps.
-
-## Form handling
-
-Both the contact form and the patient survey currently submit via `mailto:` (opens the user's email client pre-filled, addressed to `contact@recoverwithccrs.com`). This keeps the demo fully static.
-
-When you're ready to go live, swap the handlers in `script.js` to POST to:
-- **Formspree** / **Basin** / **Web3Forms** — fastest, no backend
-- **Resend** + a serverless function on **Vercel** — most flexible, your stack
-- A custom API on your existing infra
-
-The survey is explicitly **private by default** — public-testimonial use requires an opt-in checkbox.
 
 ## Local preview
 
@@ -41,8 +27,58 @@ npx serve .
 python3 -m http.server 8080
 ```
 
-## Notes
+## Deploying to Vercel
 
-- All product specs (NICE1 dimensions, temp range, wrap list, ambIT/PlasmaFlow/DJO copy) were lifted directly from the live recoverwithccrs.com content.
-- Replace the inline SVG product illustrations with real product photography when available.
-- Video thumbnails are stylized placeholders — drop in YouTube/Vimeo `iframe`s or thumbnail images to play inline.
+The repo includes `vercel.json`. From the project root:
+
+```bash
+vercel          # preview deploy
+vercel --prod   # production
+```
+
+Or import the repo at [vercel.com/new](https://vercel.com/new) — no settings needed, framework preset is "Other".
+
+## Pre-launch checklist
+
+- [ ] Finalize **NICE2** and **NICE3** spec copy (currently flagged as placeholder on `products.html`)
+- [ ] Wire contact + survey forms to a real backend. Recommended:
+  - **Resend + Vercel serverless function** (cleanest for your stack — see `/api/notes` below)
+  - **Formspree** / **Web3Forms** / **Basin** (zero-backend, fastest)
+- [ ] Remove the **Mockup** banner before go-live:
+  - Delete `.demo-banner` block from `styles.css`
+  - Remove the `<div class="demo-banner">…</div>` row from each page's `<body>`
+  - Remove `.wip-tag` rendering in each footer (or keep — it's a small "Demo build · v0.1" pill)
+- [ ] Point `recoverwithccrs.com` DNS at the new host
+- [ ] Set up an SPF/DKIM-aligned sender (`contact@recoverwithccrs.com`) for the form backend
+
+## Form backend — recommended path (Resend + Vercel)
+
+Drop two files into the project, push, and the forms will work end-to-end:
+
+```
+api/
+  contact.js     // POST { role, name, email, phone, organization, message }
+  survey.js      // POST { p_name, p_email, ratings, comments, consent, ... }
+```
+
+Each handler validates the payload, calls Resend, and returns 200. Update `script.js` to `fetch('/api/contact', ...)` and `fetch('/api/survey', ...)` instead of using `mailto:`.
+
+Happy to wire this whenever you're ready.
+
+## Asset map
+
+```
+assets/
+  logo.svg         # CCRS teal cross + leaf mark
+  nice1.jpg        # NICE1 console + carry bag + battery
+  nice2.jpg        # NICE2 in-use shot
+  nice3.jpg        # NICE3 with touchscreen, knee application
+  nice-wraps.jpg   # NICE accessory wrap layout
+  ambit.jpg        # ambIT electronic pain pump
+  plasmaflow.jpg   # PlasmaFlow PF0001 DVT prevention system
+  djo-bgs.jpg      # DJO bone growth stimulators
+```
+
+---
+
+© 2026 CCRS, LLC — All rights reserved.

@@ -365,8 +365,12 @@ p  { margin: 0 0 1em; color: var(--ink-600); }
 .product-visual svg { position: relative; z-index: 1; max-width: 70%; max-height: 70%; }
 .product-visual img.product-photo {
   position: relative; z-index: 1;
-  max-width: 82%; max-height: 82%;
+  /* Fit-to-container: contain within 82% of the frame, never upscale beyond native pixel size */
+  max-width: min(82%, 100%);
+  max-height: 82%;
+  width: auto; height: auto;
   object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
   filter: drop-shadow(0 12px 28px rgba(11,18,32,0.18));
 }
 .product-visual.photo-fill {
@@ -835,6 +839,11 @@ textarea { resize: vertical; min-height: 120px; }
 }
 .pricing-price .dollar { font-size: 1.1rem; margin-top: 6px; color: var(--ink-700); }
 .pricing-price .amount { font-size: 2.4rem; }
+.pricing-per {
+  font-size: 0.72rem; font-weight: 500; color: var(--ink-500);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-left: 6px; vertical-align: middle;
+}
 .pricing-sub { font-size: 0.82rem; color: var(--ink-500); margin: 6px 0 0; }
 
 .pricing-list {

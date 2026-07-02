@@ -123,18 +123,12 @@ if (rentalForm) {
     });
   });
 
-  rentalForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // Formspree endpoint — set data-formspree="https://formspree.io/f/XXXX" on the <form> to enable AJAX submit.
+  // Falls back to mailto: if no endpoint is configured.
+  const FORMSPREE_ENDPOINT = rentalForm.dataset.formspree || '';
+  const RECIPIENT = 'contact@recoverwithccrs.com';
 
-    // Require a duration choice (it's outside the form so .required doesn't catch it)
-    const chosen = document.querySelector('input[name="duration_choice"]:checked');
-    if (!chosen) {
-      alert('Please choose a rental duration above before submitting.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    const data = new FormData(rentalForm);
+  function buildRentalPayload(data, chosen) {
     const lines = [];
     lines.push('CCRS — NICE1 Rental Inquiry');
     lines.push('================================');
@@ -170,14 +164,98 @@ if (rentalForm) {
     lines.push('No payment was collected. Confirm final pricing + delivery with patient before charging.');
     lines.push('');
     lines.push('— Submitted from recoverwithccrs.com/rental —');
+    return lines.join('\n');
+  }
 
-    const subject = `[CCRS Rental] NICE1 ${chosen.dataset.label || ''} — ${data.get('first_name') || ''} ${data.get('last_name') || ''}`;
-    const body = lines.join('\n');
-    window.location.href = `mailto:contact@recoverwithccrs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
+  function showSuccess() {
     const success = rentalForm.querySelector('.form-success');
     if (success) success.classList.add('show');
-    window.scrollTo({ top: rentalForm.offsetTop - 100, behavior: 'smooth' });
+    rentalForm.style.display = 'none';
+    window.scrollTo({ top: (rentalForm.offsetTop || 0) - 100, behavior: 'smooth' });
+  }
+
+  function showError(msg, mailtoUrl) {
+    let err = rentalForm.querySelector('.form-error');
+    if (!err) {
+      err = document.createElement('div');
+      err.className = 'form-error show';
+      rentalForm.insertBefore(err, rentalForm.firstChild);
+    }
+    err.classList.add('show');
+    err.innerHTML = `${msg} <a href="${mailtoUrl}" style="color:inherit; text-decoration:underline; font-weight:600;">Click here to email us directly →</a>`;
+    window.scrollTo({ top: (rentalForm.offsetTop || 0) - 100, behavior: 'smooth' });
+  }
+
+  rentalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Require a duration choice (it's outside the form so .required doesn't catch it)
+    const chosen = document.querySelector('input[name="duration_choice"]:checked');
+    if (!chosen) {
+      alert('Please choose a rental duration above before submitting.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Basic required-field check (form has novalidate; do it manually so submit always feels responsive)
+    const requiredFields = ['first_name', 'last_name', 'dob', 'phone', 'address_street', 'address_city', 'address_state', 'address_zip', 'surgery_date', 'injury_type', 'physician_name'];
+    const data = new FormData(rentalForm);
+    for (const f of requiredFields) {
+      if (!data.get(f)) {
+        const el = rentalForm.querySelector(`[name="${f}"]`);
+        if (el) el.focus();
+        alert(`Please fill in the required field: ${f.replace(/_/g, ' ')}`);
+        return;
+      }
+    }
+    if (!data.get('address_verify')) {
+      alert('Please confirm your delivery address by checking the box above.');
+      return;
+    }
+    if (!data.get('contact_method')) {
+      alert('Please choose how we should reach you.');
+      return;
+    }
+
+    const submitBtn = rentalForm.querySelector('button[type="submit"]');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+    const subject = `[CCRS Rental] NICE1 ${chosen.dataset.label || ''} — ${data.get('first_name') || ''} ${data.get('last_name') || ''}`;
+    const body = buildRentalPayload(data, chosen);
+    const mailtoUrl = `mailto:${RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Path A: Formspree AJAX (preferred — works on all devices, no mail client needed)
+    if (FORMSPREE_ENDPOINT) {
+      try {
+        const payload = new FormData();
+        for (const [k, v] of data.entries()) payload.append(k, v);
+        payload.append('duration_choice', chosen.value);
+        payload.append('_subject', subject);
+        payload.append('_replyto', data.get('email') || '');
+        payload.append('summary', body);
+
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: payload,
+        });
+        if (res.ok) {
+          showSuccess();
+          return;
+        }
+        throw new Error(`Formspree returned ${res.status}`);
+      } catch (err) {
+        console.error('Formspree submit failed:', err);
+        showError('We couldn\'t submit your inquiry automatically.', mailtoUrl);
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Rental Inquiry'; }
+        return;
+      }
+    }
+
+    // Path B: mailto fallback (opens user's mail client)
+    showSuccess();
+    // Try mailto after showing success so the confirmation stays visible even if mailto fails
+    setTimeout(() => { window.location.href = mailtoUrl; }, 250);
   });
 }
 
