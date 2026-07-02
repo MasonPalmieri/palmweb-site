@@ -149,7 +149,9 @@ if (rentalForm) {
     lines.push('');
     lines.push('— Procedure —');
     lines.push(`Surgery date: ${data.get('surgery_date') || '(not provided)'}`);
-    lines.push(`Body part: ${data.get('injury_type') || '(not provided)'}`);
+    const bodyPart = data.get('injury_type') || '(not provided)';
+    const bodySide = data.get('body_side');
+    lines.push(`Body part: ${bodyPart}${bodySide ? ` (${bodySide})` : ''}`);
     lines.push(`Procedure: ${data.get('procedure') || '(not provided)'}`);
     lines.push(`Physician: ${data.get('physician_name') || '(not provided)'}`);
     lines.push('');
