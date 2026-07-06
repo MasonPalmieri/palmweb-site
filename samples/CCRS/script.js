@@ -61,54 +61,91 @@ ${message}
 const contactForm = document.getElementById('contact-form');
 if (contactForm) handleContactForm(contactForm, 'contact@recoverwithccrs.com');
 
-// ---- Patient feedback survey (mailto for demo; backend later) ----
+// ---- Patient feedback survey (POST to portal) ----
+const SURVEY_ENDPOINT = 'https://ccrs-admin.onrender.com/api/feedback/submit';
+const FEEDBACK_LOOKUP_ENDPOINT = 'https://ccrs-admin.onrender.com/api/feedback/link/';
+
 const surveyForm = document.getElementById('survey-form');
 if (surveyForm) {
-  surveyForm.addEventListener('submit', (e) => {
+  // If URL has ?t=<token>, verify + pre-fill patient info
+  const params = new URLSearchParams(window.location.search);
+  const surveyToken = params.get('t');
+
+  if (surveyToken) {
+    fetch(FEEDBACK_LOOKUP_ENDPOINT + encodeURIComponent(surveyToken))
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.valid && data.patient) {
+          const p = data.patient;
+          const nameInput = surveyForm.querySelector('#p_name');
+          const emailInput = surveyForm.querySelector('#p_email');
+          const phoneInput = surveyForm.querySelector('#p_phone');
+          const procedureInput = surveyForm.querySelector('#procedure');
+          const surgeryInput = surveyForm.querySelector('#surgery_date');
+          if (nameInput && !nameInput.value) nameInput.value = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+          if (emailInput && p.email) emailInput.value = p.email;
+          if (phoneInput && p.phone) phoneInput.value = p.phone;
+          if (procedureInput && p.procedure) procedureInput.value = p.procedure;
+          if (surgeryInput && p.surgeryDate) surgeryInput.value = p.surgeryDate;
+        } else if (data && data.used) {
+          const banner = document.createElement('div');
+          banner.style.cssText = 'background:#fef3c7;border:1px solid #f59e0b;color:#78350f;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:0.95rem;';
+          banner.textContent = 'This survey has already been submitted. Thank you.';
+          surveyForm.parentNode.insertBefore(banner, surveyForm);
+          surveyForm.style.display = 'none';
+        }
+      })
+      .catch(() => { /* silent — fall back to standalone submit */ });
+  }
+
+  surveyForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = new FormData(surveyForm);
+    const payload = {
+      token: surveyToken || null,
+      p_name: data.get('p_name') || null,
+      p_email: data.get('p_email') || null,
+      p_phone: data.get('p_phone') || null,
+      procedure: data.get('procedure') || null,
+      surgery_date: data.get('surgery_date') || null,
+      provider: data.get('provider') || null,
+      overall: data.get('overall') || null,
+      setup: data.get('setup') || null,
+      comfort: data.get('comfort') || null,
+      relief: data.get('relief') || null,
+      support: data.get('support') || null,
+      reduced_meds: data.get('reduced_meds') || null,
+      recommend: data.get('recommend') || null,
+      comments: data.get('comments') || null,
+      consent: data.get('consent') ? 'yes' : null,
+    };
 
-    const lines = [];
-    lines.push('CCRS Patient Feedback Survey');
-    lines.push('================================');
-    lines.push('');
-    lines.push(`Submitted: ${new Date().toLocaleString()}`);
-    lines.push('');
-    lines.push('— Patient Information —');
-    lines.push(`Name: ${data.get('p_name') || '(not provided)'}`);
-    lines.push(`Email: ${data.get('p_email') || '(not provided)'}`);
-    lines.push(`Phone: ${data.get('p_phone') || '(not provided)'}`);
-    lines.push(`Procedure / Surgery: ${data.get('procedure') || '(not provided)'}`);
-    lines.push(`Surgery Date: ${data.get('surgery_date') || '(not provided)'}`);
-    lines.push(`Provider / Practice: ${data.get('provider') || '(not provided)'}`);
-    lines.push('');
-    lines.push('— Experience Ratings (1=Poor, 5=Excellent) —');
-    lines.push(`Overall experience: ${data.get('overall') || '-'}`);
-    lines.push(`Ease of setup: ${data.get('setup') || '-'}`);
-    lines.push(`Comfort during use: ${data.get('comfort') || '-'}`);
-    lines.push(`Pain relief effectiveness: ${data.get('relief') || '-'}`);
-    lines.push(`CCRS support & service: ${data.get('support') || '-'}`);
-    lines.push('');
-    lines.push('— Outcomes —');
-    lines.push(`Reduced pain medication use: ${data.get('reduced_meds') || '-'}`);
-    lines.push(`Would recommend to others: ${data.get('recommend') || '-'}`);
-    lines.push('');
-    lines.push('— Comments —');
-    lines.push(data.get('comments') || '(none)');
-    lines.push('');
-    lines.push('— Consent —');
-    lines.push(`Consent to use as testimonial: ${data.get('consent') ? 'Yes' : 'No'}`);
+    const submitBtn = surveyForm.querySelector('button[type="submit"]');
+    const originalLabel = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = 'Submitting…'; }
 
-    const subject = `[CCRS Survey] Feedback from ${data.get('p_name') || 'Patient'}`;
-    const body = lines.join('\n');
-
-    // For demo: open mail client with prefilled message.
-    window.location.href = `mailto:contact@recoverwithccrs.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-    const success = surveyForm.querySelector('.form-success');
-    if (success) success.classList.add('show');
-    surveyForm.reset();
-    window.scrollTo({ top: surveyForm.offsetTop - 100, behavior: 'smooth' });
+    try {
+      const res = await fetch(SURVEY_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.message || `Server returned ${res.status}`);
+      }
+      const success = surveyForm.querySelector('.form-success');
+      if (success) {
+        success.textContent = 'Thank you — your feedback has been received. The CCRS team will review it shortly.';
+        success.classList.add('show');
+      }
+      surveyForm.reset();
+      surveyForm.style.display = 'none';
+      window.scrollTo({ top: (surveyForm.offsetTop || 0) - 100, behavior: 'smooth' });
+    } catch (err) {
+      alert('Could not submit feedback: ' + (err && err.message ? err.message : 'network error') + '\n\nPlease try again, or email contact@recoverwithccrs.com directly.');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalLabel; }
+    }
   });
 }
 
