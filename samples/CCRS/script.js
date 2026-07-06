@@ -115,6 +115,32 @@ if (surveyForm) {
 // ---- Rental inquiry form ----
 const rentalForm = document.getElementById('rental-form');
 if (rentalForm) {
+  // Auto-format phone number as (XXX) XXX-XXXX while typing
+  const phoneInput = rentalForm.querySelector('input[name="phone"]');
+  if (phoneInput) {
+    const formatPhone = (raw) => {
+      const d = (raw || '').replace(/\D/g, '').slice(0, 10);
+      if (d.length === 0) return '';
+      if (d.length < 4) return `(${d}`;
+      if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+      return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+    };
+    phoneInput.addEventListener('input', (e) => {
+      const before = e.target.value;
+      const caretAtEnd = e.target.selectionStart === before.length;
+      const formatted = formatPhone(before);
+      if (formatted !== before) {
+        e.target.value = formatted;
+        if (caretAtEnd) {
+          e.target.setSelectionRange(formatted.length, formatted.length);
+        }
+      }
+    });
+    phoneInput.addEventListener('blur', (e) => {
+      e.target.value = formatPhone(e.target.value);
+    });
+  }
+
   // Live update of the "selected duration" readout
   const readout = document.getElementById('readout-duration');
   document.querySelectorAll('input[name="duration_choice"]').forEach(r => {
