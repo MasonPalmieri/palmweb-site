@@ -517,6 +517,13 @@ a, button, input, textarea, select {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: var(--space-10); align-items: center;
 }
+.featured-inner-reverse .featured-text { order: 2; }
+.featured-inner-reverse .featured-visual { order: 1; }
+@media (max-width: 900px) {
+  .featured-inner-reverse .featured-text { order: 2; }
+  .featured-inner-reverse .featured-visual { order: 1; }
+}
+.featured-alt { border-top: 1px solid rgba(255,255,255,0.06); }
 
 .featured-label {
   font-size: var(--text-xs); font-weight: 700; text-transform: uppercase;
@@ -1205,12 +1212,52 @@ a, button, input, textarea, select {
 
 
 <!-- ============================================
-     FEATURED PROJECT — TARIFF RANGER
+     FEATURED PROJECT — CCRS (LATEST)
      ============================================ -->
 <section id="work" class="featured">
   <div class="container featured-inner">
     <div class="featured-text">
       <p class="featured-label">Latest Client Project</p>
+      <h2 class="featured-title">CCRS — Cold Compression Recovery Solutions</h2>
+      <p class="featured-desc">
+        A conversion-focused site for a Dallas-based DME partner distributing the NICE1 Cold + Compression Therapy System. Designed for two distinct audiences — patients seeking opioid-free recovery and hospitals sourcing supply-chain solutions — with product education, rental flows, how-to video library, and clear paths to consult requests.
+      </p>
+
+      <div class="featured-tags">
+        <span class="featured-tag">Healthcare / DME</span>
+        <span class="featured-tag">Multi-page</span>
+        <span class="featured-tag">Product Catalog</span>
+        <span class="featured-tag">Rental Flow</span>
+        <span class="featured-tag">Video Library</span>
+        <span class="featured-tag">Lead Capture</span>
+      </div>
+
+      <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+        <a class="btn btn-primary" href="https://recoverwithccrs.com" target="_blank" rel="noopener noreferrer">Visit RecoverWithCCRS.com</a>
+      </div>
+    </div>
+
+    <div class="featured-visual">
+      <div class="featured-browser-bar">
+        <span class="browser-dot red"></span>
+        <span class="browser-dot yellow"></span>
+        <span class="browser-dot green"></span>
+        <span class="browser-url">recoverwithccrs.com</span>
+      </div>
+      <div class="featured-screenshot">
+        <img src="assets/ccrs-preview.png" alt="CCRS website preview" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FEATURED PROJECT — TARIFF RANGER
+     ============================================ -->
+<section class="featured featured-alt">
+  <div class="container featured-inner featured-inner-reverse">
+    <div class="featured-text">
+      <p class="featured-label">Previous Client Project</p>
       <h2 class="featured-title">Tariff Ranger</h2>
       <p class="featured-desc">
         A full-service website for a tariff recovery consultancy. Built to identify companies owed significant tariff refunds and connect them with specialized recovery partners. Features animated data visualizations, interactive tools, and a dual-audience funnel for companies and partners.
