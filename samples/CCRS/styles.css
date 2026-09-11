@@ -133,14 +133,11 @@ p  { margin: 0 0 1em; color: var(--ink-600); }
   .brand-mark { height: 36px; max-width: 170px; }
 }
 .site-footer .brand {
-  background: #fff;
-  padding: 10px 14px;
-  border-radius: 10px;
   align-self: flex-start;
 }
 .site-footer .brand-mark {
-  height: 44px;
-  max-width: 240px;
+  height: 52px;
+  max-width: 260px;
 }
 .brand-text {
   display: none;
