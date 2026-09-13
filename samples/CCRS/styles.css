@@ -40,7 +40,7 @@
   --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
 
   --container: 1200px;
-  --header-h: 76px;
+  --header-h: 92px;
 }
 
 * { box-sizing: border-box; }
@@ -123,14 +123,17 @@ p  { margin: 0 0 1em; color: var(--ink-600); }
   text-decoration: none;
 }
 .brand-mark {
-  height: 44px;
+  height: 72px;
   width: auto;
-  max-width: 220px;
+  max-width: 320px;
   flex: 0 0 auto;
   display: block;
 }
+@media (max-width: 920px) {
+  .brand-mark { height: 58px; max-width: 260px; }
+}
 @media (max-width: 560px) {
-  .brand-mark { height: 36px; max-width: 170px; }
+  .brand-mark { height: 44px; max-width: 200px; }
 }
 .site-footer .brand {
   align-self: flex-start;
