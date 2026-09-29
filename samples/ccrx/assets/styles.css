@@ -1,18 +1,18 @@
 /* CCRx — patient-first healthcare service. Warm, calm, humane. */
 
 :root {
-  --bg: #faf7f2;           /* warm cream */
-  --bg-soft: #f2ede4;      /* warmer sand */
+  --bg: #f8faf9;           /* soft clinical white */
+  --bg-soft: #edf3f3;      /* pale teal */
   --bg-panel: #ffffff;
-  --ink: #2a2d28;          /* warm near-black */
-  --ink-soft: #55584f;
-  --ink-mute: #85887e;
-  --line: #e3ddd0;
-  --line-soft: #ece7dc;
-  --accent: #5c6b4d;       /* muted sage/olive */
-  --accent-deep: #414d38;
-  --accent-soft: #dfe4d4;
-  --clay: #b06a4a;         /* warm terracotta, sparing */
+  --ink: #353d40;          /* Joe's charcoal */
+  --ink-soft: #525e62;
+  --ink-mute: #647478;
+  --line: #d3dfe0;
+  --line-soft: #e3ebeb;
+  --accent: #105b69;       /* Joe's deep healthcare teal */
+  --accent-deep: #0c4651;
+  --accent-soft: #dcebee;
+  --clay: #105b69;
   --radius: 8px;
   --radius-lg: 14px;
   --shadow-sm: 0 1px 2px rgba(42, 45, 40, 0.04);
@@ -55,7 +55,9 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  height: 76px;
+  min-height: 132px;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 .brand {
   display: inline-flex;
@@ -76,6 +78,8 @@ a { color: inherit; text-decoration: none; }
   font-weight: 500;
 }
 .brand-x { color: var(--accent); font-weight: 600; }
+.brand-logo { width: 208px; height: auto; mix-blend-mode: multiply; }
+.brand { flex-shrink: 0; }
 
 .site-nav {
   display: flex;
@@ -98,7 +102,9 @@ a { color: inherit; text-decoration: none; }
 .portal-link:hover { border-bottom-color: var(--accent); }
 
 @media (max-width: 720px) {
-  .site-nav a:not(.portal-link) { display: none; }
+  .header-inner { flex-direction: column; gap: 14px; padding-top: 18px; padding-bottom: 18px; }
+  .brand-logo { width: 190px; }
+  .site-nav { justify-content: center; flex-wrap: wrap; gap: 10px 18px; font-size: 13px; }
 }
 
 /* ---------- BUTTONS ---------- */
@@ -618,6 +624,8 @@ h1, h2, h3, h4 {
   font-weight: 500;
 }
 .footer-brand svg { color: var(--accent); }
+.footer-brand img { width: 190px; height: auto; mix-blend-mode: multiply; }
+@media (max-width: 720px) { .footer-brand { justify-content: center; } }
 .footer-meta, .footer-address {
   margin: 0;
   font-size: 13px;
@@ -632,7 +640,7 @@ h1, h2, h3, h4 {
 /* ---------- PORTAL PAGE ---------- */
 .portal-body { background: var(--bg); }
 .portal-main {
-  min-height: calc(100vh - 76px - 180px);
+  min-height: calc(100vh - 132px - 180px);
   display: flex;
   align-items: center;
   padding: clamp(80px, 12vw, 160px) 0;
